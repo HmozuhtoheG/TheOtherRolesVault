@@ -111,7 +111,7 @@ namespace TheOtherRoles.Patches
 
                 void onFocusLost()
                 {
-                    TheOtherRolesPlugin.UpdateRegions();
+                   // TheOtherRolesPlugin.UpdateRegions();
                 }
             }
 
@@ -155,7 +155,7 @@ namespace TheOtherRoles.Patches
 
                 void onFocusLost()
                 {
-                    TheOtherRolesPlugin.UpdateRegions();
+                   // TheOtherRolesPlugin.UpdateRegions();
                 }
             }
 
