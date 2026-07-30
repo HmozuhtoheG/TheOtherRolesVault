@@ -34,28 +34,76 @@ namespace TheOtherRoles.Roles
             yield return new("%SHIELD%", shieldDuration.ToString());
         }
 
-        // ---- 可配置数值 ----
         public static float fieldDuration = 10f;
         public static float fieldRadius = 3f;
         public static float killCooldownReduction = 0.3f;
-        public static float shieldDuration = 5f;      // 离场后护盾还能扛多久
+        public static float shieldDuration = 5f;
 
         public static float maxEnergy = 100f;
         public static float activationCost = 50f;
         public static float energyRegenPerSecond = 4f;
 
-        public static float baseSpeedBoost = 0.25f;      // 场里只有1人时的移速加成
-        public static float extraSpeedPerPlayer = 0.1f;  // 每多1人额外加成
-        public static float maxSpeedBoost = 1f;          // 加成上限
+        public static float baseSpeedBoost = 0.25f;
+        public static float extraSpeedPerPlayer = 0.1f;
+        public static float maxSpeedBoost = 1f;
 
-        // ---- 每个持有该角色的玩家自己的状态 ----
         public bool isFieldActive;
         public float fieldTimer;
         public float currentEnergy;
 
-        // ---- 护盾记录：所有客户端各自独立计算，规则完全一致，不需要联机同步 ----
         public static Dictionary<byte, float> shieldedPlayers = new();
         private static int lastShieldUpdateFrame = -1;
+
+        private GameObject fieldIndicatorObject;
+        private SpriteRenderer fieldIndicatorRenderer;
+
+        private static Sprite ringSprite;
+        private static Sprite GetRingSprite()
+        {
+            if (ringSprite) return ringSprite;
+            int size = 256;
+            var tex = new Texture2D(size, size, TextureFormat.ARGB32, false);
+            Color clear = new Color(0, 0, 0, 0);
+            Vector2 center = new Vector2(size / 2f, size / 2f);
+            float outerRadius = size / 2f - 2f;
+            float innerRadius = outerRadius - 6f;
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dist = Vector2.Distance(new Vector2(x, y), center);
+                    tex.SetPixel(x, y, (dist <= outerRadius && dist >= innerRadius) ? Color.white : clear);
+                }
+            }
+            tex.Apply();
+            ringSprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
+            return ringSprite;
+        }
+
+        private void ShowFieldIndicator()
+        {
+            if (player != PlayerControl.LocalPlayer) return; 
+
+            if (fieldIndicatorObject == null)
+            {
+                fieldIndicatorObject = new GameObject("EnergyFieldIndicator");
+                fieldIndicatorObject.transform.SetParent(player.transform, false);
+                fieldIndicatorObject.transform.localPosition = new Vector3(0f, 0f, 1f);
+                fieldIndicatorRenderer = fieldIndicatorObject.AddComponent<SpriteRenderer>();
+                fieldIndicatorRenderer.sprite = GetRingSprite();
+                fieldIndicatorRenderer.color = new Color(color.r, color.g, color.b, 0.6f);
+            }
+
+            float diameter = fieldRadius * 2f;
+            fieldIndicatorObject.transform.localScale = new Vector3(diameter, diameter, 1f);
+            fieldIndicatorObject.SetActive(true);
+        }
+
+        private void HideFieldIndicator()
+        {
+            if (fieldIndicatorObject != null) fieldIndicatorObject.SetActive(false);
+        }
 
         private static Sprite buttonSprite;
         public static Sprite getButtonSprite()
@@ -71,6 +119,7 @@ namespace TheOtherRoles.Roles
             if (role == null) return;
             role.isFieldActive = true;
             role.fieldTimer = message.duration;
+            role.ShowFieldIndicator();
         });
 
         public static RemoteProcess<(byte playerId, byte unused)> DeactivateField = new("EnergyAmplifierDeactivate", (message, _) =>
@@ -79,6 +128,7 @@ namespace TheOtherRoles.Roles
             if (role == null) return;
             role.isFieldActive = false;
             role.fieldTimer = 0f;
+            role.HideFieldIndicator();
         });
 
         public void TryActivate()
@@ -95,7 +145,6 @@ namespace TheOtherRoles.Roles
         {
             if (player != PlayerControl.LocalPlayer) return;
 
-            // 能量回复：只需要在拥有者自己的客户端算，因为只影响自己的按钮能不能按
             if (!player.Data.IsDead)
                 currentEnergy = Mathf.Min(maxEnergy, currentEnergy + energyRegenPerSecond * Time.fixedDeltaTime);
 
@@ -116,10 +165,10 @@ namespace TheOtherRoles.Roles
             {
                 isFieldActive = false;
                 fieldTimer = 0f;
+                HideFieldIndicator();
             }
         }
 
-        // 目前这一瞬间，target是否站在某个生效中的场地里（纯粹靠已同步的位置计算，任何客户端算出来都一样）
         public static bool IsInField(PlayerControl target)
         {
             if (target == null || target.Data == null || target.Data.IsDead) return false;
@@ -130,7 +179,6 @@ namespace TheOtherRoles.Roles
                 Vector2.Distance(amp.player.GetTruePosition(), target.GetTruePosition()) <= fieldRadius);
         }
 
-        // target所在的、人数最多的那个场地里，一共有几个人
         private static int CountPlayersInSameField(PlayerControl target)
         {
             int best = 0;
@@ -150,7 +198,6 @@ namespace TheOtherRoles.Roles
             return best;
         }
 
-        // 移速加成：场地里人越多，加成越强（有上限）
         public static float GetSpeedBoostFor(PlayerControl target)
         {
             if (!IsInField(target)) return 0f;
@@ -159,7 +206,6 @@ namespace TheOtherRoles.Roles
             return Mathf.Min(baseSpeedBoost + extra, maxSpeedBoost);
         }
 
-        // 临时护盾：离场后还能再扛 shieldDuration 秒
         public static bool HasTemporaryShield(PlayerControl target)
         {
             return target != null && shieldedPlayers.TryGetValue(target.PlayerId, out var remaining) && remaining > 0f;
@@ -167,7 +213,7 @@ namespace TheOtherRoles.Roles
 
         private static void UpdateShieldBookkeeping()
         {
-            if (Time.frameCount == lastShieldUpdateFrame) return; // 保证每个客户端每帧只算一次
+            if (Time.frameCount == lastShieldUpdateFrame) return;
             lastShieldUpdateFrame = Time.frameCount;
 
             foreach (var p in PlayerControl.AllPlayerControls)
@@ -176,7 +222,7 @@ namespace TheOtherRoles.Roles
 
                 if (IsInField(p))
                 {
-                    shieldedPlayers[p.PlayerId] = shieldDuration; // 站在场里就一直刷新到满
+                    shieldedPlayers[p.PlayerId] = shieldDuration;
                 }
                 else if (shieldedPlayers.TryGetValue(p.PlayerId, out var remaining))
                 {
@@ -207,13 +253,12 @@ namespace TheOtherRoles.Roles
             players = [];
         }
 
-        // ---- 移速：场地里人越多加成越强 ----
         [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]
         public static class PlayerPhysicsEnergyFieldPatch
         {
             public static void Postfix(PlayerPhysics __instance)
             {
-                UpdateShieldBookkeeping(); // 内部有frame去重，这里调用多少次都安全
+                UpdateShieldBookkeeping();
 
                 var target = __instance.myPlayer;
                 if (target == null || target.Data == null || target.Data.IsDead) return;
@@ -225,7 +270,6 @@ namespace TheOtherRoles.Roles
             }
         }
 
-        // ---- 刀人CD缩短：站在场里的杀手 ----
         [HarmonyPatch(typeof(PlayerControlSetCoolDownPatch), nameof(PlayerControlSetCoolDownPatch.SetKillTimerUnchecked))]
         public static class PlayerControlKillTimerEnergyFieldPatch
         {

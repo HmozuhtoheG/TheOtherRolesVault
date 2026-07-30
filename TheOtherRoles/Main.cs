@@ -56,6 +56,7 @@ namespace TheOtherRoles
 
         // This is part of the Mini.RegionInstaller, Licensed under GPLv3
         // file="RegionInstallPlugin.cs" company="miniduikboot">
+        /*
         public static void UpdateRegions() {
             ServerManager serverManager = FastDestroyableSingleton<ServerManager>.Instance;
             var regions = new IRegionInfo[] {
@@ -80,7 +81,7 @@ namespace TheOtherRoles
                 serverManager.SetRegion(currentRegion);
             }
         }
-
+        */
         public override void Load() {
             Logger = Log;
             Instance = this;
