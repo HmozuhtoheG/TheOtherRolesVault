@@ -134,7 +134,7 @@ namespace TheOtherRoles.Modules
             }));
 
             var text = button.transform.GetComponentInChildren<TMPro.TMP_Text>();
-            string t = ModTranslation.getString("updateGMIA");
+            string t = ModTranslation.getString("updateTORV");
 
             StartCoroutine(Effects.Lerp(0.1f, (System.Action<float>)(p => text.SetText(t))));
             passiveButton.OnMouseOut.AddListener((Action)(() => text.color = Color.red));
@@ -159,7 +159,7 @@ namespace TheOtherRoles.Modules
             {
                 TheOtherRolesPlugin.Logger.LogError("parsing version for auto updater failed :(");
             }
-            if (showPopUp) mgr.StartCoroutine(CoShowAnnouncement(announcement, shortTitle: "GMIA Update", date: TORUpdate.TimeString));
+            if (showPopUp) mgr.StartCoroutine(CoShowAnnouncement(announcement, shortTitle: "TORV Update", date: TORUpdate.TimeString));
             showPopUp = false;
         }
 
@@ -167,7 +167,7 @@ namespace TheOtherRoles.Modules
         public IEnumerator CoUpdate()
         {
             updateInProgress = true;
-            var updateName = ModTranslation.getString("GMIA");
+            var updateName = ModTranslation.getString("TORV");
 
             var popup = Instantiate(TwitchManager.Instance.TwitchPopup);
             popup.TextAreaTMP.fontSize *= 0.7f;
@@ -177,7 +177,7 @@ namespace TheOtherRoles.Modules
 
             var button = popup.transform.GetChild(2).gameObject;
             button.SetActive(false);
-            popup.TextAreaTMP.text = string.Format(ModTranslation.getString("updatingGMIA"), updateName);
+            popup.TextAreaTMP.text = string.Format(ModTranslation.getString("updatingTORV"), updateName);
 
             var download = Task.Run(DownloadUpdate);
             while (!download.IsCompleted) yield return null;
@@ -189,7 +189,7 @@ namespace TheOtherRoles.Modules
 
         private static int announcementNumber = 501;
         [HideFromIl2Cpp]
-        public IEnumerator CoShowAnnouncement(string announcement, bool show = true, string shortTitle = "GMIA Update", string title = "", string date = "")
+        public IEnumerator CoShowAnnouncement(string announcement, bool show = true, string shortTitle = "TORV Update", string title = "", string date = "")
         {
             var mgr = FindObjectOfType<MainMenuManager>(true);
             var popUpTemplate = UnityEngine.Object.FindObjectOfType<AnnouncementPopUp>(true);
@@ -232,7 +232,7 @@ namespace TheOtherRoles.Modules
         [HideFromIl2Cpp]
         public static IEnumerator CoCheckUpdates()
         {
-            var torUpdateCheck = Task.Run(() => Instance.GetGithubUpdate("GMIA-Nexus", "TheOtherRolesGMIA"));
+            var torUpdateCheck = Task.Run(() => Instance.GetGithubUpdate("TORV-Nexus", "TheOtherRolesVersion"));
             while (!torUpdateCheck.IsCompleted) yield return null;
             if (torUpdateCheck.Result != null && torUpdateCheck.Result.IsNewer(Version.Parse(TheOtherRolesPlugin.VersionString)))
             {

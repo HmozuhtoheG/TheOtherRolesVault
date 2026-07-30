@@ -183,6 +183,7 @@ namespace TheOtherRoles.Patches {
                 crewSettings.Add((byte)RoleId.Spy, CustomOptionHolder.spySpawnRate.data);
             }
             crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Energyamplifier, CustomOptionHolder.energyAmplifierSpawnRate.data);
 
             return new RoleAssignmentData {
                 crewmates = crewmates,

@@ -31,7 +31,7 @@ namespace TheOtherRoles.Modules {
 
             if (targetPlugin != null)
             {
-                TheOtherRolesPlugin.Logger.LogMessage("Hacker Plugin Found.\n GMIA Does Not Allow You Using Such Plugins.\nWill Unpatch Soon.");
+                TheOtherRolesPlugin.Logger.LogMessage("Hacker Plugin Found.\n TORV Does Not Allow You Using Such Plugins.\nWill Unpatch Soon.");
                 Harmony.UnpatchAll();//当进入MainMenu时检测加载如果有MM 就自动关闭
             }
         }
@@ -94,8 +94,7 @@ namespace TheOtherRoles.Modules {
         public static void Postfix(VersionShower __instance)
         {
             __instance.text.text = $"Among Us v{DestroyableSingleton<ReferenceDataManager>.Instance.Refdata.userFacingVersion} - " +
-                $"{Helpers.GradientColorText("FFD700", "FF0000", $"The Other Roles GM IA")} <color=#FCCE03FF>v{TheOtherRolesPlugin.VersionString + TheOtherRolesPlugin.SubVersionString
-                + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</color>";
+           $"<color=#33FFFF>TheOtherRolesVersion</color> <color=#FCCE03FF>v{TheOtherRolesPlugin.VersionString + TheOtherRolesPlugin.SubVersionString + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</color>";
         }
     }
 
@@ -162,11 +161,11 @@ namespace TheOtherRoles.Modules {
                 modScreen.SetActive(true);
                 __instance.screenTint.enabled = true;
             }));
-            modButton.transform.FindChild("FontPlacer").GetChild(0).GetComponent<TextTranslatorTMP>().SetModText("mainMenuGMIATitle");
+            modButton.transform.FindChild("FontPlacer").GetChild(0).GetComponent<TextTranslatorTMP>().SetModText("mainMenuTORVTitle");
 
             modScreen = Object.Instantiate(__instance.accountButtons, __instance.accountButtons.transform.parent);
             modScreen.name = "modScreen";
-            modScreen.transform.GetChild(0).GetChild(0).GetComponent<TextTranslatorTMP>().SetModText("GMIA");
+            modScreen.transform.GetChild(0).GetChild(0).GetComponent<TextTranslatorTMP>().SetModText("TORV");
             __instance.mainButtons.Add(modButton);
 
             Object.Destroy(modScreen.transform.GetChild(4).gameObject);
@@ -235,16 +234,16 @@ namespace TheOtherRoles.Modules {
             });
 
             foreach (var asset in modScreen.GetComponentsInChildren<AspectScaledAsset>()) scalerList.objectsToScale.Add(asset);
-
+/*
             var discordRenderer = Helpers.CreateObject<SpriteRenderer>("DiscordButton", __instance.transform, Vector3.zero);
             discordRenderer.gameObject.SetAsUIAspectContent(AspectPosition.EdgeAlignments.RightBottom, new(0.34f, 1f, -6f));
             discordRenderer.sprite = discordSprite;
             var discordButton = discordRenderer.gameObject.SetUpButton(true, discordRenderer);
             discordButton.OnMouseOver.AddListener((Action)(() => TORGUIManager.Instance.SetHelpContext(discordButton, ModTranslation.getString("mainMenuDiscordText"))));
             discordButton.OnMouseOut.AddListener((Action)(() => TORGUIManager.Instance.HideHelpContextIf(discordButton)));
-            discordButton.OnClick.AddListener((Action)(() => Application.OpenURL("https://discord.gg/w7msq53dq7")));
+            discordButton.OnClick.AddListener((Action)(() => Application.OpenURL("https://discord.gg/2JJzweqMHc")));
             discordButton.gameObject.AddComponent<CircleCollider2D>().radius = 0.25f;
-
+*/
             void createAboutScreen()
             {
                 aboutScreen = Helpers.CreateObject("About", __instance.accountButtons.transform.parent, new Vector3(0, 0, -1f));
@@ -304,7 +303,7 @@ namespace TheOtherRoles.Modules {
         public static void loadSprite()
         {
             if (sprite == null) sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.LogoButton.png", 100f);
-            if (discordSprite == null) discordSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.DiscordIcon.png", 100f);
+            //if (discordSprite == null) discordSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.DiscordIcon.png", 100f);
         }
     }
 

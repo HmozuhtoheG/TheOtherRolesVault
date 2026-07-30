@@ -30,7 +30,7 @@ namespace TheOtherRoles.Modules
             if (!isEnabled) yield break;
 
             isRunning = true;
-            SoundEffectsManager.play("GMIATheme", volume: 1f, true, true);
+            SoundEffectsManager.play("TORVTheme", volume: 1f, true, true);
             alreadyPicked.Clear();
             bool playedAlert = false;
             feedText = UnityEngine.Object.Instantiate(__instance.TeamTitle, __instance.transform);
@@ -449,7 +449,7 @@ namespace TheOtherRoles.Modules
                 yield return null;
             }
 
-            SoundEffectsManager.stop("GMIATheme");
+            SoundEffectsManager.stop("TORVTheme");
             isRunning = false;
             yield break;
         }

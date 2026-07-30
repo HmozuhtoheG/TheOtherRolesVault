@@ -444,6 +444,19 @@ namespace TheOtherRoles {
         public static CustomOption securityGuardCamRechargeTasksNumber;
         public static CustomOption securityGuardNoMove;
 
+        public static CustomRoleOption energyAmplifierSpawnRate;
+        public static CustomOption energyAmplifierCooldown;
+        public static CustomOption energyAmplifierDuration;
+        public static CustomOption energyAmplifierRadius;
+        public static CustomOption energyAmplifierSpeedBoost;
+        public static CustomOption energyAmplifierKillCooldownReduction;
+        public static CustomOption energyAmplifierShieldDuration;
+        public static CustomOption energyAmplifierMaxEnergy;
+        public static CustomOption energyAmplifierActivationCost;
+        public static CustomOption energyAmplifierEnergyRegenRate;
+        public static CustomOption energyAmplifierExtraSpeedPerPlayer;
+        public static CustomOption energyAmplifierMaxSpeedBoost;
+
         public static CustomRoleOption vultureSpawnRate;
         public static CustomOption vultureCooldown;
         public static CustomOption vultureNumberToWin;
@@ -971,6 +984,20 @@ namespace TheOtherRoles {
             lawyerTargetCanBeJester = CustomOption.Create(351, Types.Neutral, "lawyerTargetCanBeJester", false, lawyerSpawnRate);
             pursuerCooldown = CustomOption.Create(356, Types.Neutral, "pursuerCooldown", 30f, 5f, 60f, 2.5f, lawyerSpawnRate, false, "unitSeconds");
             pursuerBlanksNumber = CustomOption.Create(357, Types.Neutral, "pursuerBlanksNumber", 5f, 1f, 20f, 1f, lawyerSpawnRate, false, "unitScrews");
+
+            energyAmplifierSpawnRate = new CustomRoleOption(6100, Types.Crewmate, "energyAmplifier", Energyamplifier.color);
+            energyAmplifierCooldown = CustomOption.Create(6101, Types.Crewmate, "energyAmplifierCooldown", 30f, 10f, 60f, 2.5f, energyAmplifierSpawnRate, false, "unitSeconds");
+            energyAmplifierDuration = CustomOption.Create(6102, Types.Crewmate, "energyAmplifierDuration", 10f, 5f, 30f, 1f, energyAmplifierSpawnRate, false, "unitSeconds");
+            energyAmplifierRadius = CustomOption.Create(6103, Types.Crewmate, "energyAmplifierRadius", 3f, 1f, 6f, 0.5f, energyAmplifierSpawnRate, false, "unitMeters");
+            energyAmplifierSpeedBoost = CustomOption.Create(6104, Types.Crewmate, "energyAmplifierSpeedBoost", 0.5f, 0.1f, 1.5f, 0.1f, energyAmplifierSpawnRate, false, "unitTimes");
+            energyAmplifierKillCooldownReduction = CustomOption.Create(6105, Types.Crewmate, "energyAmplifierKillCooldownReduction", 0.3f, 0f, 0.9f, 0.05f, energyAmplifierSpawnRate, false, "unitPercent");
+            energyAmplifierShieldDuration = CustomOption.Create(6106, Types.Crewmate, "energyAmplifierShieldDuration", 5f, 0f, 15f, 1f, energyAmplifierSpawnRate, false, "unitSeconds");
+            energyAmplifierMaxEnergy = CustomOption.Create(6107, Types.Crewmate, "energyAmplifierMaxEnergy", 100f, 50f, 200f, 10f, energyAmplifierSpawnRate, false, "unitPlayers");
+            energyAmplifierActivationCost = CustomOption.Create(6108, Types.Crewmate, "energyAmplifierActivationCost", 50f, 10f, 150f, 10f, energyAmplifierSpawnRate, false, "unitPlayers");
+            energyAmplifierEnergyRegenRate = CustomOption.Create(6109, Types.Crewmate, "energyAmplifierEnergyRegenRate", 4f, 1f, 10f, 0.5f, energyAmplifierSpawnRate, false, "unitPlayers");
+            energyAmplifierExtraSpeedPerPlayer = CustomOption.Create(6110, Types.Crewmate, "energyAmplifierExtraSpeedPerPlayer", 0.1f, 0f, 0.5f, 0.05f, energyAmplifierSpawnRate, false, "unitTimes");
+            energyAmplifierMaxSpeedBoost = CustomOption.Create(6111, Types.Crewmate, "energyAmplifierMaxSpeedBoost", 1f, 0.5f, 2f, 0.1f, energyAmplifierSpawnRate, false, "unitTimes");
+
 
             shifterSpawnRate = new CustomRoleOption(1100, Types.Neutral, "shifter", Shifter.color, 1);
             shifterIsNeutralRate = CustomOption.Create(6007, Types.Neutral, "shifterIsNeutralRate", rates, shifterSpawnRate);

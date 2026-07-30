@@ -695,6 +695,7 @@ public static class HelpMenu
                 { RoleId.EvilGuesser, CustomOptionHolder.guesserSpawnRate },
                 { RoleId.NiceWatcher, CustomOptionHolder.watcherSpawnRate },
                 { RoleId.EvilWatcher, CustomOptionHolder.watcherSpawnRate },
+                { RoleId.Energyamplifier, CustomOptionHolder.energyAmplifierSpawnRate },
                 { RoleId.Vulture, CustomOptionHolder.vultureSpawnRate },
                 { RoleId.Medium, CustomOptionHolder.mediumSpawnRate },
                 { RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate },

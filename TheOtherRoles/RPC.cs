@@ -51,6 +51,7 @@ namespace TheOtherRoles
         Jackal,
         Sidekick,
         Eraser,
+        Energyamplifier,
         FortuneTeller,
         Bait,
         Veteran,
@@ -177,7 +178,7 @@ namespace TheOtherRoles
         ShareTimer,
         ShareGhostInfo,
 
-        // GMIA Special functionality
+        // TORV Special functionality
         SerialKillerSuicide,
         YasunaSpecialVote,
         TaskMasterSetExTasks,

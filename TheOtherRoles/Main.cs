@@ -26,15 +26,15 @@ using UnityEngine.SceneManagement;
 
 namespace TheOtherRoles
 {
-    [BepInPlugin(Id, "The Other Roles GM IA", VersionString)]
+    [BepInPlugin(Id, "TheOtherRolesVersion", VersionString)]
     [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInProcess("Among Us.exe")]
     [ReactorModFlags(Reactor.Networking.ModFlags.RequireOnAllClients)]
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";
-        public const string VersionString = "1.3.7";
-        public const string SubVersionString = "-Gale";
+        public const string VersionString = "1.0.0";
+        public const string SubVersionString = "-Beta";
         public static uint betaDays = 0;  // amount of days for the build to be usable (0 for infinite!)
 
         public static Version Version = Version.Parse(VersionString);
@@ -59,7 +59,7 @@ namespace TheOtherRoles
         public static void UpdateRegions() {
             ServerManager serverManager = FastDestroyableSingleton<ServerManager>.Instance;
             var regions = new IRegionInfo[] {
-                new StaticHttpRegionInfo("<color=#ff44ff>GMIA <color=#00ffff>BEIJING</color></color>", StringNames.NoTranslation, "fk.mxyx.club", new Il2CppReferenceArray<ServerInfo>([new ServerInfo("<color=#ff44ff>GMIA <color=#00ffff>BEIJING</color></color>", "https://gmiaimp.amongusclub.cn", 443, false)])).CastFast<IRegionInfo>()
+                new StaticHttpRegionInfo("<color=#ff44ff>TORV <color=#00ffff>BEIJING</color></color>", StringNames.NoTranslation, "fk.mxyx.club", new Il2CppReferenceArray<ServerInfo>([new ServerInfo("<color=#ff44ff>TORV <color=#00ffff>BEIJING</color></color>", "https://TORVimp.amongusclub.cn", 443, false)])).CastFast<IRegionInfo>()
             };
             
             IRegionInfo currentRegion = serverManager.CurrentRegion;
@@ -86,7 +86,7 @@ namespace TheOtherRoles
             Instance = this;
   
             _ = Helpers.checkBeta(); // Exit if running an expired beta
-            Patches.CredentialsPatch.MOTD.loadMOTDs();
+           // Patches.CredentialsPatch.MOTD.loadMOTDs();
             ModTranslation.Load();
 
             DebugMode = Config.Bind("Custom", "Enable Debug Mode", "false");
@@ -97,8 +97,8 @@ namespace TheOtherRoles
             Port = Config.Bind("Custom", "Custom Server Port", (ushort)22023);
             defaultRegions = ServerManager.DefaultRegions;
 
-            ServerManager.DefaultRegions = new Il2CppReferenceArray<IRegionInfo>([]);
-            UpdateRegions();
+            ServerManager.DefaultRegions = defaultRegions;
+            // UpdateRegions();
 
             Harmony.PatchAll();
             RemoteProcessBase.Load();

@@ -2058,6 +2058,13 @@ namespace TheOtherRoles
                 return MurderAttemptResult.BlankKill;
             }
 
+            // Block kill if target is protected by Energy Amplifier's field-enhanced shield
+            if (Energyamplifier.HasTemporaryShield(target)) //&& Medic.IsShielded(target))
+            {
+                SoundEffectsManager.play("fail");
+                return MurderAttemptResult.SuppressKill;
+            }
+
             // Block impostor shielded kill
             if (Medic.IsShielded(target)) {
                 foreach (var medic in Medic.GetMedic(target)) {

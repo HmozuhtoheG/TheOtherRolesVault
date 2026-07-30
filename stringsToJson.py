@@ -51,3 +51,4 @@ if __name__ == "__main__":
   ]
   
   stringToJson(in_files)
+input("OK...")

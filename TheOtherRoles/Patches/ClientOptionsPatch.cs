@@ -163,7 +163,7 @@ namespace TheOtherRoles.Patches
             torButton.Content = torTab;
             var textObj = torButton.transform.FindChild("Text_TMP").gameObject;
             textObj.GetComponent<TextTranslatorTMP>().enabled = false;
-            textObj.GetComponent<TMPro.TMP_Text>().text = "GMIA";
+            textObj.GetComponent<TMPro.TMP_Text>().text = "TORV";
 
             passiveButton = torButton.gameObject.GetComponent<PassiveButton>();
             passiveButton.OnClick = new UnityEngine.UI.Button.ButtonClickedEvent();

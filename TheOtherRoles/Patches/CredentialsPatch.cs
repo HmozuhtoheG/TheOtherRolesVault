@@ -14,9 +14,9 @@ using UnityEngine.Networking;
 namespace TheOtherRoles.Patches {
     [HarmonyPatch]
     public static class CredentialsPatch {
-        public static string fullCredentialsVersion = $"<size=130%>{Helpers.GradientColorText("FFD700", "FF0000", $"TheOtherRoles GM IA")}</size>" + $" v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}";
+        public static string fullCredentialsVersion = $"<size=130%><color=#33FFFF>TORV</color></size> <color=#FFFF00>v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</color>";
         /*  public static string fullCredentialsVersion = 
-  $@"<size=130%><color=#ff351f>TheOtherRoles GM IA</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays>0 ? "-BETA": "")}"; */
+  $@"<size=130%><color=#ff351f>TORV</color></size> v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays>0 ? "-BETA": "")}"; */
         public static string fullCredentials = "fullCredentials";
 
     public static string mainMenuCredentials = "mainMenuCredentials";
@@ -36,7 +36,7 @@ namespace TheOtherRoles.Patches {
                     else if (HandleGuesser.isGuesserGm) gameModeText = ModTranslation.getString("gamemodeGuesser");
                     else if (FreePlayGM.isFreePlayGM) gameModeText = ModTranslation.getString("gamemodeFreePlay");
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
-                    __instance.text.text = $"<size=130%>{Helpers.GradientColorText("FFD700", "FF0000", $"TheOtherRoles GM IA")}</size>" + $" v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}\n{gameModeText}" + __instance.text.text;
+                    __instance.text.text = $"<size=130%><color=#33FFFF>TORV</color></size> <color=#FFFF00>v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</color>\n{gameModeText}";
                     position.DistanceFromEdge = new Vector3(1.5f, 0.11f, 0);
                 } else {
                     string gameModeText = $"";
@@ -169,7 +169,7 @@ namespace TheOtherRoles.Patches {
 
             public static void loadMOTDs()
             {
-                string url = Helpers.isChinese() ? "https://gitee.com/dabaoimp11/GMIAMOTDs/raw/master/MOTDs.txt" : "https://raw.githubusercontent.com/GMIA-Nexus/GMIAMOTDs/main/MOTDs.txt";
+                string url = Helpers.isChinese() ? "https://gitee.com/dabaoimp11/TORVMOTDs/raw/master/MOTDs.txt" : "https://raw.githubusercontent.com/TORV-Nexus/TORVMOTDs/main/MOTDs.txt";
                 var request = UnityWebRequest.Get(url);
                 request.SendWebRequest();
 

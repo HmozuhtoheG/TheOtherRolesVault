@@ -40,6 +40,7 @@ namespace TheOtherRoles
         public static RoleInfo mayor = new("mayor", Mayor.color, RoleId.Mayor);
         public static RoleInfo portalmaker = new("portalmaker", Portalmaker.color, RoleId.Portalmaker);
         public static RoleInfo engineer = new("engineer", Engineer.color, RoleId.Engineer);
+        public static RoleInfo energyamplifier = new("energyamplifier", Energyamplifier.color, RoleId.Energyamplifier);
         public static RoleInfo sheriff = new("sheriff", Sheriff.color, RoleId.Sheriff);
         public static RoleInfo deputy = new("deputy", Sheriff.color, RoleId.Deputy);
         public static RoleInfo lighter = new("lighter", Lighter.color, RoleId.Lighter);
@@ -86,7 +87,7 @@ namespace TheOtherRoles
         public static RoleInfo thief = new("thief", Thief.color, RoleId.Thief, true);
         //public static RoleInfo bomber = new RoleInfo("Bomber", Bomber.color, "Bomb all Crewmates", "Bomb all Crewmates", RoleId.Bomber);
 
-        // GMIA functional
+        // TORV functional
         public static RoleInfo ninja = new("ninja", Ninja.color, RoleId.Ninja);
         public static RoleInfo nekoKabocha = new("nekoKabocha", NekoKabocha.color, RoleId.NekoKabocha);
         public static RoleInfo serialKiller = new("serialKiller", SerialKiller.color, RoleId.SerialKiller);
@@ -147,7 +148,7 @@ namespace TheOtherRoles
         public static RoleInfo multitasker = new("multitasker", Color.yellow, RoleId.Multitasker, false, true);
         public static RoleInfo diseased = new("diseased", Color.yellow, RoleId.Diseased, false, true);
         public static RoleInfo radar = new("radar", Color.yellow, RoleId.Radar, false, true);
-        public static RoleInfo armored = new ("armored", Color.yellow, RoleId.Armored, false, true);
+        public static RoleInfo armored = new("armored", Color.yellow, RoleId.Armored, false, true);
         //public static RoleInfo shifter = new RoleInfo("Shifter", Color.yellow, "Shift your role", "Shift your role", RoleId.Shifter, false, true);
 
         public static List<RoleInfo> Killing = [
@@ -234,7 +235,8 @@ namespace TheOtherRoles
             lawyer,
             engineer,
             camouflager,
-            securityGuard
+            securityGuard,
+            energyamplifier
         ];
 
         public static List<RoleInfo> Outlook =
@@ -374,7 +376,8 @@ namespace TheOtherRoles
             multitasker,
             diseased,
             radar,
-            armored
+            armored,
+            energyamplifier
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
@@ -410,6 +413,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Mayor)) infos.Add(mayor);
             if (p.isRole(RoleId.Portalmaker)) infos.Add(portalmaker);
             if (p.isRole(RoleId.Engineer)) infos.Add(engineer);
+            if (p.isRole(RoleId.Energyamplifier)) infos.Add(energyamplifier);
             if (p.isRole(RoleId.Sheriff)) infos.Add(sheriff);
             if (p.isRole(RoleId.Deputy)) infos.Add(deputy);
             if (p.isRole(RoleId.Lighter)) infos.Add(lighter);
