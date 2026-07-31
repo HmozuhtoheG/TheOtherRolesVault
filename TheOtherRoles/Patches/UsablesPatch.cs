@@ -134,6 +134,22 @@ namespace TheOtherRoles.Patches {
             } else {
                 PlayerControl.LocalPlayer.MyPhysics.RpcExitVent(__instance.Id);
             }
+            if (isEnter)
+            {
+                foreach (var role in new List<Role>(Role.allRoles))
+                {
+                    if (role.player == PlayerControl.LocalPlayer)
+                        role.OnEnterVent(__instance);
+                }
+            }
+            else
+            {
+                foreach (var role in new List<Role>(Role.allRoles))
+                {
+                    if (role.player == PlayerControl.LocalPlayer)
+                        role.OnExitVent(__instance);
+                }
+            }
             __instance.SetButtons(isEnter && canMoveInVents);
             return false;
         }
