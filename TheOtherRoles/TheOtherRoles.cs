@@ -42,6 +42,7 @@ namespace TheOtherRoles
             Morphling.clearAndReload();
             Camouflager.clearAndReload();
             Hacker.clearAndReload();
+            Energyamplifier.clearAndReload();
             Tracker.clearAndReload();
             Vampire.clearAndReload();
             Snitch.clearAndReload();
@@ -63,7 +64,7 @@ namespace TheOtherRoles
             Assassin.clearAndReload();
             Thief.clearAndReload();
 
-            // GMIA
+            // TORV
             Ninja.clearAndReload();
             NekoKabocha.clearAndReload();
             SerialKiller.clearAndReload();
@@ -149,6 +150,7 @@ namespace TheOtherRoles
                 { RoleId.Tracker, typeof(RoleBase<Tracker>) },
                 { RoleId.Snitch, typeof(RoleBase<Snitch>) },
                 { RoleId.Spy, typeof(RoleBase<Spy>) },
+                { RoleId.Energyamplifier, typeof(RoleBase<Energyamplifier>) },
                 { RoleId.SecurityGuard, typeof(RoleBase<SecurityGuard>) },
                 { RoleId.NiceGuesser, typeof(RoleBase<NiceGuesser>) },
                 { RoleId.Medium, typeof(RoleBase<Medium>) },
@@ -347,6 +349,11 @@ namespace TheOtherRoles
             public static void ClearAll() {
                 allRoles = [];
             }
+            /// <summary>
+            /// After get in/jump out the vent
+            /// </summary>
+            public virtual void OnEnterVent(Vent vent) { }
+            public virtual void OnExitVent(Vent vent) { }
         }
 
         public abstract class RoleBase<T> : Role where T : RoleBase<T>, new()
