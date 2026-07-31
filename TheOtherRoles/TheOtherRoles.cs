@@ -349,6 +349,11 @@ namespace TheOtherRoles
             public static void ClearAll() {
                 allRoles = [];
             }
+            /// <summary>
+            /// After get in/jump out the vent
+            /// </summary>
+            public virtual void OnEnterVent(Vent vent) { }
+            public virtual void OnExitVent(Vent vent) { }
         }
 
         public abstract class RoleBase<T> : Role where T : RoleBase<T>, new()
