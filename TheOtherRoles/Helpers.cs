@@ -2123,6 +2123,18 @@ namespace TheOtherRoles
                 return MurderAttemptResult.BlankKill;
             }
 
+            // Block Workaholic shield kill
+            else if (Workaholic.isShielded(target))
+            {
+                var workaholic = Workaholic.getRole(target);
+                if (workaholic != null)
+                {
+                    workaholic.shieldTimer = 0f;
+                    Workaholic.BreakShield.Invoke(killer.PlayerId);
+                }
+                return MurderAttemptResult.SuppressKill;
+            }
+
             // Block hunted with time shield kill
             else if (Hunted.timeshieldActive.Contains(target.PlayerId)) {
                 MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(killer.NetId, (byte)CustomRPC.HuntedRewindTime, Hazel.SendOption.Reliable, -1);
