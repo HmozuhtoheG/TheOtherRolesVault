@@ -11,30 +11,16 @@ namespace TheOtherRoles.Patches {
     class CreateOptionsPickerPatch {
         private static List<SpriteRenderer> renderers = new();
 
+        // Mode selection on this screen now happens via the repurposed "Game Mode" button
+        // (CreateGameOptionsTORBehaviour.Awake, in Modules/CustomOptions.cs), which sets
+        // TORMapOptions.gameMode directly and never calls SetGameMode. This Prefix used to
+        // force TORMapOptions.gameMode back to Classic whenever vanilla called SetGameMode
+        // with a base mode (Normal/HideNSeek) internally (e.g. during Refresh/server-switch
+        // syncing), which would silently wipe out the player's TOR mode choice on this screen.
+        // Left as a no-op passthrough so vanilla's own SetGameMode calls no longer interfere.
         [HarmonyPatch(typeof(CreateOptionsPicker), nameof(CreateOptionsPicker.SetGameMode))]
         public static bool Prefix(CreateOptionsPicker __instance, ref GameModes mode) {
-            if (SubmergedCompatibility.Loaded) return true;
-
-            if (mode <= GameModes.HideNSeek) {
-                TORMapOptions.gameMode = CustomGamemodes.Classic;
-                return true;
-            }
-
-            __instance.SetGameMode(GameModes.Normal);  //__instance.Refresh();
-            CustomGamemodes gm = (CustomGamemodes)((int)mode - 2);
-            if (gm == CustomGamemodes.Guesser) {
-                __instance.GameModeText.text = ModTranslation.getString("torGuesser");
-                TORMapOptions.gameMode = CustomGamemodes.Guesser;
-            }
-            else if (gm == CustomGamemodes.HideNSeek) {
-                __instance.GameModeText.text = ModTranslation.getString("torHideNSeek");
-                TORMapOptions.gameMode = CustomGamemodes.HideNSeek;
-            }
-            else if (gm == CustomGamemodes.FreePlay) {
-                __instance.GameModeText.text = ModTranslation.getString("torFreePlay");
-                TORMapOptions.gameMode = CustomGamemodes.FreePlay;
-            }
-            return false;
+            return true;
         }
 
 
@@ -51,6 +37,10 @@ namespace TheOtherRoles.Patches {
             else if (TORMapOptions.gameMode == CustomGamemodes.FreePlay)
             {
                 __instance.GameModeText.text = ModTranslation.getString("torFreePlay");
+            }
+            else if (TORMapOptions.gameMode == CustomGamemodes.Zombie)
+            {
+                __instance.GameModeText.text = ModTranslation.getString("torZombie");
             }
         }
     }

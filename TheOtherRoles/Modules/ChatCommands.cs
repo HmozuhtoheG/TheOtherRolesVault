@@ -85,6 +85,10 @@ namespace TheOtherRoles.Modules {
                         {
                             gameMode = CustomGamemodes.HideNSeek;
                         }
+                        else if (gm.StartsWith("zombie") || gm.StartsWith("zb")) // /gm zombie -> zombie infection
+                        {
+                            gameMode = CustomGamemodes.Zombie;
+                        }
                         // else its classic!
 
                         if (AmongUsClient.Instance.AmHost)
@@ -126,6 +130,20 @@ namespace TheOtherRoles.Modules {
                     if (target != null) {
                         PlayerControl.LocalPlayer.transform.position = target.transform.position;
                         handled = true;
+                    }
+                }
+
+                if (text.ToLower().StartsWith("/car ") && MeetingHud.Instance != null)
+                {
+                    string idStr = text.Substring(5).Trim();
+                    if (byte.TryParse(idStr, out byte targetIndex))
+                    {
+                        PlayerControl target = PlayerControl.AllPlayerControls.ToArray().FirstOrDefault(x => x.PlayerId == targetIndex);
+                        if (target != null && !target.Data.IsDead)
+                        {
+                            Racer.TransferDriver(PlayerControl.LocalPlayer, target);
+                            handled = true;
+                        }
                     }
                 }
 

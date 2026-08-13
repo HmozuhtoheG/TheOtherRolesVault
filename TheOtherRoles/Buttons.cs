@@ -129,6 +129,11 @@ namespace TheOtherRoles
         public static CustomButton freePlaySuicideButton;
         public static CustomButton freePlayReviveButton;
         public static CustomButton eventKickButton;
+        public static CustomButton blockmanPlaceButton;
+        public static CustomButton blockmanDashButton;
+        public static TMPro.TMP_Text blockmanEnergyText;
+        public static CustomButton blockmanBreakButton;
+        public static CustomButton werewolfMarkButton;
         //public static CustomButton trapperButton;
         //public static CustomButton bomberButton;
         //public static CustomButton defuseButton;
@@ -247,9 +252,12 @@ namespace TheOtherRoles
             witchSpellButton.MaxTimer = Witch.cooldown;
             assassinButton.MaxTimer = Assassin.cooldown;
             thiefKillButton.MaxTimer = Thief.cooldown;
+            blockmanPlaceButton.MaxTimer = 0f;
+            blockmanDashButton.MaxTimer = Blockman.dashCooldown;
             mayorMeetingButton.MaxTimer = GameManager.Instance.LogicOptions.GetEmergencyCooldown();
             yandereButton.MaxTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
             ninjaButton.MaxTimer = Ninja.stealthCooldown;
+            werewolfMarkButton.MaxTimer = Werewolf.markCooldown;
             serialKillerButton.MaxTimer = SerialKiller.suicideTimer;
             archaeologistDetectButton.MaxTimer = Archaeologist.cooldown;
             archaeologistExcavateButton.MaxTimer = Archaeologist.cooldown;
@@ -610,6 +618,41 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.Q
             );
+
+            werewolfMarkButton = new CustomButton(
+                () => { Werewolf.local?.TryStartMarking(); },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Werewolf) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = Werewolf.local;
+                    return role != null && PlayerControl.LocalPlayer.CanMove && role.markCooldownTimer <= 0f && !role.isMarking;
+                },
+                () => { werewolfMarkButton.Timer = werewolfMarkButton.MaxTimer; },
+                Werewolf.getMarkButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("WerewolfMarkText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+
+            blockmanBreakButton =  new CustomButton(
+                () => { Blockman.TryUniversalBreak(); },
+                () => { return Blockman.players.Count > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var (owner, block) = Blockman.FindNearestUnsettledBlock(PlayerControl.LocalPlayer.transform.position, 1.8f);
+                    return PlayerControl.LocalPlayer.CanMove && owner != null && block != null;
+                },
+                () => { blockmanBreakButton.Timer = 0f; },
+                Blockman.getBreakButtonSprite(),
+                CustomButton.ButtonPositions.lowerRowCenter,
+                __instance,
+                KeyCode.G,
+                buttonText: ModTranslation.getString("BlockmanBreakText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+            blockmanBreakButton.MaxTimer = 0.5f;
 
             // Deputy Handcuff
             deputyHandcuffButton = new CustomButton(
@@ -2980,6 +3023,38 @@ namespace TheOtherRoles
             {
                 effectCancellable = true
             };
+
+            blockmanPlaceButton = new CustomButton(
+               () => { Blockman.local.TogglePlaceBlock(); },
+               () => { return PlayerControl.LocalPlayer.isRole(RoleId.Blockman) && !PlayerControl.LocalPlayer.Data.IsDead; },
+               () =>
+               {
+                   var role = Blockman.local;
+                   if (blockmanEnergyText != null && role != null)
+                       Blockman.UpdateEnergyText(blockmanEnergyText);
+                   return role != null && PlayerControl.LocalPlayer.CanMove;
+               },
+               () => { },
+               Blockman.getButtonSprite(),
+               CustomButton.ButtonPositions.lowerRowRight,
+               __instance,
+               KeyCode.F,
+               buttonText: ModTranslation.getString("BlockmanPlaceText"),
+               abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+
+            blockmanDashButton = new CustomButton(
+                () => { Blockman.local.TryDash(); },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Blockman) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { var role = Blockman.local; return role != null && PlayerControl.LocalPlayer.CanMove && role.currentEnergy >= Blockman.dashCost; },
+                () => { blockmanDashButton.Timer = blockmanDashButton.MaxTimer; },
+                Blockman.getDashButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.Q,
+                buttonText: ModTranslation.getString("BlockmanDashText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
 
             noisemakerButton = new CustomButton(
                 () =>

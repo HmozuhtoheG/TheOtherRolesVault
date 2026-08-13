@@ -14,6 +14,19 @@ namespace TheOtherRoles.Patches {
     class HudManagerUpdatePatch
     {
         private static Dictionary<byte, (string name, Color color)> TagColorDict = new();
+
+        static void racerBoardExitHotkey() {
+            if (!Input.GetKeyDown(KeyCode.Space)) return;
+            var local = PlayerControl.LocalPlayer;
+            if (local == null || local.Data == null || local.Data.IsDead || !local.CanMove) return;
+            ChatController cc = FastDestroyableSingleton<HudManager>.Instance.Chat;
+            if (cc != null && cc.IsOpenOrOpening) return;
+            if (MeetingHud.Instance || ExileController.Instance) return;
+
+            if (Racer.getCarByAnyOccupant(local) != null) Racer.TryExitCar(local);
+            else Racer.TryBoardNearestCar(local);
+        }
+
         static void resetNameTagsAndColors() {
             var localPlayer = PlayerControl.LocalPlayer;
             var myData = PlayerControl.LocalPlayer.Data;
@@ -462,6 +475,7 @@ namespace TheOtherRoles.Patches {
             foreach (var assassin in Assassin.players)
                 assassin.invisibleTimer -= dt;
             HideNSeek.timer -= dt;
+            Zombie.timer -= dt;
             foreach (byte key in Deputy.handcuffedKnows.Keys)
                 Deputy.handcuffedKnows[key] -= dt;
         }
@@ -544,7 +558,7 @@ namespace TheOtherRoles.Patches {
         }
 
         static void updateSabotageButton(HudManager __instance) {
-            if (MeetingHud.Instance || TORMapOptions.gameMode == CustomGamemodes.HideNSeek || !PlayerControl.LocalPlayer.roleCanUseSabotage()) __instance.SabotageButton.Hide();
+            if (MeetingHud.Instance || TORMapOptions.gameMode == CustomGamemodes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.Zombie || !PlayerControl.LocalPlayer.roleCanUseSabotage()) __instance.SabotageButton.Hide();
             else if (PlayerControl.LocalPlayer.roleCanUseSabotage() && !__instance.SabotageButton.isActiveAndEnabled) __instance.SabotageButton.Show();
 
             if (Helpers.ShowButtons) {
@@ -581,6 +595,7 @@ namespace TheOtherRoles.Patches {
             EventUtility.Update();
 
             CustomButton.HudUpdate();
+            racerBoardExitHotkey();
             resetNameTagsAndColors();
             setNameColors();
             setNameTags();

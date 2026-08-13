@@ -27,7 +27,8 @@ namespace TheOtherRoles {
             Modifier,
             Guesser,
             HideNSeekMain,
-            HideNSeekRoles
+            HideNSeekRoles,
+            ZombieMain
         }
 
         public static List<CustomOption> options = new();
@@ -810,6 +811,11 @@ namespace TheOtherRoles {
                 // create HNS Role settings
                 createCustomButton(__instance, next++, "HideNSeekRoles", ModTranslation.getString("hideNSeekRoles"), CustomOptionType.HideNSeekRoles);
             }
+            else if (TORMapOptions.gameMode == CustomGamemodes.Zombie)
+            {
+                // create Zombie settings
+                createCustomButton(__instance, next++, "ZombieMain", ModTranslation.getString("zombieMain"), CustomOptionType.ZombieMain);
+            }
         }
     }
 
@@ -844,7 +850,11 @@ namespace TheOtherRoles {
         {
             MyPicker = gameObject.GetComponent<CreateOptionsPicker>();
 
-            MyPicker.transform.FindChild("Game Mode").gameObject.SetActive(false);
+            // This screen's own "Game Mode" child (if any) isn't what actually displays the mode on
+            // the Create Game screen - that's driven by the separate GameModeText object handled in
+            // Patches/CredentialsPatch.cs, which is where the mode cycler is now wired up instead.
+            var gameModeSection = MyPicker.transform.FindChild("Game Mode");
+            if (gameModeSection != null) gameModeSection.gameObject.SetActive(false);
 
             var impostorsRoot = MyPicker.transform.FindChild("Impostors");
             if (impostorsRoot)
@@ -1395,6 +1405,12 @@ namespace TheOtherRoles {
                 createCustomButton(__instance, next++, "HideNSeekRoles", ModTranslation.getString("hideNSeekRoles"));
                 createGameOptionsMenu(__instance, CustomOptionType.HideNSeekRoles, "HideNSeekRoles");
             }
+            else if (TORMapOptions.gameMode == CustomGamemodes.Zombie)
+            {
+                // create Zombie settings
+                createCustomButton(__instance, next++, "ZombieMain", ModTranslation.getString("zombieMain"));
+                createGameOptionsMenu(__instance, CustomOptionType.ZombieMain, "ZombieMain");
+            }
         }
     }
 
@@ -1539,6 +1555,8 @@ namespace TheOtherRoles {
                 options = options.Where(x => !(x.type == CustomOption.CustomOptionType.Guesser || x == CustomOptionHolder.crewmateRolesFill || x.id == 7007));
             else if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek)
                 options = options.Where(x => (x.type == CustomOption.CustomOptionType.HideNSeekMain || x.type == CustomOption.CustomOptionType.HideNSeekRoles));
+            else if (TORMapOptions.gameMode == CustomGamemodes.Zombie)
+                options = options.Where(x => x.type == CustomOption.CustomOptionType.ZombieMain);
             if (TORMapOptions.gameMode != CustomGamemodes.FreePlay)
                 options = options.Where(x => x.id != 10429);
             foreach (var option in options) {
@@ -1566,6 +1584,7 @@ namespace TheOtherRoles {
 
             foreach (CustomOption option in options) {
                 if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek && option.type != CustomOptionType.HideNSeekMain && option.type != CustomOptionType.HideNSeekRoles) continue;
+                if (TORMapOptions.gameMode == CustomGamemodes.Zombie && option.type != CustomOptionType.ZombieMain) continue;
                 if (option.parent != null) {
                     bool isIrrelevant = !ShouldBeEnabled(option);
 
@@ -1672,6 +1691,8 @@ namespace TheOtherRoles {
             string hudString = "";
             if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) {
                 hudString += buildOptionsOfType(CustomOptionType.HideNSeekMain, false) + buildOptionsOfType(CustomOptionType.HideNSeekRoles, false);
+            } else if (TORMapOptions.gameMode == CustomGamemodes.Zombie) {
+                hudString += buildOptionsOfType(CustomOptionType.ZombieMain, false);
             } else {
                 hudString += buildOptionsOfType(CustomOptionType.General, false) + buildRoleOptions() + buildOptionsOfType(CustomOptionType.Impostor, false) +
                     buildOptionsOfType(CustomOptionType.Neutral, false) + buildOptionsOfType(CustomOptionType.Crewmate, false) +

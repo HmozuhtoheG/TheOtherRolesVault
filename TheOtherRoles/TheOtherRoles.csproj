@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Version>1.0.0</Version>
-        <Description>TheOtherRolesVersion</Description>
+        <Description>TheOtherRolesVault</Description>
         <Authors>Keno</Authors>
 		<LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -47,7 +47,7 @@
     </Target>
 		
     <Target Name="CopyCustomContent" AfterTargets="AfterBuild" Condition="Exists('$(AmongUsLatest)/BepInEx/plugins/')">
-        <Message Text="Second occurrence" />
-        <Copy SourceFiles="$(ProjectDir)\bin\$(Configuration)\net6.0\TheOtherRolesVersion.dll" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
+        <Message Text="Copying $(TargetFileName) to $(AmongUsLatest)/BepInEx/plugins/" Importance="high" />
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(AmongUsLatest)/BepInEx/plugins/" />
     </Target>
 </Project>

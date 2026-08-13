@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TheOtherRoles.Roles;
 using UnityEngine;
+using static TheOtherRoles.CustomOption;
 using Types = TheOtherRoles.CustomOption.CustomOptionType;
 
 namespace TheOtherRoles {
@@ -21,6 +22,15 @@ namespace TheOtherRoles {
         public static CustomOption impostorRolesCountMax;
         public static CustomOption modifiersCountMin;
         public static CustomOption modifiersCountMax;
+        public static CustomOption neverEndGame;
+
+        public static CustomRoleOption werewolfSpawnRate;
+        public static CustomOption werewolfMarkCooldown;
+        public static CustomOption werewolfMarkDuration;
+        public static CustomOption werewolfMarkRange;
+        public static CustomOption werewolfRampageSpeedBoost;
+        public static CustomOption werewolfRampageKillCooldownReduction;
+        public static CustomOption werewolfMarkChannelTime;
 
         public static CustomOption isDraftMode;
         public static CustomOption draftModeAmountOfChoices;
@@ -479,6 +489,18 @@ namespace TheOtherRoles {
         public static CustomOption doomsayerIndicator;
         public static CustomOption doomsayerMaxMisses;
 
+        public static CustomRoleOption blockmanSpawnRate;
+        public static CustomOption blockmanMaxEnergy;
+        public static CustomOption blockmanEnergyRegenRate;
+        public static CustomOption blockmanPlaceCost;
+        public static CustomOption blockmanRemoveRefund;
+        public static CustomOption blockmanMaxBlocks;
+        public static CustomOption blockmanBlockLifetime;
+        public static CustomOption blockmanSettleTime;
+        public static CustomOption blockmanDashCost;
+        public static CustomOption blockmanDashDistance;
+        public static CustomOption blockmanDashCooldown;
+
         public static CustomRoleOption yandereSpawnRate;
         public static CustomOption yandereReducedCooldown;
         public static CustomOption yandereCooldownPunishment;
@@ -555,6 +577,11 @@ namespace TheOtherRoles {
         public static CustomOption mimicIfOneDiesBothDie;
         public static CustomOption mimicHasOneVote;
         public static CustomOption mimicSpecialCooldown;
+
+        public static CustomOption modifierRacer;
+        public static CustomOption modifierRacerQuantity;
+        public static CustomOption modifierRacerSpeedBoost;
+        public static CustomOption modifierRacerMeetingsUntilDespawn;
 
         public static CustomRoleOption bomberSpawnRate;
         public static CustomOption bomberCooldown;
@@ -718,6 +745,11 @@ namespace TheOtherRoles {
         public static CustomOption huntedShieldRewindTime;
         public static CustomOption huntedShieldNumber;
 
+        // Zombie Gamemode
+        public static CustomOption zombieInitialCount;
+        public static CustomOption zombieTimer;
+        public static CustomOption zombieTaskWin;
+
         internal static Dictionary<byte, byte[]> blockedRolePairings = new();
 
         public static string cs(Color c, string s) {
@@ -752,6 +784,7 @@ namespace TheOtherRoles {
             modifiersCountMin = CustomOption.Create(306, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "modifiersCountMin"), 24f, 0f, 24f, 1f, format: "unitPlayers");
             modifiersCountMax = CustomOption.Create(307, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "modifiersCountMax"), 24f, 0f, 24f, 1f, format: "unitPlayers");
             crewmateRolesFill = CustomOption.Create(308, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "crewmateRolesFill"), false);
+            neverEndGame = CustomOption.Create(610, Types.General, cs(new Color(204f / 255f, 204f / 255f, 0, 1f), "neverEndGame"), false);
 
             isDraftMode = CustomOption.Create(600, Types.General, cs(Color.yellow, "enableDraftMode"), false, null, true, heading: "headingRoleDraft");
             draftModeAmountOfChoices = CustomOption.Create(601, Types.General, cs(Color.yellow, "draftModeAmountOfChoices"), 3f, 2f, 6f, 1f, isDraftMode, false, format: "unitScrews");
@@ -831,6 +864,14 @@ namespace TheOtherRoles {
             ninjaSpeedBonus = CustomOption.Create(5055, Types.Impostor, "ninjaSpeedBonus", 1.25f, 0.5f, 2f, 0.25f, ninjaSpawnRate, false, "unitTimes");
             ninjaCanBeTargeted = CustomOption.Create(5056, Types.Impostor, "ninjaCanBeTargeted", true, ninjaSpawnRate);
             ninjaCanVent = CustomOption.Create(5057, Types.Impostor, "ninjaCanVent", false, ninjaSpawnRate);
+
+            werewolfSpawnRate = new CustomRoleOption(9191, Types.Impostor, "werewolf", Werewolf.color, 1);
+            werewolfMarkCooldown = CustomOption.Create(9192, Types.Impostor, "werewolfMarkCooldown", 15f, 5f, 30f, 1f, werewolfSpawnRate, false, "unitSeconds");
+            werewolfMarkDuration = CustomOption.Create(9193, Types.Impostor, "werewolfMarkDuration", 25f, 15f, 40f, 1f, werewolfSpawnRate, false, "unitSeconds");
+            werewolfMarkRange = CustomOption.Create(9194, Types.Impostor, "werewolfMarkRange", 3f, 1f, 6f, 0.5f, werewolfSpawnRate, false, "unitMeters");
+            werewolfMarkChannelTime = CustomOption.Create(9195, Types.Impostor, "werewolfMarkChannelTime", 5f, 2f, 15f, 1f, werewolfSpawnRate, false, "unitSeconds");
+            werewolfRampageSpeedBoost = CustomOption.Create(9196, Types.Impostor, "werewolfRampageSpeedBoost", 1f, 0f, 3f, 1f, werewolfSpawnRate, false, "unitTimes");
+            werewolfRampageKillCooldownReduction = CustomOption.Create(9197, Types.Impostor, "werewolfRampageKillCooldownReduction", 20f, 0f, 90f, 10f, werewolfSpawnRate, false, "unitPercent");
 
             serialKillerSpawnRate = new CustomRoleOption(4010, Types.Impostor, "serialKiller", SerialKiller.color);
             serialKillerKillCooldown = CustomOption.Create(4011, Types.Impostor, "serialKillerKillCooldown", 15f, 2.5f, 60f, 2.5f, serialKillerSpawnRate, false, "unitSeconds");
@@ -986,17 +1027,16 @@ namespace TheOtherRoles {
             pursuerBlanksNumber = CustomOption.Create(357, Types.Neutral, "pursuerBlanksNumber", 5f, 1f, 20f, 1f, lawyerSpawnRate, false, "unitScrews");
 
             energyAmplifierSpawnRate = new CustomRoleOption(6100, Types.Crewmate, "energyAmplifier", Energyamplifier.color);
-            energyAmplifierCooldown = CustomOption.Create(6101, Types.Crewmate, "energyAmplifierCooldown", 30f, 10f, 60f, 2.5f, energyAmplifierSpawnRate, false, "unitSeconds");
             energyAmplifierDuration = CustomOption.Create(6102, Types.Crewmate, "energyAmplifierDuration", 10f, 5f, 30f, 1f, energyAmplifierSpawnRate, false, "unitSeconds");
             energyAmplifierRadius = CustomOption.Create(6103, Types.Crewmate, "energyAmplifierRadius", 3f, 1f, 6f, 0.5f, energyAmplifierSpawnRate, false, "unitMeters");
-            energyAmplifierSpeedBoost = CustomOption.Create(6104, Types.Crewmate, "energyAmplifierSpeedBoost", 0.5f, 0.1f, 1.5f, 0.1f, energyAmplifierSpawnRate, false, "unitTimes");
+            energyAmplifierSpeedBoost = CustomOption.Create(6104, Types.Crewmate, "energyAmplifierSpeedBoost", 0.25f, 0.05f, 1f, 0.05f, energyAmplifierSpawnRate, false, "unitTimes");
             energyAmplifierKillCooldownReduction = CustomOption.Create(6105, Types.Crewmate, "energyAmplifierKillCooldownReduction", 0.3f, 0f, 0.9f, 0.05f, energyAmplifierSpawnRate, false, "unitPercent");
             energyAmplifierShieldDuration = CustomOption.Create(6106, Types.Crewmate, "energyAmplifierShieldDuration", 5f, 0f, 15f, 1f, energyAmplifierSpawnRate, false, "unitSeconds");
-            energyAmplifierMaxEnergy = CustomOption.Create(6107, Types.Crewmate, "energyAmplifierMaxEnergy", 100f, 50f, 200f, 10f, energyAmplifierSpawnRate, false, "unitPlayers");
-            energyAmplifierActivationCost = CustomOption.Create(6108, Types.Crewmate, "energyAmplifierActivationCost", 50f, 10f, 150f, 10f, energyAmplifierSpawnRate, false, "unitPlayers");
             energyAmplifierMaxEnergy = CustomOption.Create(6107, Types.Crewmate, "energyAmplifierMaxEnergy", 100f, 50f, 200f, 10f, energyAmplifierSpawnRate, false, "");
             energyAmplifierActivationCost = CustomOption.Create(6108, Types.Crewmate, "energyAmplifierActivationCost", 50f, 10f, 150f, 10f, energyAmplifierSpawnRate, false, "");
-            energyAmplifierEnergyRegenRate = CustomOption.Create(6109, Types.Crewmate, "energyAmplifierEnergyRegenRate", 4f, 1f, 10f, 0.1f, energyAmplifierSpawnRate, false, "");
+            energyAmplifierEnergyRegenRate = CustomOption.Create(6109, Types.Crewmate, "energyAmplifierEnergyRegenRate", 4f, 0.1f, 10f, 0.1f, energyAmplifierSpawnRate, false, "");
+            energyAmplifierExtraSpeedPerPlayer = CustomOption.Create(6110, Types.Crewmate, "energyAmplifierExtraSpeedPerPlayer", 0.1f, 0f, 0.5f, 0.05f, energyAmplifierSpawnRate, false, "unitTimes");
+            energyAmplifierMaxSpeedBoost = CustomOption.Create(6111, Types.Crewmate, "energyAmplifierMaxSpeedBoost", 1f, 0.5f, 2f, 0.1f, energyAmplifierSpawnRate, false, "unitTimes");
 
 
             shifterSpawnRate = new CustomRoleOption(1100, Types.Neutral, "shifter", Shifter.color, 1);
@@ -1086,6 +1126,18 @@ namespace TheOtherRoles {
             foxStealthDuration = CustomOption.Create(917, Types.Neutral, "foxStealthDuration", 15f, 1f, 30f, 1f, foxSpawnRate, false, "unitSeconds");
             foxCanCreateImmoralist = CustomOption.Create(918, Types.Neutral, "foxCanCreateImmoralist", true, foxSpawnRate);
             foxNumRepairs = CustomOption.Create(920, Types.Neutral, "foxNumRepair", 1f, 0f, 10f, 1f, foxSpawnRate, false, "unitShots");
+
+            blockmanSpawnRate = new CustomRoleOption(7100, Types.Neutral, "blockman", Blockman.color);
+            blockmanMaxEnergy = CustomOption.Create(7101, Types.Neutral, "blockmanMaxEnergy", 100f, 50f, 200f, 10f, blockmanSpawnRate, false, "");
+            blockmanEnergyRegenRate = CustomOption.Create(7102, Types.Neutral, "blockmanEnergyRegenRate", 3f, 0.5f, 10f, 0.5f, blockmanSpawnRate, false, "");
+            blockmanPlaceCost = CustomOption.Create(7103, Types.Neutral, "blockmanPlaceCost", 25f, 10f, 50f, 5f, blockmanSpawnRate, false, "");
+            blockmanRemoveRefund = CustomOption.Create(7104, Types.Neutral, "blockmanRemoveRefund", 10f, 0f, 25f, 5f, blockmanSpawnRate, false, "");
+            blockmanMaxBlocks = CustomOption.Create(7105, Types.Neutral, "blockmanMaxBlocks", 5f, 2f, 10f, 1f, blockmanSpawnRate, false, "");
+            blockmanBlockLifetime = CustomOption.Create(7106, Types.Neutral, "blockmanBlockLifetime", 45f, 15f, 90f, 5f, blockmanSpawnRate, false, "unitSeconds");
+            blockmanSettleTime = CustomOption.Create(7107, Types.Neutral, "blockmanSettleTime", 1.5f, 0.5f, 5f, 0.5f, blockmanSpawnRate, false, "unitSeconds");
+            blockmanDashCost = CustomOption.Create(7108, Types.Neutral, "blockmanDashCost", 40f, 10f, 100f, 10f, blockmanSpawnRate, false, "");
+            blockmanDashDistance = CustomOption.Create(7109, Types.Neutral, "blockmanDashDistance", 3f, 1f, 6f, 0.5f, blockmanSpawnRate, false, "unitMeters");
+            blockmanDashCooldown = CustomOption.Create(7110, Types.Neutral, "blockmanDashCooldown", 15f, 5f, 40f, 5f, blockmanSpawnRate, false, "unitSeconds");
 
             mayorSpawnRate = new CustomRoleOption(80, Types.Crewmate, "mayor", Mayor.color);
             mayorNumVotes = CustomOption.Create(81, Types.Crewmate, "mayorNumVotes", 2f, 2f, 24f, 1f, mayorSpawnRate, false, "unitVotes");
@@ -1317,6 +1369,11 @@ namespace TheOtherRoles {
             modifierLoverBothDie = CustomOption.Create(1042, Types.Modifier, "loversBothDie", true, modifierLover);
             modifierLoverEnableChat = CustomOption.Create(1043, Types.Modifier, "loversEnableChat", true, modifierLover);
 
+            modifierRacer = CustomOption.Create(9200, Types.Modifier, cs(Color.yellow, "racer"), rates, null, true, color: Color.yellow);
+            modifierRacerQuantity = CustomOption.Create(9201, Types.Modifier, cs(Color.yellow, "racerQuantity"), ratesModifier, modifierRacer);
+            modifierRacerSpeedBoost = CustomOption.Create(9202, Types.Modifier, "modifierRacerSpeedBoost", 0.3f, 0.1f, 1f, 0.1f, modifierRacer, false, "unitTimes");
+            modifierRacerMeetingsUntilDespawn = CustomOption.Create(9203, Types.Modifier, "modifierRacerMeetingsUntilDespawn", 3f, 1f, 10f, 1f, modifierRacer, false, "unitMeetings");
+
             modifierSunglasses = CustomOption.Create(1050, Types.Modifier, cs(Color.yellow, "sunglasses"), rates, null, true, color: Color.yellow);
             modifierSunglassesQuantity = CustomOption.Create(1051, Types.Modifier, cs(Color.yellow, "sunglassesQuantity"), ratesModifier, modifierSunglasses);
             modifierSunglassesVision = CustomOption.Create(1052, Types.Modifier, "sunglassesVision", ["-10%", "-20%", "-30%", "-40%", "-50%"], modifierSunglasses);
@@ -1420,6 +1477,10 @@ namespace TheOtherRoles {
             huntedShieldDuration = CustomOption.Create(3016, Types.HideNSeekRoles, cs(Color.gray, "huntedShieldDuration"), 5f, 1f, 60f, 1f, format: "unitSeconds");
             huntedShieldRewindTime = CustomOption.Create(3018, Types.HideNSeekRoles, cs(Color.gray, "huntedShieldRewindTime"), 3f, 1f, 10f, 1f, format: "unitSeconds");
             huntedShieldNumber = CustomOption.Create(3026, Types.HideNSeekRoles, cs(Color.gray, "huntedShieldNumber"), 3f, 1f, 15f, 1f, format: "unitScrews");
+
+            zombieInitialCount = CustomOption.Create(11000, Types.ZombieMain, cs(Color.yellow, "zombieInitialCount"), 1f, 1f, 3f, 1f, format: "unitPlayers");
+            zombieTimer = CustomOption.Create(11001, Types.ZombieMain, cs(Color.yellow, "zombieTimer"), 5f, 1f, 30f, 1f);
+            zombieTaskWin = CustomOption.Create(11002, Types.ZombieMain, cs(Color.yellow, "zombieTaskWin"), false);
 
             // Other options
             maxNumberOfMeetings = CustomOption.Create(3, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, null, true, "unitShots", heading: "headingGameplay");

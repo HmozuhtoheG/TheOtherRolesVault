@@ -79,10 +79,22 @@ namespace TheOtherRoles.Modules {
                     template.OnClick();
                 }));
 
+                var ZombieButton = GameObject.Instantiate<Transform>(gameButton, gameButton.parent);
+                ZombieButton.transform.localPosition += new Vector3(5.1f, -0.5f);
+                var ZombieButtonText = ZombieButton.GetComponentInChildren<TMPro.TextMeshPro>();
+                var ZombieButtonPassiveButton = ZombieButton.GetComponentInChildren<PassiveButton>();
+
+                ZombieButtonPassiveButton.OnClick = new Button.ButtonClickedEvent();
+                ZombieButtonPassiveButton.OnClick.AddListener((System.Action)(() => {
+                    TORMapOptions.gameMode = CustomGamemodes.Zombie;
+                    template.OnClick();
+                }));
+
                 template.StartCoroutine(Effects.Lerp(0.1f, new System.Action<float>((p) => {
                     guesserButtonText.SetText(ModTranslation.getString("torGuesser"));
                     HideNSeekButtonText.SetText(ModTranslation.getString("torHideNSeek"));
                     FreePlaytButtonText.SetText(ModTranslation.getString("torFreePlay"));
+                    ZombieButtonText.SetText(ModTranslation.getString("torZombie"));
                  })));
             }));
         }
@@ -94,7 +106,7 @@ namespace TheOtherRoles.Modules {
         public static void Postfix(VersionShower __instance)
         {
             __instance.text.text = $"Among Us v{DestroyableSingleton<ReferenceDataManager>.Instance.Refdata.userFacingVersion} - " +
-           $"<color=#33FFFF>TheOtherRolesVersion</color> <color=#FCCE03FF>v{TheOtherRolesPlugin.VersionString + TheOtherRolesPlugin.SubVersionString + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</color>";
+           $"<color=#33FFFF>TheOtherRolesVault</color> <color=#FCCE03FF>v{TheOtherRolesPlugin.VersionString + TheOtherRolesPlugin.SubVersionString + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</color>";
         }
     }
 
@@ -106,9 +118,6 @@ namespace TheOtherRoles.Modules {
         public static Sprite discordSprite;
         public static GameObject modScreen = null;
         public static GameObject aboutScreen = null;
-        public static Dictionary<string, string> contributors = new()
-        { { "Imp11", "mainMenuDeveloper" }, { "Amongus", "mainMenuDeveloper" },  { "Fangkuai", "mainMenuArtist" },
-            { "Elinmei", "mainMenuDeveloper" }, { "Yuunozikkyou" , "mainMenuTranslator"}, { "TAIK", "mainMenuTranslator"} };
 
         public static void Postfix(MainMenuManager __instance)
         {
@@ -234,76 +243,110 @@ namespace TheOtherRoles.Modules {
             });
 
             foreach (var asset in modScreen.GetComponentsInChildren<AspectScaledAsset>()) scalerList.objectsToScale.Add(asset);
-/*
-            var discordRenderer = Helpers.CreateObject<SpriteRenderer>("DiscordButton", __instance.transform, Vector3.zero);
-            discordRenderer.gameObject.SetAsUIAspectContent(AspectPosition.EdgeAlignments.RightBottom, new(0.34f, 1f, -6f));
-            discordRenderer.sprite = discordSprite;
-            var discordButton = discordRenderer.gameObject.SetUpButton(true, discordRenderer);
-            discordButton.OnMouseOver.AddListener((Action)(() => TORGUIManager.Instance.SetHelpContext(discordButton, ModTranslation.getString("mainMenuDiscordText"))));
-            discordButton.OnMouseOut.AddListener((Action)(() => TORGUIManager.Instance.HideHelpContextIf(discordButton)));
-            discordButton.OnClick.AddListener((Action)(() => Application.OpenURL("https://discord.gg/2JJzweqMHc")));
-            discordButton.gameObject.AddComponent<CircleCollider2D>().radius = 0.25f;
-*/
+
             void createAboutScreen()
             {
                 aboutScreen = Helpers.CreateObject("About", __instance.accountButtons.transform.parent, new Vector3(0, 0, -1f));
                 aboutScreen.transform.localScale = modScreen!.transform.localScale;
+
+                var blackTex = new Texture2D(1, 1);
+                blackTex.SetPixel(0, 0, Color.black);
+                blackTex.Apply();
+
+                const float ppu = 100f;
+                var blackSprite = Sprite.Create(blackTex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), ppu);
+
+                var blackBgObj = new GameObject("BlackBackground");
+                blackBgObj.transform.SetParent(aboutScreen.transform, false); 
+                blackBgObj.layer = aboutScreen.layer; 
+                blackBgObj.transform.localPosition = new Vector3(-0.1f, 0f, 0.1f);
+
+                var blackBgRenderer = blackBgObj.AddComponent<SpriteRenderer>();
+                blackBgRenderer.sprite = blackSprite;
+                blackBgRenderer.drawMode = SpriteDrawMode.Simple; 
+                blackBgRenderer.color = Color.black; 
+                blackBgRenderer.sortingOrder = -1;
+
+                float targetWidth = 6.2f;
+                float targetHeight = 4.1f;
+                float nativeSize = 1f / ppu; 
+                blackBgObj.transform.localScale = new Vector3(targetWidth / nativeSize, targetHeight / nativeSize, 1f);
+
                 var screen = MetaScreen.GenerateScreen(new Vector2(6.2f, 4.1f), aboutScreen.transform, new Vector3(-0.1f, 0, 0f), false, false, false);
-                TextAttribute detailAttribute = new(TextAttribute.BoldAttr)
-                {
-                    FontMaterial = VanillaAsset.StandardMaskedFontMaterial,
-                    Size = new Vector2(5.8f, 0.4f),
-                    Alignment = TMPro.TextAlignmentOptions.TopLeft,
-                    FontSize = 2f,
-                    FontMaxSize = 2f,
-                    FontMinSize = 1.7f
-                };
-                TextAttribute descriptionAttribute = new(TextAttribute.ContentAttr)
-                {
-                    FontMaterial = VanillaAsset.StandardMaskedFontMaterial,
-                    Size = new Vector2(5.8f, 0.4f),
-                    Alignment = TMPro.TextAlignmentOptions.TopLeft,
-                    FontSize = 1.7f,
-                    FontMaxSize = 1.7f,
-                    FontMinSize = 1.3f
-                };
+
                 TextAttribute titleAttribute = new(TextAttribute.NormalAttr)
                 {
                     FontMaterial = VanillaAsset.StandardMaskedFontMaterial,
-                    Size = new Vector2(3.4f, 0.3f),
+                    Size = new Vector2(5.8f, 0.4f),
                     Alignment = TextAlignmentOptions.Center,
-                    FontSize = 4f,
-                    FontMaxSize = 4f,
-                    FontMinSize = 3.5f
+                    FontSize = 3.5f,
+                    FontMaxSize = 3.5f,
+                    FontMinSize = 2.5f
+                };
+
+                TextAttribute nameAttribute = new(TextAttribute.ContentAttr)
+                {
+                    FontMaterial = VanillaAsset.StandardMaskedFontMaterial,
+                    Size = new Vector2(5.8f, 0.3f),
+                    Alignment = TextAlignmentOptions.Center,
+                    FontSize = 2f,
+                    FontMaxSize = 2f,
+                    FontMinSize = 1.5f
+                };
+
+                TextAttribute hintAttribute = new(TextAttribute.ContentAttr)
+                {
+                    FontMaterial = VanillaAsset.StandardMaskedFontMaterial,
+                    Size = new Vector2(5.8f, 0.2f),
+                    Alignment = TextAlignmentOptions.Center,
+                    FontSize = 1.2f,
+                    FontMaxSize = 1.2f,
+                    FontMinSize = 0.8f
                 };
 
                 var inner = new MetaContextOld();
-                inner.Append(new MetaContextOld.Text(titleAttribute) { RawText = ModTranslation.getString("modAbout").ToUpper(), Alignment = IMetaContextOld.AlignmentOption.Center });
-                inner.Append(new MetaContextOld.VerticalMargin(0.5f));
-                foreach (var contributor in contributors)
+
+                inner.Append(new MetaContextOld.Text(titleAttribute)
                 {
-                    inner.Append(new CombinedContextOld(0.5f,
-                    new MetaContextOld.Image(Helpers.loadSpriteFromResources($"TheOtherRoles.Resources.Contributors.{contributor.Key}.png", 50f)) { Width = 0.7f },
-                    new MetaContextOld.Text(detailAttribute) { RawText = $"{ModTranslation.getString(contributor.Value)} - {contributor.Key}" })
-                    { Alignment = IMetaContextOld.AlignmentOption.Left });
-                    inner.Append(new MetaContextOld.VerticalMargin(0.3f));
-                    var lines = Helpers.removeLineFeed(ModTranslation.getString($"mainMenu{contributor.Key}AboutSection"));
-                    foreach (var l in lines)
+                    RawText = ModTranslation.getString("aboutCreditsTitle"),
+                    Alignment = IMetaContextOld.AlignmentOption.Center
+                });
+                inner.Append(new MetaContextOld.VerticalMargin(0.3f));
+
+                string namesText = ModTranslation.getString("aboutContributorsList");
+                string[] names = namesText.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string name in names)
+                {
+                    string trimmedName = name.Trim();
+                    if (!string.IsNullOrEmpty(trimmedName))
                     {
-                        inner.Append(new MetaContextOld.Text(descriptionAttribute) { RawText = l });
+                        inner.Append(new MetaContextOld.Text(nameAttribute)
+                        {
+                            RawText = trimmedName,
+                            Alignment = IMetaContextOld.AlignmentOption.Center
+                        });
+                        inner.Append(new MetaContextOld.VerticalMargin(0.05f));
                     }
-                    inner.Append(new CombinedContextOld(0.5f,
-                        new MetaContextOld.VerticalMargin(0.3f)
-                        ));
                 }
-                screen.SetContext(new MetaContextOld.ScrollView(new Vector2(6.2f, 4.1f), inner, true) { Alignment = IMetaContextOld.AlignmentOption.Center });
+
+                inner.Append(new MetaContextOld.VerticalMargin(0.2f));
+                inner.Append(new MetaContextOld.Text(hintAttribute)
+                {
+                    RawText = ModTranslation.getString("aboutScrollHint"),
+                    Alignment = IMetaContextOld.AlignmentOption.Center
+                });
+
+                screen.SetContext(new MetaContextOld.ScrollView(new Vector2(6.2f, 4.1f), inner, true)
+                {
+                    Alignment = IMetaContextOld.AlignmentOption.Center
+                });
             }
         }
 
         public static void loadSprite()
         {
             if (sprite == null) sprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.LogoButton.png", 100f);
-            //if (discordSprite == null) discordSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.DiscordIcon.png", 100f);
         }
     }
 

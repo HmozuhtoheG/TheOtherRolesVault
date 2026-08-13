@@ -206,6 +206,10 @@ namespace TheOtherRoles.Patches
                 GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod = CustomOptionHolder.hideNSeekHuntedVision.getFloat();
                 GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown = CustomOptionHolder.hideNSeekKillCooldown.getFloat();
             }
+
+            if (Zombie.isZombieGM) {
+                Zombie.timer = CustomOptionHolder.zombieTimer.getFloat() * 60;
+            }
         }
     }
 

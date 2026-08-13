@@ -667,11 +667,11 @@
         "13": "\u7531<color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color>, <color=#FCCE03FF>EndOfFile</color>, <color=#FCCE03FF>Mall\u00f6ris</color> & <color=#FCCE03FF>Gendelo</color>\u5236\u4f5c\u672c\u5bb6\u6a21\u7ec4\n\u7531<color=#FCCE03FF>Bavari</color>\u8fdb\u884c\u6309\u94ae\u5236\u4f5c\n\u7531<color=#FCCE03FF>Imp11</color>\u8986\u5199\n\u7531<color=#FCCE03FF>Keno</color>\u91cd\u5236",
         "14": "\u7531<color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color>, <color=#FCCE03FF>EndOfFile</color>, <color=#FCCE03FF>Mall\u00f6ris</color> & <color=#FCCE03FF>Gendelo</color>\u88fd\u4f5c\u672c\u5bb6\u6a21\u7d44\n\u7531<color=#FCCE03FF>Bavari</color>\u9032\u884c\u6309\u9215\u88fd\u4f5c\n\u7531<color=#FCCE03FF>Imp11</color>\u8986\u5beb\n\u7531<color=#FCCE03FF>Keno</color>\u91cd\u88fd"
     },
-    "mainMenuImp11AboutSection": {
-        "0": "This interface is under adjustment.",
-        "11": "\u3053\u306e\u30a4\u30f3\u30bf\u30fc\u30d5\u30a7\u30fc\u30b9\u306f\u8abf\u6574\u4e2d\u3067\u3059\n",
-        "13": "\u6b64\u754c\u9762\u6b63\u5728\u8abf\u6574...",
-        "14": "\u6b64\u754c\u9762\u6b63\u5728\u8abf\u6574..."
+    "aboutContributorsList": {
+        "0": "TKeno,\u7406\u60f3\u96c6,Blade,\u6c6a\u6c6a\u72d7\nJex1303,\u5185\u9b3c\u5c0f\u8f69\n<size=60%>contributors</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,r",
+        "11": "Keno,\u7406\u60f3\u96c6,Blade,\u6c6a\u6c6a\u72d7\nJex1303,\u5185\u9b3c\u5c0f\u8f69\n<size=60%>\u8ca2\u732e\u8005</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,r\n",
+        "13": "Keno,\u7406\u60f3\u96c6,Blade,\u6c6a\u6c6a\u72d7\nJex1303,\u5185\u9b3c\u5c0f\u8f69\n<size=60%>\u8d21\u732e\u4eba\u5458</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,r",
+        "14": "Keno,\u7406\u60f3\u96c6,Blade,\u6c6a\u6c6a\u72d7\n\u5170\u5c9b\u7269\u8bed,\u5185\u9b3c\u5c0f\u8f69\n<size=60%>\u8ca2\u737b\u4eba\u54e1</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,r"
     },
     "mainMenuElinmeiAboutSection": {
         "0": "This interface is under adjustment.",
@@ -699,17 +699,17 @@
         "13": "\u6b64\u754c\u9762\u6b63\u5728\u8abf\u6574...",
         "14": "\u6b64\u754c\u9762\u6b63\u5728\u8abf\u6574..."
     },
-    "mainMenuDeveloper": {
-        "0": "Developer",
-        "11": "\u958b\u767a\u8005",
-        "13": "\u5f00\u53d1\u8005",
-        "14": "\u958b\u767c\u8005"
+    "aboutCreditsTitle": {
+        "0": "Production staff",
+        "11": "\u53c3\u8207\u88fd\u4f5c\u4eba\u54e1",
+        "13": "\u53c2\u4e0e\u5236\u4f5c\u4eba\u5458",
+        "14": "\u53c3\u8207\u88fd\u4f5c\u4eba\u54e1"
     },
-    "mainMenuArtist": {
-        "0": "Artist",
-        "11": "\u30a2\u30fc\u30c6\u30a3\u30b9\u30c8",
-        "13": "\u7f8e\u5de5",
-        "14": "\u7f8e\u8853"
+    "aboutScrollHint": {
+        "0": "emm",
+        "11": "emm",
+        "13": "emm",
+        "14": "emm"
     },
     "mainMenuTranslator": {
         "0": "Translator",
@@ -7754,55 +7754,366 @@
         "13": "\u80fd\u91cf\u589e\u5e45\u8005"
     },
     "energyamplifierIntroDesc": {
+        "0": "enhance the people in the scope",
         "13": "\u589e\u5f3a\u8303\u56f4\u5185\u7684\u4eba"
     },
     "energyamplifierShortDesc": {
+        "0": "enhance the people in the scope",
         "13": "\u589e\u5f3a\u8303\u56f4\u5185\u7684\u4eba"
     },
     "energyamplifierBlurb": {
+        "0": "Players within the range that can be increased",
         "13": "\u53ef\u4ee5\u589e\u5e45\u8303\u56f4\u5185\u7684\u4eba"
     },
     "energyamplifier": {
+        "0": "Energyamplifier",
         "13": "\u80fd\u91cf\u589e\u5e45\u8005"
     },
     "EnergyAmplifierText": {
-        "13": " \u91ca\u653e\u80fd\u91cf\u573a"
+        "0": "Release energy field",
+        "13": "\u91ca\u653e\u80fd\u91cf\u573a"
     },
     "energyAmplifierDuration": {
+        "0": "Duration of energy field",
         "13": "\u80fd\u91cf\u573a\u6301\u7eed\u65f6\u95f4"
     },
     "energyAmplifierRadius": {
-        "13": " \u80fd\u91cf\u573a\u5f71\u54cd\u534a\u5f84"
+        "0": "Energy field influence radius",
+        "13": "\u80fd\u91cf\u573a\u5f71\u54cd\u534a\u5f84"
     },
     "energyAmplifierSpeedBoost": {
+        "0": "Basic movement speed bonus",
         "13": "\u57fa\u7840\u79fb\u901f\u52a0\u6210"
     },
     "energyAmplifierKillCooldownReduction": {
-        "13": " \u51fb\u6740\u51b7\u5374\u7f29\u77ed\u6bd4\u4f8b"
+        "0": "Kill cooldown reduction ratio",
+        "13": "\u51fb\u6740\u51b7\u5374\u7f29\u77ed\u6bd4\u4f8b"
     },
     "energyAmplifierShieldDuration": {
-        "13": " \u62a4\u76fe\u7ef4\u6301\u65f6\u95f4"
+        "0": "Shield duration",
+        "13": "\u62a4\u76fe\u7ef4\u6301\u65f6\u95f4"
     },
     "energyAmplifierMaxEnergy": {
+        "0": "Energy bar capacity limit",
         "13": "\u80fd\u91cf\u69fd\u4e0a\u9650"
     },
     "energyAmplifierActivationCost": {
-        "13": " \u5355\u6b21\u6d88\u8017\u80fd\u91cf"
+        "0": "Single energy consumption",
+        "13": "\u5355\u6b21\u6d88\u8017\u80fd\u91cf"
     },
     "energyAmplifierEnergyRegenRate": {
-        "13": " \u6bcf\u79d2\u80fd\u91cf\u56de\u590d"
+        "0": "Energy regeneration per second",
+        "13": "\u6bcf\u79d2\u80fd\u91cf\u56de\u590d"
     },
     "energyAmplifierExtraSpeedPerPlayer": {
+        "0": "For each additional person, the value of increased movement speed",
         "13": "\u6bcf\u591a1\u4eba\u989d\u5916\u52a0\u901f"
     },
     "energyAmplifierMaxSpeedBoost": {
+        "0": "Maximum speed bonus",
         "13": "\u79fb\u901f\u52a0\u6210\u4e0a\u9650"
     },
     "energyamplifierFullDesc": {
+        "0": "Energy Amplifier can release an energy field to grant players within range certain effects:  \n1. Movement speed increase  \n2. Immunity to kills within range (does not reset the killer's cooldown)  \n3. Reduced kill cooldown  \n(The above effects apply equally to Impostors and Neutrals)  \n(The more players within range, the stronger the effects)  \nAn energy gauge is displayed at the top-right corner of the skill\u2014monitor energy consumption carefully.",
         "13": "\u80fd\u91cf\u589e\u5e45\u8005\u53ef\u4ee5\u91ca\u653e\u80fd\u91cf\u573a\u4f7f\u8303\u56f4\u5185\u7684\u73a9\u5bb6\u5f97\u5230\u4e00\u4e9b\u6548\u679c:\n1.\u79fb\u901f\u589e\u52a02.\u5728\u8303\u56f4\u5185\u514d\u75ab\u51fb\u6740\uff08\u4e0d\u4f1a\u51b7\u5374\u51fb\u6740\u8005\u7684CD\uff093.\u51fb\u6740cd\u7f29\u77ed\n\uff08\u4ee5\u4e0a\u6548\u679c\u5bf9\u5185\u9b3c\u4e0e\u4e2d\u7acb\u540c\u6837\u751f\u6548\uff09\n\uff08\u8303\u56f4\u5185\u7684\u73a9\u5bb6\u8d8a\u591a\u6548\u679c\u8d8a\u5f3a\uff09\n\u5728\u6280\u80fd\u7684\u53f3\u4e0a\u89d2\u4f1a\u6709\u4e00\u4e2a\u80fd\u91cf\u69fd\uff0c\u8bf7\u6ce8\u610f\u80fd\u91cf\u7684\u6d88\u8017"
     },
     "energyAmplifierCooldown": {
+        "0": "Skill cooldown",
         "13": "\u6280\u80fd\u51b7\u5374"
+    },
+    "blockman": {
+        "0": "Blockman",
+        "13": "\u65b9\u5757\u4eba"
+    },
+    "blockmanIntroDesc": {
+        "0": "Complete the blueprint to win",
+        "13": "\u5b8c\u6210\u84dd\u56fe\u83b7\u5f97\u80dc\u5229"
+    },
+    "blockmanShortDesc": {
+        "0": "Complete the blueprint to win",
+        "13": "\u5b8c\u6210\u84dd\u56fe\u83b7\u5f97\u80dc\u5229"
+    },
+    "blockmanBlurb": {
+        "0": "Place blocks",
+        "13": "\u653e\u7f6e\u65b9\u5757"
+    },
+    "BlockmanPlaceText": {
+        "0": "Place",
+        "13": "\u653e\u7f6e"
+    },
+    "BlockmanDashText": {
+        "0": "Dash",
+        "13": "\u51b2\u523a"
+    },
+    "BlockmanBreakText": {
+        "0": "Break",
+        "13": "\u62c6\u9664"
+    },
+    "BlockmanNotEnoughEnergy": {
+        "0": "Not enough energy!",
+        "13": "\u80fd\u91cf\u4e0d\u8db3\uff01"
+    },
+    "BlockmanDashInvalid": {
+        "0": "Cannot dash to that position!",
+        "13": "\u8be5\u4f4d\u7f6e\u65e0\u6cd5\u51b2\u523a\uff01"
+    },
+    "BlockmanNoUnsettledBlock": {
+        "0": "No unsettled block nearby",
+        "13": "\u9644\u8fd1\u6ca1\u6709\u672a\u51dd\u56fa\u7684\u65b9\u5757"
+    },
+    "blockmanFullDesc": {
+        "0": "Block characters can place blocks, and dismantling blocks refund portion of energy. Completing the blueprint results in victory.  \nAdditional notes:  \n1. There is an that slowly replenishes over time.  \n2. Placing each block consumes a segment of energy, and there is a maximum limit to the number of blocks that can exist simultaneously on the field.  \n3., blocks have ahardened delay\u2014during this period, anyone nearby can smash them with one click.  \n4. Blocks have a lifespan and will automatically disappear upon timeout.",
+        "13": "\u65b9\u5757\u4eba\u53ef\u4ee5\u653e\u7f6e\u65b9\u5757\uff0c\u62c6\u65b9\u5757\u53ef\u4ee5\u9000\u56de\u4e00\u90e8\u5206\u80fd\u91cf\u3002\u5b8c\u6210\u84dd\u56fe\u5373\u53ef\u83b7\u80dc\n\u5176\u5b83\u8bf4\u660e\uff1a\n1\u6709\u4e00\u4e2a\u80fd\u91cf\u69fd\uff0c\u968f\u65f6\u95f4\u7f13\u6162\u6062\u590d\n2\u6bcf\u653e\u4e00\u5757\u65b9\u5757\u6d88\u8017\u4e00\u622a\u80fd\u91cf\uff0c\u573a\u4e0a\u540c\u65f6\u5b58\u5728\u7684\u65b9\u5757\u6570\u6709\u4e0a\u9650\n3\u65b9\u5757\u653e\u7f6e\u540e\u6709\u4e2a\u672a\u51dd\u56fa\u7684\u77ed\u6682\u5ef6\u8fdf\uff0c\u8fd9\u6bb5\u65f6\u95f4\u5185\u4efb\u4f55\u4eba\u9760\u8fd1\u90fd\u80fd\u4e00\u952e\u628a\u5b83\u6572\u788e\n4\u65b9\u5757\u6709\u5b58\u6d3b\u65f6\u9650\uff0c\u8d85\u65f6\u81ea\u52a8\u6d88\u5931"
+    },
+    "blockmanMaxBlocks": {
+        "0": "Maximum number of blocks that can be placed",
+        "13": "\u6700\u5927\u53ef\u653e\u65b9\u5757\u6570"
+    },
+    "blockmanMaxEnergy": {
+        "0": "Max Energy",
+        "13": "\u6700\u5927\u80fd\u91cf"
+    },
+    "blockmanEnergyRegenRate": {
+        "0": "Energy Regen / sec",
+        "13": "\u80fd\u91cf\u6062\u590d/\u79d2"
+    },
+    "blockmanPlaceCost": {
+        "0": "Place Cost",
+        "13": "\u653e\u7f6e\u6d88\u8017"
+    },
+    "blockmanRemoveRefund": {
+        "0": " Remove Refund",
+        "13": "\u62c6\u9664\u8fd4\u8fd8"
+    },
+    "blockmanBlockLifetime": {
+        "0": "Block Lifetime (s)",
+        "13": "\u6700\u5927\u65b9\u5757\u6570"
+    },
+    "blockmanSettleTime": {
+        "0": "Settle Time (s)",
+        "13": "\u65b9\u5757\u5b58\u6d3b\u65f6\u95f4(\u79d2)"
+    },
+    "blockmanDashCost": {
+        "0": "Dash Cost",
+        "13": "\u51b2\u523a\u6d88\u8017"
+    },
+    "blockmanDashDistance": {
+        "0": "Dash Distance",
+        "13": "\u51b2\u523a\u8ddd\u79bb"
+    },
+    "blockmanDashCooldown": {
+        "0": "Dash Cooldown (s)",
+        "13": "\u51b2\u523a\u51b7\u5374(\u79d2)"
+    },
+    "blockmanWin": {
+        "0": "yeeeeeeeeeeeeeeee",
+        "13": "\u54e6\u8036\uff01"
+    },
+    "blockmanWinExtra": {
+        "0": "blockman {0} win",
+        "13": "\u65b9\u5757\u4eba {0} \u80dc\u5229"
+    },
+    "werewolf": {
+        "0": " Werewolf",
+        "13": "\u72fc\u4eba"
+    },
+    "werewolfIntroDesc": {
+        "0": "Moonless and windy night for murder",
+        "13": "\u6708\u9ed1\u98ce\u9ad8\u6740\u4eba\u591c"
+    },
+    "werewolfShortDesc": {
+        "0": "Moonless and windy night for murder",
+        "13": "\u6708\u9ed1\u98ce\u9ad8\u6740\u4eba\u591c"
+    },
+    "werewolfBlurb": {
+        "0": "Enter the frenzy after dark",
+        "13": "\u5929\u9ed1\u540e\u8fdb\u5165\u72c2\u66b4"
+    },
+    "werewolfMarkCooldown": {
+        "0": "Mark Cooldown",
+        "13": "\u6807\u8bb0\u51b7\u5374\u65f6\u95f4"
+    },
+    "werewolfMarkDuration": {
+        "0": " Mark Duration",
+        "13": "\u6807\u8bb0\u6301\u7eed\u65f6\u95f4"
+    },
+    "werewolfMarkRange": {
+        "0": "Mark Range",
+        "13": "\u6807\u8bb0\u8ddd\u79bb"
+    },
+    "werewolfRampageSpeedBoost": {
+        "0": " Rampage Speed Boost",
+        "13": "\u72c2\u66b4\u79fb\u901f\u52a0\u6210"
+    },
+    "werewolfRampageKillCooldownReduction": {
+        "0": "Rampage Kill Cooldown Reduction",
+        "13": "\u72c2\u66b4\u6740\u4ebaCD\u7f29\u51cf"
+    },
+    "WerewolfMarkText": {
+        "0": "Mark",
+        "13": "\u6807\u8bb0"
+    },
+    "werewolfFullDesc": {
+        "0": "Werewolves enter a frenzied state when the lights are destroyed, gaining increased movement speed and reduced cooldown for attacks. However, they cannot jump into vents at daybreak.  \nKills can be made by marking targets during daylight.",
+        "13": "\u72fc\u4eba\u5728\u5173\u706f\u540e\u4f1a\u8fdb\u5165\u72c2\u66b4\u72b6\u6001\uff0c\u79fb\u901f\u589e\u52a0\uff0c\u5200\u4ebacd\u51cf\u77ed\u3002\u4f46\u5929\u4eae\u65f6\u65e0\u6cd5\u8df3\u7ba1\u9053\n\u5929\u4eae\u65f6\u53ef\u4ee5\u901a\u8fc7\u6807\u8bb0\u51fb\u6740"
+    },
+    "WerewolfChannelingHint": {
+        "0": "Marking... {0}s remaining",
+        "13": "\u6807\u8bb0\u4e2d...\u8fd8\u5269 {0} \u79d2"
+    },
+    "WerewolfChannelingInterrupted": {
+        "0": "Marking interrupted, target moved away",
+        "13": "\u6807\u8bb0\u4e2d\u65ad,\u4e0e\u76ee\u6807\u8ddd\u79bb\u8fc7\u8fdc"
+    },
+    "werewolfMarkChannelTime": {
+        "0": "Mark the time",
+        "13": "\u6807\u8bb0\u65f6\u95f4"
+    },
+    "racer": {
+        "0": "Racer",
+        "13": "\u98d9\u8f66\u624b"
+    },
+    "modifierRacerSpeedBoost": {
+        "0": "Car Speed Boost",
+        "13": "\u8f66\u8f86\u79fb\u901f\u52a0\u6210"
+    },
+    "modifierRacerMeetingsUntilDespawn": {
+        "0": "Car Lifespan (Meetings)",
+        "13": "\u8f66\u8f86\u5b58\u5728\u4f1a\u8bae\u6570"
+    },
+    "RacerBoardHint": {
+        "0": "Near a car \u2014 right-click to board",
+        "13": "\u9760\u8fd1\u6309\u9f20\u6807\u53f3\u952e\u4e0a\u8f66"
+    },
+    "racerQuantity": {
+        "0": "RacerQuantity",
+        "13": "\u98d9\u8f66\u624b\u526f\u804c\u4e1a\u6570\u91cf"
+    },
+    "racerIntroDesc": {
+        "0": "Racing King",
+        "13": "\u98d9\u8f66\u5927\u738b"
+    },
+    "racerShortDesc": {
+        "0": "Racing King",
+        "13": "\u98d9\u8f66\u5927\u738b"
+    },
+    "racerBlurb": {
+        "0": "You can drive a racing car",
+        "13": "\u53ef\u4ee5\u5f00\u8f66"
+    },
+    "racerFullDesc": {
+        "0": "The racer starts by driving a race car, and transfer driving rights by using /car [player number]",
+        "13": "\u8d5b\u8f66\u624b\u5f00\u5c40\u4f1a\u9a7e\u9a76\u4e00\u8f86\u8d5b\u8f66\uff0c\u4f7f\u7528/car [\u73a9\u5bb6\u7f16\u53f7]\u5373\u53ef\u8f6c\u79fb\u9a7e\u9a76\u6743"
+    },
+    "ZOMBIEMAIN": {
+        "0": "Zombie mode",
+        "13": "\u4e27\u5c38\u6a21\u5f0f"
+    },
+    "zombieInitialCount": {
+        "0": "Initial number of zombies",
+        "13": "\u521d\u59cb\u4e27\u5c38\u6570\u91cf"
+    },
+    "zombieTimer": {
+        "0": "Survivor survival time (minutes)",
+        "13": "\u5e78\u5b58\u8005\u5b58\u6d3b\u8ba1\u65f6\uff08\u5206\u949f\uff09"
+    },
+    "zombieTaskWin": {
+        "0": "Survivors can win tasks.",
+        "13": "\u5e78\u5b58\u8005\u53ef\u901a\u8fc7\u5b8c\u6210\u4efb\u52a1\u83b7\u80dc"
+    },
+    "gamemodeZombie": {
+        "0": "Zombie mode",
+        "13": "\u4e27\u5c38\u6a21\u5f0f"
+    },
+    "zombie": {
+        "0": "Zombie",
+        "13": "\u4e27\u5c38"
+    },
+    "survivor": {
+        "0": "Survivor",
+        "13": "\u5e78\u5b58\u8005"
+    },
+    "torZombie": {
+        "0": "Zombie mode",
+        "13": "\u4e27\u5c38\u6a21\u5f0f"
+    },
+    "gomokuExit": {
+        "0": "Exit",
+        "13": "\u9000\u51fa"
+    },
+    "gomokuTitle": {
+        "13": "\u4e94\u5b50\u68cb"
+    },
+    "gomokuInvite": {
+        "13": "\u9080\u8bf7"
+    },
+    "gomokuRestart": {
+        "13": "\u91cd\u5f00"
+    },
+    "gomokuWinBlack": {
+        "13": "\u9ed1\u65b9\u83b7\u80dc"
+    },
+    "gomokuWinWhite": {
+        "13": "\u767d\u65b9\u83b7\u80dc"
+    },
+    "gomokuDraw": {
+        "13": "\u5e73\u5c40"
+    },
+    "gomokuWaitingOpponent": {
+        "13": "\u7b49\u5f85\u5bf9\u624b\u52a0\u5165"
+    },
+    "gomokuYourTurn": {
+        "13": "\u8f6e\u5230\u4f60\u4e86"
+    },
+    "gomokuOpponentTurn": {
+        "13": "\u8f6e\u5230\u5bf9\u624b"
+    },
+    "gomokuSpectating": {
+        "13": "\u89c2\u6218\u4e2d"
+    },
+    "gomokuJoinBlack": {
+        "13": "\u52a0\u5165\u6267\u9ed1"
+    },
+    "gomokuJoinWhite": {
+        "13": "\u52a0\u5165\u6267\u767d"
+    },
+    "gomokuInviteListTitle": {
+        "13": "\u9080\u8bf7\u5217\u8868"
+    },
+    "gomokuInviteSend": {
+        "13": "\u53d1\u9001\u9080\u8bf7"
+    },
+    "gomokuInviteListEmpty": {
+        "13": "\u9080\u8bf7\u5217\u8868\u4e3a\u7a7a"
+    },
+    "gomokuInviteTitle": {
+        "13": "\u563f\uff01\u60f3\u8ddf\u6211\u9163\u7545\u6dcb\u6f13\u7684\u6765\u4e00\u628a\u4e94\u5b50\u68cb\u5417"
+    },
+    "gomokuInviteMessage": {
+        "13": "{0}\u9080\u8bf7\u4f60\u52a0\u5165\u4e94\u5b50\u68cb"
+    },
+    "gomokuInviteHint": {
+        "13": "\u9080\u8bf7\u5361"
+    },
+    "zombieIntroDesc": {
+        "0": "gogogo!",
+        "13": "\u53bb\u611f\u67d3\u5427\uff01"
+    },
+    "zombiShortDesc": {
+        "0": "gogogo!",
+        "13": "\u53bb\u611f\u67d3\u5427\uff01"
+    },
+    "survivorIntroDesc": {
+        "0": "Live on",
+        "13": "\u6d3b\u4e0b\u53bb"
+    },
+    "survivorShortDesc": {
+        "0": "Live on",
+        "13": "\u6d3b\u4e0b\u53bb"
+    },
+    "neverEndGame": {
+        "0": "NeverEndGame",
+        "13": "\u6c38\u4e0d\u7ed3\u675f\u6a21\u5f0f"
     },
     "colorSalmon": {
         "0": "Salmon",

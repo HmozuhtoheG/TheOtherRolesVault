@@ -29,6 +29,9 @@ namespace TheOtherRoles.Patches {
             else if (TORMapOptions.gameMode == CustomGamemodes.FreePlay) {
                 __result = 0; // No imps for freeplay
             }
+            else if (TORMapOptions.gameMode == CustomGamemodes.Zombie) {
+                __result = Mathf.RoundToInt(CustomOptionHolder.zombieInitialCount.getFloat()); // Set initial Zombie Num
+            }
             else if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) {  // Ignore Vanilla impostor limits in TOR Games.
                 __result = Mathf.Clamp(GameOptionsManager.Instance.CurrentGameOptions.NumImpostors, 1, 6);
             } 
@@ -38,7 +41,7 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(LegacyGameOptions), nameof(LegacyGameOptions.Validate))]
     class GameOptionsDataValidatePatch {
         public static void Postfix(LegacyGameOptions __instance) {
-            if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || GameOptionsManager.Instance.CurrentGameOptions.GameMode != GameModes.Normal) return;
+            if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.Zombie || GameOptionsManager.Instance.CurrentGameOptions.GameMode != GameModes.Normal) return;
             __instance.NumImpostors = GameOptionsManager.Instance.CurrentGameOptions.NumImpostors;
         }
     }
@@ -54,7 +57,7 @@ namespace TheOtherRoles.Patches {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ResetVaribles, Hazel.SendOption.Reliable, -1);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.resetVariables();
-            if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.FreePlay || RoleDraft.isEnabled) return; // Don't assign Roles in Hide N Seek
+            if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.FreePlay || TORMapOptions.gameMode == CustomGamemodes.Zombie || RoleDraft.isEnabled) return; // Don't assign Roles in Hide N Seek or Zombie
             assignRoles();
         }
 
@@ -126,6 +129,7 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.SerialKiller, CustomOptionHolder.serialKillerSpawnRate.data);
             impSettings.Add((byte)RoleId.Assassin, CustomOptionHolder.assassinSpawnRate.data);
             impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.data);
+            impSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.data);
             impSettings.Add((byte)RoleId.NekoKabocha, CustomOptionHolder.nekoKabochaSpawnRate.data);
             impSettings.Add((byte)RoleId.EvilTracker, CustomOptionHolder.evilTrackerSpawnRate.data);
             impSettings.Add((byte)RoleId.Undertaker, CustomOptionHolder.undertakerSpawnRate.data);
@@ -147,6 +151,7 @@ namespace TheOtherRoles.Patches {
             neutralSettings.Add((byte)RoleId.JekyllAndHyde, CustomOptionHolder.jekyllAndHydeSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Cupid, CustomOptionHolder.cupidSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Fox, CustomOptionHolder.foxSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Blockman, CustomOptionHolder.blockmanSpawnRate.data);
             neutralSettings.Add((byte)RoleId.SchrodingersCat, CustomOptionHolder.schrodingersCatSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Kataomoi, CustomOptionHolder.kataomoiSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Doomsayer, CustomOptionHolder.doomsayerSpawnRate.data);
@@ -575,7 +580,8 @@ namespace TheOtherRoles.Patches {
                 RoleId.Armored,
                 RoleId.Multitasker,
                 RoleId.Diseased,
-                RoleId.Radar
+                RoleId.Radar,
+                RoleId.Racer
                 //RoleId.Shifter
             });
 
@@ -870,6 +876,10 @@ namespace TheOtherRoles.Patches {
                     break;
                 case RoleId.Armored:
                     selection = CustomOptionHolder.modifierArmored.getSelection();
+                    break;
+                case RoleId.Racer:
+                    selection = CustomOptionHolder.modifierRacer.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierRacerQuantity.getQuantity();
                     break;
                 case RoleId.Radar:
                     selection = CustomOptionHolder.modifierRadar.getSelection();

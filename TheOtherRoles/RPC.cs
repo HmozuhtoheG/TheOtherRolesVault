@@ -76,6 +76,8 @@ namespace TheOtherRoles
         Jailor,
         EvilYasuna,
         Pelican,
+        Blockman,
+        Werewolf,
         //Trapper,
         Lawyer, 
         //Prosecutor,
@@ -131,6 +133,7 @@ namespace TheOtherRoles
         Radar,
         Chameleon,
         Armored,
+        Racer,
         //Shifter
     }
 
@@ -201,7 +204,8 @@ namespace TheOtherRoles
         DraftModePick,
         SetLovers,
         ZephyrBlowCannon,
-        ZephyrCheckCannon
+        ZephyrCheckCannon,
+        RacerSetOccupancy
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
@@ -810,7 +814,11 @@ namespace TheOtherRoles
                 case RoleId.Madmate:
                     Madmate.madmate.Add(player);
                     break;
-                //case RoleId.Shifter:
+                case RoleId.Racer:
+                    Racer.racer.Add(player);
+                    Racer.CreateCarForOwner(player);
+                    break;
+                    //case RoleId.Shifter:
                     //Shifter.shifter = player;
                     //break;
             }
@@ -819,6 +827,13 @@ namespace TheOtherRoles
         public static void setLovers(byte playerId1, byte playerId2)
         {
             Lovers.addCouple(Helpers.playerById(playerId1), Helpers.playerById(playerId2));
+        }
+
+        public static void racerSetOccupancy(byte ownerId, byte driverByte, byte passengerByte)
+        {
+            if (!Racer.cars.TryGetValue(ownerId, out var car)) return;
+            car.driverId = driverByte == byte.MaxValue ? null : driverByte;
+            car.passengerId = passengerByte == byte.MaxValue ? null : passengerByte;
         }
 
         public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId, string subVer, bool isAndroid) {
@@ -917,6 +932,7 @@ namespace TheOtherRoles
                     );
 
                     Mini.timeOfGrowthStart = DateTime.UtcNow;
+                    Racer.OnMeetingEnded();
                 }
             })));
         }
@@ -1934,6 +1950,15 @@ namespace TheOtherRoles
             new GuesserGM(target);
         }
 
+        public static RemoteProcess<byte> ZombieInfect = RemotePrimitiveProcess.OfByte("ZombieInfect", (message, _) => zombieInfectPlayer(message));
+
+        public static void zombieInfectPlayer(byte playerId) {
+            PlayerControl target = Helpers.playerById(playerId);
+            if (target == null || target.Data.Role.IsImpostor) return;
+            FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Impostor);
+            TORGameManager.Instance?.RecordRoleHistory(target);
+        }
+
         public static void shareTimer(float punish) {
             HideNSeek.timer -= punish;
         }
@@ -2073,6 +2098,12 @@ namespace TheOtherRoles
                     byte pId = reader.ReadByte();
                     byte flag = reader.ReadByte();
                     RPCProcedure.setModifier(modifierId, pId, flag);
+                    break;
+                case (byte)CustomRPC.RacerSetOccupancy:
+                    byte racerOwnerId = reader.ReadByte();
+                    byte racerDriverByte = reader.ReadByte();
+                    byte racerPassengerByte = reader.ReadByte();
+                    RPCProcedure.racerSetOccupancy(racerOwnerId, racerDriverByte, racerPassengerByte);
                     break;
                 case (byte)CustomRPC.VersionHandshake:
                     byte major = reader.ReadByte();

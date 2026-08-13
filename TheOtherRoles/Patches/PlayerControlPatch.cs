@@ -685,6 +685,8 @@ namespace TheOtherRoles.Patches {
 
                 // -- GAME MODE --
                 hunterUpdate();
+
+                Racer.update();
             }
 
             foreach (var role in new List<Role>(Role.allRoles)) {
@@ -1157,6 +1159,36 @@ namespace TheOtherRoles.Patches {
                 Undertaker.DraggedBody != null)
             {
                 __instance.body.velocity *= 1f + Undertaker.speedDecrease / 100f;
+            }
+
+            if (__instance.AmOwner &&
+                AmongUsClient.Instance &&
+                AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+                !PlayerControl.LocalPlayer.Data.IsDead &&
+                GameData.Instance &&
+                __instance.myPlayer.CanMove)
+            {
+                var racerCar = Racer.getCarByAnyOccupant(__instance.myPlayer);
+                if (racerCar != null && racerCar.driverId == __instance.myPlayer.PlayerId)
+                {
+                    if (__instance.body.velocity.magnitude > 0.01f)
+                    {
+                        __instance.body.velocity *= 1f + Racer.speedBoost * racerCar.currentSpeedFactor;
+                        racerCar.coastVelocity = __instance.body.velocity;
+                    }
+                    else if (racerCar.coastVelocity.magnitude > 0.05f)
+                    {
+                        __instance.body.velocity = racerCar.coastVelocity;
+                        racerCar.coastVelocity = Vector2.MoveTowards(racerCar.coastVelocity, Vector2.zero, Racer.coastDeceleration * Time.fixedDeltaTime);
+                    }
+                    else
+                    {
+                        racerCar.coastVelocity = Vector2.zero;
+                    }
+                }
+
+                if (Racer.isInjured(__instance.myPlayer))
+                    __instance.body.velocity *= Racer.injurySlowFactor;
             }
 
             Kataomoi.fixedUpdate(__instance);

@@ -232,7 +232,7 @@ namespace TheOtherRoles.Modules
         [HideFromIl2Cpp]
         public static IEnumerator CoCheckUpdates()
         {
-            var torUpdateCheck = Task.Run(() => Instance.GetGithubUpdate("TORV-Nexus", "TheOtherRolesVersion"));
+            var torUpdateCheck = Task.Run(() => Instance.GetGithubUpdate("TORV-Nexus", "TheOtherRolesVault"));
             while (!torUpdateCheck.IsCompleted) yield return null;
             if (torUpdateCheck.Result != null && torUpdateCheck.Result.IsNewer(Version.Parse(TheOtherRolesPlugin.VersionString)))
             {

@@ -89,6 +89,7 @@ namespace TheOtherRoles
 
         // TORV functional
         public static RoleInfo ninja = new("ninja", Ninja.color, RoleId.Ninja);
+        public static RoleInfo werewolf = new("werewolf", Werewolf.color, RoleId.Werewolf);
         public static RoleInfo nekoKabocha = new("nekoKabocha", NekoKabocha.color, RoleId.NekoKabocha);
         public static RoleInfo serialKiller = new("serialKiller", SerialKiller.color, RoleId.SerialKiller);
         public static RoleInfo evilTracker = new("evilTracker", EvilTracker.color, RoleId.EvilTracker);
@@ -133,6 +134,9 @@ namespace TheOtherRoles
 
         public static RoleInfo hunter = new("hunter", Palette.ImpostorRed, RoleId.Impostor);
         public static RoleInfo hunted = new("hunted", Color.white, RoleId.Crewmate);
+        public static RoleInfo zombie = new("zombie", Palette.ImpostorRed, RoleId.Impostor);
+        public static RoleInfo survivor = new("survivor", Color.white, RoleId.Crewmate);
+        public static RoleInfo blockman = new("blockman", Blockman.color, RoleId.Blockman, true); 
 
         // Modifier
         public static RoleInfo bloody = new("bloody", Color.yellow, RoleId.Bloody, false, true);
@@ -143,6 +147,7 @@ namespace TheOtherRoles
         public static RoleInfo lover = new("lover", Lovers.color, RoleId.Lover, false, true);
         public static RoleInfo mini = new("mini", Color.yellow, RoleId.Mini, false, true);
         public static RoleInfo vip = new("vip", Color.yellow, RoleId.Vip, false, true);
+        public static RoleInfo racer = new("racer", Color.yellow, RoleId.Racer, false, true);
         public static RoleInfo invert = new("invert", Color.yellow, RoleId.Invert, false, true);
         public static RoleInfo chameleon = new("chameleon", Color.yellow, RoleId.Chameleon, false, true);
         public static RoleInfo multitasker = new("multitasker", Color.yellow, RoleId.Multitasker, false, true);
@@ -291,6 +296,7 @@ namespace TheOtherRoles
             witch,
             assassin,
             ninja,
+            werewolf,
             nekoKabocha,
             serialKiller,
             evilTracker,
@@ -322,6 +328,7 @@ namespace TheOtherRoles
             chainshifter,
             plagueDoctor,
             fox,
+            blockman,
             immoralist,
             akujo,
             jekyllAndHyde,
@@ -371,13 +378,14 @@ namespace TheOtherRoles
             sunglasses,
             mini,
             vip,
+            racer,
             invert,
             chameleon,
             multitasker,
             diseased,
             radar,
             armored,
-            energyamplifier
+            energyamplifier,
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
@@ -403,6 +411,7 @@ namespace TheOtherRoles
                 if (Multitasker.multitasker.Any(x => x.PlayerId == p.PlayerId)) infos.Add(multitasker);
                 if (Diseased.diseased.Any(x => x.PlayerId == p.PlayerId)) infos.Add(diseased);
                 if (p == Radar.radar) infos.Add(radar);
+                if (Racer.racer.Any(x => x.PlayerId == p.PlayerId)) infos.Add(racer);
                 //if (p == Shifter.shifter) infos.Add(shifter);
             }
 
@@ -428,6 +437,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Cleaner)) infos.Add(cleaner);
             if (p.isRole(RoleId.Warlock)) infos.Add(warlock);
             if (p.isRole(RoleId.Witch)) infos.Add(witch);
+            if (p.isRole(RoleId.Werewolf)) infos.Add(werewolf);
             if (p.isRole(RoleId.Assassin)) infos.Add(assassin);
             if (p.isRole(RoleId.Detective)) infos.Add(detective);
             if (p.isRole(RoleId.TimeMaster)) infos.Add(timeMaster);
@@ -462,6 +472,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Doomsayer)) infos.Add(doomsayer);
             if (p.isRole(RoleId.Zephyr)) infos.Add(zephyr);
             if (p.isRole(RoleId.Collator)) infos.Add(collator);
+            if (p.isRole(RoleId.Blockman)) infos.Add(blockman);
             if (p.isRole(RoleId.Jailor)) infos.Add(jailor);
             if (p.isRole(RoleId.Pelican)) infos.Add(pelican);
             if (p.isRole(RoleId.Yandere)) infos.Add(yandere);
@@ -513,9 +524,9 @@ namespace TheOtherRoles
             // Default roles (just impostor, just crewmate, or hunter / hunted for hide n seek
             if (infos.Count == count) {
                 if (p.Data.Role.IsImpostor)
-                    infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ? hunter : impostor);
+                    infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ? hunter : TORMapOptions.gameMode == CustomGamemodes.Zombie ? zombie : impostor);
                 else
-                    infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ? hunted : crewmate);
+                    infos.Add(TORMapOptions.gameMode == CustomGamemodes.HideNSeek ? hunted : TORMapOptions.gameMode == CustomGamemodes.Zombie ? survivor : crewmate);
             }
 
             if (excludeRoles != null)

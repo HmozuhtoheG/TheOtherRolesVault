@@ -13,6 +13,7 @@ using TheOtherRoles.Roles;
 using TheOtherRoles.Utilities;
 using UnityEngine;
 
+
 namespace TheOtherRoles
 {
     [HarmonyPatch]
@@ -43,6 +44,7 @@ namespace TheOtherRoles
             Camouflager.clearAndReload();
             Hacker.clearAndReload();
             Energyamplifier.clearAndReload();
+            Energyamplifier.clearAndReload();
             Tracker.clearAndReload();
             Vampire.clearAndReload();
             Snitch.clearAndReload();
@@ -66,6 +68,7 @@ namespace TheOtherRoles
 
             // TORV
             Ninja.clearAndReload();
+            Werewolf.clearAndReload();
             NekoKabocha.clearAndReload();
             SerialKiller.clearAndReload();
             EvilTracker.clearAndReload();
@@ -102,6 +105,7 @@ namespace TheOtherRoles
             JekyllAndHyde.clearAndReload();
             Cupid.clearAndReload();
             Fox.clearAndReload();
+            Blockman.clearAndReload();
             Immoralist.clearAndReload();
             SchrodingersCat.clearAndReload();
             Kataomoi.clearAndReload();
@@ -123,11 +127,13 @@ namespace TheOtherRoles
             Multitasker.clearAndReload();
             Diseased.clearAndReload();
             Radar.clearAndReload();
+            Racer.clearAndReload();
 
             // Gamemodes
             HandleGuesser.clearAndReload();
             HideNSeek.clearAndReload();
             FreePlayGM.clearAndReload();
+            Zombie.clearAndReload();
         }
 
         public static class RoleData
@@ -199,6 +205,7 @@ namespace TheOtherRoles
                 { RoleId.EvilWatcher, typeof(RoleBase<EvilWatcher>) },
                 { RoleId.Assassin, typeof(RoleBase<Assassin>) },
                 { RoleId.Ninja, typeof(RoleBase<Ninja>) },
+                { RoleId.Werewolf, typeof(RoleBase<Werewolf>) },
                 { RoleId.Zephyr, typeof(RoleBase<Zephyr>) },
 
                 // Neutral
@@ -221,6 +228,7 @@ namespace TheOtherRoles
                 { RoleId.Cupid, typeof(RoleBase<Cupid>) },
                 { RoleId.PlagueDoctor, typeof(RoleBase<PlagueDoctor>) },
                 { RoleId.Fox, typeof(RoleBase<Fox>) },
+                { RoleId.Blockman, typeof(RoleBase<Blockman>) },
                 { RoleId.Immoralist, typeof(RoleBase<Immoralist>) },
                 { RoleId.Pelican, typeof(RoleBase<Pelican>) },
                 { RoleId.Yandere, typeof(RoleBase<Yandere>) }
@@ -349,6 +357,11 @@ namespace TheOtherRoles
             public static void ClearAll() {
                 allRoles = [];
             }
+            /// <summary>
+            /// After get in/jump out the vent
+            /// </summary>
+            public virtual void OnEnterVent(Vent vent) { }
+            public virtual void OnExitVent(Vent vent) { }
         }
 
         public abstract class RoleBase<T> : Role where T : RoleBase<T>, new()
@@ -1090,6 +1103,251 @@ namespace TheOtherRoles
                 if (lastMoved.ContainsKey(player.PlayerId)) lastMoved.Remove(player.PlayerId);
             }
             catch { }
+        }
+    }
+
+    public static class Racer
+    {
+        public static List<PlayerControl> racer = [];
+        public static Dictionary<byte, RacerCarData> cars = [];
+
+        public static float speedBoost = 0.3f;
+        public static int meetingsUntilDespawn = 3;
+        public static float boardRange = 1.2f;
+        public static float accelerationRate = 2f;
+        public static float decelerationRate = 3f;
+
+        public static float coastDeceleration = 6f;
+
+        public static float injurySpeedThreshold = 0.95f;
+        public static float injurySlowFactor = 0.5f;
+        public static float injuryDuration = 2f;
+        private static Dictionary<byte, float> injuredUntil = new();
+
+        public static bool isInjured(PlayerControl player)
+        {
+            return player != null && injuredUntil.TryGetValue(player.PlayerId, out var until) && Time.time < until;
+        }
+
+        private static void fixOccupantPose(PlayerControl player, bool facingLeft)
+        {
+            if (player == null || player.Data == null || player.Data.IsDead) return;
+            player.MyPhysics.Animations.PlayIdleAnimation();
+            player.cosmetics.AnimateSkinIdle();
+            player.MyPhysics.FlipX = facingLeft;
+        }
+
+        private static void setOccupancy(RacerCarData car, byte? driverId, byte? passengerId)
+        {
+            car.driverId = driverId;
+            car.passengerId = passengerId;
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.RacerSetOccupancy, SendOption.Reliable, -1);
+            writer.Write(car.ownerId);
+            writer.Write(driverId ?? byte.MaxValue);
+            writer.Write(passengerId ?? byte.MaxValue);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+        }
+
+        public class RacerCarData
+        {
+            public byte ownerId;
+            public byte? driverId;
+            public byte? passengerId;
+            public int meetingsSurvived;
+            public bool wasDrivingBeforeMeeting;
+            public bool destroyed;
+            public float currentSpeedFactor;
+            public Vector2 coastVelocity;
+            public bool facingLeft = true;
+            public Vector3 lastPosition;
+            public bool hasLastPosition;
+        }
+
+        public static RacerCarData getCar(PlayerControl owner)
+        {
+            if (owner == null) return null;
+            return cars.TryGetValue(owner.PlayerId, out var car) ? car : null;
+        }
+
+        public static RacerCarData getCarByAnyOccupant(PlayerControl player)
+        {
+            if (player == null) return null;
+            foreach (var car in cars.Values)
+            {
+                if (car.destroyed) continue;
+                if (car.driverId == player.PlayerId || car.passengerId == player.PlayerId) return car;
+            }
+            return null;
+        }
+
+        public static void CreateCarForOwner(PlayerControl owner)
+        {
+            if (owner == null || cars.ContainsKey(owner.PlayerId)) return;
+
+            cars[owner.PlayerId] = new RacerCarData
+            {
+                ownerId = owner.PlayerId,
+                driverId = owner.PlayerId,
+                passengerId = null,
+                meetingsSurvived = 0,
+                wasDrivingBeforeMeeting = false,
+                destroyed = false,
+                currentSpeedFactor = 0f
+            };
+
+            RacerCar.SpawnVisual(owner.PlayerId, owner.transform.position);
+        }
+
+        public static void TryExitCar(PlayerControl player)
+        {
+            if (player != PlayerControl.LocalPlayer) return;
+            var car = getCarByAnyOccupant(player);
+            if (car == null) return;
+
+            if (car.driverId == player.PlayerId && car.currentSpeedFactor >= injurySpeedThreshold)
+                injuredUntil[player.PlayerId] = Time.time + injuryDuration;
+
+            byte? newDriver = car.driverId == player.PlayerId ? null : car.driverId;
+            byte? newPassenger = car.passengerId == player.PlayerId ? null : car.passengerId;
+            setOccupancy(car, newDriver, newPassenger);
+        }
+
+        public static bool IsNearBoardableCar(PlayerControl player, out RacerCarData nearestCar)
+        {
+            nearestCar = null;
+            if (player == null || getCarByAnyOccupant(player) != null) return false;
+
+            float bestDist = boardRange;
+            foreach (var car in cars.Values)
+            {
+                if (car.destroyed) continue;
+                bool hasFreeSeat = car.driverId == null || car.passengerId == null;
+                if (!hasFreeSeat) continue;
+
+                var owner = Helpers.playerById(car.ownerId);
+                if (owner == null) continue;
+                var driverPlayer = car.driverId != null ? Helpers.playerById(car.driverId.Value) : null;
+                Vector2 carPos = driverPlayer != null ? (Vector2)driverPlayer.transform.position
+                    : car.hasLastPosition ? (Vector2)car.lastPosition : (Vector2)owner.transform.position;
+                float dist = Vector2.Distance(player.transform.position, carPos);
+                if (dist <= bestDist)
+                {
+                    bestDist = dist;
+                    nearestCar = car;
+                }
+            }
+            return nearestCar != null;
+        }
+
+        public static void TryBoardNearestCar(PlayerControl player)
+        {
+            if (player != PlayerControl.LocalPlayer) return;
+            if (!IsNearBoardableCar(player, out var nearest)) return;
+
+            byte? newDriver = nearest.driverId;
+            byte? newPassenger = nearest.passengerId;
+            if (newDriver == null && player.PlayerId == nearest.ownerId) newDriver = player.PlayerId;
+            else if (newPassenger == null && newDriver != player.PlayerId) newPassenger = player.PlayerId;
+            else return;
+            setOccupancy(nearest, newDriver, newPassenger);
+        }
+
+        public static void TransferDriver(PlayerControl currentDriver, PlayerControl target)
+        {
+            if (currentDriver != PlayerControl.LocalPlayer) return;
+            var car = getCarByAnyOccupant(currentDriver);
+            if (car == null || car.driverId != currentDriver.PlayerId) return;
+            if (target == null || target.Data.IsDead) return;
+
+            setOccupancy(car, target.PlayerId, currentDriver.PlayerId);
+        }
+
+        public static void OnMeetingStarted()
+        {
+            foreach (var car in cars.Values)
+            {
+                if (car.destroyed) continue;
+
+                car.wasDrivingBeforeMeeting = car.driverId != null;
+                car.driverId = null;
+                car.passengerId = null;
+                car.meetingsSurvived++;
+
+                if (car.meetingsSurvived >= meetingsUntilDespawn)
+                {
+                    car.destroyed = true;
+                    RacerCar.DespawnVisual(car.ownerId);
+                }
+            }
+        }
+
+        public static void OnMeetingEnded()
+        {
+            foreach (var car in cars.Values)
+            {
+                if (car.destroyed) continue;
+                if (car.wasDrivingBeforeMeeting)
+                    car.driverId = car.ownerId;
+                car.wasDrivingBeforeMeeting = false;
+            }
+        }
+
+        public static void update()
+        {
+            foreach (var player in PlayerControl.AllPlayerControls)
+            {
+                if (player == null || player.Data == null || player.Data.IsDead) continue;
+
+                var car = getCarByAnyOccupant(player);
+                if (car == null) continue;
+
+                if (car.passengerId == player.PlayerId)
+                {
+                    var driver = car.driverId != null ? Helpers.playerById(car.driverId.Value) : null;
+                    if (driver == null) continue;
+                    if (player == PlayerControl.LocalPlayer)
+                    {
+                        float behindX = car.facingLeft ? 0.22f : -0.22f;
+                        player.NetTransform.RpcSnapTo(driver.transform.position + new Vector3(behindX, 0f, 0f));
+                    }
+                    fixOccupantPose(player, car.facingLeft);
+                }
+                else if (car.driverId == player.PlayerId)
+                {
+                    if (player == PlayerControl.LocalPlayer)
+                    {
+                        // Velocity multiplier itself is applied in PlayerPhysicsFixedUpdate
+                        // (Patches/PlayerControlPatch.cs), not here - PlayerPhysics.FixedUpdate
+                        // recomputes velocity after this runs, so it would get overwritten.
+                        float inputMagnitude = player.MyPhysics.body.velocity.magnitude;
+                        float target = inputMagnitude > 0.01f ? 1f : 0f;
+                        car.currentSpeedFactor = Mathf.MoveTowards(car.currentSpeedFactor, target,
+                            (target > car.currentSpeedFactor ? accelerationRate : decelerationRate) * Time.fixedDeltaTime);
+                    }
+
+                    Vector3 pos = player.transform.position;
+                    if (car.hasLastPosition)
+                    {
+                        float deltaX = pos.x - car.lastPosition.x;
+                        if (Mathf.Abs(deltaX) > 0.0006f) car.facingLeft = deltaX < 0f;
+                    }
+                    car.lastPosition = pos;
+                    car.hasLastPosition = true;
+
+                    fixOccupantPose(player, car.facingLeft);
+                    RacerCar.UpdateVisual(car.ownerId, pos);
+                }
+            }
+        }
+
+        public static void clearAndReload()
+        {
+            RacerCar.DespawnAll();
+            injuredUntil.Clear();
+            racer = [];
+            cars.Clear();
+            speedBoost = CustomOptionHolder.modifierRacerSpeedBoost.getFloat();
+            meetingsUntilDespawn = Mathf.RoundToInt(CustomOptionHolder.modifierRacerMeetingsUntilDespawn.getFloat());
         }
     }
 }

@@ -31,7 +31,8 @@ namespace TheOtherRoles.Patches {
         KataomoiWin = 22,
         DoomsayerWin = 23,
         PelicanWin = 24,
-        YandereWin = 25
+        YandereWin = 25,
+        BlockmanWin = 26
         //ProsecutorWin = 16
     }
 
@@ -58,7 +59,8 @@ namespace TheOtherRoles.Patches {
         DoomsayerWin,
         PelicanWin,
         YandereWin,
-        EveryoneDied
+        EveryoneDied,
+        BlockmanWin
         //ProsecutorWin
     }
 
@@ -184,7 +186,8 @@ namespace TheOtherRoles.Patches {
                 .. Fox.allPlayers,
                 .. Immoralist.allPlayers,
                 .. Pelican.allPlayers,
-                .. Yandere.allPlayers
+                .. Yandere.allPlayers,
+                .. Blockman.allPlayers
             ];
             if (Shifter.isNeutral) notWinners.AddRange(Shifter.allPlayers);
 
@@ -218,6 +221,7 @@ namespace TheOtherRoles.Patches {
             bool foxWin = Fox.exists && gameOverReason == (GameOverReason)CustomGameOverReason.FoxWin;
             bool jekyllAndHydeWin = JekyllAndHyde.exists && gameOverReason == (GameOverReason)CustomGameOverReason.JekyllAndHydeWin;
             bool everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
+            bool blockmanWin = Blockman.exists && gameOverReason == (GameOverReason)CustomGameOverReason.BlockmanWin;
             //bool prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
 
             // Here we changed this to: The Pursuer wins no matter who wins except for sabotage
@@ -852,6 +856,12 @@ namespace TheOtherRoles.Patches {
                 textRenderer.color = Akujo.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Akujo.color);
             }
+            else if (AdditionalTempData.winCondition == WinCondition.BlockmanWin)
+            {
+                nonModTranslationText = "blockmanWin";
+                textRenderer.color = Blockman.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Blockman.color);
+            }
             else if (AdditionalTempData.winCondition == WinCondition.MoriartyWin)
             {
                 nonModTranslationText = "moriartyWin";
@@ -937,7 +947,7 @@ namespace TheOtherRoles.Patches {
                 }
             }
 
-            if (ClientOption.GetValue(ClientOption.ClientOptionType.ShowRoleSummary) == 1 || HideNSeek.isHideNSeekGM) {
+            if (ClientOption.GetValue(ClientOption.ClientOptionType.ShowRoleSummary) == 1 || HideNSeek.isHideNSeekGM || Zombie.isZombieGM) {
                 var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
                 GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
                 roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -214f); 
@@ -1014,7 +1024,9 @@ namespace TheOtherRoles.Patches {
             if (DestroyableSingleton<TutorialManager>.InstanceExists) // InstanceExists | Don't check Custom Criteria when in Tutorial
                 return true;
             if (FreePlayGM.isFreePlayGM) return false;
+            if (CustomOptionHolder.neverEndGame.getBool()) return false; // Testing mode: skip every win-condition check so the game never ends
             var statistics = new PlayerStatistics(__instance);
+            if (CheckAndEndGameForBlockmanWin(__instance)) return false;
             if (CheckAndEndGameForMiniLose(__instance)) return false;
             if (CheckAndEndGameForJesterWin(__instance)) return false;
             if (CheckAndEndGameForKataomoiWin(__instance)) return false;
@@ -1027,7 +1039,7 @@ namespace TheOtherRoles.Patches {
             if (CheckAndEndGameForMoriartyWin(__instance, statistics)) return false;
             if (CheckAndEndGameForYandereWin(__instance, statistics)) return false;
             if (CheckAndEndGameForSabotageWin(__instance)) return false;
-            if (CheckAndEndGameForTaskWin(__instance)) return false;
+            if (CheckAndEndGameForTaskWin(__instance))return false;
             //if (CheckAndEndGameForProsecutorWin(__instance)) return false;
             if (CheckAndEndGameForLoverWin(__instance, statistics)) return false;
             if (CheckAndEndGameForAkujoWin(__instance, statistics)) return false;
@@ -1051,6 +1063,16 @@ namespace TheOtherRoles.Patches {
             if (Jester.players.Any(x => x.player && x.triggerJesterWin)) {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.JesterWin, false);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool CheckAndEndGameForBlockmanWin(ShipStatus __instance)
+        {
+            if (Blockman.players.Any(x => x.player && x.triggerBlockmanWin))
+            {
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BlockmanWin, false);
                 return true;
             }
             return false;
@@ -1167,6 +1189,7 @@ namespace TheOtherRoles.Patches {
 
         private static bool CheckAndEndGameForTaskWin(ShipStatus __instance) {
             if (HideNSeek.isHideNSeekGM && !HideNSeek.taskWinPossible) return false;
+            if (Zombie.isZombieGM && !Zombie.taskWinPossible) return false;
             if ((GameData.Instance.TotalTasks > 0 && GameData.Instance.TotalTasks <= GameData.Instance.CompletedTasks) || (TaskMaster.triggerTaskMasterWin && TaskMaster.hasAlivePlayers)) {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByTask, false);
@@ -1239,7 +1262,7 @@ namespace TheOtherRoles.Patches {
         }
 
         private static bool CheckAndEndGameForImpostorWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (HideNSeek.isHideNSeekGM) 
+            if (HideNSeek.isHideNSeekGM || Zombie.isZombieGM)
                 if ((0 != statistics.TotalAlive - statistics.TeamImpostorsAlive)) return false;
 
             if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive && statistics.TeamPelicanAlive == 0 && statistics.YandereAlive == 0
@@ -1267,6 +1290,10 @@ namespace TheOtherRoles.Patches {
         private static bool CheckAndEndGameForCrewmateWin(ShipStatus __instance, PlayerStatistics statistics) {
             if (HideNSeek.isHideNSeekGM && HideNSeek.timer <= 0 && !HideNSeek.isWaitingTimer) {
                 //__instance.enabled = false;
+                GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByVote, false);
+                return true;
+            }
+            if (Zombie.isZombieGM && Zombie.timer <= 0) {
                 GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByVote, false);
                 return true;
             }

@@ -45,7 +45,9 @@ namespace TheOtherRoles.CustomGameModes
                 gameModeButton.transform.GetChild(2).GetComponent<SpriteRenderer>().color = new Color(0f, 0f, 0f);
                 pButton.OnClick.AddListener((Action)(() =>
                 {
-                    TORMapOptions.gameMode = (CustomGamemodes)((int)(TORMapOptions.gameMode + 1) % (Enum.GetNames(typeof(CustomGamemodes)).Length - 1));
+                    var nextGameMode = (CustomGamemodes)((int)(TORMapOptions.gameMode + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
+                    if (nextGameMode == CustomGamemodes.FreePlay) nextGameMode = (CustomGamemodes)((int)(nextGameMode + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
+                    TORMapOptions.gameMode = nextGameMode;
                     __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => { pButton.buttonText.text = Helpers.cs(Color.yellow, GameModeText.GetComponent<TextMeshPro>().text); })));
                     MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareGamemode, Hazel.SendOption.Reliable, -1);
                     writer.Write((byte)TORMapOptions.gameMode);

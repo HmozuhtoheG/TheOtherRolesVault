@@ -43,7 +43,8 @@ namespace TheOtherRoles
         Classic,
         Guesser,
         HideNSeek,
-        FreePlay
+        FreePlay,
+        Zombie
     }
 
     public static class Direction
@@ -1982,6 +1983,8 @@ namespace TheOtherRoles
                 roleCouldUse = true;
             else if (Sidekick.canUseVents && player.isRole(RoleId.Sidekick))
                 roleCouldUse = true;
+            else if (player.isRole(RoleId.Werewolf))
+                roleCouldUse = false;
             else if (Spy.canEnterVents && player.isRole(RoleId.Spy))
                 roleCouldUse = true;
             else if (Vulture.canUseVents && player.isRole(RoleId.Vulture))
@@ -2044,6 +2047,13 @@ namespace TheOtherRoles
 
             if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return MurderAttemptResult.PerformKill;
 
+            // Zombie mode: infect instead of kill, fully isolated from every other role check
+            if (Zombie.isZombieGM) {
+                if (killer.Data.Role.IsImpostor && !target.Data.Role.IsImpostor)
+                    RPCProcedure.ZombieInfect.Invoke(target.PlayerId);
+                return MurderAttemptResult.BlankKill;
+            }
+
             // Handle first kill attempt
             if (TORMapOptions.shieldFirstKill && TORMapOptions.firstKillPlayer == target) return MurderAttemptResult.SuppressKill;
 
@@ -2095,12 +2105,6 @@ namespace TheOtherRoles
                 return MurderAttemptResult.SuppressKill;
             }
 
-            else if (Cupid.checkShieldActive(target))
-            {
-                Cupid.scapeGoat(target);
-                return MurderAttemptResult.BlankKill;
-            }
-
             // Kill the killer if Veteran is on alert
             else if (Veteran.players.Any(x => x.player == target && x.alertActive))
             {
@@ -2115,6 +2119,20 @@ namespace TheOtherRoles
                 if (!checkArmored(killer, true, true))
                     thief.suicideFlag = true;
                 return MurderAttemptResult.SuppressKill;
+            }
+
+            if (TransportationToolPatches.isUsingTransportation(target) && !blockRewind && killer.isRole(RoleId.Vampire))
+            {
+                return MurderAttemptResult.DelayVampireKill;
+            }
+            else if (TransportationToolPatches.isUsingTransportation(target))
+                return MurderAttemptResult.SuppressKill;
+
+            if (killer.isRole(RoleId.Werewolf) && !Werewolf.IsLightsOff())
+            {
+                var werewolfRole = Werewolf.getRole(killer);
+                if (werewolfRole == null || werewolfRole.markedTarget != target)
+                    return MurderAttemptResult.SuppressKill;
             }
 
             // Block Armored with armor kill

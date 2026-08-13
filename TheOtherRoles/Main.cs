@@ -26,15 +26,15 @@ using UnityEngine.SceneManagement;
 
 namespace TheOtherRoles
 {
-    [BepInPlugin(Id, "TheOtherRolesVersion", VersionString)]
+    [BepInPlugin(Id, "TheOtherRolesVault", VersionString)]
     [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInProcess("Among Us.exe")]
     [ReactorModFlags(Reactor.Networking.ModFlags.RequireOnAllClients)]
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";
-        public const string VersionString = "1.0.0";
-        public const string SubVersionString = "-Beta";
+        public const string VersionString = "1.0.2";
+        public const string SubVersionString = "official";
         public static uint betaDays = 0;  // amount of days for the build to be usable (0 for infinite!)
 
         public static Version Version = Version.Parse(VersionString);

@@ -421,7 +421,7 @@ namespace TheOtherRoles.Modules
                     if (waitMore > 0) {
                         waitMoreText = $" ({string.Format(ModTranslation.getString("roleDraftTurns"), waitMore)})";
                     }
-                    __instance.TeamTitle.text += $"\n\n{waitMoreText}\n{string.Format(ModTranslation.getString("roleDraftRandomSelection"), (int)(maxTimer + 1 - timer))}\n {(SoundManager.MusicVolume > -80 ? ModTranslation.getString("roleDraftMusic") : "")}";
+                   // __instance.TeamTitle.text += $"\n\n{waitMoreText}\n{string.Format(ModTranslation.getString("roleDraftRandomSelection"), (int)(maxTimer + 1 - timer))}\n {(SoundManager.MusicVolume > -80 ? ModTranslation.getString("roleDraftMusic") : "")}";
                     yield return null;
                 }
             }

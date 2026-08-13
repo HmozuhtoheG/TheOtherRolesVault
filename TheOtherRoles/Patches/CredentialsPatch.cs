@@ -35,6 +35,7 @@ namespace TheOtherRoles.Patches {
                     if (HideNSeek.isHideNSeekGM) gameModeText = ModTranslation.getString("gamemodeHideNSeek");
                     else if (HandleGuesser.isGuesserGm) gameModeText = ModTranslation.getString("gamemodeGuesser");
                     else if (FreePlayGM.isFreePlayGM) gameModeText = ModTranslation.getString("gamemodeFreePlay");
+                    else if (Zombie.isZombieGM) gameModeText = ModTranslation.getString("gamemodeZombie");
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
                     __instance.text.text = $"<size=130%><color=#33FFFF>TORV</color></size> <color=#FFFF00>v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</color>\n{gameModeText}";
                     position.DistanceFromEdge = new Vector3(1.5f, 0.11f, 0);
@@ -43,6 +44,7 @@ namespace TheOtherRoles.Patches {
                     if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek) gameModeText = ModTranslation.getString("gamemodeHideNSeek");
                     else if (TORMapOptions.gameMode == CustomGamemodes.Guesser) gameModeText = ModTranslation.getString("gamemodeGuesser");
                     else if (TORMapOptions.gameMode == CustomGamemodes.FreePlay) gameModeText = ModTranslation.getString("gamemodeFreePlay");
+                    else if (TORMapOptions.gameMode == CustomGamemodes.Zombie) gameModeText = ModTranslation.getString("gamemodeZombie");
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText);
 
                     __instance.text.text = $"{ModTranslation.getString(fullCredentialsVersion)}\n{ModTranslation.getString(fullCredentials)}\n {__instance.text.text}";
@@ -50,12 +52,34 @@ namespace TheOtherRoles.Patches {
 
                     try
                     {
-                        var GameModeText = GameObject.Find("GameModeText")?.GetComponent<TextMeshPro>();
+                        var gameModeTextObj = GameObject.Find("GameModeText");
+                        var GameModeText = gameModeTextObj?.GetComponent<TextMeshPro>();
                         GameModeText.text = gameModeText == "" ? (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek ? "Van. HideNSeek" : ModTranslation.getString("modeClassic")) : gameModeText;
                         var ModeLabel = GameObject.Find("ModeLabel")?.GetComponentInChildren<TextMeshPro>();
                         ModeLabel.text = ModTranslation.getString("modeLabel");
+
+                        // This text is display-only in vanilla; make it clickable so TOR modes (incl. Zombie)
+                        // can be picked on screens (like the online Create Game screen) that never exposed
+                        // a working mode picker of their own.
+                        if (gameModeTextObj != null && gameModeTextObj.GetComponent<PassiveButton>() == null)
+                        {
+                            var collider = gameModeTextObj.AddComponent<BoxCollider2D>();
+                            collider.isTrigger = true;
+                            collider.size = new Vector2(2f, 0.4f);
+                            var button = gameModeTextObj.AddComponent<PassiveButton>();
+                            button.OnMouseOut = new UnityEngine.Events.UnityEvent();
+                            button.OnMouseOver = new UnityEngine.Events.UnityEvent();
+                            button.OnClick = new UnityEngine.UI.Button.ButtonClickedEvent();
+                            button.OnClick.AddListener((Action)(() => {
+                                var next = (CustomGamemodes)((int)(TORMapOptions.gameMode + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
+                                if (next == CustomGamemodes.FreePlay) next = (CustomGamemodes)((int)(next + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
+                                TORMapOptions.gameMode = next;
+                                TheOtherRolesPlugin.Logger.LogMessage($"[ZombieModeDebug] GameModeText clicked, new TORMapOptions.gameMode = {TORMapOptions.gameMode}");
+                            }));
+                            TheOtherRolesPlugin.Logger.LogMessage("[ZombieModeDebug] Made GameModeText clickable.");
+                        }
                     }
-                    catch { }
+                    catch (Exception e) { TheOtherRolesPlugin.Logger.LogWarning($"[ZombieModeDebug] Exception making GameModeText clickable: {e}"); }
                 }
                 position.AdjustPosition();
             }
