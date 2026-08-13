@@ -109,6 +109,7 @@ namespace TheOtherRoles
         Kataomoi,
         Collator,
         Yandere,
+        Workaholic,
         Busker,
         Noisemaker,
         Archaeologist,
@@ -696,7 +697,7 @@ namespace TheOtherRoles
             RoleDraft.isRunning = false;
         }
 
-    public static void HandleShareOptions(byte numberOfOptions, MessageReader reader) {            
+    public static void HandleShareOptions(byte numberOfOptions, MessageReader reader) {
             try {
                 for (int i = 0; i < numberOfOptions; i++) {
                     uint optionId = reader.ReadPackedUInt32();
@@ -704,6 +705,7 @@ namespace TheOtherRoles
                     CustomOption option = CustomOption.options.First(option => option.id == (int)optionId);
                     option.updateSelection((int)selection, i == numberOfOptions - 1);
                 }
+                clearAndReloadRoles();
                 HelpMenu.OnUpdateOptions();
             } catch (Exception e) {
                 TheOtherRolesPlugin.Logger.LogError("Error while deserializing options: " + e.Message);
@@ -851,6 +853,19 @@ namespace TheOtherRoles
             PlayerControl target = Helpers.playerById(targetId);
             if (source != null && target != null)
             {
+                // Check Workaholic shield on host side
+                if (Workaholic.isShielded(target))
+                {
+                    var workaholic = Workaholic.getRole(target);
+                    if (workaholic != null)
+                    {
+                        workaholic.shieldTimer = 0f;
+                        Workaholic.BreakShield.Invoke(sourceId);
+                    }
+                    source.killTimer = source.GetKillCooldown();
+                    return;
+                }
+
                 if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
                 source.MurderPlayer(target, MurderResultFlags.Succeeded);
             }

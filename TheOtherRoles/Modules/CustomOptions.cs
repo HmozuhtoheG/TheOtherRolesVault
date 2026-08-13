@@ -287,6 +287,7 @@ namespace TheOtherRoles {
                         ShareOptionSelections();
                     } else if (entry != null) {
                         entry.Value = selection; // Save selection to config
+                        TheOtherRoles.clearAndReloadRoles();
                         ShareOptionChange((uint)id);// Share single selection
                     }
                 }

@@ -108,6 +108,7 @@ namespace TheOtherRoles
             Doomsayer.clearAndReload();
             Pelican.clearAndReload();
             Yandere.clearAndReload();
+            Workaholic.clearAndReload();
             Role.ClearAll();
 
             // Modifier
@@ -223,7 +224,8 @@ namespace TheOtherRoles
                 { RoleId.Fox, typeof(RoleBase<Fox>) },
                 { RoleId.Immoralist, typeof(RoleBase<Immoralist>) },
                 { RoleId.Pelican, typeof(RoleBase<Pelican>) },
-                { RoleId.Yandere, typeof(RoleBase<Yandere>) }
+                { RoleId.Yandere, typeof(RoleBase<Yandere>) },
+                { RoleId.Workaholic, typeof(RoleBase<Workaholic>) }
             };
 
             public static IEnumerable<HelpSprite> GetHelp(RoleId roleId)

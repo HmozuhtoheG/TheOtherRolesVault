@@ -723,6 +723,7 @@ public static class HelpMenu
                 { RoleId.Yoyo, CustomOptionHolder.yoyoSpawnRate },
                 { RoleId.FortuneTeller, CustomOptionHolder.fortuneTellerSpawnRate },
                 { RoleId.Yandere, CustomOptionHolder.yandereSpawnRate },
+                { RoleId.Workaholic, CustomOptionHolder.workaholicSpawnRate },
                 { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate },
                 { RoleId.Sprinter, CustomOptionHolder.sprinterSpawnRate },
                 { RoleId.Sherlock, CustomOptionHolder.sherlockSpawnRate },
