@@ -72,6 +72,7 @@ namespace TheOtherRoles.Roles
             public int id;
             public Vector2 position;
             public float age;
+            public float placedAtRealtime;
             public bool settled => age >= settleTime;
             public GameObject gameObject;
             public TextMeshPro timerText;
@@ -204,7 +205,7 @@ namespace TheOtherRoles.Roles
             if (role == null) return;
             if (role.blocks.Count >= maxBlocks) return;
 
-            Block block = new() { id = message.blockId, position = message.pos, age = 0f };
+            Block block = new() { id = message.blockId, position = message.pos, age = 0f, placedAtRealtime = Time.time };
             block.gameObject = CreateBlockGameObject(message.pos, block);
             role.blocks.Add(block);
         });
@@ -352,6 +353,13 @@ namespace TheOtherRoles.Roles
             var role = getRole(Helpers.playerById(message.playerId));
             if (role == null || role.player == null) return;
             role.player.NetTransform.RpcSnapTo(message.targetPos);
+        });
+
+        public static RemoteProcess<byte> TriggerWin = RemotePrimitiveProcess.OfByte("BlockmanWin", (message, _) =>
+        {
+            var role = getRole(Helpers.playerById(message));
+            if (role == null) return;
+            role.triggerBlockmanWin = true;
         });
 
         public void TryDash()
@@ -596,7 +604,22 @@ namespace TheOtherRoles.Roles
                 if (!filled) return;
             }
 
-            triggerBlockmanWin = true;
+            TriggerWin.Invoke(player.PlayerId);
+        }
+
+        public static bool IsBlueprintComplete(Blockman role)
+        {
+            if (role == null || role.player == null || role.player.Data.IsDead) return false;
+            if (role.blueprint == null || role.blueprint.originWorldPos == Vector2.zero) return false;
+
+            foreach (var cell in role.blueprint.cells)
+            {
+                Vector2 targetPos = role.blueprint.originWorldPos + new Vector2(cell.x, cell.y) * role.blueprint.gridSize;
+                bool filled = role.blocks.Any(b => Time.time - b.placedAtRealtime >= settleTime && Vector2.Distance(b.position, targetPos) < 0.5f);
+                if (!filled) return false;
+            }
+
+            return true;
         }
 
         public override void OnMeetingStart()

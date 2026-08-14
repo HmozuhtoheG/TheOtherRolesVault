@@ -911,51 +911,7 @@ namespace TheOtherRoles
 #if WINDOWS
         public static string GetClipboardString()
         {
-            uint type = 0;
-            if (ClipboardHelper.IsClipboardFormatAvailable(1U)) { type = 1U; Debug.Log("ASCII"); }
-            if (ClipboardHelper.IsClipboardFormatAvailable(13U)) { type = 13U; Debug.Log("UNICODE"); }
-            if (type == 0) return "";
-
-            string result;
-            try
-            {
-                if (!ClipboardHelper.OpenClipboard(IntPtr.Zero))
-                {
-                    result = "";
-                }
-                else
-                {
-
-                    IntPtr clipboardData = ClipboardHelper.GetClipboardData(type);
-                    if (clipboardData == IntPtr.Zero)
-                        result = "";
-                    else
-                    {
-                        IntPtr intPtr = IntPtr.Zero;
-                        try
-                        {
-                            intPtr = ClipboardHelper.GlobalLock(clipboardData);
-                            int len = ClipboardHelper.GlobalSize(clipboardData);
-
-                            if (type == 1U)
-                                result = Marshal.PtrToStringAnsi(clipboardData, len);
-                            else
-                            {
-                                result = Marshal.PtrToStringUni(clipboardData) ?? "";
-                            }
-                        }
-                        finally
-                        {
-                            if (intPtr != IntPtr.Zero) ClipboardHelper.GlobalUnlock(intPtr);
-                        }
-                    }
-                }
-            }
-            finally
-            {
-                ClipboardHelper.CloseClipboard();
-            }
-            return result;
+            return GUIUtility.systemCopyBuffer ?? "";
         }
 #endif
 
@@ -2351,9 +2307,6 @@ namespace TheOtherRoles
                 }
                 if ((now - compileTime)?.TotalDays > TheOtherRolesPlugin.betaDays) {
                     TheOtherRolesPlugin.Logger.LogMessage($"Beta expired!");
-#if WINDOWS
-                    BepInExUpdater.MessageBoxTimeout(BepInExUpdater.GetForegroundWindow(), "BETA is expired. You cannot play this version anymore.", "The Other Roles Beta", 0,0, 10000);
-#endif
                     Application.Quit();
 
                 } else TheOtherRolesPlugin.Logger.LogMessage($"Beta will remain runnable for {TheOtherRolesPlugin.betaDays - (now - compileTime)?.TotalDays} days!");

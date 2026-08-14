@@ -110,6 +110,14 @@ namespace TheOtherRoles.Roles
                 workaholic.countdownTimer = deathCountdownTime;
         });
 
+        public static RemoteProcess<byte> Suicide = RemotePrimitiveProcess.OfByte("WorkaholicSuicide", (playerId, _) =>
+        {
+            var pc = Helpers.playerById(playerId);
+            if (pc == null) return;
+            pc.MurderPlayer(pc, MurderResultFlags.Succeeded);
+            GameHistory.overrideDeathReasonAndKiller(pc, DeadPlayer.CustomDeathReason.Suicide);
+        });
+
         public override void PostInit()
         {
             if (PlayerControl.LocalPlayer != player) return;
@@ -195,8 +203,7 @@ namespace TheOtherRoles.Roles
                 }
                 if (countdownTimer <= 0f)
                 {
-                    player.MurderPlayer(player, MurderResultFlags.Succeeded);
-                    GameHistory.overrideDeathReasonAndKiller(player, DeadPlayer.CustomDeathReason.Suicide);
+                    Suicide.Invoke(player.PlayerId);
                     return;
                 }
             }
@@ -279,12 +286,12 @@ namespace TheOtherRoles.Roles
             if (workaholic.tasksCompleted >= workaholic.tasksTotal && workaholic.tasksTotal > 0)
             {
                 workaholic.tasksCompleted = 0;
-                workaholic.player.clearAllTasks();
-                assignSingleTask(workaholic.player);
                 workaholic.countdownTimer = deathCountdownTime;
                 ResetCountdown.Invoke(pc.PlayerId);
                 if (workaholic.player == PlayerControl.LocalPlayer)
                 {
+                    workaholic.player.clearAllTasks();
+                    assignSingleTask(workaholic.player);
                     new CustomMessage(ModTranslation.getString("workaholicTaskComplete"), 3f);
                     SoundEffectsManager.play("select");
                 }

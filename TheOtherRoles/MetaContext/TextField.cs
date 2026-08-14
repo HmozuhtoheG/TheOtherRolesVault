@@ -346,7 +346,7 @@ namespace TheOtherRoles.MetaContext
         {
             if (!IsSelecting) return;
 
-            ClipboardHelper.PutClipboardString(myInput.Substring(Math.Min(cursor, selectingBegin), Math.Abs(cursor - selectingBegin)));
+            GUIUtility.systemCopyBuffer = myInput.Substring(Math.Min(cursor, selectingBegin), Math.Abs(cursor - selectingBegin));
         }
 
 

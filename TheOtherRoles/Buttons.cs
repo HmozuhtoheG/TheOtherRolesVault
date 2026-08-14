@@ -646,7 +646,7 @@ namespace TheOtherRoles
                 },
                 () => { blockmanBreakButton.Timer = 0f; },
                 Blockman.getBreakButtonSprite(),
-                CustomButton.ButtonPositions.lowerRowCenter,
+                CustomButton.ButtonPositions.screenBottomLeft,
                 __instance,
                 KeyCode.G,
                 buttonText: ModTranslation.getString("BlockmanBreakText"),

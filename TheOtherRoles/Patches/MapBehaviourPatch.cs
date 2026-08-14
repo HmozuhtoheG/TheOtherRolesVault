@@ -28,6 +28,9 @@ namespace TheOtherRoles.Patches {
         public static Dictionary<string, GameObject> mapIcons = new();
         public static Dictionary<byte, SpriteRenderer> corpseIcons = null;
 
+        public static Dictionary<int, GameObject> blockmanBlueprintIcons = new();
+        public static Sprite blockmanBlueprintSprite;
+
         public static Sprite doorClosedSprite;
         public static Dictionary<string, SpriteRenderer> doorMarks;
         public static Il2CppArrayBase<OpenableDoor> plainDoors = null;
@@ -77,6 +80,11 @@ namespace TheOtherRoles.Patches {
                 mapIcon.Destroy();
             }
             mapIcons = new();
+            foreach (var icon in blockmanBlueprintIcons.Values)
+            {
+                if (icon != null) icon.Destroy();
+            }
+            blockmanBlueprintIcons = new();
             VentNetworks = new();
             if (doorMarks != null)
             {
@@ -355,6 +363,50 @@ namespace TheOtherRoles.Patches {
                         herePoints.Remove(s.Key);
                     }
                 }
+            }
+
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Blockman))
+            {
+                var role = Blockman.local;
+                bool showBlueprint = role != null && !PlayerControl.LocalPlayer.Data.IsDead && MeetingHud.Instance == null
+                    && role.blueprint != null && role.blueprint.originWorldPos != Vector2.zero;
+
+                if (showBlueprint)
+                {
+                    blockmanBlueprintSprite ??= Blockman.getBlockSprite();
+                    for (int i = 0; i < role.blueprint.cells.Length; i++)
+                    {
+                        var cell = role.blueprint.cells[i];
+                        Vector2 worldPos = role.blueprint.originWorldPos + new Vector2(cell.x, cell.y) * role.blueprint.gridSize;
+                        Vector3 pos = new Vector3(worldPos.x, worldPos.y, 0f);
+                        pos /= MapUtilities.CachedShipStatus.MapScale;
+                        pos.x *= Mathf.Sign(MapUtilities.CachedShipStatus.transform.localScale.x);
+                        pos.z = -2f;
+
+                        if (!blockmanBlueprintIcons.TryGetValue(i, out GameObject icon) || icon == null)
+                        {
+                            icon = GameObject.Instantiate(__instance.HerePoint.gameObject, __instance.HerePoint.transform.parent);
+                            icon.transform.localScale = Vector3.one * 0.35f;
+                            blockmanBlueprintIcons[i] = icon;
+                        }
+                        var sr = icon.GetComponent<SpriteRenderer>();
+                        sr.sprite = blockmanBlueprintSprite;
+                        sr.color = Blockman.color;
+                        icon.transform.localPosition = pos;
+                        icon.SetActive(true);
+                    }
+                }
+                else
+                {
+                    foreach (var icon in blockmanBlueprintIcons.Values)
+                        if (icon != null) icon.SetActive(false);
+                }
+            }
+            else if (blockmanBlueprintIcons.Count > 0)
+            {
+                foreach (var icon in blockmanBlueprintIcons.Values)
+                    if (icon != null) icon.Destroy();
+                blockmanBlueprintIcons.Clear();
             }
 
             foreach (var vent in MapUtilities.CachedShipStatus.AllVents)

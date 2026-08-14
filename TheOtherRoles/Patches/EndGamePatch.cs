@@ -32,11 +32,8 @@ namespace TheOtherRoles.Patches {
         DoomsayerWin = 23,
         PelicanWin = 24,
         YandereWin = 25,
-<<<<<<< HEAD
-        BlockmanWin = 26
-=======
-        WorkaholicWin = 26
->>>>>>> 22734086d199599072355e65d75d1297e40517c0
+        BlockmanWin = 26,
+        WorkaholicWin = 27
         //ProsecutorWin = 16
     }
 
@@ -64,11 +61,9 @@ namespace TheOtherRoles.Patches {
         PelicanWin,
         YandereWin,
         EveryoneDied,
-<<<<<<< HEAD
-        BlockmanWin
-=======
+        BlockmanWin,
         WorkaholicWin
->>>>>>> 22734086d199599072355e65d75d1297e40517c0
+
         //ProsecutorWin
     }
 
@@ -195,11 +190,8 @@ namespace TheOtherRoles.Patches {
                 .. Immoralist.allPlayers,
                 .. Pelican.allPlayers,
                 .. Yandere.allPlayers,
-<<<<<<< HEAD
-                .. Blockman.allPlayers
-=======
+                .. Blockman.allPlayers,
                 .. Workaholic.allPlayers
->>>>>>> 22734086d199599072355e65d75d1297e40517c0
             ];
             if (Shifter.isNeutral) notWinners.AddRange(Shifter.allPlayers);
 
@@ -232,9 +224,9 @@ namespace TheOtherRoles.Patches {
             bool yandereWin = Yandere.exists && gameOverReason == (GameOverReason)CustomGameOverReason.YandereWin;
             bool foxWin = Fox.exists && gameOverReason == (GameOverReason)CustomGameOverReason.FoxWin;
             bool jekyllAndHydeWin = JekyllAndHyde.exists && gameOverReason == (GameOverReason)CustomGameOverReason.JekyllAndHydeWin;
-            bool workaholicWin = Workaholic.exists && gameOverReason == (GameOverReason)CustomGameOverReason.WorkaholicWin;
             bool everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
             bool blockmanWin = Blockman.exists && gameOverReason == (GameOverReason)CustomGameOverReason.BlockmanWin;
+            bool workaholicWin = Workaholic.exists && gameOverReason == (GameOverReason)CustomGameOverReason.WorkaholicWin;
             //bool prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
 
             // Here we changed this to: The Pursuer wins no matter who wins except for sabotage
@@ -257,6 +249,8 @@ namespace TheOtherRoles.Patches {
                 bool workaholicSnatches = Workaholic.exists && Workaholic.livingPlayers.Count > 0;
                 if (workaholicSnatches)
                 {
+                    foreach (var p in SchrodingersCat.allPlayers)
+                        EndGameResult.CachedWinners.Add(new CachedPlayerData(p.Data));
                     // Clear all winners and let Workaholic win alone
                     EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
                     AdditionalTempData.winCondition = WinCondition.WorkaholicWin;
@@ -365,6 +359,18 @@ namespace TheOtherRoles.Patches {
             {
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
                 AdditionalTempData.winCondition = WinCondition.EveryoneDied;
+            }
+
+            else if (blockmanWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.BlockmanWin;
+                foreach (var blockman in Blockman.players)
+                {
+                    if (blockman.player == null || (!blockman.triggerBlockmanWin && !Blockman.IsBlueprintComplete(blockman))) continue;
+                    CachedPlayerData wpd = new(blockman.player.Data);
+                    EndGameResult.CachedWinners.Add(wpd);
+                }
             }
 
             // Workaholic wins alone by snatching the winning side's victory
@@ -1120,7 +1126,7 @@ namespace TheOtherRoles.Patches {
 
         private static bool CheckAndEndGameForBlockmanWin(ShipStatus __instance)
         {
-            if (Blockman.players.Any(x => x.player && x.triggerBlockmanWin))
+            if (Blockman.players.Any(x => x.player && (x.triggerBlockmanWin || Blockman.IsBlueprintComplete(x))))
             {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.BlockmanWin, false);
                 return true;
@@ -1204,7 +1210,7 @@ namespace TheOtherRoles.Patches {
                 && statistics.YandereAlive == 0
                 && statistics.TeamSheriffAlive == 0;
 
-            if (allOtherThreatsDead && livingWorkaholics.Count == 1)
+            if (allOtherThreatsDead)
             {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.WorkaholicWin, false);
                 return true;

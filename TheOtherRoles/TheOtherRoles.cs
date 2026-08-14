@@ -1307,11 +1307,14 @@ namespace TheOtherRoles
                 {
                     var driver = car.driverId != null ? Helpers.playerById(car.driverId.Value) : null;
                     if (driver == null) continue;
+
+                    float behindX = car.facingLeft ? 0.22f : -0.22f;
+                    Vector3 targetPos = driver.transform.position + new Vector3(behindX, 0f, 0f);
+
                     if (player == PlayerControl.LocalPlayer)
-                    {
-                        float behindX = car.facingLeft ? 0.22f : -0.22f;
-                        player.NetTransform.RpcSnapTo(driver.transform.position + new Vector3(behindX, 0f, 0f));
-                    }
+                        player.NetTransform.RpcSnapTo(targetPos);
+                    else
+                        player.transform.position = targetPos;
                     fixOccupantPose(player, car.facingLeft);
                 }
                 else if (car.driverId == player.PlayerId)

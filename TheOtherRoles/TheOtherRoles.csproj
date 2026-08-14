@@ -25,9 +25,6 @@
 		<EmbeddedResource Include="Resources\**" Exclude="Resources\AssetsBundle\assetsbundle-Android" Condition="'$(Configuration)' == 'Windows'" />
 
 		<EmbeddedResource Include="Resources\**" Exclude="Resources\AssetsBundle\assetsbundle-Windows" Condition="'$(Configuration)' == 'Android'" />
-
-		<!-- 彩蛋视频资源 -->
-		<EmbeddedResource Include="Video\**" Condition="'$(Configuration)' == 'Windows'" />
 	</ItemGroup>
 
 	<ItemGroup>

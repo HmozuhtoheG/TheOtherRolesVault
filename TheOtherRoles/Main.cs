@@ -113,11 +113,6 @@ namespace TheOtherRoles
             Patches.ClientOption.Load();
 #if WINDOWS
             if (ClientOption.GetValue(ClientOption.ClientOptionType.ToggleCursor) == 1) Helpers.enableCursor(true);
-            if (BepInExUpdater.UpdateRequired)
-            {
-                AddComponent<BepInExUpdater>();
-                return;
-            }
             AddComponent<ModUpdateBehaviour>();
 #endif
 
