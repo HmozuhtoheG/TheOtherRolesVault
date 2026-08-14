@@ -2,8 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using Hazel;
+using Il2CppSystem.Collections.Generic;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Patches;
+using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -63,23 +67,39 @@ namespace TheOtherRoles.Roles
             var workaholic = getRole(pc);
             if (workaholic == null) return;
             workaholic.shieldTimer = 5f;
+            workaholic.shieldCount--;
             if (workaholic.player == PlayerControl.LocalPlayer)
                 SoundEffectsManager.play("medicShield");
         });
 
         public static RemoteProcess<byte> BreakShield = RemotePrimitiveProcess.OfByte("WorkaholicBreakShield", (killerId, _) =>
         {
-            var workaholic = getRole();
-            if (workaholic != null && workaholic.player != null && workaholic.player == PlayerControl.LocalPlayer)
-            {
-                Helpers.flashScreen(Color.yellow, 0.1f, 0.3f, 0.5f, 0.2f, ModTranslation.getString("workaholicShieldBroken"), Color.yellow);
-                SoundEffectsManager.play("fail");
-            }
             var killer = Helpers.playerById(killerId);
+            foreach (var workaholic in players)
+            {
+                if (workaholic.shieldTimer > 0f)
+                {
+                    workaholic.shieldTimer = 0f;
+                    if (workaholic.player != null && workaholic.player == PlayerControl.LocalPlayer)
+                    {
+                        Helpers.flashScreen(Color.yellow, 0.1f, 0.3f, 0.5f, 0.2f, ModTranslation.getString("workaholicShieldBroken"), Color.yellow);
+                        SoundEffectsManager.play("fail");
+                    }
+                }
+            }
             if (killer != null && killer == PlayerControl.LocalPlayer)
                 Helpers.flashScreen(Color.yellow, 0.1f, 0.3f, 0.5f, 0.2f, ModTranslation.getString("workaholicShieldBroken"), Color.yellow);
             if (killer != null)
                 killer.killTimer = killer.GetKillCooldown();
+        });
+
+        public static RemoteProcess ExpireShield = new("WorkaholicExpireShield", (_) =>
+        {
+            foreach (var workaholic in players)
+            {
+                if (workaholic.shieldTimer > 0f)
+                    workaholic.shieldTimer = 0f;
+            }
         });
 
         public static RemoteProcess<byte> ResetCountdown = RemotePrimitiveProcess.OfByte("WorkaholicResetCountdown", (playerId, _) =>
@@ -102,8 +122,9 @@ namespace TheOtherRoles.Roles
                     if (work != null && work.getTaskCooldown <= 0f && !player.Data.IsDead)
                     {
                         player.clearAllTasks();
-                        player.generateNormalTasks();
+                        assignSingleTask(player);
                         work.tasksCompleted = 0;
+                        work.tasksTotal = 1;
                         work.countdownTimer = deathCountdownTime;
                         work.getTaskCooldown = getTaskCooldownTime;
                         new CustomMessage(ModTranslation.getString("workaholicNewTask"), 3f);
@@ -128,7 +149,6 @@ namespace TheOtherRoles.Roles
                     if (work != null && work.shieldCount > 0 && !player.Data.IsDead && work.shieldTimer <= 0f)
                     {
                         ActivateShield.Invoke(player.PlayerId);
-                        work.shieldCount--;
                     }
                 },
                 () => PlayerControl.LocalPlayer.isRole(RoleId.Workaholic) && !player.Data.IsDead,
@@ -192,7 +212,11 @@ namespace TheOtherRoles.Roles
             if (shieldTimer > 0f)
             {
                 shieldTimer -= Time.deltaTime;
-                if (shieldTimer <= 0f) shieldTimer = 0f;
+                if (shieldTimer <= 0f)
+                {
+                    shieldTimer = 0f;
+                    ExpireShield.Invoke();
+                }
                 if (countdownText != null)
                 {
                     int shieldSeconds = Mathf.CeilToInt(shieldTimer);
@@ -234,10 +258,10 @@ namespace TheOtherRoles.Roles
             if (PlayerControl.LocalPlayer == player)
             {
                 player.clearAllTasks();
-                player.generateNormalTasks();
+                assignSingleTask(player);
                 countdownTimer = deathCountdownTime;
                 tasksCompleted = 0;
-                tasksTotal = 0;
+                tasksTotal = 1;
                 shieldCount = 0;
                 shieldTimer = 0f;
                 getTaskCooldown = 0f;
@@ -255,9 +279,8 @@ namespace TheOtherRoles.Roles
             if (workaholic.tasksCompleted >= workaholic.tasksTotal && workaholic.tasksTotal > 0)
             {
                 workaholic.tasksCompleted = 0;
-                workaholic.tasksTotal = 0;
                 workaholic.player.clearAllTasks();
-                workaholic.player.generateNormalTasks();
+                assignSingleTask(workaholic.player);
                 workaholic.countdownTimer = deathCountdownTime;
                 ResetCountdown.Invoke(pc.PlayerId);
                 if (workaholic.player == PlayerControl.LocalPlayer)
@@ -269,6 +292,53 @@ namespace TheOtherRoles.Roles
 
             if (workaholic.shieldCount < 1 && workaholic.shieldTimer <= 0f)
                 workaholic.shieldCount++;
+        }
+
+        private static void assignSingleTask(PlayerControl player)
+        {
+            if (player == null || ShipStatus.Instance == null) return;
+
+            var tasks = new Il2CppSystem.Collections.Generic.List<byte>();
+            var hashSet = new Il2CppSystem.Collections.Generic.HashSet<TaskTypes>();
+            var taskTypeIds = new System.Collections.Generic.List<byte>();
+
+            var allTasks = new System.Collections.Generic.List<NormalPlayerTask>();
+            var commonTasks = new System.Collections.Generic.List<NormalPlayerTask>();
+            var shortTasks = new System.Collections.Generic.List<NormalPlayerTask>();
+            var longTasks = new System.Collections.Generic.List<NormalPlayerTask>();
+
+            foreach (var task in MapUtilities.CachedShipStatus.CommonTasks)
+                commonTasks.Add(task);
+            foreach (var task in MapUtilities.CachedShipStatus.ShortTasks)
+                shortTasks.Add(task);
+            foreach (var task in MapUtilities.CachedShipStatus.LongTasks)
+                longTasks.Add(task);
+
+            commonTasks.Shuffle();
+            shortTasks.Shuffle();
+            longTasks.Shuffle();
+
+            allTasks.AddRange(commonTasks);
+            allTasks.AddRange(shortTasks);
+            allTasks.AddRange(longTasks);
+
+            allTasks.Shuffle();
+
+            var il2CppTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
+            foreach (var t in allTasks) il2CppTasks.Add(t);
+
+            int start = 0;
+            var cachedStatus = MapUtilities.CachedShipStatus;
+            if (cachedStatus != null)
+                cachedStatus.AddTasksFromList(ref start, Mathf.Min(1, il2CppTasks.Count), tasks, hashSet, il2CppTasks);
+
+            taskTypeIds.AddRange(tasks.ToArray().ToList());
+
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)CustomRPC.UncheckedSetTasks, Hazel.SendOption.Reliable, -1);
+            writer.Write(player.PlayerId);
+            writer.WriteBytesAndSize(taskTypeIds.ToArray());
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.uncheckedSetTasks(player.PlayerId, taskTypeIds.ToArray());
         }
 
         public static bool isShielded(PlayerControl target)
