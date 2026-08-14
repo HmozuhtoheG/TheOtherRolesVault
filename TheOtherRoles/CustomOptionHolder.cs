@@ -510,6 +510,8 @@ namespace TheOtherRoles {
         public static CustomOption yandereRunawayTimeLimit;
         public static CustomOption yandereHasImpVision;
 
+        public static CustomRoleOption workaholicSpawnRate;
+
         public static CustomRoleOption lawyerSpawnRate;
         public static CustomOption lawyerTargetKnows;
         //public static CustomOption lawyerIsProsecutorChance;
@@ -1105,6 +1107,8 @@ namespace TheOtherRoles {
             yandereMaxNuisance = CustomOption.Create(8505, Types.Neutral, "yandereMaxNuisance", 4f, 1f, 24f, 1f, yandereSpawnRate, false, "unitScrews");
             yandereRunawayTimeLimit = CustomOption.Create(8507, Types.Neutral, "yandereRunawayTimeLimit", 60f, 10f, 180f, 10f, yandereSpawnRate, false, "unitSeconds");
             yandereHasImpVision = CustomOption.Create(8506, Types.Neutral, "yandereHasImpVision", true, yandereSpawnRate);
+
+            workaholicSpawnRate = new CustomRoleOption(8600, Types.Neutral, "workaholic", Workaholic.color, max: 3);
 
             jekyllAndHydeSpawnRate = new CustomRoleOption(8104, Types.Neutral, "jekyllAndHyde", JekyllAndHyde.color);
             jekyllAndHydeNumberToWin = CustomOption.Create(8105, Types.Neutral, "jekyllAndHydeNumberToWin", 3f, 1f, 10f, 1f, jekyllAndHydeSpawnRate, false, "unitScrews");

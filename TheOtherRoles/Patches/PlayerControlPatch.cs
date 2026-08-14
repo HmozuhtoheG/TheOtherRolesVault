@@ -104,6 +104,13 @@ namespace TheOtherRoles.Patches {
                     color = Color.yellow;
                 }
 
+                // Workaholic shield outline (yellow) when shield is active
+                if (Workaholic.isShielded(target) && !hasVisibleShield)
+                {
+                    hasVisibleShield = true;
+                    color = Color.yellow;
+                }
+
                 if (hasVisibleShield) {
                 target.cosmetics.currentBodySprite.BodySprite.material.SetFloat("_Outline", 1f);
                 target.cosmetics.currentBodySprite.BodySprite.material.SetColor("_OutlineColor", color);

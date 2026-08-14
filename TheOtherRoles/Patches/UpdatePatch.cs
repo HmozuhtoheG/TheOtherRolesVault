@@ -525,6 +525,8 @@ namespace TheOtherRoles.Patches {
                 enabled = false;
             else if (PlayerControl.LocalPlayer.isRole(RoleId.BomberB) && BomberA.isAlive())
                 enabled = false;
+            else if (PlayerControl.LocalPlayer.isRole(RoleId.Workaholic))
+                enabled = false;
 
             if (enabled) __instance.KillButton.Show();
             else __instance.KillButton.Hide();

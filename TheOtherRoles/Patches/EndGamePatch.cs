@@ -32,7 +32,11 @@ namespace TheOtherRoles.Patches {
         DoomsayerWin = 23,
         PelicanWin = 24,
         YandereWin = 25,
+<<<<<<< HEAD
         BlockmanWin = 26
+=======
+        WorkaholicWin = 26
+>>>>>>> 22734086d199599072355e65d75d1297e40517c0
         //ProsecutorWin = 16
     }
 
@@ -60,7 +64,11 @@ namespace TheOtherRoles.Patches {
         PelicanWin,
         YandereWin,
         EveryoneDied,
+<<<<<<< HEAD
         BlockmanWin
+=======
+        WorkaholicWin
+>>>>>>> 22734086d199599072355e65d75d1297e40517c0
         //ProsecutorWin
     }
 
@@ -187,7 +195,11 @@ namespace TheOtherRoles.Patches {
                 .. Immoralist.allPlayers,
                 .. Pelican.allPlayers,
                 .. Yandere.allPlayers,
+<<<<<<< HEAD
                 .. Blockman.allPlayers
+=======
+                .. Workaholic.allPlayers
+>>>>>>> 22734086d199599072355e65d75d1297e40517c0
             ];
             if (Shifter.isNeutral) notWinners.AddRange(Shifter.allPlayers);
 
@@ -220,6 +232,7 @@ namespace TheOtherRoles.Patches {
             bool yandereWin = Yandere.exists && gameOverReason == (GameOverReason)CustomGameOverReason.YandereWin;
             bool foxWin = Fox.exists && gameOverReason == (GameOverReason)CustomGameOverReason.FoxWin;
             bool jekyllAndHydeWin = JekyllAndHyde.exists && gameOverReason == (GameOverReason)CustomGameOverReason.JekyllAndHydeWin;
+            bool workaholicWin = Workaholic.exists && gameOverReason == (GameOverReason)CustomGameOverReason.WorkaholicWin;
             bool everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
             bool blockmanWin = Blockman.exists && gameOverReason == (GameOverReason)CustomGameOverReason.BlockmanWin;
             //bool prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
@@ -240,10 +253,27 @@ namespace TheOtherRoles.Patches {
             // Impostors Win
             if (impostorWin)
             {
-                if (SchrodingersCat.team == SchrodingersCat.Team.Impostor)
+                // Check if Workaholic snatches the victory
+                bool workaholicSnatches = Workaholic.exists && Workaholic.livingPlayers.Count > 0;
+                if (workaholicSnatches)
                 {
-                    foreach (var p in SchrodingersCat.allPlayers)
-                        EndGameResult.CachedWinners.Add(new CachedPlayerData(p.Data));
+                    // Clear all winners and let Workaholic win alone
+                    EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                    AdditionalTempData.winCondition = WinCondition.WorkaholicWin;
+                    foreach (var workaholic in Workaholic.livingPlayers)
+                    {
+                        if (PlayerControl.LocalPlayer == workaholic) _ = new StaticAchievementToken("workaholic.challenge");
+                        CachedPlayerData wpd = new(workaholic.Data);
+                        EndGameResult.CachedWinners.Add(wpd);
+                    }
+                }
+                else
+                {
+                    if (SchrodingersCat.team == SchrodingersCat.Team.Impostor)
+                    {
+                        foreach (var p in SchrodingersCat.allPlayers)
+                            EndGameResult.CachedWinners.Add(new CachedPlayerData(p.Data));
+                    }
                 }
             }
 
@@ -335,6 +365,19 @@ namespace TheOtherRoles.Patches {
             {
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
                 AdditionalTempData.winCondition = WinCondition.EveryoneDied;
+            }
+
+            // Workaholic wins alone by snatching the winning side's victory
+            else if (workaholicWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.WorkaholicWin;
+                foreach (var workaholic in Workaholic.livingPlayers)
+                {
+                    if (PlayerControl.LocalPlayer == workaholic) _ = new StaticAchievementToken("workaholic.challenge");
+                    CachedPlayerData wpd = new(workaholic.Data);
+                    EndGameResult.CachedWinners.Add(wpd);
+                }
             }
 
             else if (jekyllAndHydeWin)
@@ -868,6 +911,12 @@ namespace TheOtherRoles.Patches {
                 textRenderer.color = Moriarty.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Moriarty.color);
             }
+            else if (AdditionalTempData.winCondition == WinCondition.WorkaholicWin)
+            {
+                nonModTranslationText = "workaholicWin";
+                textRenderer.color = Workaholic.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Workaholic.color);
+            }
 
             if (!string.IsNullOrEmpty(nonModTranslationText)) textRenderer.text = ModTranslation.getString(nonModTranslationText);
 
@@ -1038,6 +1087,7 @@ namespace TheOtherRoles.Patches {
             if (CheckAndEndGameForJekyllAndHydeWin(__instance, statistics)) return false;
             if (CheckAndEndGameForMoriartyWin(__instance, statistics)) return false;
             if (CheckAndEndGameForYandereWin(__instance, statistics)) return false;
+            if (CheckAndEndGameForWorkaholicWin(__instance, statistics)) return false;
             if (CheckAndEndGameForSabotageWin(__instance)) return false;
             if (CheckAndEndGameForTaskWin(__instance))return false;
             //if (CheckAndEndGameForProsecutorWin(__instance)) return false;
@@ -1133,6 +1183,30 @@ namespace TheOtherRoles.Patches {
                 (Yandere.canWinWithTarget && statistics.TotalAlive <= 3))
             {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.YandereWin, false);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool CheckAndEndGameForWorkaholicWin(ShipStatus __instance, PlayerStatistics statistics)
+        {
+            // Workaholic cannot kill — wins by surviving until all other threatening factions are eliminated
+            if (!Workaholic.exists) return false;
+            var livingWorkaholics = Workaholic.livingPlayers;
+            if (livingWorkaholics.Count == 0) return false;
+
+            // Check if all other threatening teams are dead
+            bool allOtherThreatsDead = statistics.TeamImpostorsAlive == 0
+                && statistics.TeamJackalAlive == 0
+                && statistics.TeamMoriartyAlive == 0
+                && statistics.TeamJekyllAndHydeAlive == 0
+                && statistics.TeamPelicanAlive == 0
+                && statistics.YandereAlive == 0
+                && statistics.TeamSheriffAlive == 0;
+
+            if (allOtherThreatsDead && livingWorkaholics.Count == 1)
+            {
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.WorkaholicWin, false);
                 return true;
             }
             return false;
