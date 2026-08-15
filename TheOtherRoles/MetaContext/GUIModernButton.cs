@@ -132,6 +132,29 @@ internal class GUIButtonGroup : GUIContext
     }
 }
 
+public class GUIModernButtonAnimator : MonoBehaviour
+{
+    static GUIModernButtonAnimator() => ClassInjector.RegisterTypeInIl2Cpp<GUIModernButtonAnimator>();
+
+    public SpriteRenderer Target;
+    public bool Hovered;
+    public bool Selected;
+
+    private float scaleCurrent = 1f;
+    private Color tintCurrent = Color.white;
+
+    public void Update()
+    {
+        float targetScale = Hovered ? 1.035f : (Selected ? 1.012f : 1f);
+        scaleCurrent = Mathf.MoveTowards(scaleCurrent, targetScale, Time.unscaledDeltaTime * 8f);
+        transform.localScale = Vector3.one * scaleCurrent;
+
+        Color targetTint = Hovered ? UIPalette.ButtonHoverTint : Color.white;
+        tintCurrent = Color.Lerp(tintCurrent, targetTint, Time.unscaledDeltaTime * 10f);
+        if (Target != null) Target.color = tintCurrent;
+    }
+}
+
 /// <summary>
 /// モダンデザインのボタンです。グループ化できます。
 /// </summary>
@@ -163,8 +186,8 @@ internal class GUIModernButton : TORGUIText
         AsMaskedButton = attribute.Font.FontMaterial != null;
     }
 
-    static private Color piledModernColor = new(41 * 0.5f, 235 * 0.5f, 198 * 0.5f);
-    static private Color selectedModernColor = new Color32(16, 16, 16, 255);
+    static private Color piledModernColor = UIPalette.TextPiled;
+    static private Color selectedModernColor = UIPalette.TextSelected;
 
     internal override GameObject Instantiate(Size size, out Size actualSize)
     {
@@ -187,6 +210,10 @@ internal class GUIModernButton : TORGUIText
         collider.isTrigger = true;
 
         var passiveButton = button.gameObject.SetUpButton(true);
+
+        var animator = button.gameObject.AddComponent<GUIModernButtonAnimator>();
+        animator.Target = button;
+        animator.Selected = SelectedDefault && EmphasizeOnSelected;
 
         var innerText = inner.GetComponent<TextMeshPro>();
         innerText.outlineColor = UnityEngine.Color.clear;
@@ -223,6 +250,7 @@ internal class GUIModernButton : TORGUIText
                     button.sprite = modernButtonSprite.GetSprite(isPiled ? 1 : 0);
                     if (Text != null) innerText.text = (isPiled ? piledText : Text)!.GetString();
                     if (checkMark) checkMark!.SetActive(false);
+                    animator.Selected = false;
                 },
                 () =>
                 {
@@ -230,6 +258,7 @@ internal class GUIModernButton : TORGUIText
                     if (EmphasizeOnSelected) button.sprite = modernButtonSprite.GetSprite(isPiled ? 4 : 3);
                     if (Text != null) innerText.text = selectedText!.GetString();
                     if (checkMark) checkMark!.SetActive(true);
+                    animator.Selected = EmphasizeOnSelected;
                 }
                 )
             { IsSelected = SelectedDefault };
@@ -246,12 +275,14 @@ internal class GUIModernButton : TORGUIText
             var selected = (buttonInstance?.IsSelected ?? false) && EmphasizeOnSelected;
             button.sprite = modernButtonSprite.GetSprite(selected ? 4 : 1);
             if (Text != null) innerText.text = (selected ? selectedText : piledText)!.GetString();
+            animator.Hovered = true;
         }));
         passiveButton.OnMouseOut.AddListener((Action)(() =>
         {
             var selected = (buttonInstance?.IsSelected ?? false) && EmphasizeOnSelected;
             button.sprite = modernButtonSprite.GetSprite(selected ? 3 : 0);
             if (Text != null) innerText.text = (selected ? selectedText : Text)!.GetString();
+            animator.Hovered = false;
         }));
 
         //テキスト色の変更

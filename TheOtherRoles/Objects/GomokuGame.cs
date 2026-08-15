@@ -24,11 +24,17 @@ namespace TheOtherRoles.Objects
         public static byte whitePlayerId = NoPlayer;
         public static byte turn = 1;
         public static byte winner = 0;
+        public static byte restartRequestedBy = NoPlayer;
 
         private static GameObject icon;
         private static GameObject panel;
         private static GameObject boardRoot;
         private static GameObject joinButtonObject;
+        private static GameObject restartButtonObject;
+        private static SpriteRenderer restartButtonRenderer;
+        private static GameObject restartAgreeButton;
+        private static GameObject restartDisagreeButton;
+        private static TextMeshPro playersText;
         private static GameObject inviteListPanel;
         private static GameObject inviteCard;
         private static BoxCollider2D boardClickCollider;
@@ -37,6 +43,7 @@ namespace TheOtherRoles.Objects
         private static readonly List<GameObject> gridLineObjects = new();
         private static readonly Dictionary<Color, Sprite> circleSpriteCache = new();
         private static readonly Dictionary<Color, Sprite> solidSpriteCache = new();
+        private static readonly Dictionary<Color, Sprite> thumbSpriteCache = new();
         private static readonly Dictionary<(string, Color), Sprite> textureSpriteCache = new();
         private static readonly Dictionary<byte, float> lastInviteRealtime = new();
         private static Material gridLineMaterial;
@@ -79,6 +86,41 @@ namespace TheOtherRoles.Objects
             RefreshVisuals();
         });
 
+        public static RemoteProcess<byte> RequestRestart = RemotePrimitiveProcess.OfByte("GomokuRequestRestart", (playerId, _) =>
+        {
+            if (playerId != blackPlayerId && playerId != whitePlayerId) return;
+            if (restartRequestedBy != NoPlayer) return;
+
+            byte other = playerId == blackPlayerId ? whitePlayerId : blackPlayerId;
+            if (other == NoPlayer)
+            {
+                ResetBoardOnly();
+                RefreshVisuals();
+                return;
+            }
+
+            restartRequestedBy = playerId;
+            RefreshVisuals();
+        });
+
+        public static RemoteProcess<byte> CancelRestart = RemotePrimitiveProcess.OfByte("GomokuCancelRestart", (playerId, _) =>
+        {
+            if (restartRequestedBy != playerId) return;
+            restartRequestedBy = NoPlayer;
+            RefreshVisuals();
+        });
+
+        public static RemoteProcess<(byte playerId, bool agree)> RespondRestart = new("GomokuRespondRestart", (msg, _) =>
+        {
+            if (restartRequestedBy == NoPlayer) return;
+            byte other = restartRequestedBy == blackPlayerId ? whitePlayerId : blackPlayerId;
+            if (msg.playerId != other) return;
+
+            if (msg.agree) ResetBoardOnly();
+            restartRequestedBy = NoPlayer;
+            RefreshVisuals();
+        });
+
         public static RemoteProcess<(byte fromId, byte toId)> Invite = new("GomokuInvite", (msg, isCalledByMe) =>
         {
             if (isCalledByMe) return;
@@ -94,6 +136,7 @@ namespace TheOtherRoles.Objects
             lastInviteRealtime.Clear();
             circleSpriteCache.Clear();
             solidSpriteCache.Clear();
+            thumbSpriteCache.Clear();
             textureSpriteCache.Clear();
             gridLineMaterial = null;
             if (icon != null) UnityEngine.Object.Destroy(icon);
@@ -149,8 +192,16 @@ namespace TheOtherRoles.Objects
             whitePlayerId = NoPlayer;
             turn = 1;
             winner = 0;
+            restartRequestedBy = NoPlayer;
             missedChecksBlack = 0;
             missedChecksWhite = 0;
+        }
+
+        private static void ResetBoardOnly()
+        {
+            board = new byte[Size, Size];
+            turn = 1;
+            winner = 0;
         }
 
         private static void LockMovement()
@@ -215,6 +266,11 @@ namespace TheOtherRoles.Objects
             panel = null;
             boardRoot = null;
             joinButtonObject = null;
+            restartButtonObject = null;
+            restartButtonRenderer = null;
+            restartAgreeButton = null;
+            restartDisagreeButton = null;
+            playersText = null;
             statusText = null;
             inviteListPanel = null;
             boardClickCollider = null;
@@ -277,15 +333,31 @@ namespace TheOtherRoles.Objects
             clickButton.OnClick.AddListener((UnityEngine.Events.UnityAction)OnBoardClicked);
 
             CreateTextButton(panel.transform, new Vector3(-2.1f, 2.4f, -0.2f), ModTranslation.getString("gomokuInvite"), OnInviteClicked, 0.9f, 0.4f, 1.1f);
-            CreateTextButton(panel.transform, new Vector3(-0.7f, 2.4f, -0.2f), ModTranslation.getString("gomokuRestart"), OnRestartClicked, 0.9f, 0.4f, 1.1f);
+
+            restartButtonObject = CreateTextButton(panel.transform, new Vector3(-0.7f, 2.4f, -0.2f), ModTranslation.getString("gomokuRestart"), OnRestartClicked, 0.9f, 0.4f, 1.1f);
+            restartButtonRenderer = restartButtonObject.GetComponent<SpriteRenderer>();
+
+            restartAgreeButton = CreateIconButton(panel.transform, new Vector3(-0.95f, 2.4f, -0.2f), 0.4f, 0f, OnRestartAgreeClicked, new Color(0.15f, 0.45f, 0.15f, 0.9f));
+            restartDisagreeButton = CreateIconButton(panel.transform, new Vector3(-0.45f, 2.4f, -0.2f), 0.4f, 180f, OnRestartDisagreeClicked, new Color(0.45f, 0.15f, 0.15f, 0.9f));
+            restartAgreeButton.SetActive(false);
+            restartDisagreeButton.SetActive(false);
+
             CreateTextButton(panel.transform, new Vector3(0.7f, 2.4f, -0.2f), ModTranslation.getString("gomokuExit"), OnExitClicked, 0.9f, 0.4f, 1.1f);
             CreateCloseButton(panel.transform, new Vector3(1.9f, 2.4f, -0.2f), 0.42f, ClosePanel, 25);
 
             statusText = Helpers.CreateObject<TextMeshPro>("GomokuStatus", panel.transform, new Vector3(0f, 1.85f, -0.2f));
+            statusText.font = VanillaAsset.StandardTextPrefab.font;
             statusText.alignment = TextAlignmentOptions.Center;
             statusText.fontSize = 1.4f;
             statusText.color = Color.black;
             statusText.sortingOrder = 28;
+
+            playersText = Helpers.CreateObject<TextMeshPro>("GomokuPlayers", panel.transform, new Vector3(0f, 1.6f, -0.2f));
+            playersText.font = VanillaAsset.StandardTextPrefab.font;
+            playersText.alignment = TextAlignmentOptions.Center;
+            playersText.fontSize = 1.0f;
+            playersText.color = new Color(0.15f, 0.1f, 0.05f);
+            playersText.sortingOrder = 28;
 
             joinButtonObject = CreateTextButton(panel.transform, new Vector3(0f, -2.55f, -0.2f), "", OnJoinClicked, 1.4f, 0.38f, 1.5f);
         }
@@ -309,6 +381,7 @@ namespace TheOtherRoles.Objects
             button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => onClick()));
 
             var label = Helpers.CreateObject<TextMeshPro>("Label", obj.transform, new Vector3(0f, 0f, -0.05f));
+            label.font = VanillaAsset.StandardTextPrefab.font;
             label.transform.localScale = new Vector3(1f / widthScale, 1f / heightScale, 1f);
             label.alignment = TextAlignmentOptions.Center;
             label.fontSize = fontSize;
@@ -348,6 +421,33 @@ namespace TheOtherRoles.Objects
                 barSr.sprite = GetSolidSprite(Color.white);
                 barSr.sortingOrder = sortingOrder + 1;
             }
+
+            return obj;
+        }
+
+        private static GameObject CreateIconButton(Transform parent, Vector3 localPos, float size, float iconRotationZ, Action onClick, Color bgColor, int sortingOrder = 25)
+        {
+            var obj = NewChild("GomokuIconButton", parent, localPos);
+            obj.transform.localScale = new Vector3(size, size, 1f);
+
+            var sr = obj.AddComponent<SpriteRenderer>();
+            sr.sprite = GetSolidSprite(bgColor);
+            sr.sortingOrder = sortingOrder;
+
+            var collider = obj.AddComponent<BoxCollider2D>();
+            collider.size = Vector2.one;
+
+            var button = obj.AddComponent<PassiveButton>();
+            button.OnMouseOut = new UnityEngine.Events.UnityEvent();
+            button.OnMouseOver = new UnityEngine.Events.UnityEvent();
+            button.OnClick = new UnityEngine.UI.Button.ButtonClickedEvent();
+            button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => onClick()));
+
+            var iconObj = NewChild("Icon", obj.transform, new Vector3(0f, 0f, -0.05f));
+            iconObj.transform.localRotation = Quaternion.Euler(0f, 0f, iconRotationZ);
+            var iconSr = iconObj.AddComponent<SpriteRenderer>();
+            iconSr.sprite = GetThumbSprite(Color.white);
+            iconSr.sortingOrder = sortingOrder + 1;
 
             return obj;
         }
@@ -428,6 +528,28 @@ namespace TheOtherRoles.Objects
                 var label = joinButtonObject.GetComponentInChildren<TextMeshPro>();
                 label.text = blackPlayerId == NoPlayer ? ModTranslation.getString("gomokuJoinBlack") : ModTranslation.getString("gomokuJoinWhite");
             }
+
+            bool showPlayers = blackPlayerId != NoPlayer || whitePlayerId != NoPlayer;
+            playersText.gameObject.SetActive(showPlayers);
+            if (showPlayers) playersText.text = $"{NameOf(blackPlayerId)} vs {NameOf(whitePlayerId)}";
+
+            bool isParticipant = isBlack || isWhite;
+            bool awaitingMyResponse = isParticipant && restartRequestedBy != NoPlayer && restartRequestedBy != localId;
+            bool iRequestedRestart = isParticipant && restartRequestedBy == localId;
+
+            restartButtonObject.SetActive(isParticipant && !awaitingMyResponse);
+            if (isParticipant && !awaitingMyResponse && restartButtonRenderer != null)
+                restartButtonRenderer.sprite = GetTextureSprite("GomokuButton", iRequestedRestart ? new Color(0.4f, 0.4f, 0.4f, 0.9f) : new Color(0.2f, 0.2f, 0.2f, 0.9f));
+
+            restartAgreeButton.SetActive(awaitingMyResponse);
+            restartDisagreeButton.SetActive(awaitingMyResponse);
+        }
+
+        private static string NameOf(byte id)
+        {
+            if (id == NoPlayer) return "?";
+            var p = Helpers.playerById(id);
+            return p != null && p.Data != null ? p.Data.PlayerName : "?";
         }
 
         private static void OnJoinClicked()
@@ -441,7 +563,24 @@ namespace TheOtherRoles.Objects
 
         private static void OnRestartClicked()
         {
-            Reset.Invoke();
+            if (PlayerControl.LocalPlayer == null) return;
+            byte localId = PlayerControl.LocalPlayer.PlayerId;
+            if (localId != blackPlayerId && localId != whitePlayerId) return;
+
+            if (restartRequestedBy == localId) CancelRestart.Invoke(localId);
+            else if (restartRequestedBy == NoPlayer) RequestRestart.Invoke(localId);
+        }
+
+        private static void OnRestartAgreeClicked()
+        {
+            if (PlayerControl.LocalPlayer == null) return;
+            RespondRestart.Invoke((PlayerControl.LocalPlayer.PlayerId, true));
+        }
+
+        private static void OnRestartDisagreeClicked()
+        {
+            if (PlayerControl.LocalPlayer == null) return;
+            RespondRestart.Invoke((PlayerControl.LocalPlayer.PlayerId, false));
         }
 
         private static void OnExitClicked()
@@ -500,6 +639,7 @@ namespace TheOtherRoles.Objects
             bgButton.OnClick = new UnityEngine.UI.Button.ButtonClickedEvent();
 
             var title = Helpers.CreateObject<TextMeshPro>("Title", inviteListPanel.transform, new Vector3(-0.3f, 2.35f, -0.1f));
+            title.font = VanillaAsset.StandardTextPrefab.font;
             title.alignment = TextAlignmentOptions.Center;
             title.fontSize = 1.3f;
             title.color = Color.white;
@@ -525,6 +665,7 @@ namespace TheOtherRoles.Objects
                 string targetName = player.Data != null ? player.Data.PlayerName : "";
 
                 var nameText = Helpers.CreateObject<TextMeshPro>("Name" + row, inviteListPanel.transform, new Vector3(-2.3f, y, -0.1f));
+                nameText.font = VanillaAsset.StandardTextPrefab.font;
                 nameText.alignment = TextAlignmentOptions.Left;
                 nameText.fontSize = 1.2f;
                 nameText.color = Color.white;
@@ -539,6 +680,7 @@ namespace TheOtherRoles.Objects
             if (row == 0)
             {
                 var empty = Helpers.CreateObject<TextMeshPro>("Empty", inviteListPanel.transform, new Vector3(0f, 0.5f, -0.1f));
+                empty.font = VanillaAsset.StandardTextPrefab.font;
                 empty.alignment = TextAlignmentOptions.Center;
                 empty.fontSize = 1.4f;
                 empty.color = Color.white;
@@ -588,6 +730,7 @@ namespace TheOtherRoles.Objects
             accentSr.sortingOrder = 61;
 
             var title = Helpers.CreateObject<TextMeshPro>("Title", inviteCard.transform, new Vector3(0.1f, 0.32f, -0.1f));
+            title.font = VanillaAsset.StandardTextPrefab.font;
             title.alignment = TextAlignmentOptions.Center;
             title.fontSize = 1.3f;
             title.color = Color.white;
@@ -595,6 +738,7 @@ namespace TheOtherRoles.Objects
             title.sortingOrder = 62;
 
             var message = Helpers.CreateObject<TextMeshPro>("Message", inviteCard.transform, new Vector3(0.1f, -0.12f, -0.1f));
+            message.font = VanillaAsset.StandardTextPrefab.font;
             message.alignment = TextAlignmentOptions.Center;
             message.fontSize = 1.1f;
             message.color = new Color(0.9f, 0.9f, 0.9f);
@@ -602,6 +746,7 @@ namespace TheOtherRoles.Objects
             message.sortingOrder = 62;
 
             var hint = Helpers.CreateObject<TextMeshPro>("Hint", inviteCard.transform, new Vector3(0.1f, -0.5f, -0.1f));
+            hint.font = VanillaAsset.StandardTextPrefab.font;
             hint.alignment = TextAlignmentOptions.Center;
             hint.fontSize = 0.85f;
             hint.color = new Color(0.75f, 0.75f, 0.75f);
@@ -670,6 +815,7 @@ namespace TheOtherRoles.Objects
             button.OnClick.AddListener((UnityEngine.Events.UnityAction)TogglePanel);
 
             var label = Helpers.CreateObject<TextMeshPro>("Label", obj.transform, new Vector3(0f, 0.65f, -0.05f));
+            label.font = VanillaAsset.StandardTextPrefab.font;
             label.transform.localScale = new Vector3(1f / 0.9f, 1f / 0.9f, 1f);
             label.alignment = TextAlignmentOptions.Center;
             label.fontSize = 1.3f;
@@ -699,6 +845,28 @@ namespace TheOtherRoles.Objects
             float pixelsPerUnit = size / (CellSize * 0.85f);
             var sprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), pixelsPerUnit);
             return circleSpriteCache[color] = sprite;
+        }
+
+        private static Sprite GetThumbSprite(Color color)
+        {
+            if (thumbSpriteCache.TryGetValue(color, out var cached) && cached != null) return cached;
+
+            const int size = 32;
+            var tex = new Texture2D(size, size, TextureFormat.ARGB32, false);
+            Color clear = new Color(0f, 0f, 0f, 0f);
+
+            bool InFist(int x, int y) => x >= 3 && x <= 27 && y >= 2 && y <= 12;
+            bool InThumb(int x, int y) => x >= 3 && x <= 14 && y >= 12 && y <= 23;
+            bool InThumbTip(int x, int y) => x >= 3 && x <= 19 && y >= 22 && y <= 28;
+
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                    tex.SetPixel(x, y, InFist(x, y) || InThumb(x, y) || InThumbTip(x, y) ? color : clear);
+            tex.Apply();
+
+            float pixelsPerUnit = size / (CellSize * 1.6f);
+            var sprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), pixelsPerUnit);
+            return thumbSpriteCache[color] = sprite;
         }
 
         private static Sprite GetSolidSprite(Color color)

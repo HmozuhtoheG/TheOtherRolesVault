@@ -21,11 +21,27 @@ namespace TheOtherRoles.Objects
         private const float FlipSpeed = 6f;
         private const float MovementDeadzone = 0.0006f;
 
+        private const int GearPipCount = 3;
+        private const float GearPipSize = 0.09f;
+        private const float GearPipSpacing = 0.13f;
+        private static readonly Vector3 GearPipRowOffset = new(0f, 0.55f, -0.02f);
+        private static readonly Color GearPipOffColor = new(0.25f, 0.25f, 0.25f, 0.6f);
+        private static readonly Color[] GearPipOnColors =
+        {
+            new(0.35f, 0.85f, 0.35f),
+            new(0.95f, 0.85f, 0.2f),
+            new(0.95f, 0.3f, 0.25f)
+        };
+
+        private static Dictionary<Color, Sprite> gearPipSpriteCache = new();
+
         private class CarVisual
         {
             public GameObject body;
             public GameObject wheelLeft;
             public GameObject wheelRight;
+            public GameObject[] gearPips;
+            public int lastGear = -1;
             public Vector3 lastPosition;
             public float targetScaleX = 1f;
             public float currentScaleX = 1f;
@@ -60,6 +76,32 @@ namespace TheOtherRoles.Objects
             return wheel;
         }
 
+        private static Sprite getGearPipSprite(Color color)
+        {
+            if (gearPipSpriteCache.TryGetValue(color, out var cached) && cached != null) return cached;
+
+            var tex = new Texture2D(4, 4, TextureFormat.ARGB32, false);
+            var pixels = new Color[16];
+            for (int i = 0; i < 16; i++) pixels[i] = color;
+            tex.SetPixels(pixels);
+            tex.Apply();
+
+            var sprite = Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4f / GearPipSize);
+            return gearPipSpriteCache[color] = sprite;
+        }
+
+        private static GameObject createGearPip(Transform parent, int index)
+        {
+            var pip = new GameObject("RacerCarGearPip") { layer = 11 };
+            pip.transform.SetParent(parent);
+            float totalWidth = (GearPipCount - 1) * GearPipSpacing;
+            float x = -totalWidth / 2f + index * GearPipSpacing;
+            pip.transform.localPosition = GearPipRowOffset + new Vector3(x, 0f, 0f);
+            var pipRenderer = pip.AddComponent<SpriteRenderer>();
+            pipRenderer.sprite = getGearPipSprite(GearPipOffColor);
+            return pip;
+        }
+
         private static Vector3 pivotPosition(Vector3 driverPosition, float scaleX)
         {
             float x = driverPosition.x - SeatOffset.x * scaleX;
@@ -77,16 +119,34 @@ namespace TheOtherRoles.Objects
             var bodyRenderer = body.AddComponent<SpriteRenderer>();
             bodyRenderer.sprite = getCarBodySprite();
 
+            var gearPips = new GameObject[GearPipCount];
+            for (int i = 0; i < GearPipCount; i++) gearPips[i] = createGearPip(body.transform, i);
+
             cars[ownerId] = new CarVisual
             {
                 body = body,
                 wheelLeft = createWheel(body.transform, LeftWheelOffset),
                 wheelRight = createWheel(body.transform, RightWheelOffset),
+                gearPips = gearPips,
                 lastPosition = initialPosition
             };
         }
 
-        public static void UpdateVisual(byte ownerId, Vector3 driverPosition)
+        private static void updateGearPips(CarVisual car, int gear)
+        {
+            if (car.gearPips == null || car.lastGear == gear) return;
+            car.lastGear = gear;
+
+            for (int i = 0; i < car.gearPips.Length; i++)
+            {
+                if (car.gearPips[i] == null) continue;
+                var pipRenderer = car.gearPips[i].GetComponent<SpriteRenderer>();
+                if (pipRenderer == null) continue;
+                pipRenderer.sprite = getGearPipSprite(i < gear ? GearPipOnColors[i] : GearPipOffColor);
+            }
+        }
+
+        public static void UpdateVisual(byte ownerId, Vector3 driverPosition, int gear)
         {
             if (!cars.TryGetValue(ownerId, out var car) || car.body == null) return;
 
@@ -120,6 +180,8 @@ namespace TheOtherRoles.Objects
             car.currentScaleX = Mathf.MoveTowards(car.currentScaleX, car.targetScaleX, FlipSpeed * Time.fixedDeltaTime);
             car.body.transform.localScale = new Vector3(car.currentScaleX, 1f, 1f);
             car.body.transform.position = pivotPosition(driverPosition, car.currentScaleX);
+
+            updateGearPips(car, gear);
         }
 
         public static void DespawnVisual(byte ownerId)

@@ -1116,10 +1116,15 @@ namespace TheOtherRoles
         public static float speedBoost = 0.3f;
         public static int meetingsUntilDespawn = 3;
         public static float boardRange = 1.2f;
-        public static float accelerationRate = 2f;
-        public static float decelerationRate = 3f;
+        public static float accelerationRate = 0.6f;
+        public static float decelerationRate = 1.5f;
 
         public static float coastDeceleration = 6f;
+
+        public const int MinGear = 1;
+        public const int MaxGear = 3;
+        private static readonly float[] GearCeilingFactor = { 0f, 0.5f, 1f };
+        public static float gearShiftKick = 0.18f;
 
         public static float injurySpeedThreshold = 0.95f;
         public static float injurySlowFactor = 0.5f;
@@ -1159,6 +1164,7 @@ namespace TheOtherRoles
             public bool wasDrivingBeforeMeeting;
             public bool destroyed;
             public float currentSpeedFactor;
+            public int gear = MinGear;
             public Vector2 coastVelocity;
             public bool facingLeft = true;
             public Vector3 lastPosition;
@@ -1248,10 +1254,34 @@ namespace TheOtherRoles
 
             byte? newDriver = nearest.driverId;
             byte? newPassenger = nearest.passengerId;
-            if (newDriver == null && player.PlayerId == nearest.ownerId) newDriver = player.PlayerId;
+            if (newDriver == null && player.PlayerId == nearest.ownerId)
+            {
+                newDriver = player.PlayerId;
+                nearest.gear = MinGear;
+                nearest.currentSpeedFactor = 0f;
+            }
             else if (newPassenger == null && newDriver != player.PlayerId) newPassenger = player.PlayerId;
             else return;
             setOccupancy(nearest, newDriver, newPassenger);
+        }
+
+        public static void ShiftGear(PlayerControl driver, int direction)
+        {
+            if (driver != PlayerControl.LocalPlayer) return;
+            var car = getCarByAnyOccupant(driver);
+            if (car == null || car.driverId != driver.PlayerId) return;
+
+            int newGear = Mathf.Clamp(car.gear + direction, MinGear, MaxGear);
+            if (newGear == car.gear) return;
+
+            if (newGear > car.gear)
+                car.currentSpeedFactor = Mathf.Min(GearCeilingFactor[newGear - 1], car.currentSpeedFactor + gearShiftKick);
+            car.gear = newGear;
+
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.RacerSetGear, SendOption.Reliable, -1);
+            writer.Write(car.ownerId);
+            writer.Write((byte)newGear);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
         }
 
         public static void TransferDriver(PlayerControl currentDriver, PlayerControl target)
@@ -1325,7 +1355,8 @@ namespace TheOtherRoles
                         // (Patches/PlayerControlPatch.cs), not here - PlayerPhysics.FixedUpdate
                         // recomputes velocity after this runs, so it would get overwritten.
                         float inputMagnitude = player.MyPhysics.body.velocity.magnitude;
-                        float target = inputMagnitude > 0.01f ? 1f : 0f;
+                        float gearCeiling = GearCeilingFactor[car.gear - 1];
+                        float target = inputMagnitude > 0.01f ? gearCeiling : 0f;
                         car.currentSpeedFactor = Mathf.MoveTowards(car.currentSpeedFactor, target,
                             (target > car.currentSpeedFactor ? accelerationRate : decelerationRate) * Time.fixedDeltaTime);
                     }
@@ -1340,7 +1371,7 @@ namespace TheOtherRoles
                     car.hasLastPosition = true;
 
                     fixOccupantPose(player, car.facingLeft);
-                    RacerCar.UpdateVisual(car.ownerId, pos);
+                    RacerCar.UpdateVisual(car.ownerId, pos, car.gear);
                 }
             }
         }

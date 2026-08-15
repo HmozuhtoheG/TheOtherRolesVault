@@ -558,6 +558,7 @@ namespace TheOtherRoles {
         public static List<PassiveButton> currentButtons = new();
         public static List<CustomOptionType> currentButtonTypes = new();
         public static bool gameModeChangedFlag = false;
+        private const float RowSlideOffset = 0.18f;
 
         public static void createCustomButton(LobbyViewSettingsPane __instance, int targetMenu, string buttonName, string buttonText, CustomOptionType optionType)
         {
@@ -660,6 +661,7 @@ namespace TheOtherRoles {
             int lines = 0;
             var curType = CustomOptionType.Modifier;
             int numBonus = 0;
+            var animatedRows = new List<(GameObject Obj, Vector3 TargetPos)>();
 
             foreach (var option in relevantOptions)
             {
@@ -680,9 +682,11 @@ namespace TheOtherRoles {
                         categoryHeaderMasked.Title.text = new Dictionary<CustomOptionType, string>() { { CustomOptionType.Impostor, ModTranslation.getString("impostorRoles") }, { CustomOptionType.Neutral, ModTranslation.getString("neutralRoles") },
                             { CustomOptionType.Crewmate, ModTranslation.getString("crewmateRoles") }, { CustomOptionType.Modifier, ModTranslation.getString("modifiers") } }[curType];
                     categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);
-                    categoryHeaderMasked.transform.localScale = Vector3.one;
-                    categoryHeaderMasked.transform.localPosition = new Vector3(-9.77f, num, -2f);
+                    var headerTargetPos = new Vector3(-9.77f, num, -2f);
+                    categoryHeaderMasked.transform.localScale = Vector3.zero;
+                    categoryHeaderMasked.transform.localPosition = headerTargetPos + new Vector3(0f, -RowSlideOffset, 0f);
                     __instance.settingsInfo.Add(categoryHeaderMasked.gameObject);
+                    animatedRows.Add((categoryHeaderMasked.gameObject, headerTargetPos));
                     if ((int)optionType != 99) {
                         categoryHeaderMasked.transform.GetChild(0).GetComponent<SpriteRenderer>().color = option.getColor();
                         categoryHeaderMasked.transform.GetChild(1).GetComponent<SpriteRenderer>().color = option.getColor();
@@ -696,7 +700,6 @@ namespace TheOtherRoles {
 
                 ViewSettingsInfoPanel viewSettingsInfoPanel = UnityEngine.Object.Instantiate<ViewSettingsInfoPanel>(__instance.infoPanelOrigin);
                 viewSettingsInfoPanel.transform.SetParent(__instance.settingsContainer);
-                viewSettingsInfoPanel.transform.localScale = Vector3.one;
                 float num2;
                 if (i % 2 == 0) {
                     lines++;
@@ -708,7 +711,9 @@ namespace TheOtherRoles {
                 else {
                     num2 = -3f;
                 }
-                viewSettingsInfoPanel.transform.localPosition = new Vector3(num2, num, -2f);
+                var rowTargetPos = new Vector3(num2, num, -2f);
+                viewSettingsInfoPanel.transform.localScale = Vector3.zero;
+                viewSettingsInfoPanel.transform.localPosition = rowTargetPos + new Vector3(0f, -RowSlideOffset, 0f);
                 int value = option.getSelection();
                 var settingTuple = handleSpecialOptionsView(option, option.getName(), option.getString());
                 viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, settingTuple.Item2, 61);
@@ -723,12 +728,32 @@ namespace TheOtherRoles {
                         viewSettingsInfoPanel.settingText.text += roleOption.enabled && roleOption.countOption != null ? $" ({roleOption.count})" : "";
                 }
                 __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);
+                animatedRows.Add((viewSettingsInfoPanel.gameObject, rowTargetPos));
 
                 i++;
             }
             float actual_spacing = (headers * 1.05f + lines * 0.85f) / (headers + lines) * 1.01f;
             __instance.scrollBar.CalculateAndSetYBounds(__instance.settingsInfo.Count + singles * 2 + headers, 2f, 6f, actual_spacing);
 
+            if (animatedRows.Count > 0)
+            {
+                int total = animatedRows.Count;
+                const float duration = 0.32f;
+                const float staggerSpan = 0.6f;
+                __instance.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
+                {
+                    for (int k = 0; k < total; k++)
+                    {
+                        var (row, targetPos) = animatedRows[k];
+                        if (row == null) continue;
+                        float rowStart = staggerSpan * k / Mathf.Max(1, total - 1);
+                        float rowP = Mathf.Clamp01((p - rowStart) / (1f - staggerSpan));
+                        float eased = 1f - Mathf.Pow(1f - rowP, 3f);
+                        row.transform.localScale = Vector3.one * eased;
+                        row.transform.localPosition = targetPos + new Vector3(0f, -RowSlideOffset * (1f - eased), 0f);
+                    }
+                })));
+            }
         }
         private static Tuple<string, string> handleSpecialOptionsView(CustomOption option, string defaultString, string defaultVal)
         {

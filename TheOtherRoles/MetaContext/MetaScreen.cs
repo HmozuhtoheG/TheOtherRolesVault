@@ -988,7 +988,7 @@ namespace TheOtherRoles.MetaContext
                 checkMark.text = "<b>✓</b>";
                 checkMark.transform.localPosition = new Vector3(0, 0, -0.2f);
                 checkMark.sortingOrder = 16;
-                checkMark.color = Color.green;
+                checkMark.color = UIPalette.Success;
                 checkMark.gameObject.SetActive(StateRef?.Value ?? false);
 
                 var box = GameObject.Instantiate(VanillaAsset.StandardTextPrefab, obj.transform);
@@ -1014,7 +1014,7 @@ namespace TheOtherRoles.MetaContext
                 var passiveButton = obj.SetUpButton(true);
                 passiveButton.OnClick.AddListener((Action)(() => SwitchState()));
                 passiveButton.OnMouseOut.AddListener((Action)(() => box.color = Color.white));
-                passiveButton.OnMouseOver.AddListener((Action)(() => box.color = Color.green));
+                passiveButton.OnMouseOver.AddListener((Action)(() => box.color = UIPalette.Success));
             }
 
             public float Generate(GameObject screen, Vector2 center, out float width)

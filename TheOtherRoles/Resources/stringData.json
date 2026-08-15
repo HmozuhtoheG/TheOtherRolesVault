@@ -7991,8 +7991,8 @@
         "13": "\u53ef\u4ee5\u5f00\u8f66"
     },
     "racerFullDesc": {
-        "0": "The racer starts by driving a race car, and transfer driving rights by using /car [player number],Press the space bar to get on and off the vehicle others can also get on by pressing the space bar",
-        "13": "\u8d5b\u8f66\u624b\u5f00\u5c40\u4f1a\u9a7e\u9a76\u4e00\u8f86\u8d5b\u8f66\uff0c\u4f7f\u7528/car [\u73a9\u5bb6\u7f16\u53f7]\u5373\u53ef\u8f6c\u79fb\u9a7e\u9a76\u6743\uff0c\u6309\u7a7a\u683c\u4e0a\u4e0b\u8f66\uff0c\u522b\u4eba\u4e5f\u53ef\u901a\u8fc7\u7a7a\u683c\u4e0a\u8f66"
+        "0": "The racer starts by driving a race car, and transfer driving rights by using /car [player number],Press the space bar to get on and off the vehicle others can also get on by pressing the space bar\nPress Shift to upshift, press Ctrl to downshift.",
+        "13": "\u8d5b\u8f66\u624b\u5f00\u5c40\u4f1a\u9a7e\u9a76\u4e00\u8f86\u8d5b\u8f66\uff0c\u4f7f\u7528/car [\u73a9\u5bb6\u7f16\u53f7]\u5373\u53ef\u8f6c\u79fb\u9a7e\u9a76\u6743\uff0c\u6309\u7a7a\u683c\u4e0a\u4e0b\u8f66\uff0c\u522b\u4eba\u4e5f\u53ef\u901a\u8fc7\u7a7a\u683c\u4e0a\u8f66\n\u6309shift\u5347\u6863\uff0c\u6309ctrl\u964d\u6863"
     },
     "ZOMBIEMAIN": {
         "0": "Zombie mode",
@@ -8121,8 +8121,8 @@
         "13": "\u52a0\u6cb9\u5e72\uff01"
     },
     "workaholicFullDesc": {
-        "0": "You are a Workaholic. You have a limited time to complete tasks. Complete tasks to earn shields that protect you from death.",
-        "13": "\u4f60\u662f\u4e00\u4e2a\u5de5\u4f5c\u72c2\u3002\u4f60\u5fc5\u987b\u5728\u9650\u5b9a\u65f6\u95f4\u5185\u5b8c\u6210\u4efb\u52a1\u3002\u5b8c\u6210\u4efb\u52a1\u53ef\u4ee5\u83b7\u5f97\u62a4\u76fe\u6765\u4fdd\u62a4\u4f60\u514d\u4e8e\u4e00\u6b7b\u3002"
+        "0": "You are a Workaholic. You have a limited time to complete tasks. Complete tasks to earn shields that protect you from death.Survive to the end to seize victory",
+        "13": "\u4f60\u662f\u4e00\u4e2a\u5de5\u4f5c\u72c2\u3002\u4f60\u5fc5\u987b\u5728\u9650\u5b9a\u65f6\u95f4\u5185\u5b8c\u6210\u4efb\u52a1\u3002\u5b8c\u6210\u4efb\u52a1\u53ef\u4ee5\u83b7\u5f97\u62a4\u76fe\u6765\u4fdd\u62a4\u4f60\u514d\u4e8e\u4e00\u6b7b\u3002\u6d3b\u5230\u6700\u540e\u5373\u53ef\u62a2\u593a\u80dc\u5229"
     },
     "workaholicCountdown": {
         "0": "You have",

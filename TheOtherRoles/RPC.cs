@@ -206,7 +206,8 @@ namespace TheOtherRoles
         SetLovers,
         ZephyrBlowCannon,
         ZephyrCheckCannon,
-        RacerSetOccupancy
+        RacerSetOccupancy,
+        RacerSetGear
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
@@ -836,6 +837,12 @@ namespace TheOtherRoles
             if (!Racer.cars.TryGetValue(ownerId, out var car)) return;
             car.driverId = driverByte == byte.MaxValue ? null : driverByte;
             car.passengerId = passengerByte == byte.MaxValue ? null : passengerByte;
+        }
+
+        public static void racerSetGear(byte ownerId, byte gear)
+        {
+            if (!Racer.cars.TryGetValue(ownerId, out var car)) return;
+            car.gear = gear;
         }
 
         public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId, string subVer, bool isAndroid) {
@@ -2119,6 +2126,11 @@ namespace TheOtherRoles
                     byte racerDriverByte = reader.ReadByte();
                     byte racerPassengerByte = reader.ReadByte();
                     RPCProcedure.racerSetOccupancy(racerOwnerId, racerDriverByte, racerPassengerByte);
+                    break;
+                case (byte)CustomRPC.RacerSetGear:
+                    byte racerGearOwnerId = reader.ReadByte();
+                    byte racerGear = reader.ReadByte();
+                    RPCProcedure.racerSetGear(racerGearOwnerId, racerGear);
                     break;
                 case (byte)CustomRPC.VersionHandshake:
                     byte major = reader.ReadByte();

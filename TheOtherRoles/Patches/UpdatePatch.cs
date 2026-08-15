@@ -27,6 +27,19 @@ namespace TheOtherRoles.Patches {
             else Racer.TryBoardNearestCar(local);
         }
 
+        static void racerGearShiftHotkey() {
+            var local = PlayerControl.LocalPlayer;
+            if (local == null || local.Data == null || local.Data.IsDead || !local.CanMove) return;
+            ChatController cc = FastDestroyableSingleton<HudManager>.Instance.Chat;
+            if (cc != null && cc.IsOpenOrOpening) return;
+            if (MeetingHud.Instance || ExileController.Instance) return;
+
+            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+                Racer.ShiftGear(local, 1);
+            else if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.RightControl))
+                Racer.ShiftGear(local, -1);
+        }
+
         static void resetNameTagsAndColors() {
             var localPlayer = PlayerControl.LocalPlayer;
             var myData = PlayerControl.LocalPlayer.Data;
@@ -598,6 +611,7 @@ namespace TheOtherRoles.Patches {
 
             CustomButton.HudUpdate();
             racerBoardExitHotkey();
+            racerGearShiftHotkey();
             resetNameTagsAndColors();
             setNameColors();
             setNameTags();
