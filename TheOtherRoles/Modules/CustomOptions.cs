@@ -216,7 +216,8 @@ namespace TheOtherRoles {
             string sel = selections[selection].ToString();
             if (format != "")
             {
-                return string.Format(ModTranslation.getString(format), sel);
+                string unitFormat = ModTranslation.getString(format, tryFind: true) ?? "{0}";
+                return string.Format(unitFormat, sel);
             }
 
             if (sel is "optionOn"  or "deputyOnImmediately" or "deputyOnAfterMeeting" or "mayorOnUntilMeeting" or "mayorOnBeforeVoting")
@@ -1055,7 +1056,8 @@ namespace TheOtherRoles {
             __instance.containerConfirm.GetChild(8).localPosition = new(4f, - 0.47f, - 0.1f);
             __instance.containerConfirm.GetChild(5).GetChild(2).GetComponent<TextMeshPro>().SetText(
                 TORMapOptions.gameMode is CustomGamemodes.Classic ? DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameTypeClassic) :
-                (TORMapOptions.gameMode is CustomGamemodes.Guesser ? ModTranslation.getString("gamemodeGuesser") : ModTranslation.getString("gamemodeHideNSeek")));
+                (TORMapOptions.gameMode is CustomGamemodes.Guesser ? ModTranslation.getString("gamemodeGuesser") :
+                (TORMapOptions.gameMode is CustomGamemodes.Zombie ? ModTranslation.getString("gamemodeZombie") : ModTranslation.getString("gamemodeHideNSeek"))));
         }
     }
 
@@ -1065,7 +1067,8 @@ namespace TheOtherRoles {
         static void Postfix(CreateGameOptions __instance)
         {
             if ((CreateGameOptionsPatch.modeButtonGS != null && CreateGameOptionsPatch.modeButtonGS.IsSelected()) ||
-                (CreateGameOptionsPatch.modeButtonHK != null && CreateGameOptionsPatch.modeButtonHK.IsSelected()))
+                (CreateGameOptionsPatch.modeButtonHK != null && CreateGameOptionsPatch.modeButtonHK.IsSelected()) ||
+                (CreateGameOptionsPatch.modeButtonZM != null && CreateGameOptionsPatch.modeButtonZM.IsSelected()))
                 __instance.modeButtons[0].SelectButton(false);
         }
     }
@@ -1075,6 +1078,7 @@ namespace TheOtherRoles {
     {
         public static PassiveButton modeButtonGS;
         public static PassiveButton modeButtonHK;
+        public static PassiveButton modeButtonZM;
 
         private static void Postfix(CreateGameOptions __instance)
         {
@@ -1101,6 +1105,7 @@ namespace TheOtherRoles {
                 modeButtonGS.SelectButton(true);
                 __instance.modeButtons[0].SelectButton(false);
                 modeButtonHK.SelectButton(false);
+                modeButtonZM.SelectButton(false);
             }
             ));
 
@@ -1116,6 +1121,23 @@ namespace TheOtherRoles {
                 modeButtonHK.SelectButton(true);
                 __instance.modeButtons[0].SelectButton(false);
                 modeButtonGS.SelectButton(false);
+                modeButtonZM.SelectButton(false);
+            }
+            ));
+
+            modeButtonZM = UnityEngine.Object.Instantiate(modeButtonHK, __instance.modeButtons[0].transform);
+            modeButtonZM.name = "TORZOMBIE";
+            changeButtonText(modeButtonZM, ModTranslation.getString("torZombie"));
+            modeButtonZM.transform.localPosition = new Vector3(8.69f, 0f, -3f);
+            modeButtonZM.OnClick.RemoveAllListeners();
+            __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => modeButtonZM.SelectButton(false))));
+            modeButtonZM.OnClick.AddListener((Action)(() =>
+            {
+                TORMapOptions.gameMode = CustomGamemodes.Zombie;
+                modeButtonZM.SelectButton(true);
+                __instance.modeButtons[0].SelectButton(false);
+                modeButtonGS.SelectButton(false);
+                modeButtonHK.SelectButton(false);
             }
             ));
 
@@ -1124,6 +1146,7 @@ namespace TheOtherRoles {
                 TORMapOptions.gameMode = CustomGamemodes.Classic;
                 modeButtonGS.SelectButton(false);
                 modeButtonHK.SelectButton(false);
+                modeButtonZM.SelectButton(false);
             }
             ));
         }

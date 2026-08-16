@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TheOtherRoles.Utilities;
@@ -35,9 +36,44 @@ namespace TheOtherRoles.Objects
 
         private static Dictionary<Color, Sprite> gearPipSpriteCache = new();
 
+        // Smooths per render frame via Time.time, not through Rigidbody2D interpolation.
+        public class PositionSmoother : MonoBehaviour
+        {
+            static PositionSmoother() => ClassInjector.RegisterTypeInIl2Cpp<PositionSmoother>();
+            public PositionSmoother(IntPtr ptr) : base(ptr) { }
+
+            private Vector3 fromPos;
+            private Vector3 toPos;
+            private float fromTime;
+            private float toTime;
+            private bool hasTarget;
+
+            public void SetTarget(Vector3 target)
+            {
+                float now = Time.time;
+                if (!hasTarget)
+                {
+                    transform.position = target;
+                    hasTarget = true;
+                }
+                fromPos = transform.position;
+                toPos = target;
+                fromTime = now;
+                toTime = now + Mathf.Max(Time.fixedDeltaTime, 0.001f);
+            }
+
+            public void Update()
+            {
+                if (!hasTarget) return;
+                float t = toTime > fromTime ? Mathf.Clamp01((Time.time - fromTime) / (toTime - fromTime)) : 1f;
+                transform.position = Vector3.LerpUnclamped(fromPos, toPos, t);
+            }
+        }
+
         private class CarVisual
         {
             public GameObject body;
+            public PositionSmoother bodySmoother;
             public GameObject wheelLeft;
             public GameObject wheelRight;
             public GameObject[] gearPips;
@@ -119,12 +155,15 @@ namespace TheOtherRoles.Objects
             var bodyRenderer = body.AddComponent<SpriteRenderer>();
             bodyRenderer.sprite = getCarBodySprite();
 
+            var bodySmoother = body.AddComponent<PositionSmoother>();
+
             var gearPips = new GameObject[GearPipCount];
             for (int i = 0; i < GearPipCount; i++) gearPips[i] = createGearPip(body.transform, i);
 
             cars[ownerId] = new CarVisual
             {
                 body = body,
+                bodySmoother = bodySmoother,
                 wheelLeft = createWheel(body.transform, LeftWheelOffset),
                 wheelRight = createWheel(body.transform, RightWheelOffset),
                 gearPips = gearPips,
@@ -179,7 +218,9 @@ namespace TheOtherRoles.Objects
 
             car.currentScaleX = Mathf.MoveTowards(car.currentScaleX, car.targetScaleX, FlipSpeed * Time.fixedDeltaTime);
             car.body.transform.localScale = new Vector3(car.currentScaleX, 1f, 1f);
-            car.body.transform.position = pivotPosition(driverPosition, car.currentScaleX);
+
+            Vector3 pivot = pivotPosition(driverPosition, car.currentScaleX);
+            car.bodySmoother.SetTarget(pivot);
 
             updateGearPips(car, gear);
         }
@@ -187,14 +228,14 @@ namespace TheOtherRoles.Objects
         public static void DespawnVisual(byte ownerId)
         {
             if (cars.TryGetValue(ownerId, out var car) && car.body != null)
-                Object.Destroy(car.body);
+                UnityEngine.Object.Destroy(car.body);
             cars.Remove(ownerId);
         }
 
         public static void DespawnAll()
         {
             foreach (var car in cars.Values)
-                if (car.body != null) Object.Destroy(car.body);
+                if (car.body != null) UnityEngine.Object.Destroy(car.body);
             cars.Clear();
         }
     }

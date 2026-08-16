@@ -1290,6 +1290,8 @@ namespace TheOtherRoles.Patches
                 // Mini
                 Mini.timeOfMeetingStart = DateTime.UtcNow;
                 Mini.ageOnMeetingStart = Mathf.FloorToInt(Mini.growingProgress() * 18);
+                // Racer
+                Racer.OnMeetingStarted();
                 // Count meetings
                 if (meetingTarget == null) meetingsCount++;
                 // Save the meeting target

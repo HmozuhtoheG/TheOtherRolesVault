@@ -32,6 +32,20 @@ namespace TheOtherRoles {
         public static CustomOption werewolfRampageKillCooldownReduction;
         public static CustomOption werewolfMarkChannelTime;
 
+        public static CustomRoleOption permafrostSpawnRate;
+        public static CustomOption permafrostSprayCooldown;
+        public static CustomOption permafrostMaxSprayDuration;
+        public static CustomOption permafrostSprayRange;
+        public static CustomOption permafrostSlowFactor;
+        public static CustomOption permafrostBlockLifetime;
+        public static CustomOption permafrostBlockSlowFactor;
+        public static CustomOption permafrostBlockSlowDuration;
+        public static CustomOption permafrostVentFreezeDuration;
+        public static CustomOption permafrostMaxActiveBlocks;
+        public static CustomOption permafrostBlockBreakable;
+        public static CustomOption permafrostBlockBreakHits;
+        public static CustomOption permafrostFreezeDuration;
+
         public static CustomOption isDraftMode;
         public static CustomOption draftModeAmountOfChoices;
         public static CustomOption draftModeTimeToChoose;
@@ -751,6 +765,7 @@ namespace TheOtherRoles {
         public static CustomOption zombieInitialCount;
         public static CustomOption zombieTimer;
         public static CustomOption zombieTaskWin;
+        public static CustomOption zombieWaitingTime;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new();
 
@@ -874,6 +889,20 @@ namespace TheOtherRoles {
             werewolfMarkChannelTime = CustomOption.Create(9195, Types.Impostor, "werewolfMarkChannelTime", 5f, 2f, 15f, 1f, werewolfSpawnRate, false, "unitSeconds");
             werewolfRampageSpeedBoost = CustomOption.Create(9196, Types.Impostor, "werewolfRampageSpeedBoost", 1f, 0f, 3f, 1f, werewolfSpawnRate, false, "unitTimes");
             werewolfRampageKillCooldownReduction = CustomOption.Create(9197, Types.Impostor, "werewolfRampageKillCooldownReduction", 20f, 0f, 90f, 10f, werewolfSpawnRate, false, "unitPercent");
+
+            permafrostSpawnRate = new CustomRoleOption(9800, Types.Impostor, "permafrost", Permafrost.color, 1);
+            permafrostSprayCooldown = CustomOption.Create(9801, Types.Impostor, "permafrostSprayCooldown", 22f, 10f, 45f, 1f, permafrostSpawnRate, false, "unitSeconds");
+            permafrostMaxSprayDuration = CustomOption.Create(9802, Types.Impostor, "permafrostMaxSprayDuration", 10f, 6f, 14f, 1f, permafrostSpawnRate, false, "unitSeconds");
+            permafrostSprayRange = CustomOption.Create(9803, Types.Impostor, "permafrostSprayRange", 2.5f, 1.5f, 4f, 0.25f, permafrostSpawnRate, false, "unitMeters");
+            permafrostSlowFactor = CustomOption.Create(9804, Types.Impostor, "permafrostSlowFactor", -0.5f, -0.8f, -0.2f, 0.05f, permafrostSpawnRate, false, "unitTimes");
+            permafrostBlockLifetime = CustomOption.Create(9805, Types.Impostor, "permafrostBlockLifetime", 75f, 30f, 150f, 15f, permafrostSpawnRate, false, "unitSeconds");
+            permafrostBlockSlowFactor = CustomOption.Create(9806, Types.Impostor, "permafrostBlockSlowFactor", -0.6f, -0.9f, -0.3f, 0.05f, permafrostSpawnRate, false, "unitTimes");
+            permafrostBlockSlowDuration = CustomOption.Create(9807, Types.Impostor, "permafrostBlockSlowDuration", 2.5f, 1f, 6f, 0.5f, permafrostSpawnRate, false, "unitSeconds");
+            permafrostVentFreezeDuration = CustomOption.Create(9808, Types.Impostor, "permafrostVentFreezeDuration", 6f, 3f, 15f, 1f, permafrostSpawnRate, false, "unitSeconds");
+            permafrostMaxActiveBlocks = CustomOption.Create(9809, Types.Impostor, "permafrostMaxActiveBlocks", 2f, 1f, 4f, 1f, permafrostSpawnRate, false, "unitScrews");
+            permafrostBlockBreakable = CustomOption.Create(9810, Types.Impostor, "permafrostBlockBreakable", true, permafrostSpawnRate);
+            permafrostBlockBreakHits = CustomOption.Create(9811, Types.Impostor, "permafrostBlockBreakHits", 3f, 2f, 6f, 1f, permafrostSpawnRate, false, "unitScrews");
+            permafrostFreezeDuration = CustomOption.Create(9812, Types.Impostor, "permafrostFreezeDuration", 20f, 5f, 120f, 5f, permafrostSpawnRate, false, "unitSeconds");
 
             serialKillerSpawnRate = new CustomRoleOption(4010, Types.Impostor, "serialKiller", SerialKiller.color);
             serialKillerKillCooldown = CustomOption.Create(4011, Types.Impostor, "serialKillerKillCooldown", 15f, 2.5f, 60f, 2.5f, serialKillerSpawnRate, false, "unitSeconds");
@@ -1138,7 +1167,7 @@ namespace TheOtherRoles {
             blockmanRemoveRefund = CustomOption.Create(7104, Types.Neutral, "blockmanRemoveRefund", 10f, 0f, 25f, 5f, blockmanSpawnRate, false, "");
             blockmanMaxBlocks = CustomOption.Create(7105, Types.Neutral, "blockmanMaxBlocks", 5f, 2f, 10f, 1f, blockmanSpawnRate, false, "");
             blockmanBlockLifetime = CustomOption.Create(7106, Types.Neutral, "blockmanBlockLifetime", 45f, 15f, 90f, 5f, blockmanSpawnRate, false, "unitSeconds");
-            blockmanSettleTime = CustomOption.Create(7107, Types.Neutral, "blockmanSettleTime", 1.5f, 0.5f, 5f, 0.5f, blockmanSpawnRate, false, "unitSeconds");
+            blockmanSettleTime = CustomOption.Create(7107, Types.Neutral, "blockmanSettleTime", 1f, 0.5f, 5f, 0.5f, blockmanSpawnRate, false, "unitMinutes");
             blockmanDashCost = CustomOption.Create(7108, Types.Neutral, "blockmanDashCost", 40f, 10f, 100f, 10f, blockmanSpawnRate, false, "");
             blockmanDashDistance = CustomOption.Create(7109, Types.Neutral, "blockmanDashDistance", 3f, 1f, 6f, 0.5f, blockmanSpawnRate, false, "unitMeters");
             blockmanDashCooldown = CustomOption.Create(7110, Types.Neutral, "blockmanDashCooldown", 15f, 5f, 40f, 5f, blockmanSpawnRate, false, "unitSeconds");
@@ -1485,6 +1514,7 @@ namespace TheOtherRoles {
             zombieInitialCount = CustomOption.Create(11000, Types.ZombieMain, cs(Color.yellow, "zombieInitialCount"), 1f, 1f, 3f, 1f, format: "unitPlayers");
             zombieTimer = CustomOption.Create(11001, Types.ZombieMain, cs(Color.yellow, "zombieTimer"), 5f, 1f, 30f, 1f);
             zombieTaskWin = CustomOption.Create(11002, Types.ZombieMain, cs(Color.yellow, "zombieTaskWin"), false);
+            zombieWaitingTime = CustomOption.Create(11003, Types.ZombieMain, cs(Color.yellow, "zombieWaitingTime"), 15f, 2.5f, 60f, 2.5f, format: "unitSeconds");
 
             // Other options
             maxNumberOfMeetings = CustomOption.Create(3, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, null, true, "unitShots", heading: "headingGameplay");

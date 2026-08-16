@@ -23,6 +23,11 @@ namespace TheOtherRoles.Patches
     {
         public static PoolablePlayer playerPrefab;
         public static Vector3 bottomLeft;
+
+#if WINDOWS
+        static bool Prepare() => AccessTools.Method(typeof(IntroCutscene), nameof(IntroCutscene.OnDestroy)) != null;
+#endif
+
         public static void Prefix(IntroCutscene __instance) {
             // Generate and initialize player icons
             int playerCounter = 0;
@@ -208,7 +213,18 @@ namespace TheOtherRoles.Patches
             }
 
             if (Zombie.isZombieGM) {
-                Zombie.timer = CustomOptionHolder.zombieTimer.getFloat() * 60;
+                foreach (PlayerControl player in Zombie.getZombies()) {
+                    player.moveable = false;
+                    player.NetTransform.Halt();
+                    Zombie.timer = Zombie.zombieWaitingTime;
+                    FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(Zombie.zombieWaitingTime, new Action<float>((p) => {
+                        if (p == 1f) {
+                            player.moveable = true;
+                            Zombie.timer = CustomOptionHolder.zombieTimer.getFloat() * 60;
+                            Zombie.isWaitingTimer = false;
+                        }
+                    })));
+                }
             }
         }
     }

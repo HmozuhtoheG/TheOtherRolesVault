@@ -69,6 +69,7 @@ namespace TheOtherRoles
             // TORV
             Ninja.clearAndReload();
             Werewolf.clearAndReload();
+            Permafrost.clearAndReload();
             NekoKabocha.clearAndReload();
             SerialKiller.clearAndReload();
             EvilTracker.clearAndReload();
@@ -207,6 +208,7 @@ namespace TheOtherRoles
                 { RoleId.Assassin, typeof(RoleBase<Assassin>) },
                 { RoleId.Ninja, typeof(RoleBase<Ninja>) },
                 { RoleId.Werewolf, typeof(RoleBase<Werewolf>) },
+                { RoleId.Permafrost, typeof(RoleBase<Permafrost>) },
                 { RoleId.Zephyr, typeof(RoleBase<Zephyr>) },
 
                 // Neutral
@@ -1118,6 +1120,7 @@ namespace TheOtherRoles
         public static float boardRange = 1.2f;
         public static float accelerationRate = 0.6f;
         public static float decelerationRate = 1.5f;
+        public static float passengerSeatOffsetX = 0.22f;
 
         public static float coastDeceleration = 6f;
 
@@ -1134,6 +1137,12 @@ namespace TheOtherRoles
         public static bool isInjured(PlayerControl player)
         {
             return player != null && injuredUntil.TryGetValue(player.PlayerId, out var until) && Time.time < until;
+        }
+
+        public static Vector3 GetPassengerSeatPosition(RacerCarData car, PlayerControl driver)
+        {
+            float behindX = car.facingLeft ? passengerSeatOffsetX : -passengerSeatOffsetX;
+            return driver.transform.position + new Vector3(behindX, 0f, 0f);
         }
 
         private static void fixOccupantPose(PlayerControl player, bool facingLeft)
@@ -1338,13 +1347,8 @@ namespace TheOtherRoles
                     var driver = car.driverId != null ? Helpers.playerById(car.driverId.Value) : null;
                     if (driver == null) continue;
 
-                    float behindX = car.facingLeft ? 0.22f : -0.22f;
-                    Vector3 targetPos = driver.transform.position + new Vector3(behindX, 0f, 0f);
-
-                    if (player == PlayerControl.LocalPlayer)
-                        player.NetTransform.RpcSnapTo(targetPos);
-                    else
-                        player.transform.position = targetPos;
+                    // Position is set from PlayerPhysicsFixedUpdate (Patches/PlayerControlPatch.cs),
+                    // not here, same as the driver's velocity boost below.
                     fixOccupantPose(player, car.facingLeft);
                 }
                 else if (car.driverId == player.PlayerId)

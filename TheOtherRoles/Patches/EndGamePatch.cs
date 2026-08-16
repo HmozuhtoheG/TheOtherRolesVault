@@ -1373,7 +1373,7 @@ namespace TheOtherRoles.Patches {
                 GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByVote, false);
                 return true;
             }
-            if (Zombie.isZombieGM && Zombie.timer <= 0) {
+            if (Zombie.isZombieGM && Zombie.timer <= 0 && !Zombie.isWaitingTimer) {
                 GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByVote, false);
                 return true;
             }

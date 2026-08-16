@@ -50,36 +50,11 @@ namespace TheOtherRoles.Patches {
                     __instance.text.text = $"{ModTranslation.getString(fullCredentialsVersion)}\n{ModTranslation.getString(fullCredentials)}\n {__instance.text.text}";
                     position.DistanceFromEdge = new Vector3(0.5f, 0.11f);
 
-                    try
-                    {
-                        var gameModeTextObj = GameObject.Find("GameModeText");
-                        var GameModeText = gameModeTextObj?.GetComponent<TextMeshPro>();
+                    var GameModeText = GameObject.Find("GameModeText")?.GetComponent<TextMeshPro>();
+                    if (GameModeText != null)
                         GameModeText.text = gameModeText == "" ? (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek ? "Van. HideNSeek" : ModTranslation.getString("modeClassic")) : gameModeText;
-                        var ModeLabel = GameObject.Find("ModeLabel")?.GetComponentInChildren<TextMeshPro>();
-                        ModeLabel.text = ModTranslation.getString("modeLabel");
-
-                        // This text is display-only in vanilla; make it clickable so TOR modes (incl. Zombie)
-                        // can be picked on screens (like the online Create Game screen) that never exposed
-                        // a working mode picker of their own.
-                        if (gameModeTextObj != null && gameModeTextObj.GetComponent<PassiveButton>() == null)
-                        {
-                            var collider = gameModeTextObj.AddComponent<BoxCollider2D>();
-                            collider.isTrigger = true;
-                            collider.size = new Vector2(2f, 0.4f);
-                            var button = gameModeTextObj.AddComponent<PassiveButton>();
-                            button.OnMouseOut = new UnityEngine.Events.UnityEvent();
-                            button.OnMouseOver = new UnityEngine.Events.UnityEvent();
-                            button.OnClick = new UnityEngine.UI.Button.ButtonClickedEvent();
-                            button.OnClick.AddListener((Action)(() => {
-                                var next = (CustomGamemodes)((int)(TORMapOptions.gameMode + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
-                                if (next == CustomGamemodes.FreePlay) next = (CustomGamemodes)((int)(next + 1) % Enum.GetNames(typeof(CustomGamemodes)).Length);
-                                TORMapOptions.gameMode = next;
-                                TheOtherRolesPlugin.Logger.LogMessage($"[ZombieModeDebug] GameModeText clicked, new TORMapOptions.gameMode = {TORMapOptions.gameMode}");
-                            }));
-                            TheOtherRolesPlugin.Logger.LogMessage("[ZombieModeDebug] Made GameModeText clickable.");
-                        }
-                    }
-                    catch (Exception e) { TheOtherRolesPlugin.Logger.LogWarning($"[ZombieModeDebug] Exception making GameModeText clickable: {e}"); }
+                    var ModeLabel = GameObject.Find("ModeLabel")?.GetComponentInChildren<TextMeshPro>();
+                    if (ModeLabel != null) ModeLabel.text = ModTranslation.getString("modeLabel");
                 }
                 position.AdjustPosition();
             }

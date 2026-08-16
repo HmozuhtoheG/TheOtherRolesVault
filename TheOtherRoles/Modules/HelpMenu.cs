@@ -705,6 +705,7 @@ public static class HelpMenu
                 { RoleId.Thief, CustomOptionHolder.thiefSpawnRate },
                 { RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate },
                 { RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate },
+                { RoleId.Permafrost, CustomOptionHolder.permafrostSpawnRate },
                 { RoleId.NekoKabocha, CustomOptionHolder.nekoKabochaSpawnRate },
                 { RoleId.SerialKiller, CustomOptionHolder.serialKillerSpawnRate },
                 { RoleId.EvilTracker, CustomOptionHolder.evilTrackerSpawnRate },

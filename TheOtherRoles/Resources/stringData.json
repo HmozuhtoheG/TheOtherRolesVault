@@ -668,25 +668,10 @@
         "14": "\u7531<color=#FCCE03FF>Eisbison</color>, <color=#FCCE03FF>Thunderstorm584</color>, <color=#FCCE03FF>EndOfFile</color>, <color=#FCCE03FF>Mall\u00f6ris</color> & <color=#FCCE03FF>Gendelo</color>\u88fd\u4f5c\u672c\u5bb6\u6a21\u7d44\n\u7531<color=#FCCE03FF>Bavari</color>\u9032\u884c\u6309\u9215\u88fd\u4f5c\n\u7531<color=#FCCE03FF>Imp11</color>\u8986\u5beb\n\u7531<color=#FCCE03FF>Keno</color>\u91cd\u88fd"
     },
     "aboutContributorsList": {
-        "0": "TKeno,\u7406\u60f3\u96c6,Blade,\u6c6a\u6c6a\u72d7\nJex1303,\u5185\u9b3c\u5c0f\u8f69\n<size=60%>contributors</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,r",
-        "11": "Keno,Blade,Jex1303,\u5185\u9b3c\u5c0f\u8f69\n<size=60%>\u8ca2\u732e\u8005</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,\u7406\u60f3\u96c6,\u6c6a\u6c6a\u72d7,11",
-        "13": "Keno,Blade,Jex1303,\u5185\u9b3c\u5c0f\u8f69\n<size=60%>\u8d21\u732e\u8005</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,\u7406\u60f3\u96c6,\u6c6a\u6c6a\u72d7,11",
-        "14": "Keno,Blade,Jex1303,\u5185\u9b3c\u5c0f\u8f69\n<size=60%>\u8ca2\u732e\u8005</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,\u7406\u60f3\u96c6,\u6c6a\u6c6a\u72d7,11"
-    },
-    "mainMenuElinmeiAboutSection": {
-        "0": "This interface is under adjustment."
-    },
-    "mainMenuFangkuaiAboutSection": {
-        "0": "This interface is under adjustment."
-    },
-    "mainMenuAmongusAboutSection": {
-        "0": "This interface is under adjustment."
-    },
-    "mainMenuYuunozikkyouAboutSection": {
-        "0": "This interface is under adjustment."
-    },
-    "mainMenuTAIKAboutSection": {
-        "0": "This interface is under adjustment."
+        "0": "Keno,Blade,wwg\n<size=60%>contributor</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,\u7406\u60f3\u96c6,11,Jex1303,\u5185\u9b3c\u5c0f\u8f69\nImp11,Among us,Fangkuai,ELinmei,Fangkuai",
+        "11": "Keno,Blade,wwg\n<size=60%>\u8ca2\u732e\u8005</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,\u7406\u60f3\u96c6,11,Jex1303,\u5185\u9b3c\u5c0f\u8f69\nImp11,Among us,Fangkuai,ELinmei,Fangkuai",
+        "13": "Keno,Blade,wwg\n<size=60%>\u8d21\u732e\u8005</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,\u7406\u60f3\u96c6,11,Jex1303,\u5185\u9b3c\u5c0f\u8f69\nImp11,Among us,Fangkuai,ELinmei,Fangkuai",
+        "14": "Keno,Blade,wwg\n<size=60%>\u8ca2\u732e\u8005</size>\nWt Felar,nes,\u7ef4\u5e0c\u6cd5\u56fd\u5165,\u9ca4\u9c7c\u5927\u738b,\u7406\u60f3\u96c6,11,Jex1303,\u5185\u9b3c\u5c0f\u8f69\nImp11,Among us,Fangkuai,ELinmei,Fangkuai"
     },
     "aboutCreditsTitle": {
         "0": "Production staff",
@@ -7871,16 +7856,16 @@
         "13": "\u653e\u7f6e\u6d88\u8017"
     },
     "blockmanRemoveRefund": {
-        "0": " Remove Refund",
+        "0": "Remove Refund",
         "13": "\u62c6\u9664\u8fd4\u8fd8"
     },
     "blockmanBlockLifetime": {
-        "0": "Block Lifetime (s)",
+        "0": "Maximum number of existing blocks",
         "13": "\u6700\u5927\u65b9\u5757\u6570"
     },
     "blockmanSettleTime": {
-        "0": "Settle Time (s)",
-        "13": "\u65b9\u5757\u5b58\u6d3b\u65f6\u95f4(\u79d2)"
+        "0": "blocks solidification time (minutes)",
+        "13": "\u65b9\u5757\u51dd\u56fa\u65f6\u95f4(\u5206\u949f)"
     },
     "blockmanDashCost": {
         "0": "Dash Cost",
@@ -7903,7 +7888,7 @@
         "13": "\u65b9\u5757\u4eba {0} \u80dc\u5229"
     },
     "werewolf": {
-        "0": " Werewolf",
+        "0": "Werewolf",
         "13": "\u72fc\u4eba"
     },
     "werewolfIntroDesc": {
@@ -7923,7 +7908,7 @@
         "13": "\u6807\u8bb0\u51b7\u5374\u65f6\u95f4"
     },
     "werewolfMarkDuration": {
-        "0": " Mark Duration",
+        "0": "Mark Duration",
         "13": "\u6807\u8bb0\u6301\u7eed\u65f6\u95f4"
     },
     "werewolfMarkRange": {
@@ -7931,7 +7916,7 @@
         "13": "\u6807\u8bb0\u8ddd\u79bb"
     },
     "werewolfRampageSpeedBoost": {
-        "0": " Rampage Speed Boost",
+        "0": "Rampage Speed Boost",
         "13": "\u72c2\u66b4\u79fb\u901f\u52a0\u6210"
     },
     "werewolfRampageKillCooldownReduction": {
@@ -7994,9 +7979,17 @@
         "0": "The racer starts by driving a race car, and transfer driving rights by using /car [player number],Press the space bar to get on and off the vehicle others can also get on by pressing the space bar\nPress Shift to upshift, press Ctrl to downshift.",
         "13": "\u8d5b\u8f66\u624b\u5f00\u5c40\u4f1a\u9a7e\u9a76\u4e00\u8f86\u8d5b\u8f66\uff0c\u4f7f\u7528/car [\u73a9\u5bb6\u7f16\u53f7]\u5373\u53ef\u8f6c\u79fb\u9a7e\u9a76\u6743\uff0c\u6309\u7a7a\u683c\u4e0a\u4e0b\u8f66\uff0c\u522b\u4eba\u4e5f\u53ef\u901a\u8fc7\u7a7a\u683c\u4e0a\u8f66\n\u6309shift\u5347\u6863\uff0c\u6309ctrl\u964d\u6863"
     },
-    "ZOMBIEMAIN": {
-        "0": "Zombie mode",
-        "13": "\u4e27\u5c38\u6a21\u5f0f"
+    "zombieMeetingButton": {
+        "0": "huh",
+        "13": "\u4f60\u60f3\u505a\u751a?"
+    },
+    "zombieWaitingTime": {
+        "0": "Time Zombies Need To Wait",
+        "13": "\u4e27\u5c38\u7b49\u5f85\u65f6\u95f4"
+    },
+    "zombieMain": {
+        "0": "Zombie Settings",
+        "13": "\u4e27\u5c38\u8bbe\u7f6e"
     },
     "zombieInitialCount": {
         "0": "Initial number of zombies",
@@ -8031,57 +8024,75 @@
         "13": "\u9000\u51fa"
     },
     "gomokuTitle": {
+        "0": "Gomoku",
         "13": "\u4e94\u5b50\u68cb"
     },
     "gomokuInvite": {
+        "0": "invitation",
         "13": "\u9080\u8bf7"
     },
     "gomokuRestart": {
+        "0": "Restart",
         "13": "\u91cd\u5f00"
     },
     "gomokuWinBlack": {
+        "0": "Black wins",
         "13": "\u9ed1\u65b9\u83b7\u80dc"
     },
     "gomokuWinWhite": {
+        "0": "White wins",
         "13": "\u767d\u65b9\u83b7\u80dc"
     },
     "gomokuDraw": {
+        "0": "Draw",
         "13": "\u5e73\u5c40"
     },
     "gomokuWaitingOpponent": {
+        "0": "Waiting for opponent to join",
         "13": "\u7b49\u5f85\u5bf9\u624b\u52a0\u5165"
     },
     "gomokuYourTurn": {
+        "0": "It's your turn.",
         "13": "\u8f6e\u5230\u4f60\u4e86"
     },
     "gomokuOpponentTurn": {
+        "0": "It's the opponent's turn",
         "13": "\u8f6e\u5230\u5bf9\u624b"
     },
     "gomokuSpectating": {
+        "0": "Watching the match",
         "13": "\u89c2\u6218\u4e2d"
     },
     "gomokuJoinBlack": {
+        "0": "Join Black",
         "13": "\u52a0\u5165\u6267\u9ed1"
     },
     "gomokuJoinWhite": {
+        "0": "Join White",
         "13": "\u52a0\u5165\u6267\u767d"
     },
     "gomokuInviteListTitle": {
+        "0": "Invitation list",
         "13": "\u9080\u8bf7\u5217\u8868"
     },
     "gomokuInviteSend": {
+        "0": "Send invitation",
         "13": "\u53d1\u9001\u9080\u8bf7"
     },
     "gomokuInviteListEmpty": {
+        "0": "Invitation list is empty",
         "13": "\u9080\u8bf7\u5217\u8868\u4e3a\u7a7a"
     },
     "gomokuInviteTitle": {
+        "0": "Hey! Want to play a thrilling game of Gomoku with",
         "13": "\u563f\uff01\u60f3\u8ddf\u6211\u9163\u7545\u6dcb\u6f13\u7684\u6765\u4e00\u628a\u4e94\u5b50\u68cb\u5417"
     },
     "gomokuInviteMessage": {
+        "0": "{0} invites you to join Gomoku",
         "13": "{0}\u9080\u8bf7\u4f60\u52a0\u5165\u4e94\u5b50\u68cb"
     },
     "gomokuInviteHint": {
+        "0": "Invitation card",
         "13": "\u9080\u8bf7\u5361"
     },
     "zombieIntroDesc": {
@@ -8171,6 +8182,118 @@
     "workaholicExtra": {
         "0": "The <color=#FFA500FF>Workaholic</color> got a promotion and raise!",
         "13": "<color=#FFA500FF>\u5de5\u4f5c\u72c2</color> \u8fce\u6765\u4e86\u5347\u804c\u52a0\u85aa\uff01"
+    },
+    "gomokuOngoingMatches": {
+        "0": "Ongoing Matches",
+        "13": "\u8fdb\u884c\u4e2d\u7684\u5bf9\u5c40"
+    },
+    "gomokuNoOngoingMatches": {
+        "0": "No ongoing matches",
+        "13": "\u6682\u65e0\u8fdb\u884c\u4e2d\u7684\u5bf9\u5c40"
+    },
+    "gomokuNoMatchSelected": {
+        "0": "Select a match to spectate, or start a new one",
+        "13": "\u9009\u62e9\u5de6\u4fa7\u5bf9\u5c40\u89c2\u6218\uff0c\u6216\u65b0\u5efa\u4e00\u5c40"
+    },
+    "gomokuCreateMatch": {
+        "0": "New Match",
+        "13": "\u65b0\u5efa\u5bf9\u5c40"
+    },
+    "gomokuWaitingSeat": {
+        "0": "Waiting...",
+        "13": "\u7b49\u5f85\u4e2d"
+    },
+    "gomokuExitSpectate": {
+        "0": "Exit Spectate",
+        "13": "\u9000\u51fa\u89c2\u6218"
+    },
+    "permafrost": {
+        "0": "Permafrost",
+        "13": "\u51b0\u971c\u8005"
+    },
+    "permafrostIntroDesc": {
+        "0": "The cold never lets go",
+        "13": "\u611f\u53d7\u6211\u7684\u5bd2\u610f"
+    },
+    "permafrostShortDesc": {
+        "0": "The cold never lets go",
+        "13": "\u611f\u53d7\u6211\u7684\u5bd2\u610f"
+    },
+    "permafrostFullDesc": {
+        "0": "Hold the spray button to unleash a channeled ice spray for up to %SPRAYDURATION% seconds. Aiming at a nearby\ncrewmate slows them down; holding the spray steady on the same floor tile for the full duration instead forms an ice\nblock that trips up anyone who walks over it, or seals a vent shut for %VENTFREEZE% seconds if aimed at one. Ice\nblocks melt after %BLOCKLIFETIME% seconds.",
+        "13": "\u957f\u6309\u55b7\u5c04\u952e\u91ca\u653e\u6301\u7eed\u51b0\u971c\u55b7\u5c04,\u6700\u957f%SPRAYDURATION%\u79d2\u3002\u7784\u51c6\u9644\u8fd1\u8239\u5458\u4f1a\u4f7f\u5176\u51cf\u901f\u3002\u82e5\u6574\u6bb5\u65f6\u95f4\u6301\u7eed\u5bf9\u51c6\u540c\u4e00\u5757\u5730\u9762\uff0c\u5219\u4f1a\u51dd\u7ed3\u6210\u51b0\u5757\uff0c\u7eca\u5012\u7ecf\u8fc7\u7684\u4eba\uff1b\u82e5\u5bf9\u51c6\u7ba1\u9053\uff0c\u5219\u4f1a\u5c06\u5176\u5c01\u9501%VENTFREEZE%\u79d2\u3002\u51b0\u5757\u4f1a\u5728%BLOCKLIFETIME%\u79d2\u540e\u878d\u5316\u3002\u5bf9\u51c6\u4e00\u4e2a/\u4e00\u7fa4\u4eba\u55b7\u5c0410\u79d2\u4f1a\u51bb\u7ed3\u5bf9\u65b9%FREEZEDURATION%\u79d2"
+    },
+    "permafrostBlurb": {
+        "0": "Freeze everyone",
+        "13": "\u4f60\u53ef\u4ee5\u55b7\u5c04\u51b0\u971c"
+    },
+    "permafrostSprayCooldown": {
+        "0": "Spray Cooldown",
+        "13": "\u55b7\u5c04\u51b7\u5374\u65f6\u95f4"
+    },
+    "permafrostMaxSprayDuration": {
+        "0": "Max Spray Duration",
+        "13": "\u6700\u957f\u55b7\u5c04\u65f6\u957f"
+    },
+    "permafrostSprayRange": {
+        "0": "Spray Range",
+        "13": "\u55b7\u5c04\u8303\u56f4"
+    },
+    "permafrostSlowFactor": {
+        "0": "Player Slow Strength",
+        "13": "\u76ee\u6807\u51cf\u901f\u5f3a\u5ea6"
+    },
+    "permafrostBlockLifetime": {
+        "0": "Ice Block Lifetime",
+        "13": "\u51b0\u5757\u5b58\u7eed\u65f6\u95f4"
+    },
+    "permafrostBlockSlowFactor": {
+        "0": "Ice Block Slow Strength",
+        "13": "\u51b0\u5757\u6ed1\u5012\u51cf\u901f\u5f3a\u5ea6"
+    },
+    "permafrostBlockSlowDuration": {
+        "0": "Ice Block Slow Duration",
+        "13": "\u51b0\u5757\u6ed1\u5012\u6301\u7eed\u65f6\u95f4"
+    },
+    "permafrostVentFreezeDuration": {
+        "0": "Vent Freeze Duration",
+        "13": "\u7ba1\u9053\u5c01\u9501\u65f6\u957f"
+    },
+    "permafrostMaxActiveBlocks": {
+        "0": "Max Active Ice Blocks",
+        "13": "\u540c\u65f6\u5b58\u5728\u51b0\u5757\u4e0a\u9650"
+    },
+    "permafrostBlockBreakable": {
+        "0": "Ice Blocks Are Breakable",
+        "13": "\u51b0\u5757\u53ef\u88ab\u8e29\u788e"
+    },
+    "permafrostBlockBreakHits": {
+        "0": "Hits To Break Ice Block",
+        "13": "\u51fb\u788e\u51b0\u5757\u6240\u9700\u4eba\u6570"
+    },
+    "PermafrostSprayText": {
+        "0": "Spray",
+        "13": "\u55b7\u5c04"
+    },
+    "permafrostFreezeDuration": {
+        "0": "Freeze Duration",
+        "13": "\u51bb\u7ed3\u4eba\u7269\u7684\u6301\u7eed\u65f6\u95f4"
+    },
+    "RacerBoardText": {
+        "0": "Board",
+        "13": "\u4e0a\u8f66"
+    },
+    "RacerExitText": {
+        "0": "Exit",
+        "13": "\u4e0b\u8f66"
+    },
+    "RacerGearUpText": {
+        "0": "Gear+",
+        "13": "\u52a0\u6863"
+    },
+    "RacerGearDownText": {
+        "0": "Gear-",
+        "13": "\u51cf\u6863"
     },
     "colorSalmon": {
         "0": "Salmon",

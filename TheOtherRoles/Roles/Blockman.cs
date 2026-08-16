@@ -47,13 +47,15 @@ namespace TheOtherRoles.Roles
         public static float removeRefund = 10f;
         public static int maxBlocks = 5;
         public static float blockLifetime = 45f;
-        public static float settleTime = 10f;
+        public static float settleTime = 1f;
+        public static float settleTimeSeconds => settleTime * 60f;
         public static float placeRange = 1.5f;
 
         public static float dashCost = 40f;
         public static float dashDistance = 3f;
         public static float dashCooldown = 15f;
         public static float ghostRevealRange = 6f;
+        public const float breakRange = 1.8f;
 
         public float currentEnergy;
         public List<Block> blocks;
@@ -73,7 +75,7 @@ namespace TheOtherRoles.Roles
             public Vector2 position;
             public float age;
             public float placedAtRealtime;
-            public bool settled => age >= settleTime;
+            public bool settled => Time.time - placedAtRealtime >= settleTimeSeconds;
             public GameObject gameObject;
             public TextMeshPro timerText;
         }
@@ -254,10 +256,23 @@ namespace TheOtherRoles.Roles
         private Vector2 GetMousePlacePos()
         {
             if (player == null) return Vector2.zero;
+            Vector2 direction = GetAimDirection();
+            return (Vector2)player.transform.position + direction * placeRange;
+        }
+
+        private Vector2 GetAimDirection()
+        {
+            if (System.OperatingSystem.IsAndroid())
+            {
+                Vector2 velocity = player.MyPhysics.body.velocity;
+                if (velocity.sqrMagnitude > 0.0001f) return velocity.normalized;
+                return player.MyPhysics.FlipX ? Vector2.left : Vector2.right;
+            }
+
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseWorld.z = 0f;
-            Vector2 direction = ((Vector2)mouseWorld - (Vector2)player.transform.position).normalized;
-            return (Vector2)player.transform.position + direction * placeRange;
+            Vector2 direction = (Vector2)mouseWorld - (Vector2)player.transform.position;
+            return direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector2.right;
         }
 
         public void TogglePlaceBlock()
@@ -309,13 +324,12 @@ namespace TheOtherRoles.Roles
             var player = PlayerControl.LocalPlayer;
             if (player == null || player.Data.IsDead) return;
 
-            float checkRange = 1.8f;
-            var (owner, block) = FindNearestUnsettledBlock(player.transform.position, checkRange);
+            var (owner, block) = FindNearestUnsettledBlock(player.transform.position, breakRange);
 
             if (owner != null && block != null)
                 BreakUnsettledBlock(owner, block);
             else
-                Helpers.CreateAndShowNotification(ModTranslation.getString("BlockmanMaxBlocks"), Color.white, new Vector3(0f, 1f, -20f));
+                Helpers.CreateAndShowNotification(ModTranslation.getString("BlockmanNoUnsettledBlock"), Color.white, new Vector3(0f, 1f, -20f));
         }
 
         public static void BreakUnsettledBlock(Blockman owner, Block block)
@@ -367,9 +381,7 @@ namespace TheOtherRoles.Roles
             if (player != PlayerControl.LocalPlayer) return;
             if (currentEnergy < dashCost) return;
 
-            Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorld.z = 0f;
-            Vector2 direction = ((Vector2)mouseWorld - (Vector2)player.transform.position).normalized;
+            Vector2 direction = GetAimDirection();
             Vector2 target = (Vector2)player.transform.position + direction * dashDistance;
 
             var currentData = MapData.GetCurrentMapData();
@@ -548,7 +560,7 @@ namespace TheOtherRoles.Roles
                 foreach (var block in bm.blocks)
                 {
                     if (block.gameObject == null || block.timerText == null) continue;
-                    float remaining = Mathf.Max(0f, settleTime - block.age);
+                    float remaining = Mathf.Max(0f, settleTimeSeconds - (Time.time - block.placedAtRealtime));
                     block.timerText.text = remaining.ToString("F1") + "s";
                     if (Camera.main != null)
                         block.timerText.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
@@ -615,7 +627,7 @@ namespace TheOtherRoles.Roles
             foreach (var cell in role.blueprint.cells)
             {
                 Vector2 targetPos = role.blueprint.originWorldPos + new Vector2(cell.x, cell.y) * role.blueprint.gridSize;
-                bool filled = role.blocks.Any(b => Time.time - b.placedAtRealtime >= settleTime && Vector2.Distance(b.position, targetPos) < 0.5f);
+                bool filled = role.blocks.Any(b => b.settled && Vector2.Distance(b.position, targetPos) < 0.5f);
                 if (!filled) return false;
             }
 

@@ -130,6 +130,7 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.Assassin, CustomOptionHolder.assassinSpawnRate.data);
             impSettings.Add((byte)RoleId.Ninja, CustomOptionHolder.ninjaSpawnRate.data);
             impSettings.Add((byte)RoleId.Werewolf, CustomOptionHolder.werewolfSpawnRate.data);
+            impSettings.Add((byte)RoleId.Permafrost, CustomOptionHolder.permafrostSpawnRate.data);
             impSettings.Add((byte)RoleId.NekoKabocha, CustomOptionHolder.nekoKabochaSpawnRate.data);
             impSettings.Add((byte)RoleId.EvilTracker, CustomOptionHolder.evilTrackerSpawnRate.data);
             impSettings.Add((byte)RoleId.Undertaker, CustomOptionHolder.undertakerSpawnRate.data);
