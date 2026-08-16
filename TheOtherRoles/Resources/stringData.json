@@ -8295,6 +8295,18 @@
         "0": "Gear-",
         "13": "\u51cf\u6863"
     },
+    "developerAchievementTitle": {
+        "0": "developer",
+        "13": "\u5f00\u53d1\u8005"
+    },
+    "achievementGroupSecret": {
+        "0": "achievement",
+        "13": "\u795e\u79d8\u6210\u5c31"
+    },
+    "developerAchievementGoal": {
+        "0": "Become a developer",
+        "13": "\u6210\u4e3a\u5f00\u53d1\u8005"
+    },
     "colorSalmon": {
         "0": "Salmon",
         "11": "\u30b5\u30fc\u30e2\u30f3",
