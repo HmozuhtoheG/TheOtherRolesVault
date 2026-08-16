@@ -9,7 +9,7 @@ namespace TheOtherRoles
 		//此处填入开发者ID
 		public static readonly HashSet<string> DevFriendCodes = new() {
 			"midplace#8957",//wwg
-            "offlinenil＃5191",//zy
+            "offlinenil#5191",//zy
             "squishyhod#5187"//hg
 
         };

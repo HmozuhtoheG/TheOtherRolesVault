@@ -71,6 +71,20 @@ namespace TheOtherRoles.Roles
         private static readonly Dictionary<int, DateTime> frozenVents = new();
         private static readonly Dictionary<byte, DateTime> frozenUntil = new();
 
+        private static bool sprayButtonHeld;
+        public static bool sprayButtonHovered;
+
+        private static bool IsPointerDown()
+        {
+            if (Input.GetMouseButton(0)) return true;
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                TouchPhase phase = Input.GetTouch(i).phase;
+                if (phase != TouchPhase.Ended && phase != TouchPhase.Canceled) return true;
+            }
+            return false;
+        }
+
         private static bool IsSprayInputHeld()
         {
             var button = HudManagerStartPatch.permafrostSprayButton;
@@ -78,17 +92,7 @@ namespace TheOtherRoles.Roles
 
             if (button.hotkey.HasValue && Input.GetKey(button.hotkey.Value)) return true;
 
-            if (Input.GetMouseButton(0) && button.actionButtonGameObject != null)
-            {
-                var rect = button.actionButtonGameObject.transform as RectTransform;
-                if (rect != null)
-                {
-                    var canvas = rect.GetComponentInParent<Canvas>();
-                    Camera cam = (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay) ? Camera.main : null;
-                    if (RectTransformUtility.RectangleContainsScreenPoint(rect, Input.mousePosition, cam)) return true;
-                }
-            }
-            return false;
+            return sprayButtonHeld || (sprayButtonHovered && IsPointerDown());
         }
 
         private void StartSprayLocal()
@@ -223,6 +227,8 @@ namespace TheOtherRoles.Roles
             frozenUntil.Clear();
             IceBlock.ClearAll();
             ClearVisuals();
+            sprayButtonHeld = false;
+            sprayButtonHovered = false;
             players = [];
         }
 
@@ -760,6 +766,39 @@ namespace TheOtherRoles.Roles
                 }
                 canUse = couldUse = false;
                 __result = float.MaxValue;
+            }
+        }
+
+        private static bool IsSprayPassiveButton(PassiveUiElement instance)
+        {
+            var button = HudManagerStartPatch.permafrostSprayButton;
+            return button?.actionButton != null && instance == button.actionButton.GetComponent<PassiveButton>();
+        }
+
+        [HarmonyPatch(typeof(PassiveUiElement), nameof(PassiveUiElement.ReceiveClickDown))]
+        private static class PermafrostSprayButtonDownPatch
+        {
+            public static void Postfix(PassiveUiElement __instance)
+            {
+                if (IsSprayPassiveButton(__instance)) sprayButtonHeld = true;
+            }
+        }
+
+        [HarmonyPatch(typeof(PassiveUiElement), nameof(PassiveUiElement.ReceiveClickUp))]
+        private static class PermafrostSprayButtonUpPatch
+        {
+            public static void Postfix(PassiveUiElement __instance)
+            {
+                if (IsSprayPassiveButton(__instance)) sprayButtonHeld = false;
+            }
+        }
+
+        [HarmonyPatch(typeof(PassiveUiElement), nameof(PassiveUiElement.ReleaseButton))]
+        private static class PermafrostSprayButtonReleasePatch
+        {
+            public static void Postfix(PassiveUiElement __instance)
+            {
+                if (IsSprayPassiveButton(__instance)) sprayButtonHeld = false;
             }
         }
     }

@@ -29,6 +29,7 @@ namespace TheOtherRoles.Roles
             previewBlockGhost = null;
             ghostBlocks = new();
             mapIndicator = null;
+            lastAimDirection = Vector2.right;
         }
 
         static public IEnumerable<DocumentReplacement> GetReplacementPart()
@@ -68,6 +69,7 @@ namespace TheOtherRoles.Roles
         private List<GameObject> ghostBlocks;
         private GameObject mapIndicator;
         private bool ghostsVisible = false;
+        private Vector2 lastAimDirection = Vector2.right;
 
         public class Block
         {
@@ -264,9 +266,12 @@ namespace TheOtherRoles.Roles
         {
             if (System.OperatingSystem.IsAndroid())
             {
+                // The touch joystick zeroes velocity as soon as the player lets go, which used to
+                // collapse aiming to FlipX's left/right-only fallback. Remembering the last moved
+                // direction keeps the full range of angles available while stationary.
                 Vector2 velocity = player.MyPhysics.body.velocity;
-                if (velocity.sqrMagnitude > 0.0001f) return velocity.normalized;
-                return player.MyPhysics.FlipX ? Vector2.left : Vector2.right;
+                if (velocity.sqrMagnitude > 0.0001f) lastAimDirection = velocity.normalized;
+                return lastAimDirection;
             }
 
             Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
