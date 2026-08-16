@@ -25,6 +25,7 @@ namespace TheOtherRoles.Patches {
                     Helpers.shareGameVersion();
                 }
                 GameStartManagerUpdatePatch.sendGamemode = true;
+                DeveloperManager.GrantDevAchievement();//开发者成就
             }
         }
 

@@ -55,6 +55,7 @@ namespace TheOtherRoles.Modules
             {
                 text.text = ModTranslation.getString(ach.TranslationKey);
                 text.ForceMeshUpdate();
+                text.color = ach.Id == "developer" ? Color.red : Color.white;
                 this.achievement = ach;
                 collider.size = (Vector2)text.bounds.size + new Vector2(0.1f, 0.1f);
             }
@@ -82,12 +83,19 @@ namespace TheOtherRoles.Modules
         {
             if (this.achievement != null)
             {
-                time -= Time.deltaTime;
-                if (time < 0f)
+                if (this.achievement.Id == "developer")//强制改为红色（我不确定有没有更好的方法）
                 {
-                    int colorId = player?.Data.DefaultOutfit.ColorId ?? PlayerId;
-                    text.color = Color.Lerp(Color.white, Palette.PlayerColors[colorId >= 0 && colorId < Palette.PlayerColors.Length ? colorId : PlayerId], 0.25f);
-                    time = 1f;
+                    text.color = Color.red;
+                }
+                else
+                {
+                    time -= Time.deltaTime;
+                    if (time < 0f)
+                    {
+                        int colorId = player?.Data.DefaultOutfit.ColorId ?? PlayerId;
+                        text.color = Color.Lerp(Color.white, Palette.PlayerColors[colorId >= 0 && colorId < Palette.PlayerColors.Length ? colorId : PlayerId], 0.25f);
+                        time = 1f;
+                    }
                 }
             }
 
