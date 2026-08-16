@@ -87,7 +87,8 @@ namespace TheOtherRoles.Modules
             AddGroup("Recently", TORAchievementManager.RecentlyCleared);
             AddGroup("Roles", TORAchievementManager.AllAchievements.Where(a => !a.RelatedRole.IsEmpty()));
             AddGroup("Seasonal", TORAchievementManager.AllAchievements.Where(a => a.RelatedRole.IsEmpty() && !a.AchievementType().IsEmpty() && a.AchievementType().First() == AchievementType.Seasonal));
-
+            //这个目前仅有开发者成就使用
+            AddGroup("Secret", TORAchievementManager.AllAchievements.Where(a => a.RelatedRole.IsEmpty() && !a.AchievementType().IsEmpty() && a.AchievementType().First() == AchievementType.Secret));
             var scroller = new GUIScrollDynamicView(GUIAlignment.Center, new(4.7f, scrollerHeight), inner) { ScrollerTag = scrollerTag, WithMask = true };
 
             var cul = TORAchievementManager.Aggregate(predicate);
