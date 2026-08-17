@@ -134,6 +134,11 @@ namespace TheOtherRoles
         public static TMPro.TMP_Text blockmanEnergyText;
         public static CustomButton blockmanBreakButton;
         public static CustomButton werewolfMarkButton;
+        public static CustomButton permafrostSprayButton;
+        public static CustomButton emoteWheelButton;
+        public static CustomButton racerBoardButton;
+        public static CustomButton racerGearUpButton;
+        public static CustomButton racerGearDownButton;
         //public static CustomButton trapperButton;
         //public static CustomButton bomberButton;
         //public static CustomButton defuseButton;
@@ -258,6 +263,7 @@ namespace TheOtherRoles
             yandereButton.MaxTimer = GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
             ninjaButton.MaxTimer = Ninja.stealthCooldown;
             werewolfMarkButton.MaxTimer = Werewolf.markCooldown;
+            permafrostSprayButton.MaxTimer = Permafrost.sprayCooldown;
             serialKillerButton.MaxTimer = SerialKiller.suicideTimer;
             archaeologistDetectButton.MaxTimer = Archaeologist.cooldown;
             archaeologistExcavateButton.MaxTimer = Archaeologist.cooldown;
@@ -636,12 +642,32 @@ namespace TheOtherRoles
                 abilityTexture: CustomButton.ButtonLabelType.UseButton
             );
 
+            permafrostSprayButton = new CustomButton(
+                () => { },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Permafrost) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = Permafrost.local;
+                    return role != null && PlayerControl.LocalPlayer.CanMove && (role.isSpraying || role.sprayCooldownTimer <= 0f);
+                },
+                () => { permafrostSprayButton.Timer = permafrostSprayButton.MaxTimer; },
+                Permafrost.getSprayButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("PermafrostSprayText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+            var sprayHover = permafrostSprayButton.actionButtonGameObject.AddComponent<TouchHover>();
+            sprayHover.OnHoverOver.AddListener((Action)(() => Permafrost.sprayButtonHovered = true));
+            sprayHover.OnHoverOut.AddListener((Action)(() => Permafrost.sprayButtonHovered = false));
+
             blockmanBreakButton =  new CustomButton(
                 () => { Blockman.TryUniversalBreak(); },
                 () => { return Blockman.players.Count > 0 && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () =>
                 {
-                    var (owner, block) = Blockman.FindNearestUnsettledBlock(PlayerControl.LocalPlayer.transform.position, 1.8f);
+                    var (owner, block) = Blockman.FindNearestUnsettledBlock(PlayerControl.LocalPlayer.transform.position, Blockman.breakRange);
                     return PlayerControl.LocalPlayer.CanMove && owner != null && block != null;
                 },
                 () => { blockmanBreakButton.Timer = 0f; },
@@ -4948,6 +4974,112 @@ namespace TheOtherRoles
                 abilityTexture: CustomButton.ButtonLabelType.UseButton
             );
             huntedShieldCountText = huntedShieldButton.ShowUsesIcon(3);
+
+            emoteWheelButton = new CustomButton(
+                () =>
+                {
+                    if (EmoteWheel.IsOpen) EmoteWheel.CloseFromButton();
+                    else EmoteWheel.OpenFromButton();
+                },
+                () => OperatingSystem.IsAndroid() && PlayerControl.LocalPlayer != null,
+                () => EmoteWheel.IsOpen || EmoteWheel.CanOpen(),
+                () => EmoteWheel.CloseFromButton(),
+                __instance.UseButton.graphic.sprite,
+                new Vector3(-1.1f, 2.06f, 0f),
+                __instance,
+                null,
+                abilityTexture: CustomButton.ButtonLabelType.UseButton,
+                shakeOnEnd: false
+            )
+            {
+                Timer = 0f
+            };
+
+            racerBoardButton = new CustomButton(
+                () =>
+                {
+                    var local = PlayerControl.LocalPlayer;
+                    if (Racer.getCarByAnyOccupant(local) != null) Racer.TryExitCar(local);
+                    else Racer.TryBoardNearestCar(local);
+                },
+                () =>
+                {
+                    if (!OperatingSystem.IsAndroid()) return false;
+                    var local = PlayerControl.LocalPlayer;
+                    if (local == null || local.Data == null || local.Data.IsDead) return false;
+                    bool inCar = Racer.getCarByAnyOccupant(local) != null;
+                    racerBoardButton.buttonText = inCar ? ModTranslation.getString("RacerExitText") : ModTranslation.getString("RacerBoardText");
+                    return inCar || Racer.IsNearBoardableCar(local, out _);
+                },
+                () => PlayerControl.LocalPlayer.CanMove,
+                () => { },
+                __instance.UseButton.graphic.sprite,
+                new Vector3(-2.1f, 2.06f, 0f),
+                __instance,
+                null,
+                buttonText: ModTranslation.getString("RacerBoardText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton,
+                shakeOnEnd: false
+            )
+            {
+                Timer = 0f
+            };
+
+            racerGearUpButton = new CustomButton(
+                () => Racer.ShiftGear(PlayerControl.LocalPlayer, 1),
+                () =>
+                {
+                    if (!OperatingSystem.IsAndroid()) return false;
+                    var local = PlayerControl.LocalPlayer;
+                    if (local == null || local.Data == null || local.Data.IsDead) return false;
+                    var car = Racer.getCarByAnyOccupant(local);
+                    return car != null && car.driverId == local.PlayerId;
+                },
+                () =>
+                {
+                    var car = Racer.getCarByAnyOccupant(PlayerControl.LocalPlayer);
+                    return car != null && car.gear < Racer.MaxGear && PlayerControl.LocalPlayer.CanMove;
+                },
+                () => { },
+                __instance.UseButton.graphic.sprite,
+                new Vector3(-3.1f, 2.06f, 0f),
+                __instance,
+                null,
+                buttonText: ModTranslation.getString("RacerGearUpText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton,
+                shakeOnEnd: false
+            )
+            {
+                Timer = 0f
+            };
+
+            racerGearDownButton = new CustomButton(
+                () => Racer.ShiftGear(PlayerControl.LocalPlayer, -1),
+                () =>
+                {
+                    if (!OperatingSystem.IsAndroid()) return false;
+                    var local = PlayerControl.LocalPlayer;
+                    if (local == null || local.Data == null || local.Data.IsDead) return false;
+                    var car = Racer.getCarByAnyOccupant(local);
+                    return car != null && car.driverId == local.PlayerId;
+                },
+                () =>
+                {
+                    var car = Racer.getCarByAnyOccupant(PlayerControl.LocalPlayer);
+                    return car != null && car.gear > Racer.MinGear && PlayerControl.LocalPlayer.CanMove;
+                },
+                () => { },
+                __instance.UseButton.graphic.sprite,
+                new Vector3(-4.1f, 2.06f, 0f),
+                __instance,
+                null,
+                buttonText: ModTranslation.getString("RacerGearDownText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton,
+                shakeOnEnd: false
+            )
+            {
+                Timer = 0f
+            };
 
             // Set the default (or settings from the previous game) timers / durations when spawning the buttons
             initialized = true;

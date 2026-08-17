@@ -249,29 +249,6 @@ namespace TheOtherRoles.Modules {
                 aboutScreen = Helpers.CreateObject("About", __instance.accountButtons.transform.parent, new Vector3(0, 0, -1f));
                 aboutScreen.transform.localScale = modScreen!.transform.localScale;
 
-                var blackTex = new Texture2D(1, 1);
-                blackTex.SetPixel(0, 0, Color.black);
-                blackTex.Apply();
-
-                const float ppu = 100f;
-                var blackSprite = Sprite.Create(blackTex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), ppu);
-
-                var blackBgObj = new GameObject("BlackBackground");
-                blackBgObj.transform.SetParent(aboutScreen.transform, false); 
-                blackBgObj.layer = aboutScreen.layer; 
-                blackBgObj.transform.localPosition = new Vector3(-0.1f, 0f, 0.1f);
-
-                var blackBgRenderer = blackBgObj.AddComponent<SpriteRenderer>();
-                blackBgRenderer.sprite = blackSprite;
-                blackBgRenderer.drawMode = SpriteDrawMode.Simple; 
-                blackBgRenderer.color = Color.black; 
-                blackBgRenderer.sortingOrder = -1;
-
-                float targetWidth = 6.2f;
-                float targetHeight = 4.1f;
-                float nativeSize = 1f / ppu; 
-                blackBgObj.transform.localScale = new Vector3(targetWidth / nativeSize, targetHeight / nativeSize, 1f);
-
                 var screen = MetaScreen.GenerateScreen(new Vector2(6.2f, 4.1f), aboutScreen.transform, new Vector3(-0.1f, 0, 0f), false, false, false);
 
                 TextAttribute titleAttribute = new(TextAttribute.NormalAttr)

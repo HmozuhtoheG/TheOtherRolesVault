@@ -1193,8 +1193,17 @@ namespace TheOtherRoles.Patches {
                         racerCar.coastVelocity = Vector2.zero;
                     }
                 }
+                else if (racerCar != null && racerCar.passengerId == __instance.myPlayer.PlayerId)
+                {
+                    var driver = racerCar.driverId != null ? Helpers.playerById(racerCar.driverId.Value) : null;
+                    if (driver != null)
+                    {
+                        Vector2 targetPos = Racer.GetPassengerSeatPosition(racerCar, driver);
+                        __instance.body.velocity = (targetPos - __instance.body.position) / Time.fixedDeltaTime;
+                    }
+                }
 
-                if (Racer.isInjured(__instance.myPlayer))
+                if (Racer.isInjured(__instance.myPlayer) && (racerCar == null || racerCar.passengerId != __instance.myPlayer.PlayerId))
                     __instance.body.velocity *= Racer.injurySlowFactor;
             }
 

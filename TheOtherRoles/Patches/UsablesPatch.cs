@@ -276,6 +276,11 @@ namespace TheOtherRoles.Patches {
             var roleCanCallEmergency = true;
             var statusText = "";
 
+            // Deactivate emergency button in Zombie mode: survivors win by outlasting the timer, not by voting zombies out
+            if (Zombie.isZombieGM) {
+                roleCanCallEmergency = false;
+                statusText = ModTranslation.getString("zombieMeetingButton");
+            }
             // Deactivate emergency button for Swapper
             if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper) && !Swapper.canCallEmergency) {
                 roleCanCallEmergency = false;

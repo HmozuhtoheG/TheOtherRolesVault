@@ -1,85 +1,68 @@
 using System.Collections.Generic;
-using HarmonyLib;
 using TheOtherRoles.MetaContext;
 using TheOtherRoles.Utilities;
-using TMPro;
 using UnityEngine;
 using Image = UnityEngine.UI.Image;
 
 namespace TheOtherRoles.Modules
 {
     // Press ` (backquote/tilde key) to open a radial emote wheel. Move the mouse to pick a
-    // slice, click to send it. Works both in the pre-game lobby room and in an active game,
-    // since it hooks TORGUIManager.Update which runs in every scene.
-    [HarmonyPatch]
+    // slice, click to send it. Works both in the pre-game lobby room and in an active game.
+    // The TORGUIManager.Update hook that drives this lives in Patches/EmoteWheelPatch.cs.
     [TORRPCHolder]
     public static class EmoteWheel
     {
-        private static readonly (string Glyph, Color32 Color)[] Emotes =
-        {
-            ("☺", new Color32(255, 214, 64, 255)),  // ☺ happy
-            ("♥", new Color32(255, 90, 140, 255)),  // ♥ love
-            ("★", new Color32(255, 193, 40, 255)),  // ★ nice
-            ("✓", new Color32(90, 217, 110, 255)),  // ✓ agree
-            ("✗", new Color32(230, 80, 80, 255)),   // ✗ disagree
-            ("!", new Color32(255, 150, 40, 255)),       // wow
-            ("?", new Color32(150, 140, 255, 255)),      // confused
-            ("☹", new Color32(100, 165, 255, 255)), // ☹ sad
-        };
+        private const int EmoteCount = 8;
 
-        private const float OuterRadius = 170f;
-        private const float DeadZoneRadius = 46f;
-        private const float IconRadius = 122f;
-        private const float IconSize = 64f;
-        private const float IconOutlineThickness = 6f;
+        private static Sprite[] emoteSprites;
+        private static Sprite[] EmoteSprites
+        {
+            get
+            {
+                if (emoteSprites == null)
+                {
+                    emoteSprites = new Sprite[EmoteCount];
+                    for (int i = 0; i < EmoteCount; i++)
+                        emoteSprites[i] = Helpers.loadSpriteFromResources($"TheOtherRoles.Resources.expression{i + 1}.png", 100f);
+                }
+                return emoteSprites;
+            }
+        }
+
+        private const float OuterRadius = 205f;
+        private const float DeadZoneRadius = 52f;
+        private const float IconRadius = 150f;
+        private const float IconSize = 96f;
+        private const float IconOutlineThickness = 7f;
+        private const float BubbleIconSize = 84f;
         private const float SendCooldownSeconds = 1.2f;
         private const float BubbleLifetime = 2.6f;
         private const float BubbleFadeOut = 0.5f;
 
+        internal const float ConfirmGraceSeconds = 0.18f;
+
         public static RemoteProcess<(byte senderId, byte emoteIndex)> SendEmote = new("EmoteWheelSend", (message, _) =>
         {
             var sender = Helpers.playerById(message.senderId);
-            if (sender == null || message.emoteIndex >= Emotes.Length) return;
+            if (sender == null || message.emoteIndex >= EmoteCount) return;
             ShowBubble(sender, message.emoteIndex);
         });
 
-        [HarmonyPatch(typeof(TORGUIManager), nameof(TORGUIManager.Update))]
-        private static class WheelUpdatePatch
+        public static void OpenFromButton()
         {
-            private static void Postfix()
-            {
-                if (sendCooldownTimer > 0f) sendCooldownTimer -= Time.unscaledDeltaTime;
-
-                UpdateBubbles();
-
-                if (Input.GetKeyDown(KeyCode.BackQuote))
-                {
-                    if (IsOpen) Close();
-                    else if (CanOpen()) Open();
-                    return;
-                }
-
-                if (!IsOpen) return;
-
-                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1))
-                {
-                    Close();
-                    return;
-                }
-
-                TickWheel();
-
-                if (Input.GetMouseButtonDown(0) && hoveredIndex >= 0 && sendCooldownTimer <= 0f)
-                {
-                    Emit(hoveredIndex);
-                    Close();
-                }
-            }
+            if (IsOpen || !CanOpen()) return;
+            Open();
         }
 
-        private static bool CanOpen()
+        public static void CloseFromButton()
+        {
+            if (IsOpen) Close();
+        }
+
+        public static bool CanOpen()
         {
             if (PlayerControl.LocalPlayer == null) return false;
+            if (sendCooldownTimer > 0f) return false;
             if (MeetingHud.Instance || ExileController.Instance) return false;
             if (TORGUIManager.Instance != null && TORGUIManager.Instance.HasSomeUI) return false;
             if (TextField.AnyoneValid) return false;
@@ -90,7 +73,7 @@ namespace TheOtherRoles.Modules
             return true;
         }
 
-        private static void Emit(int index)
+        internal static void Emit(int index)
         {
             sendCooldownTimer = SendCooldownSeconds;
             SendEmote.Invoke((PlayerControl.LocalPlayer.PlayerId, (byte)index));
@@ -98,7 +81,7 @@ namespace TheOtherRoles.Modules
 
         // ---------------- Wheel UI ----------------
 
-        private static float sendCooldownTimer;
+        internal static float sendCooldownTimer;
 
         private static GameObject wheelRoot;
         private static CanvasGroup wheelCanvasGroup;
@@ -107,11 +90,11 @@ namespace TheOtherRoles.Modules
         private static RectTransform[] iconRects;
         private static float[] iconScaleCurrent;
 
-        private static int hoveredIndex = -1;
+        internal static int hoveredIndex = -1;
         private static float highlightAngleCurrent;
         private static float highlightAngleVelocity;
         private static bool highlightAngleInit;
-        private static float openTimeStamp;
+        internal static float openTimeStamp;
 
         public static bool IsOpen => wheelRoot != null;
 
@@ -122,16 +105,16 @@ namespace TheOtherRoles.Modules
         private static void EnsureAssets()
         {
             if (discSprite != null) return;
-            float sliceAngle = 360f / Emotes.Length;
+            float sliceAngle = 360f / EmoteCount;
             discSprite = ToSprite(GenerateDiscTexture(128));
             ringSprite = ToSprite(GenerateRingTexture(512, DeadZoneRadius / OuterRadius));
             wedgeSprite = ToSprite(GenerateWedgeTexture(512, sliceAngle, DeadZoneRadius / OuterRadius));
         }
 
-        private static void Open()
+        internal static void Open()
         {
             EnsureAssets();
-            int n = Emotes.Length;
+            int n = EmoteCount;
             float sliceAngle = 360f / n;
 
             wheelRoot = new GameObject("EmoteWheel");
@@ -181,16 +164,8 @@ namespace TheOtherRoles.Modules
                 var outline = CreateCenteredImage("Outline", slot, discSprite, new Vector2(IconSize + IconOutlineThickness * 2f, IconSize + IconOutlineThickness * 2f));
                 outline.color = new Color(0.05f, 0.05f, 0.08f, 0.85f);
 
-                var bg = CreateCenteredImage("Fill", slot, discSprite, new Vector2(IconSize, IconSize));
-                bg.color = new Color(Emotes[i].Color.r / 255f, Emotes[i].Color.g / 255f, Emotes[i].Color.b / 255f, 0.85f);
-
-                var glyph = CreateCenteredText("Glyph", slot, Vector2.zero, new Vector2(IconSize, IconSize));
-                glyph.text = Emotes[i].Glyph;
-                glyph.fontSize = 34f;
-                glyph.color = Color.white;
-                glyph.fontStyle = FontStyles.Bold;
-                glyph.outlineWidth = 0.2f;
-                glyph.outlineColor = new Color32(20, 20, 20, 255);
+                var icon = CreateCenteredImage("Icon", slot, EmoteSprites[i], new Vector2(IconSize, IconSize));
+                icon.color = Color.white;
             }
 
             hoveredIndex = -1;
@@ -199,7 +174,7 @@ namespace TheOtherRoles.Modules
             openTimeStamp = Time.unscaledTime;
         }
 
-        private static void Close()
+        internal static void Close()
         {
             if (wheelRoot != null) Object.Destroy(wheelRoot);
             wheelRoot = null;
@@ -211,7 +186,7 @@ namespace TheOtherRoles.Modules
             hoveredIndex = -1;
         }
 
-        private static void TickWheel()
+        internal static void TickWheel()
         {
             if (wheelRoot == null) return;
 
@@ -219,7 +194,7 @@ namespace TheOtherRoles.Modules
             wheelCanvasGroup.alpha = fadeT;
             wheelRoot.transform.localScale = Vector3.one * Mathf.Lerp(0.85f, 1f, fadeT);
 
-            int n = Emotes.Length;
+            int n = EmoteCount;
             float sliceAngle = 360f / n;
 
             Vector2 mouseFromCenter = (Vector2)Input.mousePosition - new Vector2(Screen.width / 2f, Screen.height / 2f);
@@ -277,21 +252,6 @@ namespace TheOtherRoles.Modules
             image.sprite = sprite;
             image.raycastTarget = false;
             return image;
-        }
-
-        private static TextMeshProUGUI CreateCenteredText(string name, Transform parent, Vector2 pos, Vector2 size)
-        {
-            var obj = new GameObject(name);
-            obj.transform.SetParent(parent, false);
-            var rect = obj.AddComponent<RectTransform>();
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = pos;
-            rect.sizeDelta = size;
-            var text = obj.AddComponent<TextMeshProUGUI>();
-            text.alignment = TextAlignmentOptions.Center;
-            text.raycastTarget = false;
-            return text;
         }
 
         // ---------------- Procedural textures ----------------
@@ -422,29 +382,17 @@ namespace TheOtherRoles.Modules
             var obj = new GameObject("EmoteBubble");
             obj.transform.SetParent(bubbleLayerRoot.transform, false);
             var rect = obj.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(60f, 60f);
+            rect.sizeDelta = new Vector2(BubbleIconSize, BubbleIconSize);
             rect.pivot = new Vector2(0.5f, 0.5f);
             var group = obj.AddComponent<CanvasGroup>();
 
-            var outline = CreateCenteredImage("Outline", obj.transform, discSprite, new Vector2(60f + IconOutlineThickness * 2f, 60f + IconOutlineThickness * 2f));
-            outline.color = new Color(0.05f, 0.05f, 0.08f, 0.85f);
-
-            var bg = CreateCenteredImage("Bg", obj.transform, discSprite, new Vector2(60f, 60f));
-            var c = Emotes[emoteIndex].Color;
-            bg.color = new Color(c.r / 255f, c.g / 255f, c.b / 255f, 0.9f);
-
-            var glyph = CreateCenteredText("Glyph", obj.transform, Vector2.zero, new Vector2(60f, 60f));
-            glyph.text = Emotes[emoteIndex].Glyph;
-            glyph.fontSize = 30f;
-            glyph.color = Color.white;
-            glyph.fontStyle = FontStyles.Bold;
-            glyph.outlineWidth = 0.2f;
-            glyph.outlineColor = new Color32(20, 20, 20, 255);
+            var icon = CreateCenteredImage("Icon", obj.transform, EmoteSprites[emoteIndex], new Vector2(BubbleIconSize, BubbleIconSize));
+            icon.color = Color.white;
 
             bubbles.Add(new ActiveBubble { Target = target, Rect = rect, Group = group, Timer = 0f });
         }
 
-        private static void UpdateBubbles()
+        internal static void UpdateBubbles()
         {
             if (bubbles.Count == 0) return;
             var cam = Camera.main;

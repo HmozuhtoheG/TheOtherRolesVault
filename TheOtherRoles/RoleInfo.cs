@@ -90,6 +90,7 @@ namespace TheOtherRoles
         // TORV functional
         public static RoleInfo ninja = new("ninja", Ninja.color, RoleId.Ninja);
         public static RoleInfo werewolf = new("werewolf", Werewolf.color, RoleId.Werewolf);
+        public static RoleInfo permafrost = new("permafrost", Permafrost.color, RoleId.Permafrost);
         public static RoleInfo nekoKabocha = new("nekoKabocha", NekoKabocha.color, RoleId.NekoKabocha);
         public static RoleInfo serialKiller = new("serialKiller", SerialKiller.color, RoleId.SerialKiller);
         public static RoleInfo evilTracker = new("evilTracker", EvilTracker.color, RoleId.EvilTracker);
@@ -299,6 +300,7 @@ namespace TheOtherRoles
             assassin,
             ninja,
             werewolf,
+            permafrost,
             nekoKabocha,
             serialKiller,
             evilTracker,
@@ -441,6 +443,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Warlock)) infos.Add(warlock);
             if (p.isRole(RoleId.Witch)) infos.Add(witch);
             if (p.isRole(RoleId.Werewolf)) infos.Add(werewolf);
+            if (p.isRole(RoleId.Permafrost)) infos.Add(permafrost);
             if (p.isRole(RoleId.Assassin)) infos.Add(assassin);
             if (p.isRole(RoleId.Detective)) infos.Add(detective);
             if (p.isRole(RoleId.TimeMaster)) infos.Add(timeMaster);

@@ -8,9 +8,11 @@ namespace TheOtherRoles
 	{
 		//此处填入开发者ID
 		public static readonly HashSet<string> DevFriendCodes = new() {
-			"midplace#8957"//汪汪狗
-		
-		};
+			"midplace#8957",//wwg
+            "offlinenil#5191",//zy
+            "squishyhod#5187"//hg
+
+        };
 		//使用IsDev(好友代码)方法检查玩家是否为开发者（非TheOtherRoles命名空间需加DeveloperManager.前缀）
 		public static bool IsDev(PlayerControl player) =>
 			player != null && player.FriendCode != null && DevFriendCodes.Contains(player.FriendCode);

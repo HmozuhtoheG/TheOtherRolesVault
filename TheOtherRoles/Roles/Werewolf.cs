@@ -154,6 +154,14 @@ namespace TheOtherRoles.Roles
                         channelingTarget = null;
                         channelingTimer = 0f;
                         markCooldownTimer = markCooldown;
+
+                        var button = HudManagerStartPatch.werewolfMarkButton;
+                        if (button != null)
+                        {
+                            button.MaxTimer = markCooldown;
+                            button.Timer = markCooldown;
+                        }
+
                         MarkTarget.Invoke((player.PlayerId, target.PlayerId));
                     }
                 }

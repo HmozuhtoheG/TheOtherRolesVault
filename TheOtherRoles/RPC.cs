@@ -78,6 +78,7 @@ namespace TheOtherRoles
         Pelican,
         Blockman,
         Werewolf,
+        Permafrost,
         //Trapper,
         Lawyer, 
         //Prosecutor,

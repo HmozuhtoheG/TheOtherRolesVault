@@ -4,7 +4,7 @@ A mod brimming with learning and love
 ---
 
 ## About the Mod  
-This project is a **brand-new branch based on the TORGMIA mod**, developed and actively maintained by Keno. It builds upon the core mechanics of TORGMIA while improvements, bug fixes, and community-requested features to elevate your Among Us experience. 
+This project is a **brand-new branch based on the TORGMIA mod**, developed and actively maintained by Keno. It builds upon the core mechanics of TORGMIA while improvements, bug fixes, and community-requested features to elevate your Among Us experience. In pursuit of efficiency, some code in the repository is written by AI, please be aware.
 
 ---
 
