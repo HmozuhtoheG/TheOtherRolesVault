@@ -11,7 +11,7 @@ namespace TheOtherRoles.Modules
     public static class DeveloperCommand
     {
         //正则命令解析（感谢DS）
-        private static readonly Regex commandRegex = new(@"^/(\w+)\s*(.*)$", RegexOptions.IgnoreCase);
+        private static readonly Regex commandRegex = new(@"^/(\w+)\s+(.+)$", RegexOptions.IgnoreCase);
 
         static DeveloperCommand() => ClassInjector.RegisterTypeInIl2Cpp<AnnouncementTimer>();
 
@@ -47,7 +47,12 @@ namespace TheOtherRoles.Modules
                 {
                     case "s"://全图公告
                         if (arg.Length > 0)
-                            RPCProcedure.DevAnnouncement.Invoke((PlayerControl.LocalPlayer.PlayerId, arg));
+                        {
+                            var senderName = PlayerControl.LocalPlayer.Data.PlayerName;
+                            RPCProcedure.DevAnnouncement.Invoke((PlayerControl.LocalPlayer.PlayerId,senderName+":"+arg+"(DevCmd)"));
+
+                        }
+
                         break;
                 }
                 return false;
@@ -85,8 +90,7 @@ namespace TheOtherRoles.Modules
             textRect.anchorMax = Vector2.one;
             textRect.sizeDelta = Vector2.zero;
             var text = textObj.AddComponent<TextMeshProUGUI>();
-            text.text = "DevAnnouncement:";
-            text.text += message;
+            text.text = message;
             text.alignment = TextAlignmentOptions.Center;
             text.color = Color.white;
             text.fontSize = 72;
