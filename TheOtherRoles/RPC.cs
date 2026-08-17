@@ -114,6 +114,7 @@ namespace TheOtherRoles
         Yandere,
         Workaholic,
         Busker,
+        VoidEater,
         Noisemaker,
         Archaeologist,
         SchrodingersCat,

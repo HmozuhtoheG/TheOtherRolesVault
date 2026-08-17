@@ -525,6 +525,10 @@ namespace TheOtherRoles {
         public static CustomOption yandereHasImpVision;
 
         public static CustomRoleOption workaholicSpawnRate;
+        public static CustomRoleOption voidEaterSpawnRate;
+        public static CustomOption voidEaterSwallowCooldown;
+        public static CustomOption voidEaterSpeedBoostDuration;
+        public static CustomOption voidEaterSpeedBoostMultiplier;
 
         public static CustomRoleOption lawyerSpawnRate;
         public static CustomOption lawyerTargetKnows;
@@ -1138,6 +1142,11 @@ namespace TheOtherRoles {
             yandereHasImpVision = CustomOption.Create(8506, Types.Neutral, "yandereHasImpVision", true, yandereSpawnRate);
 
             workaholicSpawnRate = new CustomRoleOption(8600, Types.Neutral, "workaholic", Workaholic.color, max: 3);
+
+            voidEaterSpawnRate = new CustomRoleOption(8800, Types.Impostor, "voidEater", VoidEater.color, max: 1);
+            voidEaterSwallowCooldown = CustomOption.Create(8802, Types.Impostor, "voidEaterSwallowCooldown", 24f, 5f, 60f, 1f, voidEaterSpawnRate, false, "unitSeconds");
+            voidEaterSpeedBoostDuration = CustomOption.Create(8803, Types.Impostor, "voidEaterSpeedBoostDuration", 5f, 1f, 15f, 1f, voidEaterSpawnRate, false, "unitSeconds");
+            voidEaterSpeedBoostMultiplier = CustomOption.Create(8804, Types.Impostor, "voidEaterSpeedBoostMultiplier", 0.3f, 0.05f, 1f, 0.05f, voidEaterSpawnRate, false, "unitTimes");
 
             jekyllAndHydeSpawnRate = new CustomRoleOption(8104, Types.Neutral, "jekyllAndHyde", JekyllAndHyde.color);
             jekyllAndHydeNumberToWin = CustomOption.Create(8105, Types.Neutral, "jekyllAndHydeNumberToWin", 3f, 1f, 10f, 1f, jekyllAndHydeSpawnRate, false, "unitScrews");
