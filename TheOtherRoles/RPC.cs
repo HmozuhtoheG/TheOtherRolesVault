@@ -1231,6 +1231,13 @@ namespace TheOtherRoles
             }
         }, false);
 
+        public static RemoteProcess<(byte playerId, string message)> DevAnnouncement = new("DevAnnouncement", (message, _) =>
+        {
+            var player = Helpers.playerById(message.playerId);
+            if (player == null) return;
+            DeveloperCommand.Show(message.message);
+        }, false);
+
         public static RemoteProcess RpcRequireHandShake = new("RequireHandShake", (isCalledByMe) =>
         {
             var ach = TORAchievementManager.MyTitle?.Id ?? "-";
