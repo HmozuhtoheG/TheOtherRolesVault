@@ -72,6 +72,7 @@ namespace TheOtherRoles.Roles
         private static readonly Dictionary<byte, DateTime> frozenUntil = new();
 
         private static bool sprayButtonHeld;
+        private static bool sprayPointerWasDown;
         public static bool sprayButtonHovered;
 
         private static bool IsPointerDown()
@@ -92,7 +93,12 @@ namespace TheOtherRoles.Roles
 
             if (button.hotkey.HasValue && Input.GetKey(button.hotkey.Value)) return true;
 
-            return sprayButtonHeld || (sprayButtonHovered && IsPointerDown());
+            bool pointerDown = IsPointerDown();
+            if (!pointerDown) sprayButtonHeld = false;
+            else if (!sprayPointerWasDown && sprayButtonHovered) sprayButtonHeld = true;
+            sprayPointerWasDown = pointerDown;
+
+            return sprayButtonHeld;
         }
 
         private void StartSprayLocal()
@@ -228,6 +234,7 @@ namespace TheOtherRoles.Roles
             IceBlock.ClearAll();
             ClearVisuals();
             sprayButtonHeld = false;
+            sprayPointerWasDown = false;
             sprayButtonHovered = false;
             players = [];
         }
@@ -769,38 +776,5 @@ namespace TheOtherRoles.Roles
             }
         }
 
-        private static bool IsSprayPassiveButton(PassiveUiElement instance)
-        {
-            if (!instance) return false;
-            var button = HudManagerStartPatch.permafrostSprayButton;
-            return button?.actionButton != null && instance == button.actionButton.GetComponent<PassiveButton>();
-        }
-
-        [HarmonyPatch(typeof(PassiveUiElement), nameof(PassiveUiElement.ReceiveClickDown))]
-        private static class PermafrostSprayButtonDownPatch
-        {
-            public static void Postfix(PassiveUiElement __instance)
-            {
-                if (IsSprayPassiveButton(__instance)) sprayButtonHeld = true;
-            }
-        }
-
-        [HarmonyPatch(typeof(PassiveUiElement), nameof(PassiveUiElement.ReceiveClickUp))]
-        private static class PermafrostSprayButtonUpPatch
-        {
-            public static void Postfix(PassiveUiElement __instance)
-            {
-                if (IsSprayPassiveButton(__instance)) sprayButtonHeld = false;
-            }
-        }
-
-        [HarmonyPatch(typeof(PassiveUiElement), nameof(PassiveUiElement.ReleaseButton))]
-        private static class PermafrostSprayButtonReleasePatch
-        {
-            public static void Postfix(PassiveUiElement __instance)
-            {
-                if (IsSprayPassiveButton(__instance)) sprayButtonHeld = false;
-            }
-        }
     }
 }
