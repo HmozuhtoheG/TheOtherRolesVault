@@ -658,6 +658,9 @@ namespace TheOtherRoles
                 buttonText: ModTranslation.getString("PermafrostSprayText"),
                 abilityTexture: CustomButton.ButtonLabelType.UseButton
             );
+            var sprayHover = permafrostSprayButton.actionButtonGameObject.AddComponent<TouchHover>();
+            sprayHover.OnHoverOver.AddListener((Action)(() => Permafrost.sprayButtonHovered = true));
+            sprayHover.OnHoverOut.AddListener((Action)(() => Permafrost.sprayButtonHovered = false));
 
             blockmanBreakButton =  new CustomButton(
                 () => { Blockman.TryUniversalBreak(); },
