@@ -114,6 +114,7 @@ namespace TheOtherRoles
             Pelican.clearAndReload();
             Yandere.clearAndReload();
             Workaholic.clearAndReload();
+            VoidEater.clearAndReload();
             Role.ClearAll();
 
             // Modifier
@@ -235,7 +236,8 @@ namespace TheOtherRoles
                 { RoleId.Immoralist, typeof(RoleBase<Immoralist>) },
                 { RoleId.Pelican, typeof(RoleBase<Pelican>) },
                 { RoleId.Yandere, typeof(RoleBase<Yandere>) },
-                { RoleId.Workaholic, typeof(RoleBase<Workaholic>) }
+                { RoleId.Workaholic, typeof(RoleBase<Workaholic>) },
+                { RoleId.VoidEater, typeof(RoleBase<VoidEater>) }
             };
 
             public static IEnumerable<HelpSprite> GetHelp(RoleId roleId)
