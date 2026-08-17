@@ -8,19 +8,13 @@ namespace TheOtherRoles.Objects
     public static class RacerCar
     {
         private const float BodyPixelsPerUnit = 528f;
-
         private const float WheelPixelsPerUnit = 950f;
-        private const float WheelDiameterUnits = 400f / WheelPixelsPerUnit;
-        private const float WheelCircumferenceUnits = Mathf.PI * WheelDiameterUnits;
-
+        private const float WheelCircumferenceUnits = Mathf.PI * 400f / WheelPixelsPerUnit;
         private static readonly Vector3 LeftWheelOffset = new(-0.50f, -0.22f, -0.01f);
         private static readonly Vector3 RightWheelOffset = new(0.69f, -0.22f, -0.01f);
-
-        // Seat position minus body pivot, at default (unflipped) facing.
         private static readonly Vector2 SeatOffset = new(0f, 0.08f);
-
         private const float FlipSpeed = 6f;
-        private const float MovementDeadzone = 0.0006f;
+        private const float MovementDeadzone = 0.0006f; // ignore jitter smaller than this so the car doesn't flip/spin while standing still
 
         private const int GearPipCount = 3;
         private const float GearPipSize = 0.09f;
@@ -36,7 +30,8 @@ namespace TheOtherRoles.Objects
 
         private static Dictionary<Color, Sprite> gearPipSpriteCache = new();
 
-        // Smooths per render frame via Time.time, not through Rigidbody2D interpolation.
+        // driver position only updates on FixedUpdate, so lerp toward it on every frame instead
+        // of snapping - otherwise the car looks jerky above 50fps
         public class PositionSmoother : MonoBehaviour
         {
             static PositionSmoother() => ClassInjector.RegisterTypeInIl2Cpp<PositionSmoother>();
@@ -203,8 +198,6 @@ namespace TheOtherRoles.Objects
                 {
                     if (delta.x > 0f) car.targetScaleX = -1f;
                     else if (delta.x < 0f) car.targetScaleX = 1f;
-                    // Unity mirrors the wheels' local rotation automatically when the body's
-                    // scale.x flips, so a single fixed spin sign looks correct facing either way.
                     rotationDegrees = -(Mathf.Abs(delta.x) / WheelCircumferenceUnits) * 360f;
                 }
                 else

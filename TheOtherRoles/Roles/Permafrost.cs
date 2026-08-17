@@ -771,6 +771,7 @@ namespace TheOtherRoles.Roles
 
         private static bool IsSprayPassiveButton(PassiveUiElement instance)
         {
+            if (!instance) return false;
             var button = HudManagerStartPatch.permafrostSprayButton;
             return button?.actionButton != null && instance == button.actionButton.GetComponent<PassiveButton>();
         }

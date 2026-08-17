@@ -120,15 +120,8 @@ namespace TheOtherRoles {
             // make sure to reload all tabs, even the ones in the background, because they might have changed when the preset was switched!
             if (AmongUsClient.Instance?.AmHost == true)
             {
-                foreach (var entry in GameOptionsMenuStartPatch.currentGOMs)
-                {
-                    CustomOptionType optionType = (CustomOptionType)entry.Key;
-                    GameOptionsMenu gom = entry.Value;
-                    if (gom != null)
-                    {
-                        GameOptionsMenuStartPatch.updateGameOptionsMenu(optionType, gom);
-                    }
-                }
+                GameOptionsMenuStartPatch.MarkAllTabsDirty();
+                GameOptionsMenuStartPatch.RebuildActiveTabIfDirty();
             }
         }
 
@@ -384,15 +377,8 @@ namespace TheOtherRoles {
                 {
                     if (AmongUsClient.Instance?.AmHost == true)
                     {
-                        foreach (var entry in GameOptionsMenuStartPatch.currentGOMs)
-                        {
-                            CustomOptionType optionType = (CustomOptionType)entry.Key;
-                            GameOptionsMenu gom = entry.Value;
-                            if (gom != null)
-                            {
-                                GameOptionsMenuStartPatch.updateGameOptionsMenu(optionType, gom);
-                            }
-                        }
+                        GameOptionsMenuStartPatch.MarkAllTabsDirty();
+                        GameOptionsMenuStartPatch.RebuildActiveTabIfDirty();
                     }
                 }
                 catch
@@ -494,8 +480,14 @@ namespace TheOtherRoles {
             if (tabNum > 2)
             {
                 tabNum -= 3;
+                GameOptionsMenuStartPatch.activeTabIndex = tabNum;
+                GameOptionsMenuStartPatch.RebuildTabIfDirty(tabNum);
                 GameOptionsMenuStartPatch.currentTabs[tabNum].SetActive(true);
                 GameOptionsMenuStartPatch.currentButtons[tabNum].SelectButton(true);
+            }
+            else
+            {
+                GameOptionsMenuStartPatch.activeTabIndex = -1;
             }
         }
     }
@@ -1206,6 +1198,9 @@ namespace TheOtherRoles {
         public static List<GameObject> currentTabs = new();
         public static List<PassiveButton> currentButtons = new();
         public static Dictionary<byte, GameOptionsMenu> currentGOMs = new();
+        public static List<CustomOptionType> currentTabTypes = new();
+        public static List<bool> currentTabsDirty = new();
+        public static int activeTabIndex = -1;
 
         public static void Postfix(GameSettingMenu __instance)
         {
@@ -1214,6 +1209,9 @@ namespace TheOtherRoles {
             currentTabs = new();
             currentButtons = new();
             currentGOMs.Clear();
+            currentTabTypes = new();
+            currentTabsDirty = new();
+            activeTabIndex = -1;
 
             if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
 
@@ -1390,10 +1388,30 @@ namespace TheOtherRoles {
 
             var torSettingsGOM = torSettingsTab.GetComponent<GameOptionsMenu>();
 
-            updateGameOptionsMenu(optionType, torSettingsGOM);
             currentTabs.Add(torSettingsTab);
+            currentTabTypes.Add(optionType);
+            currentTabsDirty.Add(true);
             torSettingsTab.SetActive(false);
             currentGOMs.Add((byte)optionType, torSettingsGOM);
+        }
+
+        public static void RebuildTabIfDirty(int index)
+        {
+            if (index < 0 || index >= currentTabsDirty.Count || !currentTabsDirty[index]) return;
+            var optionType = currentTabTypes[index];
+            if (currentGOMs.TryGetValue((byte)optionType, out var gom) && gom != null)
+                updateGameOptionsMenu(optionType, gom);
+            currentTabsDirty[index] = false;
+        }
+
+        public static void RebuildActiveTabIfDirty()
+        {
+            if (activeTabIndex >= 0) RebuildTabIfDirty(activeTabIndex);
+        }
+
+        public static void MarkAllTabsDirty()
+        {
+            for (int i = 0; i < currentTabsDirty.Count; i++) currentTabsDirty[i] = true;
         }
         public static void updateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu torSettingsGOM)
         {

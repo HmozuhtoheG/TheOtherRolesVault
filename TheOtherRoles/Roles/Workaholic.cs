@@ -246,14 +246,11 @@ namespace TheOtherRoles.Roles
             getTaskCooldown = 0f;
         }
 
-        public override void OnDeath(PlayerControl killer = null)
-        {
-            if (countdownText != null) { UnityEngine.Object.Destroy(countdownText); countdownText = null; }
-            if (getTaskButton != null) { UnityEngine.Object.Destroy(getTaskButton.actionButtonGameObject); getTaskButton = null; }
-            if (protectSelfButton != null) { UnityEngine.Object.Destroy(protectSelfButton.actionButtonGameObject); protectSelfButton = null; }
-        }
+        public override void OnDeath(PlayerControl killer = null) => destroyUi();
 
-        public override void ResetRole(bool isShifted)
+        public override void ResetRole(bool isShifted) => destroyUi();
+
+        private static void destroyUi()
         {
             if (countdownText != null) { UnityEngine.Object.Destroy(countdownText); countdownText = null; }
             if (getTaskButton != null) { UnityEngine.Object.Destroy(getTaskButton.actionButtonGameObject); getTaskButton = null; }
@@ -309,26 +306,11 @@ namespace TheOtherRoles.Roles
             var hashSet = new Il2CppSystem.Collections.Generic.HashSet<TaskTypes>();
             var taskTypeIds = new System.Collections.Generic.List<byte>();
 
+            // grab every task on the map and shuffle them together, then just take one below
             var allTasks = new System.Collections.Generic.List<NormalPlayerTask>();
-            var commonTasks = new System.Collections.Generic.List<NormalPlayerTask>();
-            var shortTasks = new System.Collections.Generic.List<NormalPlayerTask>();
-            var longTasks = new System.Collections.Generic.List<NormalPlayerTask>();
-
-            foreach (var task in MapUtilities.CachedShipStatus.CommonTasks)
-                commonTasks.Add(task);
-            foreach (var task in MapUtilities.CachedShipStatus.ShortTasks)
-                shortTasks.Add(task);
-            foreach (var task in MapUtilities.CachedShipStatus.LongTasks)
-                longTasks.Add(task);
-
-            commonTasks.Shuffle();
-            shortTasks.Shuffle();
-            longTasks.Shuffle();
-
-            allTasks.AddRange(commonTasks);
-            allTasks.AddRange(shortTasks);
-            allTasks.AddRange(longTasks);
-
+            foreach (var task in MapUtilities.CachedShipStatus.CommonTasks) allTasks.Add(task);
+            foreach (var task in MapUtilities.CachedShipStatus.ShortTasks) allTasks.Add(task);
+            foreach (var task in MapUtilities.CachedShipStatus.LongTasks) allTasks.Add(task);
             allTasks.Shuffle();
 
             var il2CppTasks = new Il2CppSystem.Collections.Generic.List<NormalPlayerTask>();
@@ -339,7 +321,7 @@ namespace TheOtherRoles.Roles
             if (cachedStatus != null)
                 cachedStatus.AddTasksFromList(ref start, Mathf.Min(1, il2CppTasks.Count), tasks, hashSet, il2CppTasks);
 
-            taskTypeIds.AddRange(tasks.ToArray().ToList());
+            taskTypeIds.AddRange(tasks.ToArray());
 
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(player.NetId, (byte)CustomRPC.UncheckedSetTasks, Hazel.SendOption.Reliable, -1);
             writer.Write(player.PlayerId);

@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Reactor.Utilities;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static TheOtherRoles.MetaContext.IMetaContextOld;
@@ -211,9 +213,15 @@ namespace TheOtherRoles.MetaContext
         {
             var button = InstantiateCloseButton(target.transform.parent, localPos);
             var targetObj = target.combinedObject;
-            button.OnClick.AddListener((Action)(() => GameObject.Destroy(targetObj)));
+            button.OnClick.AddListener((Action)(() => Coroutines.Start(CoDestroyNextFrame(targetObj))));
 
             return button;
+        }
+
+        private static IEnumerator CoDestroyNextFrame(GameObject target)
+        {
+            yield return null;
+            if (target) GameObject.Destroy(target);
         }
 
         static public MetaScreen GenerateWindow(Vector2 size, Transform parent, Vector3 localPos, bool withBlackScreen, bool closeOnClickOutside, bool withMask = false, BackgroundSetting background = BackgroundSetting.Old)
@@ -233,7 +241,7 @@ namespace TheOtherRoles.MetaContext
                 renderer = collider.gameObject.AddComponent<SpriteRenderer>();
                 renderer.sprite = closeButtonSprite.GetSprite(0);
                 var button = collider.gameObject.SetUpButton(true);
-                button.OnClick.AddListener((Action)(() => GameObject.Destroy(obj)));
+                button.OnClick.AddListener((Action)(() => Coroutines.Start(CoDestroyNextFrame(obj))));
                 button.OnMouseOver.AddListener((Action)(() => renderer.sprite = closeButtonSprite.GetSprite(1)));
                 button.OnMouseOut.AddListener((Action)(() => renderer.sprite = closeButtonSprite.GetSprite(0)));
                 TORGUIManager.Instance.RegisterUI(obj, button);
@@ -246,7 +254,7 @@ namespace TheOtherRoles.MetaContext
 
             if (closeOnClickOutside)
             {
-                obj.transform.FindChild("ClickGuard").GetComponent<PassiveButton>().OnClick.AddListener((Action)(() => GameObject.Destroy(obj)));
+                obj.transform.FindChild("ClickGuard").GetComponent<PassiveButton>().OnClick.AddListener((Action)(() => Coroutines.Start(CoDestroyNextFrame(obj))));
                 var myCollider = Helpers.CreateObject<BoxCollider2D>("MyScreenCollider", obj.transform, new Vector3(0f, 0f, 0.1f));
                 myCollider.isTrigger = true;
                 myCollider.size = size;

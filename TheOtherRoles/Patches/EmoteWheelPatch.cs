@@ -5,9 +5,6 @@ using UnityEngine;
 
 namespace TheOtherRoles.Patches
 {
-    // Drives EmoteWheel: press ` to open the radial emote wheel, move the mouse to pick a
-    // slice, click to send it. Hooks TORGUIManager.Update since that runs in every scene,
-    // including the pre-game lobby room.
     [HarmonyPatch]
     public static class EmoteWheelPatch
     {

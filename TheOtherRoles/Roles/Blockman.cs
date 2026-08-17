@@ -87,6 +87,8 @@ namespace TheOtherRoles.Roles
             public Vector2Int[] cells;
             public Vector2 originWorldPos;
             public float gridSize = 1f;
+
+            public Vector2 CellWorldPos(Vector2Int cell, Vector2 origin) => origin + new Vector2(cell.x, cell.y) * gridSize;
         }
 
         private static readonly Vector2Int[][] BlueprintTemplates = new[]
@@ -119,56 +121,48 @@ namespace TheOtherRoles.Roles
         {
             if (player != PlayerControl.LocalPlayer) return;
 
-            var currentData = MapData.GetCurrentMapData();
-            bool CanWarpTo(Vector2 pos) => currentData.CheckMapArea(pos, 0.25f);
-
-            var candidateCorners = MapCorners.OrderBy(c => UnityEngine.Random.value).ToList();
+            // pick a random map corner and jitter around it until the whole blueprint fits;
+            // if none of the corners work, just jitter around the player as a last resort
             Vector2 chosenOrigin = (Vector2)player.transform.position;
             bool found = false;
 
-            foreach (var corner in candidateCorners)
+            foreach (var corner in MapCorners.OrderBy(c => UnityEngine.Random.value))
             {
-                for (int attempt = 0; attempt < 10 && !found; attempt++)
-                {
-                    Vector2 candidate = corner + UnityEngine.Random.insideUnitCircle * 3f;
-                    bool allValid = true;
-                    foreach (var cell in blueprint.cells)
-                    {
-                        Vector2 cellPos = candidate + new Vector2(cell.x, cell.y) * blueprint.gridSize;
-                        if (!CanWarpTo(cellPos)) { allValid = false; break; }
-                    }
-                    if (allValid)
-                    {
-                        chosenOrigin = candidate;
-                        found = true;
-                    }
-                }
-                if (found) break;
+                if (!TryFindFittingOrigin(corner, 3f, 10, out var candidate)) continue;
+                chosenOrigin = candidate;
+                found = true;
+                break;
             }
 
-            if (!found)
-            {
-                var basePos = (Vector2)player.transform.position;
-                for (int attempt = 0; attempt < 20 && !found; attempt++)
-                {
-                    Vector2 candidate = basePos + UnityEngine.Random.insideUnitCircle * 4f;
-                    bool allValid = true;
-                    foreach (var cell in blueprint.cells)
-                    {
-                        Vector2 cellPos = candidate + new Vector2(cell.x, cell.y) * blueprint.gridSize;
-                        if (!CanWarpTo(cellPos)) { allValid = false; break; }
-                    }
-                    if (allValid)
-                    {
-                        chosenOrigin = candidate;
-                        found = true;
-                    }
-                }
-            }
+            if (!found && TryFindFittingOrigin((Vector2)player.transform.position, 4f, 20, out var fallback))
+                chosenOrigin = fallback;
 
             blueprint.originWorldPos = chosenOrigin;
             CreateGhostBlueprint();
             CreateMapIndicator();
+        }
+
+        private bool TryFindFittingOrigin(Vector2 basePos, float jitterRadius, int attempts, out Vector2 origin)
+        {
+            var currentData = MapData.GetCurrentMapData();
+            origin = basePos;
+
+            for (int attempt = 0; attempt < attempts; attempt++)
+            {
+                Vector2 candidate = basePos + UnityEngine.Random.insideUnitCircle * jitterRadius;
+                bool fits = true;
+                foreach (var cell in blueprint.cells)
+                {
+                    Vector2 cellPos = blueprint.CellWorldPos(cell, candidate);
+                    if (!currentData.CheckMapArea(cellPos, 0.25f)) { fits = false; break; }
+                }
+                if (fits)
+                {
+                    origin = candidate;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static Sprite buttonSprite;
@@ -266,9 +260,6 @@ namespace TheOtherRoles.Roles
         {
             if (System.OperatingSystem.IsAndroid())
             {
-                // The touch joystick zeroes velocity as soon as the player lets go, which used to
-                // collapse aiming to FlipX's left/right-only fallback. Remembering the last moved
-                // direction keeps the full range of angles available while stationary.
                 Vector2 velocity = player.MyPhysics.body.velocity;
                 if (velocity.sqrMagnitude > 0.0001f) lastAimDirection = velocity.normalized;
                 return lastAimDirection;
@@ -389,10 +380,7 @@ namespace TheOtherRoles.Roles
             Vector2 direction = GetAimDirection();
             Vector2 target = (Vector2)player.transform.position + direction * dashDistance;
 
-            var currentData = MapData.GetCurrentMapData();
-            bool IsValidPosition(Vector2 pos) => currentData.CheckMapArea(pos, 0.25f);
-
-            if (!IsValidPosition(target))
+            if (!MapData.GetCurrentMapData().CheckMapArea(target, 0.25f))
             {
                 Helpers.CreateAndShowNotification(ModTranslation.getString("BlockmanDashInvalid"), Color.white, new Vector3(0f, 1f, -20f));
                 return;
@@ -483,7 +471,7 @@ namespace TheOtherRoles.Roles
 
             foreach (var cell in blueprint.cells)
             {
-                Vector2 worldPos = blueprint.originWorldPos + new Vector2(cell.x, cell.y) * blueprint.gridSize;
+                Vector2 worldPos = blueprint.CellWorldPos(cell, blueprint.originWorldPos);
                 GameObject ghost = new("BlueprintGhost");
                 ghost.transform.position = new Vector3(worldPos.x, worldPos.y, 4f);
                 var sr = ghost.AddComponent<SpriteRenderer>();
@@ -532,7 +520,7 @@ namespace TheOtherRoles.Roles
             Vector2 playerPos = player.transform.position;
             foreach (var cell in blueprint.cells)
             {
-                Vector2 cellPos = blueprint.originWorldPos + new Vector2(cell.x, cell.y) * blueprint.gridSize;
+                Vector2 cellPos = blueprint.CellWorldPos(cell, blueprint.originWorldPos);
                 if (Vector2.Distance(playerPos, cellPos) <= ghostRevealRange)
                 {
                     shouldShow = true;
@@ -612,16 +600,8 @@ namespace TheOtherRoles.Roles
 
         private void CheckWinCondition()
         {
-            if (triggerBlockmanWin || player.Data.IsDead) return;
-
-            foreach (var cell in blueprint.cells)
-            {
-                Vector2 targetPos = blueprint.originWorldPos + new Vector2(cell.x, cell.y) * blueprint.gridSize;
-                bool filled = blocks.Any(b => b.settled && Vector2.Distance(b.position, targetPos) < 0.5f);
-                if (!filled) return;
-            }
-
-            TriggerWin.Invoke(player.PlayerId);
+            if (!triggerBlockmanWin && IsBlueprintComplete(this))
+                TriggerWin.Invoke(player.PlayerId);
         }
 
         public static bool IsBlueprintComplete(Blockman role)
@@ -631,7 +611,7 @@ namespace TheOtherRoles.Roles
 
             foreach (var cell in role.blueprint.cells)
             {
-                Vector2 targetPos = role.blueprint.originWorldPos + new Vector2(cell.x, cell.y) * role.blueprint.gridSize;
+                Vector2 targetPos = role.blueprint.CellWorldPos(cell, role.blueprint.originWorldPos);
                 bool filled = role.blocks.Any(b => b.settled && Vector2.Distance(b.position, targetPos) < 0.5f);
                 if (!filled) return false;
             }

@@ -6,13 +6,12 @@ using Image = UnityEngine.UI.Image;
 
 namespace TheOtherRoles.Modules
 {
-    // Press ` (backquote/tilde key) to open a radial emote wheel. Move the mouse to pick a
-    // slice, click to send it. Works both in the pre-game lobby room and in an active game.
-    // The TORGUIManager.Update hook that drives this lives in Patches/EmoteWheelPatch.cs.
+    // input handling lives in Patches/EmoteWheelPatch.cs, this is just the wheel itself
     [TORRPCHolder]
     public static class EmoteWheel
     {
         private const int EmoteCount = 8;
+        private const float SliceAngle = 360f / EmoteCount;
 
         private static Sprite[] emoteSprites;
         private static Sprite[] EmoteSprites
@@ -79,8 +78,6 @@ namespace TheOtherRoles.Modules
             SendEmote.Invoke((PlayerControl.LocalPlayer.PlayerId, (byte)index));
         }
 
-        // ---------------- Wheel UI ----------------
-
         internal static float sendCooldownTimer;
 
         private static GameObject wheelRoot;
@@ -105,17 +102,16 @@ namespace TheOtherRoles.Modules
         private static void EnsureAssets()
         {
             if (discSprite != null) return;
-            float sliceAngle = 360f / EmoteCount;
-            discSprite = ToSprite(GenerateDiscTexture(128));
-            ringSprite = ToSprite(GenerateRingTexture(512, DeadZoneRadius / OuterRadius));
-            wedgeSprite = ToSprite(GenerateWedgeTexture(512, sliceAngle, DeadZoneRadius / OuterRadius));
+            float innerRatio = DeadZoneRadius / OuterRadius;
+            discSprite = ToSprite(GenerateRadialTexture(128, 0f, null));
+            ringSprite = ToSprite(GenerateRadialTexture(512, innerRatio, null));
+            wedgeSprite = ToSprite(GenerateRadialTexture(512, innerRatio, SliceAngle));
         }
 
         internal static void Open()
         {
             EnsureAssets();
             int n = EmoteCount;
-            float sliceAngle = 360f / n;
 
             wheelRoot = new GameObject("EmoteWheel");
             wheelRoot.layer = LayerMask.NameToLayer("UI");
@@ -152,7 +148,7 @@ namespace TheOtherRoles.Modules
 
             for (int i = 0; i < n; i++)
             {
-                float angle = i * sliceAngle;
+                float angle = i * SliceAngle;
                 float rad = angle * Mathf.Deg2Rad;
                 Vector2 pos = new Vector2(Mathf.Sin(rad) * IconRadius, Mathf.Cos(rad) * IconRadius);
 
@@ -195,7 +191,6 @@ namespace TheOtherRoles.Modules
             wheelRoot.transform.localScale = Vector3.one * Mathf.Lerp(0.85f, 1f, fadeT);
 
             int n = EmoteCount;
-            float sliceAngle = 360f / n;
 
             Vector2 mouseFromCenter = (Vector2)Input.mousePosition - new Vector2(Screen.width / 2f, Screen.height / 2f);
             float dist = mouseFromCenter.magnitude;
@@ -205,17 +200,17 @@ namespace TheOtherRoles.Modules
             {
                 float angle = Mathf.Atan2(mouseFromCenter.x, mouseFromCenter.y) * Mathf.Rad2Deg;
                 if (angle < 0f) angle += 360f;
-                hoveredIndex = Mathf.RoundToInt(angle / sliceAngle) % n;
+                hoveredIndex = Mathf.RoundToInt(angle / SliceAngle) % n;
             }
 
             if (!highlightAngleInit)
             {
-                highlightAngleCurrent = hoveredIndex >= 0 ? hoveredIndex * sliceAngle : 0f;
+                highlightAngleCurrent = hoveredIndex >= 0 ? hoveredIndex * SliceAngle : 0f;
                 highlightAngleInit = true;
             }
             else if (hoveredIndex >= 0)
             {
-                float targetAngle = hoveredIndex * sliceAngle;
+                float targetAngle = hoveredIndex * SliceAngle;
                 highlightAngleCurrent = Mathf.SmoothDampAngle(highlightAngleCurrent, targetAngle, ref highlightAngleVelocity, 0.09f, Mathf.Infinity, Time.unscaledDeltaTime);
             }
 
@@ -254,8 +249,6 @@ namespace TheOtherRoles.Modules
             return image;
         }
 
-        // ---------------- Procedural textures ----------------
-
         private static Sprite ToSprite(Texture2D tex) => Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
 
         private static Texture2D NewTexture(int size)
@@ -266,33 +259,14 @@ namespace TheOtherRoles.Modules
             return tex;
         }
 
-        private static Texture2D GenerateDiscTexture(int size)
-        {
-            var tex = NewTexture(size);
-            float r = size / 2f;
-            const float feather = 2.5f;
-            var pixels = new Color32[size * size];
-            for (int y = 0; y < size; y++)
-            {
-                for (int x = 0; x < size; x++)
-                {
-                    float dx = x + 0.5f - r;
-                    float dy = y + 0.5f - r;
-                    float d = Mathf.Sqrt(dx * dx + dy * dy);
-                    float a = Mathf.Clamp01((r - d) / feather);
-                    pixels[y * size + x] = new Color(1f, 1f, 1f, a);
-                }
-            }
-            tex.SetPixels32(pixels);
-            tex.Apply();
-            return tex;
-        }
-
-        private static Texture2D GenerateRingTexture(int size, float innerRatio)
+        // disc/ring/wedge are all the same filled-circle-with-feathered-edges math, just with an
+        // optional inner cutout (innerRatio > 0) and an optional angular slice (sliceAngleDeg)
+        private static Texture2D GenerateRadialTexture(int size, float innerRatio, float? sliceAngleDeg)
         {
             var tex = NewTexture(size);
             float r = size / 2f;
             float innerR = r * innerRatio;
+            float half = sliceAngleDeg.HasValue ? sliceAngleDeg.Value * 0.5f : 0f;
             const float feather = 2.5f;
             var pixels = new Color32[size * size];
             for (int y = 0; y < size; y++)
@@ -302,12 +276,20 @@ namespace TheOtherRoles.Modules
                     float dx = x + 0.5f - r;
                     float dy = y + 0.5f - r;
                     float d = Mathf.Sqrt(dx * dx + dy * dy);
+
+                    bool inSlice = true;
+                    if (sliceAngleDeg.HasValue)
+                    {
+                        float angle = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg;
+                        inSlice = Mathf.Abs(Mathf.DeltaAngle(0f, angle)) <= half;
+                    }
+
                     float a = 0f;
-                    if (d <= r)
+                    if (d <= r && inSlice)
                     {
                         a = 1f;
                         if (d > r - feather) a *= Mathf.Clamp01((r - d) / feather);
-                        if (d < innerR + feather) a *= Mathf.Clamp01((d - innerR) / feather);
+                        if (innerRatio > 0f && d < innerR + feather) a *= Mathf.Clamp01((d - innerR) / feather);
                     }
                     pixels[y * size + x] = new Color(1f, 1f, 1f, a);
                 }
@@ -316,40 +298,6 @@ namespace TheOtherRoles.Modules
             tex.Apply();
             return tex;
         }
-
-        private static Texture2D GenerateWedgeTexture(int size, float sliceAngleDeg, float innerRatio)
-        {
-            var tex = NewTexture(size);
-            float r = size / 2f;
-            float innerR = r * innerRatio;
-            float half = sliceAngleDeg * 0.5f;
-            const float feather = 2.5f;
-            var pixels = new Color32[size * size];
-            for (int y = 0; y < size; y++)
-            {
-                for (int x = 0; x < size; x++)
-                {
-                    float dx = x + 0.5f - r;
-                    float dy = y + 0.5f - r;
-                    float d = Mathf.Sqrt(dx * dx + dy * dy);
-                    float angle = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg;
-                    float da = Mathf.Abs(Mathf.DeltaAngle(0f, angle));
-                    float a = 0f;
-                    if (da <= half && d <= r)
-                    {
-                        a = 1f;
-                        if (d > r - feather) a *= Mathf.Clamp01((r - d) / feather);
-                        if (d < innerR + feather) a *= Mathf.Clamp01((d - innerR) / feather);
-                    }
-                    pixels[y * size + x] = new Color(1f, 1f, 1f, a);
-                }
-            }
-            tex.SetPixels32(pixels);
-            tex.Apply();
-            return tex;
-        }
-
-        // ---------------- Received emote bubbles ----------------
 
         private class ActiveBubble
         {

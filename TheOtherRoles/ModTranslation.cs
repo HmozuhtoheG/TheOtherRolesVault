@@ -56,11 +56,15 @@ namespace TheOtherRoles
             }
         }
 
+        private static readonly Regex ColorTagRegex = new("<.*?>", RegexOptions.Compiled);
+        private static readonly Regex LeadingDashRegex = new("^-\\s*", RegexOptions.Compiled);
+
         public static string getString(string key, string def = null, bool tryFind = false)
         {
             // Strip out color tags.
-            string keyClean = Regex.Replace(key, "<.*?>", "");
-            keyClean = Regex.Replace(keyClean, "^-\\s*", "");
+            string keyClean = key;
+            if (key.IndexOf('<') >= 0) keyClean = ColorTagRegex.Replace(keyClean, "");
+            if (keyClean.Length > 0 && keyClean[0] == '-') keyClean = LeadingDashRegex.Replace(keyClean, "");
             keyClean = keyClean.Trim();
 
             def ??= key;
