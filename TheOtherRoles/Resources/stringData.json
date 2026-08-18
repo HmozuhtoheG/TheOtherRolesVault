@@ -8256,12 +8256,12 @@
     "13": "\u611f\u53d7\u6211\u7684\u5bd2\u610f"
   },
   "permafrostFullDesc": {
-    "0": "You are a Void Eater. When someone dies, you see red flashes and arrows pointing to bodies. Eat dead bodies near you to reduce your kill cooldown by 10s and gain a speed boost for 5s.",
-    "13": "\u4f60\u662f\u865a\u7a7a\u541e\u566c\u8005\u3002\u6709\u4eba\u6b7b\u4ea1\u65f6\u4f60\u4f1a\u770b\u5230\u7ea2\u8272\u95ea\u5c4f\u548c\u6307\u5411\u5c38\u4f53\u7684\u7bad\u5934\u3002\u541e\u566c\u9644\u8fd1\u7684\u5c38\u4f53\u53ef\u51cf\u5c1110\u79d2\u51fb\u6740\u51b7\u5374\u5e76\u83b7\u5f975\u79d2\u52a0\u901f\u3002"
+    "0": "Hold the spray button to unleash a channeled ice spray for up to %SPRAYDURATION% seconds. Aiming at a nearby\ncrewmate slows them down; holding the spray steady on the same floor tile for the full duration instead forms an ice\nblock that trips up anyone who walks over it, or seals a vent shut for %VENTFREEZE% seconds if aimed at one. Ice\nblocks melt after %BLOCKLIFETIME% seconds.",
+    "13": "\u957f\u6309\u55b7\u5c04\u952e\u91ca\u653e\u6301\u7eed\u51b0\u971c\u55b7\u5c04,\u6700\u957f%SPRAYDURATION%\u79d2\u3002\u7784\u51c6\u9644\u8fd1\u8239\u5458\u4f1a\u4f7f\u5176\u51cf\u901f\u3002\u82e5\u6574\u6bb5\u65f6\u95f4\u6301\u7eed\u5bf9\u51c6\u540c\u4e00\u5757\u5730\u9762\uff0c\u5219\u4f1a\u51dd\u7ed3\u6210\u51b0\u5757\uff0c\u7eca\u5012\u7ecf\u8fc7\u7684\u4eba\uff1b\u82e5\u5bf9\u51c6\u7ba1\u9053\uff0c\u5219\u4f1a\u5c06\u5176\u5c01\u9501%VENTFREEZE%\u79d2\u3002\u51b0\u5757\u4f1a\u5728%BLOCKLIFETIME%\u79d2\u540e\u878d\u5316\u3002\u5bf9\u51c6\u4e00\u4e2a/\u4e00\u7fa4\u4eba\u55b7\u5c0410\u79d2\u4f1a\u51bb\u7ed3\u5bf9\u65b9%FREEZEDURATION%\u79d2"
   },
   "permafrostBlurb": {
-    "0": "EatEatEat!",
-    "13": "\u4f60\u53ef\u4ee5\u541e\u566c\u5c38\u4f53\u83b7\u53d6\u52a0\u6210"
+    "0": "Freeze everyone",
+    "13": "\u4f60\u53ef\u4ee5\u55b7\u5c04\u51b0\u971c"
   },
   "permafrostSprayCooldown": {
     "0": "Spray Cooldown",
@@ -8354,6 +8354,14 @@
   "voidEaterShortDesc": {
     "0": "Eat the corpse",
     "13": "\u541e\u566c\u5c38\u4f53"
+  },
+  "voidEaterFullDesc": {
+    "0": "You are a Void Eater. When someone dies, you see red flashes and arrows pointing to bodies. Eat dead bodies near you to reduce your kill cooldown by 10s and gain a speed boost for 5s.",
+    "13": "\u4f60\u662f\u865a\u7a7a\u541e\u566c\u8005\u3002\u6709\u4eba\u6b7b\u4ea1\u65f6\u4f60\u4f1a\u770b\u5230\u7ea2\u8272\u95ea\u5c4f\u548c\u6307\u5411\u5c38\u4f53\u7684\u7bad\u5934\u3002\u541e\u566c\u9644\u8fd1\u7684\u5c38\u4f53\u53ef\u51cf\u5c1110\u79d2\u51fb\u6740\u51b7\u5374\u5e76\u83b7\u5f975\u79d2\u52a0\u901f\u3002"
+  },
+  "voidEaterBlurb": {
+    "0": "EatEatEat!",
+    "13": "\u4f60\u53ef\u4ee5\u541e\u566c\u5c38\u4f53\u83b7\u53d6\u52a0\u6210"
   },
   "voidEaterSwallow": {
     "0": "Swallow",
