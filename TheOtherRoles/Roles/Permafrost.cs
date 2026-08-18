@@ -240,22 +240,7 @@ namespace TheOtherRoles.Roles
         }
 
         public static PlayerControl GetNearestSprayTarget(PlayerControl from, float maxRange)
-        {
-            PlayerControl best = null;
-            float bestDist = maxRange;
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
-            {
-                if (p == null || p == from || p.Data == null || p.Data.IsDead) continue;
-                if (from.Data.Role.IsImpostor && p.Data.Role.IsImpostor) continue;
-                float dist = Vector2.Distance(from.transform.position, p.transform.position);
-                if (dist <= bestDist)
-                {
-                    bestDist = dist;
-                    best = p;
-                }
-            }
-            return best;
-        }
+            => Helpers.GetNearestPlayer(from, maxRange, excludeSameImpostorTeam: true);
 
         public static List<PlayerControl> GetAllSprayTargets(PlayerControl from, float maxRange)
         {
@@ -481,12 +466,7 @@ namespace TheOtherRoles.Roles
         private static void EnsureFrostBubbleLayer()
         {
             if (frostBubbleLayerRoot != null) return;
-            frostBubbleLayerRoot = new GameObject("PermafrostFrostMarkLayer");
-            frostBubbleLayerRoot.layer = LayerMask.NameToLayer("UI");
-            var canvas = frostBubbleLayerRoot.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.overrideSorting = true;
-            canvas.sortingOrder = 8990;
+            frostBubbleLayerRoot = Helpers.CreateOverlayCanvas("PermafrostFrostMarkLayer", 8990);
         }
 
         private static FrostBubble CreateFrostBubble(PlayerControl target)
@@ -499,15 +479,7 @@ namespace TheOtherRoles.Roles
             rect.pivot = new Vector2(0.5f, 0.5f);
             var group = obj.AddComponent<CanvasGroup>();
 
-            var iconObj = new GameObject("Icon");
-            iconObj.transform.SetParent(obj.transform, false);
-            var iconRect = iconObj.AddComponent<RectTransform>();
-            iconRect.anchorMin = iconRect.anchorMax = new Vector2(0.5f, 0.5f);
-            iconRect.pivot = new Vector2(0.5f, 0.5f);
-            iconRect.sizeDelta = new Vector2(FrostMarkSize, FrostMarkSize);
-            var image = iconObj.AddComponent<Image>();
-            image.sprite = getFrostMarkSprite();
-            image.raycastTarget = false;
+            Helpers.CreateCenteredImage("Icon", obj.transform, getFrostMarkSprite(), new Vector2(FrostMarkSize, FrostMarkSize));
 
             return new FrostBubble { target = target, rect = rect, group = group, lastActiveTime = Time.unscaledTime };
         }
@@ -597,15 +569,7 @@ namespace TheOtherRoles.Roles
             rect.pivot = new Vector2(0.5f, 0.5f);
             var group = obj.AddComponent<CanvasGroup>();
 
-            var iconObj = new GameObject("Icon");
-            iconObj.transform.SetParent(obj.transform, false);
-            var iconRect = iconObj.AddComponent<RectTransform>();
-            iconRect.anchorMin = iconRect.anchorMax = new Vector2(0.5f, 0.5f);
-            iconRect.pivot = new Vector2(0.5f, 0.5f);
-            iconRect.sizeDelta = new Vector2(FrozenOverlaySize, FrozenOverlaySize);
-            var image = iconObj.AddComponent<Image>();
-            image.sprite = IceBlock.getIceBlockSprite();
-            image.raycastTarget = false;
+            Helpers.CreateCenteredImage("Icon", obj.transform, IceBlock.getIceBlockSprite(), new Vector2(FrozenOverlaySize, FrozenOverlaySize));
 
             return new FrozenOverlay { rect = rect, group = group };
         }
@@ -653,12 +617,7 @@ namespace TheOtherRoles.Roles
         private static void EnsureFogOverlay()
         {
             if (fogOverlayRoot != null) return;
-            fogOverlayRoot = new GameObject("PermafrostFogOverlay");
-            fogOverlayRoot.layer = LayerMask.NameToLayer("UI");
-            var canvas = fogOverlayRoot.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.overrideSorting = true;
-            canvas.sortingOrder = 9500;
+            fogOverlayRoot = Helpers.CreateOverlayCanvas("PermafrostFogOverlay", 9500);
 
             var imgObj = new GameObject("Fog");
             imgObj.transform.SetParent(fogOverlayRoot.transform, false);
@@ -729,25 +688,30 @@ namespace TheOtherRoles.Roles
                 if (target == null || target.Data == null || target.Data.IsDead) return;
                 if (!__instance.AmOwner || !target.CanMove) return;
 
-                bool inLiveSpray = false;
-                foreach (var caster in Permafrost.players)
+                bool isFrozen = frozenUntil.TryGetValue(target.PlayerId, out var frozenUntilTime) && DateTime.UtcNow < frozenUntilTime;
+                if (isFrozen)
                 {
-                    if (!caster.isSpraying || caster.player == null || caster.player == target) continue;
-                    if (caster.player.Data == null || caster.player.Data.IsDead) continue;
-                    if (caster.player.Data.Role.IsImpostor && target.Data.Role.IsImpostor) continue;
-                    if (Vector2.Distance(caster.player.transform.position, target.transform.position) <= sprayRange)
-                    {
-                        inLiveSpray = true;
-                        break;
-                    }
-                }
-                if (inLiveSpray) __instance.body.velocity *= (slowFactor + 1f);
-
-                if (IceBlock.slowUntil.TryGetValue(target.PlayerId, out var until) && DateTime.UtcNow < until)
-                    __instance.body.velocity *= (blockSlowFactor + 1f);
-
-                if (frozenUntil.TryGetValue(target.PlayerId, out var frozenUntilTime) && DateTime.UtcNow < frozenUntilTime)
                     __instance.body.velocity = Vector2.zero;
+                }
+                else
+                {
+                    bool inLiveSpray = false;
+                    foreach (var caster in Permafrost.players)
+                    {
+                        if (!caster.isSpraying || caster.player == null || caster.player == target) continue;
+                        if (caster.player.Data == null || caster.player.Data.IsDead) continue;
+                        if (caster.player.Data.Role.IsImpostor && target.Data.Role.IsImpostor) continue;
+                        if (Vector2.Distance(caster.player.transform.position, target.transform.position) <= sprayRange)
+                        {
+                            inLiveSpray = true;
+                            break;
+                        }
+                    }
+                    if (inLiveSpray) __instance.body.velocity *= (slowFactor + 1f);
+
+                    if (IceBlock.slowUntil.TryGetValue(target.PlayerId, out var until) && DateTime.UtcNow < until)
+                        __instance.body.velocity *= (blockSlowFactor + 1f);
+                }
 
                 foreach (var block in IceBlock.blocks.Values)
                 {
