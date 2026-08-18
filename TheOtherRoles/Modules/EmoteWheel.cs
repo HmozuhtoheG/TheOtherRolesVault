@@ -61,6 +61,7 @@ namespace TheOtherRoles.Modules
         public static bool CanOpen()
         {
             if (PlayerControl.LocalPlayer == null) return false;
+            if (PlayerControl.LocalPlayer.Data.IsDead) return false;
             if (sendCooldownTimer > 0f) return false;
             if (MeetingHud.Instance || ExileController.Instance) return false;
             if (TORGUIManager.Instance != null && TORGUIManager.Instance.HasSomeUI) return false;
@@ -113,12 +114,7 @@ namespace TheOtherRoles.Modules
             EnsureAssets();
             int n = EmoteCount;
 
-            wheelRoot = new GameObject("EmoteWheel");
-            wheelRoot.layer = LayerMask.NameToLayer("UI");
-            var canvas = wheelRoot.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.overrideSorting = true;
-            canvas.sortingOrder = 10500;
+            wheelRoot = Helpers.CreateOverlayCanvas("EmoteWheel", 10500);
             wheelCanvasGroup = wheelRoot.AddComponent<CanvasGroup>();
             wheelCanvasGroup.alpha = 0f;
 
@@ -132,15 +128,15 @@ namespace TheOtherRoles.Modules
             blockerImage.color = new Color(0f, 0f, 0f, 0.35f);
             blockerImage.raycastTarget = true;
 
-            var ring = CreateCenteredImage("Ring", wheelRoot.transform, ringSprite, new Vector2(OuterRadius * 2f, OuterRadius * 2f));
+            var ring = Helpers.CreateCenteredImage("Ring", wheelRoot.transform, ringSprite, new Vector2(OuterRadius * 2f, OuterRadius * 2f));
             ring.color = new Color(0.05f, 0.05f, 0.09f, 0.72f);
 
-            var hl = CreateCenteredImage("Highlight", wheelRoot.transform, wedgeSprite, new Vector2(OuterRadius * 2f, OuterRadius * 2f));
+            var hl = Helpers.CreateCenteredImage("Highlight", wheelRoot.transform, wedgeSprite, new Vector2(OuterRadius * 2f, OuterRadius * 2f));
             hl.color = new Color(1f, 1f, 1f, 0f);
             highlightImage = hl;
             highlightRect = hl.rectTransform;
 
-            var center = CreateCenteredImage("Center", wheelRoot.transform, discSprite, new Vector2(DeadZoneRadius * 1.8f, DeadZoneRadius * 1.8f));
+            var center = Helpers.CreateCenteredImage("Center", wheelRoot.transform, discSprite, new Vector2(DeadZoneRadius * 1.8f, DeadZoneRadius * 1.8f));
             center.color = new Color(0f, 0f, 0f, 0.55f);
 
             iconRects = new RectTransform[n];
@@ -152,15 +148,15 @@ namespace TheOtherRoles.Modules
                 float rad = angle * Mathf.Deg2Rad;
                 Vector2 pos = new Vector2(Mathf.Sin(rad) * IconRadius, Mathf.Cos(rad) * IconRadius);
 
-                var slot = CreateCenteredRect("EmoteSlot" + i, wheelRoot.transform, new Vector2(IconSize, IconSize));
+                var slot = Helpers.CreateCenteredRect("EmoteSlot" + i, wheelRoot.transform, new Vector2(IconSize, IconSize));
                 slot.anchoredPosition = pos;
                 iconRects[i] = slot;
                 iconScaleCurrent[i] = 1f;
 
-                var outline = CreateCenteredImage("Outline", slot, discSprite, new Vector2(IconSize + IconOutlineThickness * 2f, IconSize + IconOutlineThickness * 2f));
+                var outline = Helpers.CreateCenteredImage("Outline", slot, discSprite, new Vector2(IconSize + IconOutlineThickness * 2f, IconSize + IconOutlineThickness * 2f));
                 outline.color = new Color(0.05f, 0.05f, 0.08f, 0.85f);
 
-                var icon = CreateCenteredImage("Icon", slot, EmoteSprites[i], new Vector2(IconSize, IconSize));
+                var icon = Helpers.CreateCenteredImage("Icon", slot, EmoteSprites[i], new Vector2(IconSize, IconSize));
                 icon.color = Color.white;
             }
 
@@ -228,27 +224,6 @@ namespace TheOtherRoles.Modules
             }
         }
 
-        private static RectTransform CreateCenteredRect(string name, Transform parent, Vector2 size)
-        {
-            var obj = new GameObject(name);
-            obj.transform.SetParent(parent, false);
-            var rect = obj.AddComponent<RectTransform>();
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = Vector2.zero;
-            rect.sizeDelta = size;
-            return rect;
-        }
-
-        private static Image CreateCenteredImage(string name, Transform parent, Sprite sprite, Vector2 size)
-        {
-            var rect = CreateCenteredRect(name, parent, size);
-            var image = rect.gameObject.AddComponent<Image>();
-            image.sprite = sprite;
-            image.raycastTarget = false;
-            return image;
-        }
-
         private static Sprite ToSprite(Texture2D tex) => Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
 
         private static Texture2D NewTexture(int size)
@@ -313,12 +288,7 @@ namespace TheOtherRoles.Modules
         private static void EnsureBubbleLayer()
         {
             if (bubbleLayerRoot != null) return;
-            bubbleLayerRoot = new GameObject("EmoteBubbleLayer");
-            bubbleLayerRoot.layer = LayerMask.NameToLayer("UI");
-            var canvas = bubbleLayerRoot.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.overrideSorting = true;
-            canvas.sortingOrder = 9000;
+            bubbleLayerRoot = Helpers.CreateOverlayCanvas("EmoteBubbleLayer", 9000);
         }
 
         private static void ShowBubble(PlayerControl target, int emoteIndex)
@@ -334,7 +304,7 @@ namespace TheOtherRoles.Modules
             rect.pivot = new Vector2(0.5f, 0.5f);
             var group = obj.AddComponent<CanvasGroup>();
 
-            var icon = CreateCenteredImage("Icon", obj.transform, EmoteSprites[emoteIndex], new Vector2(BubbleIconSize, BubbleIconSize));
+            var icon = Helpers.CreateCenteredImage("Icon", obj.transform, EmoteSprites[emoteIndex], new Vector2(BubbleIconSize, BubbleIconSize));
             icon.color = Color.white;
 
             bubbles.Add(new ActiveBubble { Target = target, Rect = rect, Group = group, Timer = 0f });

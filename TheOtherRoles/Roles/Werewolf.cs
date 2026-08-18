@@ -66,22 +66,7 @@ namespace TheOtherRoles.Roles
         }
 
         public static PlayerControl GetNearestMarkableTarget(PlayerControl from, float maxRange)
-        {
-            PlayerControl best = null;
-            float bestDist = maxRange;
-
-            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
-            {
-                if (p == null || p == from || p.Data == null || p.Data.IsDead) continue;
-                float dist = Vector2.Distance(from.transform.position, p.transform.position);
-                if (dist <= bestDist)
-                {
-                    bestDist = dist;
-                    best = p;
-                }
-            }
-            return best;
-        }
+            => Helpers.GetNearestPlayer(from, maxRange);
 
         public static RemoteProcess<(byte werewolfId, byte targetId)> MarkTarget = new("WerewolfMark", (message, _) =>
         {

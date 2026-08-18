@@ -62,7 +62,6 @@ namespace TheOtherRoles.Roles
         public List<Block> blocks;
         public bool triggerBlockmanWin;
         public Blueprint blueprint;
-        public float dashTimer;
         public bool isPreviewing;
         private GameObject previewLine;
         private GameObject previewBlockGhost;
@@ -642,7 +641,7 @@ namespace TheOtherRoles.Roles
             dashCost = CustomOptionHolder.blockmanDashCost.getFloat();
             dashDistance = CustomOptionHolder.blockmanDashDistance.getFloat();
             dashCooldown = CustomOptionHolder.blockmanDashCooldown.getFloat();
-            players = new();
+            players = [];
         }
     }
 }

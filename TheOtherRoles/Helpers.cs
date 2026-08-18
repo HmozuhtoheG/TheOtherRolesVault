@@ -260,6 +260,24 @@ namespace TheOtherRoles
             return res;
         }
 
+        public static PlayerControl GetNearestPlayer(PlayerControl from, float maxRange, bool excludeSameImpostorTeam = false)
+        {
+            PlayerControl best = null;
+            float bestDist = maxRange;
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            {
+                if (p == null || p == from || p.Data == null || p.Data.IsDead) continue;
+                if (excludeSameImpostorTeam && from.Data.Role.IsImpostor && p.Data.Role.IsImpostor) continue;
+                float dist = Vector2.Distance(from.transform.position, p.transform.position);
+                if (dist <= bestDist)
+                {
+                    bestDist = dist;
+                    best = p;
+                }
+            }
+            return best;
+        }
+
         // Intersteing Color Gradient Feature :)
         public static string GradientColorText(string startColorHex, string endColorHex, string text)
         {
@@ -613,6 +631,38 @@ namespace TheOtherRoles
             lightRenderer.material.shader = PlayerControl.LocalPlayer.LightPrefab.LightCutawayMaterial.shader;
             lightRenderer.enabled = enabled;
             return lightRenderer;
+        }
+
+        public static GameObject CreateOverlayCanvas(string name, int sortingOrder)
+        {
+            var root = new GameObject(name);
+            root.layer = LayerMask.NameToLayer("UI");
+            var canvas = root.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = sortingOrder;
+            return root;
+        }
+
+        public static RectTransform CreateCenteredRect(string name, Transform parent, Vector2 size)
+        {
+            var obj = new GameObject(name);
+            obj.transform.SetParent(parent, false);
+            var rect = obj.AddComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.sizeDelta = size;
+            return rect;
+        }
+
+        public static UnityEngine.UI.Image CreateCenteredImage(string name, Transform parent, Sprite sprite, Vector2 size)
+        {
+            var rect = CreateCenteredRect(name, parent, size);
+            var image = rect.gameObject.AddComponent<UnityEngine.UI.Image>();
+            image.sprite = sprite;
+            image.raycastTarget = false;
+            return image;
         }
 
         public static Vector3 convertPos(int index, int arrangeType, (int x, int y)[] arrangement, Vector3 origin, Vector3[] originOffset, Vector3 contentsOffset, float[] scale, (float x, float y)[] contentAreaMultiplier)
