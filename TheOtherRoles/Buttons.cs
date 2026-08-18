@@ -92,6 +92,7 @@ namespace TheOtherRoles
         public static CustomButton moriartyKillButton;
         public static CustomButton akujoHonmeiButton;
         public static CustomButton akujoBackupButton;
+        public static CustomButton martyrButton;
         public static CustomButton plagueDoctorButton;
         public static CustomButton lighterButton;
         public static CustomButton jekyllAndHydeKillButton;
@@ -242,6 +243,7 @@ namespace TheOtherRoles
             securityGuardFlushButton.MaxTimer = SecurityGuard.flushCooldown;
             medicVitalsButton.MaxTimer = 0f;
             zephyrButton.MaxTimer = Zephyr.cooldown;
+            martyrButton.MaxTimer = Martyr.cooldown;
             lighterButton.MaxTimer = Lighter.cooldown;
             arsonistButton.MaxTimer = Arsonist.cooldown;
             kataomoiButton.MaxTimer = Kataomoi.stareCooldown;
@@ -3407,6 +3409,26 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.F,
                 false
+            );
+
+            // Martyr
+            martyrButton = new CustomButton(
+                () =>
+                {
+                    var target = Martyr.deadTarget;
+                    if (target == null || MeetingHud.Instance != null) return;
+                    Martyr.Sacrifice.Invoke((PlayerControl.LocalPlayer.PlayerId, target.PlayerId));
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Martyr) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.CanMove && Martyr.deadTarget != null; },
+                () => { martyrButton.Timer = martyrButton.MaxTimer; },
+                FreePlayGM.getReviveButtonSprite(),
+                CustomButton.ButtonPositions.upperRowCenter,
+                __instance,
+                KeyCode.Q,
+                buttonText: ModTranslation.getString("ReviveText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton,
+                isSuicide: true
             );
 
             // Mimic(Assistant) Admin

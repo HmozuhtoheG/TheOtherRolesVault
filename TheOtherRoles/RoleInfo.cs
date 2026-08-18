@@ -134,6 +134,7 @@ namespace TheOtherRoles
         public static RoleInfo yandere = new("yandere", Yandere.color, RoleId.Yandere, true);
         public static RoleInfo voidEater = new("voidEater", VoidEater.color, RoleId.VoidEater, true);
         public static RoleInfo workaholic = new("workaholic", Workaholic.color, RoleId.Workaholic, true);
+        public static RoleInfo martyr = new("martyr", Martyr.color, RoleId.Martyr);
 
         public static RoleInfo hunter = new("hunter", Palette.ImpostorRed, RoleId.Impostor);
         public static RoleInfo hunted = new("hunted", Color.white, RoleId.Crewmate);
@@ -244,7 +245,8 @@ namespace TheOtherRoles
             engineer,
             camouflager,
             securityGuard,
-            energyamplifier
+            energyamplifier,
+            martyr
         ];
 
         public static List<RoleInfo> Outlook =
@@ -346,6 +348,7 @@ namespace TheOtherRoles
             pelican,
             yandere,
             voidEater,
+            martyr,
             workaholic,
             crewmate,
             mayor,

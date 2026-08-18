@@ -575,6 +575,9 @@ namespace TheOtherRoles {
         public static CustomOption moriartySherlockAddition;
         public static CustomOption moriartyKillIndicate;
 
+        public static CustomRoleOption martyrSpawnRate;
+        public static CustomOption martyrCooldown;
+
         public static CustomRoleOption akujoSpawnRate;
         public static CustomOption akujoTimeLimit;
         public static CustomOption akujoKnowsRoles;
@@ -1381,6 +1384,9 @@ namespace TheOtherRoles {
             moriartyNumberToWin = CustomOption.Create(8033, Types.Neutral, "moriartyNumberToWin", 3f, 1f, 10f, 1f, moriartySpawnRate, false, "unitScrews");
             moriartySherlockAddition = CustomOption.Create(8045, Types.Neutral, "moriartySherlockAddition", 2f, 0f, 5f, 1f, moriartySpawnRate, false, "unitScrews");
             moriartyKillIndicate = CustomOption.Create(8044, Types.Neutral, "moriartyKillIndicate", false, moriartySpawnRate);
+
+            martyrSpawnRate = new CustomRoleOption(9801, Types.Crewmate, "martyr", Martyr.color, 1);
+            martyrCooldown = CustomOption.Create(9802, Types.Crewmate, "martyrCooldown", 30f, 2.5f, 60f, 2.5f, martyrSpawnRate, false, "unitSeconds");
 
             /*trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
             trapperCooldown = CustomOption.Create(420, Types.Crewmate, "Trapper Cooldown", 30f, 5f, 120f, 5f, trapperSpawnRate);

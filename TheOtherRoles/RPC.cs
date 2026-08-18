@@ -121,6 +121,7 @@ namespace TheOtherRoles
         Madmate,
         Crewmate,
         Impostor,
+        Martyr,
         // Modifier ---
         Lover,
         //Bait, Bait is no longer a modifier
