@@ -115,6 +115,7 @@ namespace TheOtherRoles
             Yandere.clearAndReload();
             Workaholic.clearAndReload();
             VoidEater.clearAndReload();
+            Martyr.clearAndReload();
             Role.ClearAll();
 
             // Modifier
@@ -211,6 +212,7 @@ namespace TheOtherRoles
                 { RoleId.Werewolf, typeof(RoleBase<Werewolf>) },
                 { RoleId.Permafrost, typeof(RoleBase<Permafrost>) },
                 { RoleId.Zephyr, typeof(RoleBase<Zephyr>) },
+                { RoleId.Martyr, typeof(RoleBase<Martyr>) },
 
                 // Neutral
                 { RoleId.Jester, typeof(RoleBase<Jester>) },

@@ -204,6 +204,8 @@ namespace TheOtherRoles.Patches {
                 Jester.TriggerWin.Invoke(exiled.PlayerId);
             }
 
+            // Martyr judgement
+            if (exiled != null && AmongUsClient.Instance.AmHost) Martyr.triggerJudgement(exiled);
 
             // Reset custom button timers where necessary
             CustomButton.MeetingEndedUpdate();
