@@ -1,11 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-using TheOtherRoles.MetaContext;
-using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
-using TheOtherRoles.Utilities;
 using UnityEngine;
 using TMPro;
 using static TheOtherRoles.TheOtherRoles;
@@ -30,16 +26,6 @@ namespace TheOtherRoles.Roles
             ghostBlocks = new();
             mapIndicator = null;
             lastAimDirection = Vector2.right;
-        }
-
-        static public IEnumerable<DocumentReplacement> GetReplacementPart()
-        {
-            yield return new("%MAXBLOCKS%", maxBlocks.ToString());
-            yield return new("%LIFETIME%", blockLifetime.ToString());
-            yield return new("%SETTLETIME%", settleTime.ToString());
-            yield return new("%COST%", placeCost.ToString());
-            yield return new("%DASHCOST%", dashCost.ToString());
-            yield return new("%DASHDIST%", dashDistance.ToString());
         }
 
         public static float maxEnergy = 100f;

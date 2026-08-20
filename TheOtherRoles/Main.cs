@@ -11,6 +11,7 @@ using AmongUs.Data.Player;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
+using FilterAPI.Attributes;
 using HarmonyLib;
 using Hazel;
 using Il2CppSystem.Security.Cryptography;
@@ -28,8 +29,10 @@ namespace TheOtherRoles
 {
     [BepInPlugin(Id, "TheOtherRolesVault", VersionString)]
     [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("ume.filter.api", BepInDependency.DependencyFlags.HardDependency)]
     [BepInProcess("Among Us.exe")]
     [ReactorModFlags(Reactor.Networking.ModFlags.RequireOnAllClients)]
+    [AmciModGuid("9542f992-8306-41ab-8629-b72b9e9c80b4")]
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";

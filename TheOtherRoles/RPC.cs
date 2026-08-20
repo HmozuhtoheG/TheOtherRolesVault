@@ -1525,20 +1525,20 @@ namespace TheOtherRoles
             {
                 foreach (PlayerVoteArea pva in MeetingHud.Instance.playerStates)
                 {
-                    if (pva.TargetPlayerId == targetId)
+                    if (pva.PlayerId == targetId)
                     {
-                        pva.SetDead(pva.DidReport, true);
+                        pva.SetDead(true);
                         pva.Overlay.gameObject.SetActive(true);
                         MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, targetId);
                         MeetingHudPatch.yasunaCheckAndReturnSpecialVote(MeetingHud.Instance, targetId);
                     }
 
                     // Give players back their vote if target is shot dead
-                    if (pva.VotedFor != targetId) continue;
+                    if (pva.VotedForId != targetId) continue;
                     pva.UnsetVote();
-                    var voteAreaPlayer = Helpers.playerById(pva.TargetPlayerId);
+                    var voteAreaPlayer = Helpers.playerById(pva.PlayerId);
                     if (!voteAreaPlayer.AmOwner) continue;
-                    MeetingHud.Instance.ClearVote();
+                    MeetingHud.Instance.ClearVote(pva.PlayerId, true);
                 }
 
                 if (AmongUsClient.Instance.AmHost)
@@ -2100,6 +2100,7 @@ namespace TheOtherRoles
 
         static void Postfix([HarmonyArgument(0)]byte callId, [HarmonyArgument(1)]MessageReader reader)
         {
+            try {
             if (callId == 128) ReceiveMessage(reader);
             byte packetId = callId;
 
@@ -2345,6 +2346,9 @@ namespace TheOtherRoles
                     byte kickTarget = reader.ReadByte();
                     EventUtility.handleKick(Helpers.playerById(kickSource), Helpers.playerById(kickTarget), reader.ReadSingle());
                     break;
+            }
+            } catch (Exception e) {
+                TheOtherRolesPlugin.Logger.LogError($"RPCHandlerPatch.Postfix error, callId: {callId}, {e}");
             }
         }
     }

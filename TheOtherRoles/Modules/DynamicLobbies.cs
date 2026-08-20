@@ -53,7 +53,7 @@ namespace TheOtherRoles.Modules {
                     maxPlayers = 24;
                 }
                 DynamicLobbies.LobbyLimit = maxPlayers;
-                settings.MaxPlayers = 24; // Force 24 Player Lobby on Server
+                // settings.MaxPlayers = 24;
                 DataManager.Settings.Multiplayer.ChatMode = InnerNet.QuickChatModes.FreeChatOrQuickChat;
             }
             public static void Postfix(InnerNet.InnerNetClient __instance, [HarmonyArgument(0)] LegacyGameOptions settings) {

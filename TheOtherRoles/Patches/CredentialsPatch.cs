@@ -52,7 +52,7 @@ namespace TheOtherRoles.Patches {
 
                     var GameModeText = GameObject.Find("GameModeText")?.GetComponent<TextMeshPro>();
                     if (GameModeText != null)
-                        GameModeText.text = gameModeText == "" ? (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek ? "Van. HideNSeek" : ModTranslation.getString("modeClassic")) : gameModeText;
+                        GameModeText.text = gameModeText == "" ? (GameOptionsManager.Instance?.currentGameOptions?.GameMode == GameModes.HideNSeek ? "Van. HideNSeek" : ModTranslation.getString("modeClassic")) : gameModeText;
                     var ModeLabel = GameObject.Find("ModeLabel")?.GetComponentInChildren<TextMeshPro>();
                     if (ModeLabel != null) ModeLabel.text = ModTranslation.getString("modeLabel");
                 }

@@ -73,8 +73,12 @@ namespace TheOtherRoles {
             if (parent != null) parent.children.Add(this);
             selection = 0;
             if (id != 0) {
-                entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
-                selection = Mathf.Clamp(entry.Value, 0, selections.Length - 1);
+                try {
+                    entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", id.ToString(), defaultSelection);
+                    selection = Mathf.Clamp(entry.Value, 0, selections.Length - 1);
+                } catch {
+                    selection = Mathf.Clamp(defaultSelection, 0, selections.Length - 1);
+                }
             }
             options.Add(this);
         }
@@ -109,8 +113,12 @@ namespace TheOtherRoles {
             foreach (CustomOption option in CustomOption.options) {
                 if (option.id == 0) continue;
 
-                option.entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", option.id.ToString(), option.defaultSelection);
-                option.selection = Mathf.Clamp(option.entry.Value, 0, option.selections.Length - 1);
+                try {
+                    option.entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", option.id.ToString(), option.defaultSelection);
+                    option.selection = Mathf.Clamp(option.entry.Value, 0, option.selections.Length - 1);
+                } catch {
+                    option.selection = Mathf.Clamp(option.defaultSelection, 0, option.selections.Length - 1);
+                }
                 if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption) {
                     stringOption.oldValue = stringOption.Value = option.selection;
                     stringOption.ValueText.text = option.getString();
@@ -341,7 +349,9 @@ namespace TheOtherRoles {
                     if (id == 0) continue;
                     lastId = id;
                     CustomOption option = options.First(option => option.id == id);
-                    option.entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", option.id.ToString(), option.defaultSelection);
+                    try {
+                        option.entry = TheOtherRolesPlugin.Instance.Config.Bind($"Preset{preset}", option.id.ToString(), option.defaultSelection);
+                    } catch { }
                     option.selection = selection;
                     if (option.optionBehaviour != null && option.optionBehaviour is StringOption stringOption)
                     {
