@@ -29,6 +29,7 @@ namespace TheOtherRoles {
             Swallowed,
             Bomb,
             Arson,
+            Reckoning,
         };
 
         public PlayerControl player;

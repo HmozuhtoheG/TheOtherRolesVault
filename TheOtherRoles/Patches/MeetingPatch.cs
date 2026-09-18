@@ -1077,6 +1077,42 @@ namespace TheOtherRoles.Patches
                     addButtonGuide(button, string.Format(ModTranslation.getString("buttonLeftClick"), ModTranslation.getString("buttonForceExile")));
                 }
             }
+
+            // Add Godfather Reckoning Buttons
+            Godfather.ClearButtons();
+
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Godfather))
+            {
+                Godfather.OnMeetingBegin();
+
+                if (!PlayerControl.LocalPlayer.Data.IsDead
+                    && !IsBlockedBlackmail()
+                    && !Jailor.isJailed(PlayerControl.LocalPlayer.PlayerId)
+                    && Godfather.canUse)
+                {
+                    for (int i = 0; i < __instance.playerStates.Length; i++)
+                    {
+                        PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+                        if (playerVoteArea.AmDead || (byte)playerVoteArea.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
+                        if (Jailor.isJailed(playerVoteArea.PlayerId)) continue;
+
+                        GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+                        GameObject targetBox = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);
+                        targetBox.name = "ReckoningButton";
+                        targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.9f);
+                        SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
+                        renderer.sprite = Godfather.GetReckoningSprite();
+                        PassiveButton button = targetBox.GetComponent<PassiveButton>();
+                        button.OnClick.RemoveAllListeners();
+                        byte copiedId = (byte)playerVoteArea.PlayerId;
+                        button.OnClick.AddListener((Action)(() => Godfather.OpenConfirm(copiedId)));
+                        addButtonGuide(button, string.Format(ModTranslation.getString("buttonLeftClick"), ModTranslation.getString("godfatherReckoningButton")));
+
+                        targetBox.SetActive(false);
+                        Godfather.reckoningButtons.Add(targetBox);
+                    }
+                }
+            }
         }
 
         public static void addButtonGuide(PassiveButton button, string guide)
@@ -1376,6 +1412,11 @@ namespace TheOtherRoles.Patches
                 }
 
                 if (PlayerControl.LocalPlayer.isRole(RoleId.Mafioso)) Mafioso.UpdateTimer(__instance);
+                if (PlayerControl.LocalPlayer.isRole(RoleId.Godfather))
+                {
+                    Godfather.UpdateButtons(__instance);
+                    Godfather.UpdateMeetingText();
+                }
             }
         }
 
