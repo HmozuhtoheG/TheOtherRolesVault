@@ -66,6 +66,8 @@ namespace TheOtherRoles {
         public static CustomOption janitorCanSabotage;
         public static CustomOption janitorImpostorsCanSeeDeadBody;
         public static CustomOption mafiosoNumberOfSkips;
+        public static CustomOption godfatherReckoningPerMeeting;
+        public static CustomOption godfatherReckoningTotal;
 
         public static CustomRoleOption morphlingSpawnRate;
         public static CustomOption morphlingCooldown;
@@ -823,6 +825,8 @@ namespace TheOtherRoles {
             janitorImpostorsCanSeeDeadBody = CustomOption.Create(19, Types.Impostor, "janitorImpostorsCanSeeDeadBody", true, mafiaSpawnRate);
             janitorCanSabotage = CustomOption.Create(25, Types.Impostor, "janitorCanSabotage", true, mafiaSpawnRate);
             mafiosoNumberOfSkips = CustomOption.Create(23, Types.Impostor, "mafiosoNumberOfSkips", 2f, 1f, 15f, 1f, mafiaSpawnRate, false, "unitScrews");
+            godfatherReckoningPerMeeting = CustomOption.Create(921, Types.Impostor, "godfatherReckoningPerMeeting", 1f, 1f, 3f, 1f, mafiaSpawnRate, false, "unitTimes");
+            godfatherReckoningTotal = CustomOption.Create(922, Types.Impostor, "godfatherReckoningTotal", 2f, 1f, 5f, 1f, mafiaSpawnRate, false, "unitTimes");
 
             morphlingSpawnRate = new CustomRoleOption(20, Types.Impostor, "morphling", Morphling.color);
             morphlingCooldown = CustomOption.Create(21, Types.Impostor, "morphlingCooldown", 30f, 10f, 60f, 2.5f, morphlingSpawnRate, false, "unitSeconds");
