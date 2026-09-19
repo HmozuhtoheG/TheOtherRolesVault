@@ -23,17 +23,6 @@ namespace TheOtherRoles.Roles
             currentEnergy = maxEnergy;
         }
 
-        static public IEnumerable<DocumentReplacement> GetReplacementPart()
-        {
-            yield return new("%DURATION%", fieldDuration.ToString());
-            yield return new("%RADIUS%", fieldRadius.ToString());
-            yield return new("%SPEED%", baseSpeedBoost.ToString());
-            yield return new("%MAXSPEED%", maxSpeedBoost.ToString());
-            yield return new("%COST%", activationCost.ToString());
-            yield return new("%MAXENERGY%", maxEnergy.ToString());
-            yield return new("%SHIELD%", shieldDuration.ToString());
-        }
-
         public static float fieldDuration = 10f;
         public static float fieldRadius = 3f;
         public static float killCooldownReduction = 0.3f;
