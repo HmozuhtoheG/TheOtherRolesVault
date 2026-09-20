@@ -985,6 +985,7 @@ namespace TheOtherRoles
 
         static public float GetKillCooldown(this PlayerControl player)
         {
+            if (player.isRole(RoleId.Agnosia)) return Agnosia.isActive(player) ? Agnosia.killCooldownActive : Agnosia.killCooldownIdle;
             if (player.isRole(RoleId.SerialKiller)) return SerialKiller.killCooldown;
             if (player.isRole(RoleId.SchrodingersCat)) return SchrodingersCat.killCooldown;
             return GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
@@ -1520,6 +1521,7 @@ namespace TheOtherRoles
         static public float Distance(this Vector2 myVec, Vector2 vector) => (myVec - vector).magnitude;
 
         public static bool hidePlayerName(PlayerControl source, PlayerControl target) {
+            if (source != target && Agnosia.isActive(source)) return true;
             if (Camouflager.camouflageTimer > 0f || MushroomSabotageActive()) return true; // No names are visible
             if (!source.Data.Role.IsImpostor && Ninja.isStealthed(target)) return true; // Hide Ninja nametags from non-impostors
             if (Sprinter.isSprinting(target) && source != target) return true; // Hide Sprinter nametags
@@ -1982,6 +1984,7 @@ namespace TheOtherRoles
         }
 
         public static bool roleCanUseVents(this PlayerControl player) {
+            if (Agnosia.madnessActive) return false;
             bool roleCouldUse = false;
             if (player.isRole(RoleId.Engineer))
                 roleCouldUse = true;
@@ -2282,6 +2285,7 @@ namespace TheOtherRoles
                 !player.isRole(RoleId.Akujo) &&
                 !player.isRole(RoleId.PlagueDoctor) &&
                 !player.isRole(RoleId.Cupid) &&
+                !player.isRole(RoleId.Gremlin) &&
                 !(player.isRole(RoleId.SchrodingersCat) && !SchrodingersCat.hasTeam()));
 
         }

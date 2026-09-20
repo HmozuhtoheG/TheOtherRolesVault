@@ -135,6 +135,9 @@ namespace TheOtherRoles
         public static RoleInfo voidEater = new("voidEater", VoidEater.color, RoleId.VoidEater, true);
         public static RoleInfo workaholic = new("workaholic", Workaholic.color, RoleId.Workaholic, true);
         public static RoleInfo martyr = new("martyr", Martyr.color, RoleId.Martyr);
+        public static RoleInfo gremlin = new("gremlin", Gremlin.color, RoleId.Gremlin, true);
+        public static RoleInfo illusionist = new("illusionist", Illusionist.color, RoleId.Illusionist);
+        public static RoleInfo agnosia = new("agnosia", Agnosia.color, RoleId.Agnosia);
 
         public static RoleInfo hunter = new("hunter", Palette.ImpostorRed, RoleId.Impostor);
         public static RoleInfo hunted = new("hunted", Color.white, RoleId.Crewmate);
@@ -180,7 +183,10 @@ namespace TheOtherRoles
             niceSwapper,
             evilSwapper,
             mayor,
-            bait
+            bait,
+            gremlin,
+            illusionist,
+            agnosia
         ];
 
         public static List<RoleInfo> Detect =
@@ -350,6 +356,7 @@ namespace TheOtherRoles
             voidEater,
             martyr,
             workaholic,
+            gremlin,
             crewmate,
             mayor,
             portalmaker,
@@ -397,6 +404,8 @@ namespace TheOtherRoles
             radar,
             armored,
             energyamplifier,
+            illusionist,
+            agnosia,
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
@@ -489,6 +498,9 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Pelican)) infos.Add(pelican);
             if (p.isRole(RoleId.Yandere)) infos.Add(yandere);
             if (p.isRole(RoleId.Workaholic)) infos.Add(workaholic);
+            if (p.isRole(RoleId.Gremlin)) infos.Add(gremlin);
+            if (p.isRole(RoleId.Illusionist)) infos.Add(illusionist);
+            if (p.isRole(RoleId.Agnosia)) infos.Add(agnosia);
             if (p.isRole(RoleId.VoidEater)) infos.Add(voidEater);
             if (p.isRole(RoleId.FortuneTeller))
             {

@@ -189,7 +189,10 @@ namespace TheOtherRoles.Patches {
             }
 
             PlayerControl target = null;
-            if (Spy.exists) {
+            if (Agnosia.isActive(PlayerControl.LocalPlayer)) {
+                target = setTarget(false, true);
+            }
+            else if (Spy.exists) {
                 if (Spy.impostorsCanKillAnyone) {
                     target = setTarget(false, true);
                 }

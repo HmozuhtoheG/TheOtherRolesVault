@@ -29,6 +29,7 @@ namespace TheOtherRoles.Patches
 #endif
 
         public static void Prefix(IntroCutscene __instance) {
+            Agnosia.seekerSpawnAnim = __instance.HnSSeekerSpawnAnim;
             // Generate and initialize player icons
             int playerCounter = 0;
             int hideNSeekCounter = 0;
@@ -476,6 +477,8 @@ namespace TheOtherRoles.Patches
         {
             public static bool Prefix(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
             {
+                Agnosia.seekerSpawnAnim = __instance.HnSSeekerSpawnAnim;
+
                 __result = CoBegin(__instance).WrapToIl2Cpp();
 
                 return false;

@@ -580,6 +580,31 @@ namespace TheOtherRoles {
         public static CustomRoleOption martyrSpawnRate;
         public static CustomOption martyrCooldown;
 
+        public static CustomRoleOption gremlinSpawnRate;
+        public static CustomOption gremlinCooldown;
+        public static CustomOption gremlinPassiveInterval;
+        public static CustomOption gremlinComboChance;
+        public static CustomOption gremlinDashDuration;
+        public static CustomOption gremlinDashMultiplier;
+        public static CustomOption gremlinSlumpDuration;
+        public static CustomOption gremlinSlumpMultiplier;
+        public static CustomOption gremlinGiantDuration;
+        public static CustomOption gremlinGiantScale;
+        public static CustomOption gremlinFreezeDuration;
+
+        public static CustomRoleOption illusionistSpawnRate;
+        public static CustomOption illusionistCooldown;
+        public static CustomOption illusionistUses;
+        public static CustomOption illusionistTriggerRadius;
+
+        public static CustomRoleOption agnosiaSpawnRate;
+        public static CustomOption agnosiaCooldown;
+        public static CustomOption agnosiaDuration;
+        public static CustomOption agnosiaKillCooldownActive;
+        public static CustomOption agnosiaKillCooldownIdle;
+        public static CustomOption agnosiaMadnessKills;
+        public static CustomOption agnosiaMadnessDuration;
+
         public static CustomRoleOption akujoSpawnRate;
         public static CustomOption akujoTimeLimit;
         public static CustomOption akujoKnowsRoles;
@@ -1391,6 +1416,31 @@ namespace TheOtherRoles {
 
             martyrSpawnRate = new CustomRoleOption(9801, Types.Crewmate, "martyr", Martyr.color, 1);
             martyrCooldown = CustomOption.Create(9802, Types.Crewmate, "martyrCooldown", 30f, 2.5f, 60f, 2.5f, martyrSpawnRate, false, "unitSeconds");
+
+            gremlinSpawnRate = new CustomRoleOption(11100, Types.Neutral, "gremlin", Gremlin.color, max: 3);
+            gremlinCooldown = CustomOption.Create(11101, Types.Neutral, "gremlinCooldown", 15f, 3f, 60f, 1f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinPassiveInterval = CustomOption.Create(11102, Types.Neutral, "gremlinPassiveInterval", 45f, 10f, 120f, 5f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinComboChance = CustomOption.Create(11103, Types.Neutral, "gremlinComboChance", 35f, 0f, 100f, 5f, gremlinSpawnRate, false, "unitPercent");
+            gremlinDashDuration = CustomOption.Create(11104, Types.Neutral, "gremlinDashDuration", 6f, 1f, 20f, 1f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinDashMultiplier = CustomOption.Create(11105, Types.Neutral, "gremlinDashMultiplier", 0.5f, 0.1f, 1.5f, 0.05f, gremlinSpawnRate, false, "unitTimes");
+            gremlinSlumpDuration = CustomOption.Create(11106, Types.Neutral, "gremlinSlumpDuration", 5f, 1f, 20f, 1f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinSlumpMultiplier = CustomOption.Create(11107, Types.Neutral, "gremlinSlumpMultiplier", 0.45f, 0.1f, 0.9f, 0.05f, gremlinSpawnRate, false, "unitTimes");
+            gremlinGiantDuration = CustomOption.Create(11108, Types.Neutral, "gremlinGiantDuration", 8f, 2f, 30f, 1f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinGiantScale = CustomOption.Create(11109, Types.Neutral, "gremlinGiantScale", 2f, 1.3f, 4f, 0.1f, gremlinSpawnRate, false, "unitTimes");
+            gremlinFreezeDuration = CustomOption.Create(11110, Types.Neutral, "gremlinFreezeDuration", 4f, 1f, 15f, 1f, gremlinSpawnRate, false, "unitSeconds");
+
+            illusionistSpawnRate = new CustomRoleOption(11111, Types.Impostor, "illusionist", Illusionist.color);
+            illusionistCooldown = CustomOption.Create(11112, Types.Impostor, "illusionistCooldown", 25f, 5f, 120f, 2.5f, illusionistSpawnRate, false, "unitSeconds");
+            illusionistUses = CustomOption.Create(11113, Types.Impostor, "illusionistUses", 3f, 1f, 10f, 1f, illusionistSpawnRate, false, "unitScrews");
+            illusionistTriggerRadius = CustomOption.Create(11114, Types.Impostor, "illusionistTriggerRadius", 1.5f, 0.5f, 4f, 0.1f, illusionistSpawnRate, false, "unitMeters");
+
+            agnosiaSpawnRate = new CustomRoleOption(11115, Types.Impostor, "agnosia", Agnosia.color);
+            agnosiaCooldown = CustomOption.Create(11116, Types.Impostor, "agnosiaCooldown", 30f, 5f, 120f, 2.5f, agnosiaSpawnRate, false, "unitSeconds");
+            agnosiaDuration = CustomOption.Create(11117, Types.Impostor, "agnosiaDuration", 15f, 3f, 40f, 1f, agnosiaSpawnRate, false, "unitSeconds");
+            agnosiaKillCooldownActive = CustomOption.Create(11118, Types.Impostor, "agnosiaKillCooldownActive", 10f, 2.5f, 60f, 2.5f, agnosiaSpawnRate, false, "unitSeconds");
+            agnosiaKillCooldownIdle = CustomOption.Create(11119, Types.Impostor, "agnosiaKillCooldownIdle", 45f, 5f, 120f, 2.5f, agnosiaSpawnRate, false, "unitSeconds");
+            agnosiaMadnessKills = CustomOption.Create(11120, Types.Impostor, "agnosiaMadnessKills", 3f, 1f, 10f, 1f, agnosiaSpawnRate, false, "unitScrews");
+            agnosiaMadnessDuration = CustomOption.Create(11121, Types.Impostor, "agnosiaMadnessDuration", 30f, 5f, 90f, 5f, agnosiaSpawnRate, false, "unitSeconds");
 
             /*trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
             trapperCooldown = CustomOption.Create(420, Types.Crewmate, "Trapper Cooldown", 30f, 5f, 120f, 5f, trapperSpawnRate);

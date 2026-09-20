@@ -139,6 +139,10 @@ namespace TheOtherRoles
         Armored,
         Racer,
         //Shifter
+
+        Gremlin,
+        Illusionist,
+        Agnosia,
     }
 
     enum CustomRPC

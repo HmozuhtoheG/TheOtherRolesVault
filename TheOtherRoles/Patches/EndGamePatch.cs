@@ -62,7 +62,8 @@ namespace TheOtherRoles.Patches {
         YandereWin,
         EveryoneDied,
         BlockmanWin,
-        WorkaholicWin
+        WorkaholicWin,
+        GremlinWin
 
         //ProsecutorWin
     }
@@ -191,7 +192,8 @@ namespace TheOtherRoles.Patches {
                 .. Pelican.allPlayers,
                 .. Yandere.allPlayers,
                 .. Blockman.allPlayers,
-                .. Workaholic.allPlayers
+                .. Workaholic.allPlayers,
+                .. Gremlin.allPlayers
             ];
             if (Shifter.isNeutral) notWinners.AddRange(Shifter.allPlayers);
 
@@ -701,6 +703,17 @@ namespace TheOtherRoles.Patches {
                 }
                 if (oppWin)
                     AdditionalTempData.additionalWinConditions.Add(WinCondition.OpportunistWin);
+
+                bool gremlinWin = false;
+                foreach (var p in Gremlin.players)
+                {
+                    if (p.player == null || p.player.Data.IsDead) continue;
+                    if (!EndGameResult.CachedWinners.ToArray().Any(x => x.PlayerName == p.player.Data.PlayerName))
+                        EndGameResult.CachedWinners.Add(new CachedPlayerData(p.player.Data));
+                    gremlinWin = true;
+                }
+                if (gremlinWin)
+                    AdditionalTempData.additionalWinConditions.Add(WinCondition.GremlinWin);
             }
 
             if (PlayerControl.LocalPlayer.isRole(RoleId.Lighter) && !PlayerControl.LocalPlayer.Data.IsDead)
@@ -979,6 +992,9 @@ namespace TheOtherRoles.Patches {
                         break;
                     case WinCondition.AdditionalAlivePursuerWin:
                         extraText += ModTranslation.getString("pursuerExtra");
+                        break;
+                    case WinCondition.GremlinWin:
+                        extraText += ModTranslation.getString("gremlinExtra");
                         break;
                     default:
                         break;

@@ -139,6 +139,8 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.Blackmailer, CustomOptionHolder.blackmailerSpawnRate.data);
             impSettings.Add((byte)RoleId.Yoyo, CustomOptionHolder.yoyoSpawnRate.data);
             impSettings.Add((byte)RoleId.Zephyr, CustomOptionHolder.zephyrSpawnRate.data);
+            impSettings.Add((byte)RoleId.Illusionist, CustomOptionHolder.illusionistSpawnRate.data);
+            impSettings.Add((byte)RoleId.Agnosia, CustomOptionHolder.agnosiaSpawnRate.data);
 
             neutralSettings.Add((byte)RoleId.Jester, CustomOptionHolder.jesterSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.data);
@@ -161,6 +163,7 @@ namespace TheOtherRoles.Patches {
             neutralSettings.Add((byte)RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Workaholic, CustomOptionHolder.workaholicSpawnRate.data);
             neutralSettings.Add((byte)RoleId.VoidEater, CustomOptionHolder.voidEaterSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Gremlin, CustomOptionHolder.gremlinSpawnRate.data);
 
             crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.data);
             crewSettings.Add((byte)RoleId.Portalmaker, CustomOptionHolder.portalmakerSpawnRate.data);
