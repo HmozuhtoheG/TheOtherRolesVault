@@ -6,15 +6,12 @@ namespace TheOtherRoles.Patches
 {
     public static class MainMenuBackground
     {
-        public static Color TopColor = new Color32(0x0A, 0x0C, 0x1A, 0xFF);
-        public static Color BottomColor = new Color32(0x1B, 0x14, 0x33, 0xFF);
-        public static float Alpha = 0.94f;
+        public const string BackgroundResource = "TheOtherRoles.Resources.ReBuildUi.BackGround.png";
+        public const float PixelsPerUnit = 100f;
+        private const float DesignAspect = 16f / 9f;
+        public static float Alpha = 1f;
         public static Vector2 CoverSize = new Vector2(40f, 24f);
         public static float Z = 8f;
-
-        private static Sprite _gradient;
-        private static Color _cachedTop;
-        private static Color _cachedBottom;
 
         public static void Apply(MainMenuManager instance)
         {
@@ -25,8 +22,12 @@ namespace TheOtherRoles.Patches
                 var previous = GameObject.Find("TORMainMenuBackground");
                 if (previous) Object.Destroy(previous);
 
-                var sprite = BuildGradient(TopColor, BottomColor);
-                if (!sprite) return;
+                var sprite = Helpers.loadSpriteFromResources(BackgroundResource, PixelsPerUnit);
+                if (!sprite)
+                {
+                    Log("背景图加载失败: " + BackgroundResource);
+                    return;
+                }
 
                 var renderer = Helpers.CreateObject<SpriteRenderer>(
                     "TORMainMenuBackground", instance.mainMenuUI.transform, new Vector3(0f, 0f, Z));
@@ -35,47 +36,28 @@ namespace TheOtherRoles.Patches
                 renderer.drawMode = SpriteDrawMode.Simple;
                 renderer.color = new Color(1f, 1f, 1f, Mathf.Clamp01(Alpha));
 
+                var cam = Helpers.FindCamera(renderer.gameObject.layer);
+                if (!cam) cam = Camera.main;
+
+                float screenHeight = cam ? 2f * cam.orthographicSize : CoverSize.y;
+                float aspect = Mathf.Max(DesignAspect, Screen.height > 0 ? Screen.width / (float)Screen.height : DesignAspect);
+                float screenWidth = screenHeight * aspect;
+
                 var size = sprite.bounds.size;
-                renderer.transform.localScale = new Vector3(
-                    CoverSize.x / Mathf.Max(size.x, 0.0001f),
-                    CoverSize.y / Mathf.Max(size.y, 0.0001f),
-                    1f);
+                float scale = Mathf.Max(
+                    screenWidth / Mathf.Max(size.x, 0.0001f),
+                    screenHeight / Mathf.Max(size.y, 0.0001f));
+
+                renderer.transform.localScale = new Vector3(scale, scale, 1f);
+
+                Log($"cam={(cam ? cam.name : "null")} ortho={(cam ? cam.orthographicSize.ToString("F2") : "-")} " +
+                    $"camAspect={(cam ? cam.aspect.ToString("F2") : "-")} aspect={aspect:F3} " +
+                    $"screen={screenWidth:F2}x{screenHeight:F2} sprite={size.x:F2}x{size.y:F2} scale={scale:F3}");
             }
             catch (Exception ex)
             {
                 Log("Apply 失败: " + ex.Message);
             }
-        }
-
-        private static Sprite BuildGradient(Color top, Color bottom)
-        {
-            if (_gradient && _cachedTop == top && _cachedBottom == bottom) return _gradient;
-
-            const int Width = 4;
-            const int Height = 128;
-
-            var texture = new Texture2D(Width, Height, TextureFormat.ARGB32, false)
-            {
-                wrapMode = TextureWrapMode.Clamp,
-                filterMode = FilterMode.Bilinear
-            };
-
-            for (int y = 0; y < Height; y++)
-            {
-                var color = Color.Lerp(bottom, top, y / (float)(Height - 1));
-                for (int x = 0; x < Width; x++) texture.SetPixel(x, y, color);
-            }
-
-            texture.Apply();
-            texture.hideFlags |= HideFlags.HideAndDontSave;
-
-            if (_gradient) Object.Destroy(_gradient);
-            _gradient = Sprite.Create(texture, new Rect(0f, 0f, Width, Height), new Vector2(0.5f, 0.5f), 100f);
-            _gradient.hideFlags |= HideFlags.HideAndDontSave;
-
-            _cachedTop = top;
-            _cachedBottom = bottom;
-            return _gradient;
         }
 
         private static void Log(string message)

@@ -24,6 +24,7 @@ namespace TheOtherRoles.Patches
         private static bool _dumped;
         private static bool _hooked;
         private static bool _lateDumped;
+        private static int _popupTick;
         private static float _enforceUntil;
         private static float _lateDumpAt;
 
@@ -64,6 +65,12 @@ namespace TheOtherRoles.Patches
         private static readonly List<Transform> _keptRoots = new List<Transform>();
         private static readonly List<GameObject> _disabledObjects = new List<GameObject>();
 
+        private static void RepairPlayFlow()
+        {
+            if (_menu && _menu.rightPanelMask && !_menu.rightPanelMask.activeSelf)
+                _menu.rightPanelMask.SetActive(true);
+        }
+
         public static void Hide(MainMenuManager instance)
         {
             _menu = instance;
@@ -88,6 +95,7 @@ namespace TheOtherRoles.Patches
             Step("ClearModUpdateButton", ClearModUpdateButton);
             Step("ClearVersionText", ClearVersionText);
             Step("SweepVisible", SweepMenu);
+            Step("RepairPlayFlow", RepairPlayFlow);
 
             if (!_dumped)
             {
@@ -105,6 +113,8 @@ namespace TheOtherRoles.Patches
                 _lateDumped = true;
                 Step("DumpLate", Dump);
             }
+
+            Step("WatchPopup", WatchPopup);
 
             if (Time.time > _enforceUntil) return;
 
@@ -213,7 +223,7 @@ namespace TheOtherRoles.Patches
                 if (renderer) renderer.enabled = false;
             }
 
-            if (_menu && _menu.rightPanelMask) _menu.rightPanelMask.SetActive(false);
+            if (_menu && _menu.rightPanelMask) _menu.rightPanelMask.SetActive(true);
         }
 
         private static void ClearDivider()
@@ -246,6 +256,7 @@ namespace TheOtherRoles.Patches
                 _menu.PlayOnlineButton, _menu.playLocalButton, _menu.findGameButton,
                 _menu.createGameButton, _menu.backButtonOnline, _menu.entercodeField,
                 _menu.onlineButtonsContainer, _menu.enterCodeContainer,
+                _menu.screenTint,
             };
 
             foreach (var component in kept)
@@ -368,6 +379,7 @@ namespace TheOtherRoles.Patches
             SweepAll<SpriteRenderer>(component =>
             {
                 if (!component.enabled) return;
+                if (!component.gameObject.activeInHierarchy) return;
                 _disabledRenderers.Add(component);
                 component.enabled = false;
             }, keepRenderers: false);
@@ -375,7 +387,7 @@ namespace TheOtherRoles.Patches
             SweepAll<TMPro.TextMeshPro>(component =>
             {
                 var go = component.gameObject;
-                if (!go.activeSelf) return;
+                if (!go.activeInHierarchy) return;
                 _disabledObjects.Add(go);
                 go.SetActive(false);
             }, keepRenderers: true);
@@ -491,6 +503,7 @@ namespace TheOtherRoles.Patches
             _logoParent = null;
             _dumped = false;
             _lateDumped = false;
+            _popupTick = 0;
             _enforceUntil = 0f;
             _lateDumpAt = 0f;
         }
@@ -511,6 +524,70 @@ namespace TheOtherRoles.Patches
             Step("DumpPlayFlow", () => DumpPlayFlow(builder));
 
             Step("DumpLog", () => TheOtherRolesPlugin.Logger.LogInfo(builder.ToString()));
+        }
+
+        private static void WatchPopup()
+        {
+            if (!_menu) return;
+
+            if (++_popupTick % 15 != 0) return;
+            if (!PopupOpen()) return;
+
+            Step("CleanPopupImages", CleanPopupImages);
+        }
+
+        private static void CleanPopupImages()
+        {
+            if (!_menu || !_menu.creditsScreen) return;
+
+            foreach (var image in _menu.creditsScreen.GetComponentsInChildren<UnityEngine.UI.Image>(true))
+            {
+                if (!image || !image.gameObject) continue;
+                if (!IsBigWhite(image.rectTransform, image.color, image.sprite)) continue;
+
+                image.color = new Vector4(image.color.r, image.color.g, image.color.b, 0f);
+            }
+
+            foreach (var raw in _menu.creditsScreen.GetComponentsInChildren<UnityEngine.UI.RawImage>(true))
+            {
+                if (!raw || !raw.gameObject) continue;
+                if (!IsBigWhite(raw.rectTransform, raw.color, raw.texture)) continue;
+
+                raw.color = new Vector4(raw.color.r, raw.color.g, raw.color.b, 0f);
+            }
+        }
+
+        private static bool IsBigWhite(RectTransform rect, Color color, UnityEngine.Object asset)
+        {
+            if (asset && asset.name != "blank" && asset.name != "White") return false;
+
+            var size = rect ? rect.rect.size : Vector2.zero;
+            if (size.x * size.y < 200000f) return false;
+
+            return color.r > 0.9f && color.g > 0.9f && color.b > 0.9f && color.a > 0.5f;
+        }
+
+        private static bool PopupOpen()
+        {
+            if (_menu.screenTint && _menu.screenTint.enabled) return true;
+            if (FindActive<CreditsScreenPopUp>()) return true;
+            if (FindActive<AnnouncementPopUp>()) return true;
+            if (MainMenuSetUpPatch.modScreen && MainMenuSetUpPatch.modScreen.activeInHierarchy) return true;
+
+            return false;
+        }
+
+        private static bool FindActive<T>() where T : Component
+        {
+            var type = Il2CppInterop.Runtime.Il2CppType.Of<T>();
+
+            foreach (var entry in Object.FindObjectsOfTypeIncludingAssets(type))
+            {
+                var component = entry ? entry.TryCast<T>() : null;
+                if (component && component.gameObject && component.gameObject.activeInHierarchy) return true;
+            }
+
+            return false;
         }
 
         private static void DumpPlayFlow(StringBuilder builder)
@@ -695,7 +772,7 @@ namespace TheOtherRoles.Patches
             return null;
         }
 
-        private static GameObject FindInChildren(Transform root, string name)
+        public static GameObject FindInChildren(Transform root, string name)
         {
             if (root == null) return null;
 
