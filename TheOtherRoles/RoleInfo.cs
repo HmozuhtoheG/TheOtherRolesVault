@@ -161,6 +161,13 @@ namespace TheOtherRoles
         public static RoleInfo diseased = new("diseased", Color.yellow, RoleId.Diseased, false, true);
         public static RoleInfo radar = new("radar", Color.yellow, RoleId.Radar, false, true);
         public static RoleInfo armored = new("armored", Color.yellow, RoleId.Armored, false, true);
+        public static RoleInfo gravedigger = new("gravedigger", Color.yellow, RoleId.Gravedigger, false, true);
+        public static RoleInfo gambler = new("gambler", Gambler.color, RoleId.Gambler, false, true);
+        public static RoleInfo layabout = new("layabout", Color.yellow, RoleId.Layabout, false, true);
+        public static RoleInfo peeker = new("peeker", Color.yellow, RoleId.Peeker, false, true);
+        public static RoleInfo superstar = new("superstar", Superstar.color, RoleId.Superstar, false, true);
+        public static RoleInfo nightOwl = new("nightOwl", Color.yellow, RoleId.NightOwl, false, true);
+        public static RoleInfo scatterer = new("scatterer", Color.yellow, RoleId.Scatterer, false, true);
         //public static RoleInfo shifter = new RoleInfo("Shifter", Color.yellow, "Shift your role", "Shift your role", RoleId.Shifter, false, true);
 
         public static List<RoleInfo> Killing = [
@@ -406,6 +413,13 @@ namespace TheOtherRoles
             energyamplifier,
             illusionist,
             agnosia,
+            gravedigger,
+            gambler,
+            layabout,
+            peeker,
+            superstar,
+            nightOwl,
+            scatterer,
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
@@ -432,6 +446,13 @@ namespace TheOtherRoles
                 if (Diseased.diseased.Any(x => x.PlayerId == p.PlayerId)) infos.Add(diseased);
                 if (p == Radar.radar) infos.Add(radar);
                 if (Racer.racer.Any(x => x.PlayerId == p.PlayerId)) infos.Add(racer);
+                if (p == Gravedigger.gravedigger) infos.Add(gravedigger);
+                if (p == Gambler.gambler) infos.Add(gambler);
+                if (p == Layabout.layabout) infos.Add(layabout);
+                if (p == Peeker.peeker) infos.Add(peeker);
+                if (p == Superstar.superstar) infos.Add(superstar);
+                if (p == NightOwl.nightOwl) infos.Add(nightOwl);
+                if (Scatterer.isScatterer(p)) infos.Add(scatterer);
                 //if (p == Shifter.shifter) infos.Add(shifter);
             }
 

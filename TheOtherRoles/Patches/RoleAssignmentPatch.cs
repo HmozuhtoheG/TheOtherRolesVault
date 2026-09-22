@@ -587,7 +587,14 @@ namespace TheOtherRoles.Patches {
                 RoleId.Multitasker,
                 RoleId.Diseased,
                 RoleId.Radar,
-                RoleId.Racer
+                RoleId.Racer,
+                RoleId.Gravedigger,
+                RoleId.Gambler,
+                RoleId.Layabout,
+                RoleId.Peeker,
+                RoleId.Superstar,
+                RoleId.NightOwl,
+                RoleId.Scatterer
                 //RoleId.Shifter
             });
 
@@ -817,6 +824,89 @@ namespace TheOtherRoles.Patches {
                 modifiers.RemoveAll(x => x == RoleId.Diseased);
             }
 
+            if (modifiers.Contains(RoleId.Scatterer))
+            {
+                var scattererPool = playerList.Where(x => Helpers.isKiller(x)).ToList();
+                var scattererCount = 0;
+                while (scattererCount < modifiers.FindAll(x => x == RoleId.Scatterer).Count)
+                {
+                    if (scattererPool.Count == 0) break;
+                    playerId = setModifierToRandomPlayer((byte)RoleId.Scatterer, scattererPool);
+                    scattererPool.RemoveAll(x => x.PlayerId == playerId);
+                    crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+                    playerList.RemoveAll(x => x.PlayerId == playerId);
+                    scattererCount++;
+                }
+                modifiers.RemoveAll(x => x == RoleId.Scatterer);
+            }
+
+            if (modifiers.Contains(RoleId.NightOwl))
+            {
+                var impPool = playerList.Where(x => x.Data.Role.IsImpostor).ToList();
+                var nightOwlCount = 0;
+                while (nightOwlCount < modifiers.FindAll(x => x == RoleId.NightOwl).Count)
+                {
+                    if (impPool.Count == 0) break;
+                    playerId = setModifierToRandomPlayer((byte)RoleId.NightOwl, impPool);
+                    impPool.RemoveAll(x => x.PlayerId == playerId);
+                    crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+                    playerList.RemoveAll(x => x.PlayerId == playerId);
+                    nightOwlCount++;
+                }
+                modifiers.RemoveAll(x => x == RoleId.NightOwl);
+            }
+
+            if (modifiers.Contains(RoleId.Superstar))
+            {
+                var superstarCount = 0;
+                while (superstarCount < modifiers.FindAll(x => x == RoleId.Superstar).Count)
+                {
+                    if (crewPlayer.Count == 0) break;
+                    playerId = setModifierToRandomPlayer((byte)RoleId.Superstar, crewPlayer);
+                    crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+                    playerList.RemoveAll(x => x.PlayerId == playerId);
+                    superstarCount++;
+                }
+                modifiers.RemoveAll(x => x == RoleId.Superstar);
+            }
+
+            if (modifiers.Contains(RoleId.Layabout))
+            {
+                var layaboutCount = 0;
+                while (layaboutCount < modifiers.FindAll(x => x == RoleId.Layabout).Count)
+                {
+                    if (crewPlayer.Count == 0) break;
+                    playerId = setModifierToRandomPlayer((byte)RoleId.Layabout, crewPlayer);
+                    crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+                    playerList.RemoveAll(x => x.PlayerId == playerId);
+                    layaboutCount++;
+                }
+                modifiers.RemoveAll(x => x == RoleId.Layabout);
+            }
+
+            if (modifiers.Contains(RoleId.Gambler))
+            {
+                var gamblerPool = new List<PlayerControl>();
+                if (CustomOptionHolder.modifierGamblerAssignCrew.getBool()) gamblerPool.AddRange(crewPlayer);
+                if (CustomOptionHolder.modifierGamblerAssignImpostor.getBool()) gamblerPool.AddRange(playerList.Where(x => x.Data.Role.IsImpostor));
+                if (CustomOptionHolder.modifierGamblerAssignNeutral.getBool()) gamblerPool.AddRange(playerList.Where(x => !x.Data.Role.IsImpostor && Helpers.isNeutral(x)));
+
+                gamblerPool = gamblerPool.GroupBy(x => x.PlayerId).Select(g => g.First())
+                    .Where(x => !x.isRole(RoleId.NiceGuesser) && !x.isRole(RoleId.EvilGuesser) && !x.isRole(RoleId.Doomsayer)).ToList();
+
+                var gamblerCount = 0;
+                while (gamblerCount < modifiers.FindAll(x => x == RoleId.Gambler).Count)
+                {
+                    if (gamblerPool.Count == 0) break;
+                    playerId = setModifierToRandomPlayer((byte)RoleId.Gambler, gamblerPool);
+                    gamblerPool.RemoveAll(x => x.PlayerId == playerId);
+                    crewPlayer.RemoveAll(x => x.PlayerId == playerId);
+                    playerList.RemoveAll(x => x.PlayerId == playerId);
+                    gamblerCount++;
+                }
+                modifiers.RemoveAll(x => x == RoleId.Gambler);
+            }
+
             foreach (RoleId modifier in modifiers) {
                 if (playerList.Count == 0) break;
                 playerId = setModifierToRandomPlayer((byte)modifier, playerList);
@@ -889,6 +979,28 @@ namespace TheOtherRoles.Patches {
                     break;
                 case RoleId.Radar:
                     selection = CustomOptionHolder.modifierRadar.getSelection();
+                    break;
+                case RoleId.Gravedigger:
+                    selection = CustomOptionHolder.modifierGravedigger.getSelection();
+                    break;
+                case RoleId.Gambler:
+                    selection = CustomOptionHolder.modifierGambler.getSelection();
+                    break;
+                case RoleId.Layabout:
+                    selection = CustomOptionHolder.modifierLayabout.getSelection();
+                    break;
+                case RoleId.Peeker:
+                    selection = CustomOptionHolder.modifierPeeker.getSelection();
+                    break;
+                case RoleId.Superstar:
+                    selection = CustomOptionHolder.modifierSuperstar.getSelection();
+                    break;
+                case RoleId.NightOwl:
+                    selection = CustomOptionHolder.modifierNightOwl.getSelection();
+                    break;
+                case RoleId.Scatterer:
+                    selection = CustomOptionHolder.modifierScatterer.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierScattererQuantity.getQuantity();
                     break;
                     //case RoleId.Shifter:
                     //selection = CustomOptionHolder.modifierShifter.getSelection();

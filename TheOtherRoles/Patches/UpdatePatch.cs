@@ -468,6 +468,17 @@ namespace TheOtherRoles.Patches {
                             player.NameText.text += suffix;
             }
 
+            // Superstar
+            if (Superstar.superstar != null && Superstar.superstar.Data != null)
+            {
+                string star = Helpers.cs(Superstar.color, " ★");
+                Superstar.superstar.cosmetics.nameText.text += star;
+                if (MeetingHud.Instance != null)
+                    foreach (PlayerVoteArea player in MeetingHud.Instance.playerStates)
+                        if (player.PlayerId == Superstar.superstar.PlayerId)
+                            player.NameText.text += star;
+            }
+
             // Add medic shield info:
             foreach (var medic in Medic.players) {
                 if (MeetingHud.Instance != null && Medic.shieldVisible(medic.shielded)) {
@@ -609,6 +620,7 @@ namespace TheOtherRoles.Patches {
             
             EventUtility.Update();
 
+            Scatterer.createButton();
             CustomButton.HudUpdate();
             racerBoardExitHotkey();
             racerGearShiftHotkey();

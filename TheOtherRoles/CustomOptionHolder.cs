@@ -91,6 +91,7 @@ namespace TheOtherRoles {
         public static CustomRoleOption guesserSpawnRate;
         public static CustomOption guesserIsImpGuesserRate;
         public static CustomOption guesserNumberOfShots;
+        public static CustomOption guesserSafeGuesses;
         public static CustomOption guesserHasMultipleShotsPerMeeting;
         public static CustomOption guesserKillsThroughShield;
         public static CustomOption guesserEvilCanKillSpy;
@@ -633,6 +634,26 @@ namespace TheOtherRoles {
         public static CustomOption modifierRacerSpeedBoost;
         public static CustomOption modifierRacerMeetingsUntilDespawn;
 
+        public static CustomOption modifierGravedigger;
+
+        public static CustomOption modifierGambler;
+        public static CustomOption modifierGamblerAssignCrew;
+        public static CustomOption modifierGamblerAssignImpostor;
+        public static CustomOption modifierGamblerAssignNeutral;
+        public static CustomOption modifierGamblerShotsPerMeeting;
+        public static CustomOption modifierGamblerShotsTotal;
+
+        public static CustomOption modifierLayabout;
+
+        public static CustomOption modifierPeeker;
+
+        public static CustomOption modifierSuperstar;
+
+        public static CustomOption modifierNightOwl;
+
+        public static CustomOption modifierScatterer;
+        public static CustomOption modifierScattererQuantity;
+
         public static CustomRoleOption bomberSpawnRate;
         public static CustomOption bomberCooldown;
         public static CustomOption bomberDuration;
@@ -1028,6 +1049,7 @@ namespace TheOtherRoles {
             guesserIsImpGuesserRate = CustomOption.Create(311, Types.Neutral, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
             guesserNumberOfShots = CustomOption.Create(312, Types.Neutral, "guesserNumberOfShots", 2f, 1f, 24f, 1f, guesserSpawnRate, false, "unitShots");
             guesserHasMultipleShotsPerMeeting = CustomOption.Create(313, Types.Neutral, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
+            guesserSafeGuesses = CustomOption.Create(314, Types.Neutral, "guesserSafeGuesses", 0f, 0f, 10f, 1f, guesserSpawnRate, false, "unitShots");
             guesserKillsThroughShield  = CustomOption.Create(315, Types.Neutral, "guesserKillsThroughShield", true, guesserSpawnRate);
             guesserEvilCanKillSpy  = CustomOption.Create(316, Types.Neutral, "guesserEvilCanKillSpy", true, guesserSpawnRate);
             guesserSpawnBothRate = CustomOption.Create(317, Types.Neutral, "guesserSpawnBothRate", rates, guesserSpawnRate);
@@ -1475,6 +1497,26 @@ namespace TheOtherRoles {
             modifierRacerQuantity = CustomOption.Create(9201, Types.Modifier, cs(Color.yellow, "racerQuantity"), ratesModifier, modifierRacer);
             modifierRacerSpeedBoost = CustomOption.Create(9202, Types.Modifier, "modifierRacerSpeedBoost", 0.3f, 0.1f, 1f, 0.1f, modifierRacer, false, "unitTimes");
             modifierRacerMeetingsUntilDespawn = CustomOption.Create(9203, Types.Modifier, "modifierRacerMeetingsUntilDespawn", 3f, 1f, 10f, 1f, modifierRacer, false, "unitMeetings");
+
+            modifierGravedigger = CustomOption.Create(1110, Types.Modifier, cs(Color.yellow, "gravedigger"), rates, null, true, color: Color.yellow);
+
+            modifierGambler = CustomOption.Create(1111, Types.Modifier, cs(Gambler.color, "gambler"), rates, null, true, color: Gambler.color);
+            modifierGamblerAssignCrew = CustomOption.Create(1112, Types.Modifier, "modifierGamblerAssignCrew", true, modifierGambler);
+            modifierGamblerAssignImpostor = CustomOption.Create(1113, Types.Modifier, "modifierGamblerAssignImpostor", true, modifierGambler);
+            modifierGamblerAssignNeutral = CustomOption.Create(1114, Types.Modifier, "modifierGamblerAssignNeutral", true, modifierGambler);
+            modifierGamblerShotsPerMeeting = CustomOption.Create(1115, Types.Modifier, "modifierGamblerShotsPerMeeting", 1f, 0f, 10f, 1f, modifierGambler, false, "unitShots");
+            modifierGamblerShotsTotal = CustomOption.Create(1116, Types.Modifier, "modifierGamblerShotsTotal", 2f, 1f, 20f, 1f, modifierGambler, false, "unitShots");
+
+            modifierLayabout = CustomOption.Create(1117, Types.Modifier, cs(Color.yellow, "layabout"), rates, null, true, color: Color.yellow);
+
+            modifierPeeker = CustomOption.Create(1118, Types.Modifier, cs(Color.yellow, "peeker"), rates, null, true, color: Color.yellow);
+
+            modifierSuperstar = CustomOption.Create(1119, Types.Modifier, cs(Superstar.color, "superstar"), rates, null, true, color: Superstar.color);
+
+            modifierNightOwl = CustomOption.Create(1120, Types.Modifier, cs(Color.yellow, "nightOwl"), rates, null, true, color: Color.yellow);
+
+            modifierScatterer = CustomOption.Create(1121, Types.Modifier, cs(Color.yellow, "scatterer"), rates, null, true, color: Color.yellow);
+            modifierScattererQuantity = CustomOption.Create(1122, Types.Modifier, cs(Color.yellow, "scattererQuantity"), ratesModifier, modifierScatterer);
 
             modifierSunglasses = CustomOption.Create(1050, Types.Modifier, cs(Color.yellow, "sunglasses"), rates, null, true, color: Color.yellow);
             modifierSunglassesQuantity = CustomOption.Create(1051, Types.Modifier, cs(Color.yellow, "sunglassesQuantity"), ratesModifier, modifierSunglasses);

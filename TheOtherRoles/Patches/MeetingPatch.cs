@@ -779,6 +779,20 @@ namespace TheOtherRoles.Patches
                                 return;
                             }
 
+                            // Handle Nice / Evil Guesser safe guess
+                            if (dyingTarget == PlayerControl.LocalPlayer) {
+                                if (PlayerControl.LocalPlayer.isRole(RoleId.NiceGuesser) && NiceGuesser.consumeSafeGuess()) {
+                                    Helpers.showFlash(Color.yellow, duration: 0.5f, ModTranslation.getString("guesserSafeGuess"));
+                                    SoundEffectsManager.play("fail");
+                                    return;
+                                }
+                                if (PlayerControl.LocalPlayer.isRole(RoleId.EvilGuesser) && EvilGuesser.consumeSafeGuess()) {
+                                    Helpers.showFlash(Palette.ImpostorRed, duration: 0.5f, ModTranslation.getString("guesserSafeGuess"));
+                                    SoundEffectsManager.play("fail");
+                                    return;
+                                }
+                            }
+
                             bool isSpecialRole = roleInfo == RoleInfo.niceshifter || roleInfo == RoleInfo.niceSwapper;
                             // Shoot player and send chat info if activated
                             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GuesserShoot, Hazel.SendOption.Reliable, -1);
@@ -1079,6 +1093,7 @@ namespace TheOtherRoles.Patches
             }
 
             // Add Godfather Reckoning Buttons
+            Gambler.OnMeetingBegin();
             Godfather.ClearButtons();
 
             if (PlayerControl.LocalPlayer.isRole(RoleId.Godfather))
@@ -1448,6 +1463,18 @@ namespace TheOtherRoles.Patches
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]
         public static void MeetingHudIntroPrefix() {
             EventUtility.meetingStartsUpdate();
+        }
+
+        [HarmonyPatch(typeof(LogicOptionsNormal), nameof(LogicOptionsNormal.GetAnonymousVotes))]
+        class PeekerAnonymousVotesPatch
+        {
+            public static void Postfix(ref bool __result)
+            {
+                if (!__result) return;
+                if (MeetingHud.Instance == null) return;
+                if (!Peeker.isPeeker(PlayerControl.LocalPlayer)) return;
+                __result = false;
+            }
         }
 
     }

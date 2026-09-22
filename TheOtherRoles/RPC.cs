@@ -143,6 +143,13 @@ namespace TheOtherRoles
         Gremlin,
         Illusionist,
         Agnosia,
+        Gravedigger,
+        Gambler,
+        Layabout,
+        Peeker,
+        Superstar,
+        NightOwl,
+        Scatterer,
     }
 
     enum CustomRPC
@@ -828,6 +835,27 @@ namespace TheOtherRoles
                     Racer.racer.Add(player);
                     Racer.CreateCarForOwner(player);
                     break;
+                case RoleId.Gravedigger:
+                    Gravedigger.gravedigger = player;
+                    break;
+                case RoleId.Gambler:
+                    Gambler.gambler = player;
+                    break;
+                case RoleId.Layabout:
+                    Layabout.layabout = player;
+                    break;
+                case RoleId.Peeker:
+                    Peeker.peeker = player;
+                    break;
+                case RoleId.Superstar:
+                    Superstar.superstar = player;
+                    break;
+                case RoleId.NightOwl:
+                    NightOwl.nightOwl = player;
+                    break;
+                case RoleId.Scatterer:
+                    Scatterer.scatterer.Add(player);
+                    break;
                     //case RoleId.Shifter:
                     //Shifter.shifter = player;
                     //break;
@@ -1001,6 +1029,11 @@ namespace TheOtherRoles
                     }
                 }
             });
+
+        public static RemoteProcess<(byte playerId, byte seed)> ScattererScatter = new("ScattererScatter", (message, _) =>
+        {
+            Scatterer.doScatter(message.playerId, message.seed);
+        });
 
         public static RemoteProcess<byte> RpcRevive = RemotePrimitiveProcess.OfByte("ModRpcRevive", (message, _) =>
         {

@@ -305,7 +305,7 @@ namespace TheOtherRoles.Patches {
 
                 if ((Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer.isRole(RoleId.Lawyer) && p == Lawyer.target) || (Akujo.knowsRoles && Akujo.isPartner(PlayerControl.LocalPlayer, p))
                     || p == PlayerControl.LocalPlayer || (PlayerControl.LocalPlayer.Data.IsDead && RoleManager.IsGhostRole(PlayerControl.LocalPlayer.Data.RoleType))
-                    || (Godfather.shouldShowInfo(PlayerControl.LocalPlayer) && Godfather.killed.Contains(p)) || (PlayerControl.LocalPlayer.isRole(RoleId.Snitch) && Snitch.shouldShowRole(PlayerControl.LocalPlayer, p)) || FreePlayGM.isFreePlayGM) {
+                    || (Godfather.shouldShowInfo(PlayerControl.LocalPlayer) && Godfather.killed.Contains(p)) || (PlayerControl.LocalPlayer.isRole(RoleId.Snitch) && Snitch.shouldShowRole(PlayerControl.LocalPlayer, p)) || (Gravedigger.isGravedigger(PlayerControl.LocalPlayer) && Gravedigger.knows(p)) || FreePlayGM.isFreePlayGM) {
                     Transform playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
                     TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
                     if (playerInfo == null) {
@@ -365,6 +365,10 @@ namespace TheOtherRoles.Patches {
                         else {
                             playerInfoText = $"{roleText} {exTaskInfo}".Trim();
                         }
+                        meetingInfoText = playerInfoText;
+                    }
+                    else if (Gravedigger.isGravedigger(PlayerControl.LocalPlayer) && Gravedigger.knows(p)) {
+                        playerInfoText = RoleInfo.GetRolesString(p, true, false, true, true);
                         meetingInfoText = playerInfoText;
                     }
                     else if ((Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer.isRole(RoleId.Lawyer) && p == Lawyer.target)
@@ -795,7 +799,10 @@ namespace TheOtherRoles.Patches {
                         }*/
                     }
                 }
-            }  
+            }
+
+            if (target != null && Gravedigger.isGravedigger(__instance) && PlayerControl.LocalPlayer == __instance)
+                Gravedigger.learn(Helpers.playerById(target.PlayerId));
         }
     }
 

@@ -52,7 +52,7 @@ namespace TheOtherRoles.Roles
         public static Sprite getButtonSprite()
         {
             if (buttonSprite) return buttonSprite;
-            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BrainwashButton.png", 115f);
+            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.CamoButton.png", 115f);
             return buttonSprite;
         }
 
