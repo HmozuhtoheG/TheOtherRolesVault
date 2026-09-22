@@ -14235,8 +14235,8 @@
         "13": "\u62a5\u544a\u5c38\u4f53\uff0c\u5f97\u77e5\u6b7b\u8005\u8eab\u4efd\u3002"
     },
     "gravediggerFullDesc": {
-        "0": "<title>Effect</title>Every time you report a dead body, you learn the role of the player you reported. It is shown under their name.\n<title>Note</title>Only their main role is revealed, and there is no limit on how often it works.\n<title>Inspiration</title>Inspired by Town of Us.",
-        "13": "<title>\u6548\u679c</title>\u4f60\u6bcf\u6b21\u62a5\u544a\u4e00\u5177\u5c38\u4f53\uff0c\u90fd\u4f1a\u5f97\u77e5\u88ab\u62a5\u544a\u8005\u7684\u8eab\u4efd\uff0c\u663e\u793a\u5728\u4ed6\u7684\u540d\u5b57\u4e0b\u65b9\u3002\n<title>\u8bf4\u660e</title>\u53ea\u663e\u793a\u4e3b\u8eab\u4efd\uff0c\u4e0d\u9650\u6b21\u6570\u3002\n<title>\u7075\u611f\u6765\u6e90</title>\u7075\u611f\u6765\u81ea Town of Us\u3002"
+        "0": "<title>Effect</title>Report a dead body to learn who it was. Their role is shown under their name.\n<title>Inspiration</title>Inspired by Town of Us.",
+        "13": "<title>\u6548\u679c</title>\u62a5\u544a\u5c38\u4f53\u5373\u53ef\u5f97\u77e5\u6b7b\u8005\u8eab\u4efd\uff0c\u663e\u793a\u5728\u4ed6\u7684\u540d\u5b57\u4e0b\u65b9\u3002\n<title>\u7075\u611f\u6765\u6e90</title>\u7075\u611f\u6765\u81ea Town of Us\u3002"
     },
     "gravediggerBlurb": {
         "0": "Rest in peace. But first, tell me what you were.",
@@ -14255,8 +14255,8 @@
         "13": "\u5728\u4f1a\u8bae\u4e0a\u731c\u67d0\u4e2a\u73a9\u5bb6\u7684\u8eab\u4efd\u3002"
     },
     "gamblerFullDesc": {
-        "0": "<title>Effect</title>During a meeting, pick a player and guess their role.\n<title>Right and Wrong</title>A correct guess kills the player you guessed. A wrong guess kills you instead.\n<title>Limits</title>How many guesses you get per meeting, and how many you get in total for the whole game, are both configurable.\n<title>Note</title>Any role can be guessed, no matter which side it is on. Modifiers can never be guessed.\n<title>Inspiration</title>Inspired by Town of Us.",
-        "13": "<title>\u6548\u679c</title>\u4f1a\u8bae\u4e2d\u9009\u4e00\u540d\u73a9\u5bb6\uff0c\u731c\u4ed6\u7684\u8eab\u4efd\u3002\n<title>\u5bf9\u4e0e\u9519</title>\u731c\u5bf9\u4e86\uff0c\u88ab\u4f60\u731c\u7684\u4eba\u6b7b\u4ea1\uff1b\u731c\u9519\u4e86\uff0c\u6b7b\u7684\u662f\u4f60\u81ea\u5df1\u3002\n<title>\u6b21\u6570</title>\u6bcf\u573a\u4f1a\u8bae\u7684\u731c\u6d4b\u6b21\u6570\u3001\u4ee5\u53ca\u6574\u5c40\u7684\u731c\u6d4b\u603b\u6b21\u6570\uff0c\u90fd\u53ef\u4ee5\u5728\u8bbe\u7f6e\u91cc\u8c03\u3002\n<title>\u8bf4\u660e</title>\u4efb\u4f55\u8eab\u4efd\u90fd\u80fd\u731c\uff0c\u4e0d\u5206\u9635\u8425\u3002\u4fee\u9970\u7b26\u4e0d\u53ef\u88ab\u731c\u3002\n<title>\u7075\u611f\u6765\u6e90</title>\u7075\u611f\u6765\u81ea Town of Us\u3002"
+        "0": "<title>Effect</title>Guess a player's role during a meeting. Right kills them, wrong kills you.\n<title>Limits</title>Guesses per meeting and in total are set in the options.\n<title>Inspiration</title>Inspired by Town of Us.",
+        "13": "<title>\u6548\u679c</title>\u4f1a\u8bae\u4e2d\u731c\u67d0\u4eba\u7684\u8eab\u4efd\u3002\u731c\u5bf9\u76ee\u6807\u6b7b\uff0c\u731c\u9519\u81ea\u5df1\u6b7b\u3002\n<title>\u6b21\u6570</title>\u6bcf\u573a\u6b21\u6570\u548c\u5168\u5c40\u6b21\u6570\u89c1\u8bbe\u7f6e\u3002\n<title>\u7075\u611f\u6765\u6e90</title>\u7075\u611f\u6765\u81ea Town of Us\u3002"
     },
     "gamblerBlurb": {
         "0": "Fifty percent luck, fifty percent skill, one hundred percent you.",
@@ -14295,8 +14295,8 @@
         "13": "\u4f60\u505a\u7684\u4efb\u52a1\u4e0d\u8ba1\u5165\u4efb\u52a1\u8fdb\u5ea6\u3002"
     },
     "layaboutFullDesc": {
-        "0": "<title>Effect</title>You still get tasks, and you can still do them, but none of them count. Your tasks are left out of the task bar entirely, both the ones you have finished and the ones you have not.\n<title>Note</title>Only Crewmates can be the Layabout.\n<title>Inspiration</title>Inspired by NOS.",
-        "13": "<title>\u6548\u679c</title>\u4f60\u7167\u6837\u6709\u4efb\u52a1\u3001\u4e5f\u80fd\u505a\uff0c\u4f46\u4e00\u4e2a\u90fd\u4e0d\u7b97\u6570\u3002\u4f60\u7684\u4efb\u52a1\u6574\u4e2a\u4eba\u88ab\u6392\u9664\u5728\u4efb\u52a1\u8fdb\u5ea6\u4e4b\u5916\u2014\u2014\u505a\u5b8c\u7684\u6ca1\u505a\u5b8c\u7684\u90fd\u4e0d\u8ba1\u3002\n<title>\u8bf4\u660e</title>\u53ea\u6709\u8239\u5458\u4f1a\u6210\u4e3a\u8eba\u5e73\u8005\u3002\n<title>\u7075\u611f\u6765\u6e90</title>\u7075\u611f\u6765\u81ea NOS\u3002"
+        "0": "<title>Effect</title>Your tasks never count towards the task bar. Doing them is pointless.\n<title>Inspiration</title>Inspired by NOS.",
+        "13": "<title>\u6548\u679c</title>\u4f60\u7684\u4efb\u52a1\u4e0d\u8ba1\u5165\u4efb\u52a1\u8fdb\u5ea6\uff0c\u505a\u4e86\u4e5f\u6ca1\u7528\u3002\n<title>\u7075\u611f\u6765\u6e90</title>\u7075\u611f\u6765\u81ea NOS\u3002"
     },
     "layaboutBlurb": {
         "0": "Work smart, not hard. Or better: not at all.",
@@ -14315,8 +14315,8 @@
         "13": "\u5373\u4f7f\u5f00\u4e86\u533f\u540d\u6295\u7968\uff0c\u4f60\u4e5f\u80fd\u770b\u5230\u8c01\u6295\u4e86\u8c01\u3002"
     },
     "peekerFullDesc": {
-        "0": "<title>Effect</title>Even when the lobby has anonymous votes enabled, you still see who voted for whom.\n<title>Note</title>This applies to you only. Everyone else sees the anonymous result as usual.",
-        "13": "<title>\u6548\u679c</title>\u5373\u4f7f\u623f\u95f4\u5f00\u4e86\u533f\u540d\u6295\u7968\uff0c\u4f60\u4f9d\u7136\u80fd\u770b\u5230\u6bcf\u4e2a\u4eba\u7684\u7968\u6295\u7ed9\u4e86\u8c01\u3002\n<title>\u8bf4\u660e</title>\u53ea\u5bf9\u4f60\u751f\u6548\uff0c\u5176\u4ed6\u4eba\u7684\u754c\u9762\u7167\u65e7\u662f\u533f\u540d\u7684\u3002"
+        "0": "<title>Effect</title>Even with anonymous votes on, you alone see who voted for whom.",
+        "13": "<title>\u6548\u679c</title>\u5373\u4f7f\u5f00\u4e86\u533f\u540d\u6295\u7968\uff0c\u4e5f\u53ea\u6709\u4f60\u80fd\u770b\u5230\u8c01\u6295\u4e86\u8c01\u3002"
     },
     "peekerBlurb": {
         "0": "I saw nothing. I saw everything.",
@@ -14335,8 +14335,8 @@
         "13": "\u4f60\u7684\u540d\u5b57\u65c1\u8fb9\u4f1a\u6709\u4e00\u4e2a\u6240\u6709\u4eba\u90fd\u80fd\u770b\u5230\u7684\u9ec4\u8272\u4e94\u89d2\u661f\u3002"
     },
     "superstarFullDesc": {
-        "0": "<title>Effect</title>A yellow star is shown to the right of your name, and everyone in the lobby can see it.\n<title>Note</title>Only Crewmates can be the Superstar.",
-        "13": "<title>\u6548\u679c</title>\u4f60\u7684\u540d\u5b57\u53f3\u4fa7\u4f1a\u6302\u4e00\u4e2a\u9ec4\u8272\u4e94\u89d2\u661f\uff0c\u5168\u573a\u6240\u6709\u4eba\u90fd\u80fd\u770b\u5230\u3002\n<title>\u8bf4\u660e</title>\u53ea\u6709\u8239\u5458\u4f1a\u6210\u4e3a\u5927\u660e\u661f\u3002"
+        "0": "<title>Effect</title>A yellow star sits next to your name. Everyone can see it.",
+        "13": "<title>\u6548\u679c</title>\u4f60\u7684\u540d\u5b57\u53f3\u8fb9\u6302\u4e00\u4e2a\u9ec4\u8272\u4e94\u89d2\u661f\uff0c\u6240\u6709\u4eba\u90fd\u770b\u5f97\u5230\u3002"
     },
     "superstarBlurb": {
         "0": "Fame is a spotlight you cannot switch off.",
@@ -14355,8 +14355,8 @@
         "13": "\u5173\u706f\u65f6\u4f60\u7684\u89c6\u91ce\u5b8c\u5168\u70b9\u4eae\u3002"
     },
     "nightOwlFullDesc": {
-        "0": "<title>Effect</title>While the lights are sabotaged, your vision is not reduced at all. You see the whole screen with no dark edges.\n<title>Note</title>Only Impostors can be the Night Owl, and it only works while the lights are actually out.",
-        "13": "<title>\u6548\u679c</title>\u706f\u88ab\u7834\u574f\u671f\u95f4\uff0c\u4f60\u7684\u89c6\u91ce\u5b8c\u5168\u4e0d\u53d7\u9650\u5236\u2014\u2014\u6574\u4e2a\u5c4f\u5e55\u90fd\u662f\u4eae\u7684\uff0c\u6ca1\u6709\u4e00\u70b9\u9ed1\u6697\u8fb9\u7f18\u3002\n<title>\u8bf4\u660e</title>\u53ea\u6709\u5185\u9b3c\u4f1a\u6210\u4e3a\u591c\u884c\u8005\uff0c\u4e14\u53ea\u5728\u706f\u786e\u5b9e\u5173\u7740\u65f6\u751f\u6548\u3002"
+        "0": "<title>Effect</title>While the lights are out, your view is fully lit with no blind spot.",
+        "13": "<title>\u6548\u679c</title>\u5173\u706f\u671f\u95f4\u4f60\u7684\u89c6\u91ce\u5b8c\u5168\u70b9\u4eae\uff0c\u6ca1\u6709\u76f2\u533a\u3002"
     },
     "nightOwlBlurb": {
         "0": "The dark was never the problem.",
@@ -14375,8 +14375,8 @@
         "13": "\u6574\u5c40\u9650\u7528\u4e00\u6b21\uff0c\u628a\u6240\u6709\u4eba\u6253\u6563\u5230\u968f\u673a\u7684\u901a\u98ce\u7ba1\u3002"
     },
     "scattererFullDesc": {
-        "0": "<title>Effect</title>You get one extra button. Use it once per game and every living player is thrown onto a random vent somewhere on the map.\n<title>Limits</title>Usable once per game only.\n<title>Note</title>Only Impostors and neutral roles that can kill can be the Scatterer.",
-        "13": "<title>\u6548\u679c</title>\u4f60\u591a\u4e00\u4e2a\u6280\u80fd\u6309\u94ae\u3002\u6574\u5c40\u9650\u7528\u4e00\u6b21\uff0c\u6309\u4e0b\u540e\u573a\u4e0a\u6240\u6709\u5b58\u6d3b\u73a9\u5bb6\u88ab\u6253\u6563\u5230\u5730\u56fe\u5185\u968f\u673a\u7684\u901a\u98ce\u7ba1\u4f4d\u7f6e\u3002\n<title>\u6b21\u6570</title>\u6574\u5c40\u53ea\u80fd\u7528\u4e00\u6b21\u3002\n<title>\u8bf4\u660e</title>\u53ea\u6709\u5185\u9b3c\u548c\u5e26\u5200\u7684\u4e2d\u7acb\u4f1a\u6210\u4e3a\u5206\u6563\u8005\u3002"
+        "0": "<title>Effect</title>One extra button, usable once per game. Everyone is thrown onto a random vent.",
+        "13": "<title>\u6548\u679c</title>\u591a\u4e00\u4e2a\u6309\u94ae\uff0c\u6574\u5c40\u9650\u7528\u4e00\u6b21\uff1a\u6240\u6709\u4eba\u88ab\u6253\u6563\u5230\u968f\u673a\u7684\u901a\u98ce\u7ba1\u3002"
     },
     "scattererBlurb": {
         "0": "Nothing personal. Just geography.",
@@ -14401,5 +14401,25 @@
     "guesserSafeGuess": {
         "0": "Wrong guess - not this time.",
         "13": "\u731c\u9519\u4e86\u2014\u2014\u4f46\u8fd9\u6b21\u6b7b\u4e0d\u4e86\u3002"
+    },
+    "gravediggerQuantity": {
+        "0": "Gravedigger quantity",
+        "13": "\u6398\u5893\u8005\u6570\u91cf"
+    },
+    "layaboutQuantity": {
+        "0": "Layabout quantity",
+        "13": "\u8eba\u5e73\u8005\u6570\u91cf"
+    },
+    "peekerQuantity": {
+        "0": "Peeker quantity",
+        "13": "\u7aa5\u7968\u8005\u6570\u91cf"
+    },
+    "superstarQuantity": {
+        "0": "Superstar quantity",
+        "13": "\u5927\u660e\u661f\u6570\u91cf"
+    },
+    "nightOwlQuantity": {
+        "0": "Night Owl quantity",
+        "13": "\u591c\u884c\u8005\u6570\u91cf"
     }
 }

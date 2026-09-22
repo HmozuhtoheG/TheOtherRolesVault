@@ -635,6 +635,7 @@ namespace TheOtherRoles {
         public static CustomOption modifierRacerMeetingsUntilDespawn;
 
         public static CustomOption modifierGravedigger;
+        public static CustomOption modifierGravediggerQuantity;
 
         public static CustomOption modifierGambler;
         public static CustomOption modifierGamblerAssignCrew;
@@ -644,12 +645,16 @@ namespace TheOtherRoles {
         public static CustomOption modifierGamblerShotsTotal;
 
         public static CustomOption modifierLayabout;
+        public static CustomOption modifierLayaboutQuantity;
 
         public static CustomOption modifierPeeker;
+        public static CustomOption modifierPeekerQuantity;
 
         public static CustomOption modifierSuperstar;
+        public static CustomOption modifierSuperstarQuantity;
 
         public static CustomOption modifierNightOwl;
+        public static CustomOption modifierNightOwlQuantity;
 
         public static CustomOption modifierScatterer;
         public static CustomOption modifierScattererQuantity;
@@ -1499,6 +1504,7 @@ namespace TheOtherRoles {
             modifierRacerMeetingsUntilDespawn = CustomOption.Create(9203, Types.Modifier, "modifierRacerMeetingsUntilDespawn", 3f, 1f, 10f, 1f, modifierRacer, false, "unitMeetings");
 
             modifierGravedigger = CustomOption.Create(1110, Types.Modifier, cs(Color.yellow, "gravedigger"), rates, null, true, color: Color.yellow);
+            modifierGravediggerQuantity = CustomOption.Create(1123, Types.Modifier, cs(Color.yellow, "gravediggerQuantity"), ratesModifier, modifierGravedigger);
 
             modifierGambler = CustomOption.Create(1111, Types.Modifier, cs(Gambler.color, "gambler"), rates, null, true, color: Gambler.color);
             modifierGamblerAssignCrew = CustomOption.Create(1112, Types.Modifier, "modifierGamblerAssignCrew", true, modifierGambler);
@@ -1508,12 +1514,16 @@ namespace TheOtherRoles {
             modifierGamblerShotsTotal = CustomOption.Create(1116, Types.Modifier, "modifierGamblerShotsTotal", 2f, 1f, 20f, 1f, modifierGambler, false, "unitShots");
 
             modifierLayabout = CustomOption.Create(1117, Types.Modifier, cs(Color.yellow, "layabout"), rates, null, true, color: Color.yellow);
+            modifierLayaboutQuantity = CustomOption.Create(1124, Types.Modifier, cs(Color.yellow, "layaboutQuantity"), ratesModifier, modifierLayabout);
 
             modifierPeeker = CustomOption.Create(1118, Types.Modifier, cs(Color.yellow, "peeker"), rates, null, true, color: Color.yellow);
+            modifierPeekerQuantity = CustomOption.Create(1125, Types.Modifier, cs(Color.yellow, "peekerQuantity"), ratesModifier, modifierPeeker);
 
             modifierSuperstar = CustomOption.Create(1119, Types.Modifier, cs(Superstar.color, "superstar"), rates, null, true, color: Superstar.color);
+            modifierSuperstarQuantity = CustomOption.Create(1126, Types.Modifier, cs(Superstar.color, "superstarQuantity"), ratesModifier, modifierSuperstar);
 
             modifierNightOwl = CustomOption.Create(1120, Types.Modifier, cs(Color.yellow, "nightOwl"), rates, null, true, color: Color.yellow);
+            modifierNightOwlQuantity = CustomOption.Create(1127, Types.Modifier, cs(Color.yellow, "nightOwlQuantity"), ratesModifier, modifierNightOwl);
 
             modifierScatterer = CustomOption.Create(1121, Types.Modifier, cs(Color.yellow, "scatterer"), rates, null, true, color: Color.yellow);
             modifierScattererQuantity = CustomOption.Create(1122, Types.Modifier, cs(Color.yellow, "scattererQuantity"), ratesModifier, modifierScatterer);

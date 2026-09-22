@@ -982,21 +982,26 @@ namespace TheOtherRoles.Patches {
                     break;
                 case RoleId.Gravedigger:
                     selection = CustomOptionHolder.modifierGravedigger.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierGravediggerQuantity.getQuantity();
                     break;
                 case RoleId.Gambler:
                     selection = CustomOptionHolder.modifierGambler.getSelection();
                     break;
                 case RoleId.Layabout:
                     selection = CustomOptionHolder.modifierLayabout.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierLayaboutQuantity.getQuantity();
                     break;
                 case RoleId.Peeker:
                     selection = CustomOptionHolder.modifierPeeker.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierPeekerQuantity.getQuantity();
                     break;
                 case RoleId.Superstar:
                     selection = CustomOptionHolder.modifierSuperstar.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierSuperstarQuantity.getQuantity();
                     break;
                 case RoleId.NightOwl:
                     selection = CustomOptionHolder.modifierNightOwl.getSelection();
+                    if (multiplyQuantity) selection *= CustomOptionHolder.modifierNightOwlQuantity.getQuantity();
                     break;
                 case RoleId.Scatterer:
                     selection = CustomOptionHolder.modifierScatterer.getSelection();
