@@ -141,6 +141,7 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.Zephyr, CustomOptionHolder.zephyrSpawnRate.data);
             impSettings.Add((byte)RoleId.Illusionist, CustomOptionHolder.illusionistSpawnRate.data);
             impSettings.Add((byte)RoleId.Agnosia, CustomOptionHolder.agnosiaSpawnRate.data);
+            impSettings.Add((byte)RoleId.VoidEater, CustomOptionHolder.voidEaterSpawnRate.data);
 
             neutralSettings.Add((byte)RoleId.Jester, CustomOptionHolder.jesterSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.data);
@@ -162,8 +163,8 @@ namespace TheOtherRoles.Patches {
             neutralSettings.Add((byte)RoleId.Yandere, CustomOptionHolder.yandereSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Lawyer, CustomOptionHolder.lawyerSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Workaholic, CustomOptionHolder.workaholicSpawnRate.data);
-            neutralSettings.Add((byte)RoleId.VoidEater, CustomOptionHolder.voidEaterSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Gremlin, CustomOptionHolder.gremlinSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.PlayerRole, CustomOptionHolder.playerRoleSpawnRate.data);
 
             crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.data);
             crewSettings.Add((byte)RoleId.Portalmaker, CustomOptionHolder.portalmakerSpawnRate.data);
@@ -297,6 +298,32 @@ namespace TheOtherRoles.Patches {
 
                 if (evilCount > 0)
                     data.impSettings.Add((byte)RoleId.EvilWatcher, (CustomOptionHolder.watcherSpawnRate.getSelection(), evilCount));
+            }
+
+            if (CustomOptionHolder.voteEaterSpawnRate.getSelection() > 0)
+            {
+                int voteEaterNiceCount = 0;
+                int voteEaterEvilCount = 0;
+                while (voteEaterNiceCount + voteEaterEvilCount < CustomOptionHolder.voteEaterSpawnRate.count)
+                {
+                    if (CustomOptionHolder.voteEaterAssignEqually.getSelection() == 0)
+                    {
+                        voteEaterNiceCount++;
+                        voteEaterEvilCount++;
+                    }
+                    else
+                    {
+                        bool isEvil = rnd.Next(1, 101) <= CustomOptionHolder.voteEaterIsImpVoteEaterRate.getSelection() * 10;
+                        if (isEvil) voteEaterEvilCount++;
+                        else voteEaterNiceCount++;
+                    }
+                }
+
+                if (voteEaterNiceCount > 0)
+                    data.crewSettings.Add((byte)RoleId.NiceVoteEater, (CustomOptionHolder.voteEaterSpawnRate.getSelection(), voteEaterNiceCount));
+
+                if (voteEaterEvilCount > 0)
+                    data.impSettings.Add((byte)RoleId.EvilVoteEater, (CustomOptionHolder.voteEaterSpawnRate.getSelection(), voteEaterEvilCount));
             }
 
             // Assign Sheriff

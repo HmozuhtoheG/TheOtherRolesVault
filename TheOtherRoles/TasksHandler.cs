@@ -58,6 +58,8 @@ namespace TheOtherRoles {
                         || (SchrodingersCat.hideRole && playerInfo.Object.isRole(RoleId.SchrodingersCat))
                         || playerInfo.Object.isRole(RoleId.JekyllAndHyde)
                         || playerInfo.Object.isRole(RoleId.Fox)
+                        || playerInfo.Object.isRole(RoleId.PlayerRole)
+                        || playerInfo.Object.isRole(RoleId.Workaholic)
                         || Layabout.isLayabout(playerInfo.Object))
                         )
                         continue;

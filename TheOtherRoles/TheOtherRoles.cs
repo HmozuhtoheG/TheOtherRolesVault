@@ -119,6 +119,8 @@ namespace TheOtherRoles
             Gremlin.clearAndReload();
             Illusionist.clearAndReload();
             Agnosia.clearAndReload();
+            PlayerRole.clearAndReload();
+            VoteEater.clearAndReload();
             Role.ClearAll();
 
             // Modifier
@@ -252,7 +254,10 @@ namespace TheOtherRoles
                 { RoleId.VoidEater, typeof(RoleBase<VoidEater>) },
                 { RoleId.Gremlin, typeof(RoleBase<Gremlin>) },
                 { RoleId.Illusionist, typeof(RoleBase<Illusionist>) },
-                { RoleId.Agnosia, typeof(RoleBase<Agnosia>) }
+                { RoleId.Agnosia, typeof(RoleBase<Agnosia>) },
+                { RoleId.PlayerRole, typeof(RoleBase<PlayerRole>) },
+                { RoleId.NiceVoteEater, typeof(RoleBase<NiceVoteEater>) },
+                { RoleId.EvilVoteEater, typeof(RoleBase<EvilVoteEater>) }
             };
 
             public static IEnumerable<HelpSprite> GetHelp(RoleId roleId)

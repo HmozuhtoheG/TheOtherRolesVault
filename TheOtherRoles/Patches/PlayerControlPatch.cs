@@ -104,13 +104,6 @@ namespace TheOtherRoles.Patches {
                     color = Color.yellow;
                 }
 
-                // Workaholic shield outline (yellow) when shield is active
-                if (Workaholic.isShielded(target) && !hasVisibleShield)
-                {
-                    hasVisibleShield = true;
-                    color = Color.yellow;
-                }
-
                 if (hasVisibleShield) {
                 target.cosmetics.currentBodySprite.BodySprite.material.SetFloat("_Outline", 1f);
                 target.cosmetics.currentBodySprite.BodySprite.material.SetColor("_OutlineColor", color);
@@ -1215,6 +1208,19 @@ namespace TheOtherRoles.Patches {
 
                 if (Racer.isInjured(__instance.myPlayer) && (racerCar == null || racerCar.passengerId != __instance.myPlayer.PlayerId))
                     __instance.body.velocity *= Racer.injurySlowFactor;
+            }
+
+            if (__instance.AmOwner &&
+                AmongUsClient.Instance &&
+                AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+                !PlayerControl.LocalPlayer.Data.IsDead &&
+                GameData.Instance &&
+                __instance.body != null &&
+                __instance.myPlayer.CanMove &&
+                VoidEater.local != null &&
+                VoidEater.local.speedBoostTimer > 0f)
+            {
+                __instance.body.velocity *= 1f + VoidEater.speedBoostMultiplier;
             }
 
             Kataomoi.fixedUpdate(__instance);

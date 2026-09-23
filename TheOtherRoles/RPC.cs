@@ -150,6 +150,9 @@ namespace TheOtherRoles
         Superstar,
         NightOwl,
         Scatterer,
+        PlayerRole,
+        NiceVoteEater,
+        EvilVoteEater,
     }
 
     enum CustomRPC
@@ -917,7 +920,7 @@ namespace TheOtherRoles
                     if (workaholic != null)
                     {
                         workaholic.shieldTimer = 0f;
-                        Workaholic.BreakShield.Invoke(sourceId);
+                        Workaholic.BreakShield.Invoke((sourceId, targetId));
                     }
                     source.killTimer = source.GetKillCooldown();
                     return;
@@ -1569,6 +1572,7 @@ namespace TheOtherRoles
                         pva.Overlay.gameObject.SetActive(true);
                         MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, targetId);
                         MeetingHudPatch.yasunaCheckAndReturnSpecialVote(MeetingHud.Instance, targetId);
+                        MeetingHudPatch.voteEaterCheckAndReturnUses(MeetingHud.Instance, targetId);
                     }
 
                     // Give players back their vote if target is shot dead

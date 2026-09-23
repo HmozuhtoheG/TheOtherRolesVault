@@ -728,6 +728,9 @@ public static class HelpMenu
                 { RoleId.Workaholic, CustomOptionHolder.workaholicSpawnRate },
                 { RoleId.VoidEater, CustomOptionHolder.voidEaterSpawnRate },
                 { RoleId.Gremlin, CustomOptionHolder.gremlinSpawnRate },
+                { RoleId.PlayerRole, CustomOptionHolder.playerRoleSpawnRate },
+                { RoleId.NiceVoteEater, CustomOptionHolder.voteEaterSpawnRate },
+                { RoleId.EvilVoteEater, CustomOptionHolder.voteEaterSpawnRate },
                 { RoleId.Illusionist, CustomOptionHolder.illusionistSpawnRate },
                 { RoleId.Agnosia, CustomOptionHolder.agnosiaSpawnRate },
                 { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate },
@@ -785,7 +788,8 @@ public static class HelpMenu
             ("plagueDoctorWin", PlagueDoctor.color, ["plagueDoctorWinCondHint"], CustomOptionHolder.plagueDoctorSpawnRate),
             ("akujoWin", Akujo.color, ["akujoWinCondHint"], CustomOptionHolder.akujoSpawnRate),
             ("foxWin", Fox.color, ["foxWinCondHint"], CustomOptionHolder.foxSpawnRate),
-            ("gremlinWin", Gremlin.color, ["gremlinWinCondHint"], CustomOptionHolder.gremlinSpawnRate)
+            ("gremlinWin", Gremlin.color, ["gremlinWinCondHint"], CustomOptionHolder.gremlinSpawnRate),
+            ("playerRoleWin", PlayerRole.color, ["playerRoleWinCondHint"], CustomOptionHolder.playerRoleSpawnRate)
         ];
     }
 

@@ -696,7 +696,7 @@ namespace TheOtherRoles
         }
 
         public static bool shouldClearTask(this PlayerControl target) => (target.hasFakeTasks() || target.isRole(RoleId.Thief) || (target.isRole(RoleId.Shifter) && Shifter.isNeutral) || (target.isRole(RoleId.TaskMaster) && target.PlayerId == PlayerControl.LocalPlayer.PlayerId && TaskMaster.isTaskComplete)
-                || Madmate.madmate.Any(x => x.PlayerId == target.PlayerId) || CreatedMadmate.createdMadmate.Any(x => x.PlayerId == target.PlayerId) || target.isRole(RoleId.JekyllAndHyde) || target.isRole(RoleId.Fox)) && !FreePlayGM.isFreePlayGM;
+                || Madmate.madmate.Any(x => x.PlayerId == target.PlayerId) || CreatedMadmate.createdMadmate.Any(x => x.PlayerId == target.PlayerId) || target.isRole(RoleId.JekyllAndHyde) || target.isRole(RoleId.Fox) || target.isRole(RoleId.PlayerRole)) && !FreePlayGM.isFreePlayGM;
 
         public static void clearAllTasks(this PlayerControl player) {
             if (player == null) return;
@@ -988,6 +988,7 @@ namespace TheOtherRoles
             if (player.isRole(RoleId.Agnosia)) return Agnosia.isActive(player) ? Agnosia.killCooldownActive : Agnosia.killCooldownIdle;
             if (player.isRole(RoleId.SerialKiller)) return SerialKiller.killCooldown;
             if (player.isRole(RoleId.SchrodingersCat)) return SchrodingersCat.killCooldown;
+            if (player.isRole(RoleId.PlayerRole)) return PlayerRole.getCooldownOf(player);
             return GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
         }
 
@@ -2157,7 +2158,7 @@ namespace TheOtherRoles
                 if (workaholic != null)
                 {
                     workaholic.shieldTimer = 0f;
-                    Workaholic.BreakShield.Invoke(killer.PlayerId);
+                    Workaholic.BreakShield.Invoke((killer.PlayerId, target.PlayerId));
                 }
                 return MurderAttemptResult.SuppressKill;
             }

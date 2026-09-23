@@ -132,12 +132,15 @@ namespace TheOtherRoles
         public static RoleInfo doomsayer = new("doomsayer", Doomsayer.color, RoleId.Doomsayer, true);
         public static RoleInfo pelican = new("pelican", Pelican.color, RoleId.Pelican, true);
         public static RoleInfo yandere = new("yandere", Yandere.color, RoleId.Yandere, true);
-        public static RoleInfo voidEater = new("voidEater", VoidEater.color, RoleId.VoidEater, true);
+        public static RoleInfo voidEater = new("voidEater", VoidEater.color, RoleId.VoidEater);
         public static RoleInfo workaholic = new("workaholic", Workaholic.color, RoleId.Workaholic, true);
         public static RoleInfo martyr = new("martyr", Martyr.color, RoleId.Martyr);
         public static RoleInfo gremlin = new("gremlin", Gremlin.color, RoleId.Gremlin, true);
         public static RoleInfo illusionist = new("illusionist", Illusionist.color, RoleId.Illusionist);
         public static RoleInfo agnosia = new("agnosia", Agnosia.color, RoleId.Agnosia);
+        public static RoleInfo playerRole = new("playerRole", PlayerRole.color, RoleId.PlayerRole, true);
+        public static RoleInfo niceVoteEater = new("niceVoteEater", VoteEater.color, RoleId.NiceVoteEater);
+        public static RoleInfo evilVoteEater = new("evilVoteEater", Palette.ImpostorRed, RoleId.EvilVoteEater);
 
         public static RoleInfo hunter = new("hunter", Palette.ImpostorRed, RoleId.Impostor);
         public static RoleInfo hunted = new("hunted", Color.white, RoleId.Crewmate);
@@ -179,7 +182,8 @@ namespace TheOtherRoles
             jekyllAndHyde,
             thief,
             serialKiller,
-            pelican
+            pelican,
+            playerRole
         ];
 
         public static List<RoleInfo> Trick =
@@ -297,6 +301,7 @@ namespace TheOtherRoles
             [niceSwapper, evilSwapper],
             [niceWatcher, evilWatcher],
             [yasuna, evilYasuna],
+            [niceVoteEater, evilVoteEater],
             [niceshifter, chainshifter]
         ];
 
@@ -420,6 +425,9 @@ namespace TheOtherRoles
             superstar,
             nightOwl,
             scatterer,
+            playerRole,
+            niceVoteEater,
+            evilVoteEater,
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
@@ -522,6 +530,9 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Gremlin)) infos.Add(gremlin);
             if (p.isRole(RoleId.Illusionist)) infos.Add(illusionist);
             if (p.isRole(RoleId.Agnosia)) infos.Add(agnosia);
+            if (p.isRole(RoleId.PlayerRole)) infos.Add(playerRole);
+            if (p.isRole(RoleId.NiceVoteEater)) infos.Add(niceVoteEater);
+            if (p.isRole(RoleId.EvilVoteEater)) infos.Add(evilVoteEater);
             if (p.isRole(RoleId.VoidEater)) infos.Add(voidEater);
             if (p.isRole(RoleId.FortuneTeller))
             {

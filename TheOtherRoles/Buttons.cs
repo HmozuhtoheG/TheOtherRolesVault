@@ -86,6 +86,7 @@ namespace TheOtherRoles
         public static CustomButton evilHackerButton;
         public static CustomButton evilHackerCreatesMadmateButton;
         public static CustomButton pelicanKillButton;
+        public static CustomButton playerRoleKillButton;
         public static CustomButton trapperSetTrapButton;
         public static CustomButton blackmailerButton;
         public static CustomButton moriartyBrainwashButton;
@@ -236,6 +237,7 @@ namespace TheOtherRoles
             warlockCurseButton.MaxTimer = Warlock.cooldown;
             yoyoButton.MaxTimer = Yoyo.markCooldown;
             pelicanKillButton.MaxTimer = Pelican.cooldown;
+            if (PlayerRole.local != null) playerRoleKillButton.MaxTimer = PlayerRole.local.currentCooldown;
             energyAmplifierButton.MaxTimer = 0f; 
             energyAmplifierButton.EffectDuration = Energyamplifier.fieldDuration;
             securityGuardButton.MaxTimer = SecurityGuard.cooldown;
@@ -1676,6 +1678,27 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.Q
             );
+
+            playerRoleKillButton = new CustomButton(
+                () =>
+                {
+                    var localRole = PlayerRole.local;
+                    if (localRole == null) return;
+                    if (Helpers.checkMurderAttemptAndKill(PlayerControl.LocalPlayer, localRole.currentTarget) == MurderAttemptResult.SuppressKill) return;
+
+                    playerRoleKillButton.Timer = playerRoleKillButton.MaxTimer;
+                    localRole.currentTarget = null;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.PlayerRole) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { var localRole = PlayerRole.local; return localRole != null && localRole.currentTarget && PlayerControl.LocalPlayer.CanMove; },
+                () => { playerRoleKillButton.Timer = playerRoleKillButton.MaxTimer; },
+                __instance.KillButton.graphic.sprite,
+                CustomButton.ButtonPositions.upperRowRight,
+                __instance,
+                KeyCode.Q
+            );
+            playerRoleKillButton.MaxTimer = PlayerRole.baseKillCooldown;
+            playerRoleKillButton.Timer = PlayerRole.baseKillCooldown;
 
             yandereButton = new CustomButton(
                 () =>

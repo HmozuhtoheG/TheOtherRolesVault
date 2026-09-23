@@ -528,10 +528,15 @@ namespace TheOtherRoles {
         public static CustomOption yandereHasImpVision;
 
         public static CustomRoleOption workaholicSpawnRate;
+        public static CustomOption workaholicDeathCountdown;
+        public static CustomOption workaholicGetTaskCooldown;
+        public static CustomOption workaholicShieldDuration;
+        public static CustomOption workaholicMaxShieldCount;
         public static CustomRoleOption voidEaterSpawnRate;
         public static CustomOption voidEaterSwallowCooldown;
         public static CustomOption voidEaterSpeedBoostDuration;
         public static CustomOption voidEaterSpeedBoostMultiplier;
+        public static CustomOption voidEaterKillCooldownReduction;
 
         public static CustomRoleOption lawyerSpawnRate;
         public static CustomOption lawyerTargetKnows;
@@ -605,6 +610,22 @@ namespace TheOtherRoles {
         public static CustomOption agnosiaKillCooldownIdle;
         public static CustomOption agnosiaMadnessKills;
         public static CustomOption agnosiaMadnessDuration;
+
+        public static CustomRoleOption playerRoleSpawnRate;
+        public static CustomOption playerRoleKillCooldown;
+        public static CustomOption playerRoleCooldownReduce;
+        public static CustomOption playerRoleMinKillCooldown;
+        public static CustomOption playerRoleExpPerTask;
+        public static CustomOption playerRoleExpPerKill;
+        public static CustomOption playerRoleExpPerLevel;
+        public static CustomOption playerRoleCommonTasks;
+        public static CustomOption playerRoleShortTasks;
+        public static CustomOption playerRoleLongTasks;
+
+        public static CustomRoleOption voteEaterSpawnRate;
+        public static CustomOption voteEaterAssignEqually;
+        public static CustomOption voteEaterIsImpVoteEaterRate;
+        public static CustomOption voteEaterNumberOfUses;
 
         public static CustomRoleOption akujoSpawnRate;
         public static CustomOption akujoTimeLimit;
@@ -1201,8 +1222,13 @@ namespace TheOtherRoles {
             yandereHasImpVision = CustomOption.Create(8506, Types.Neutral, "yandereHasImpVision", true, yandereSpawnRate);
 
             workaholicSpawnRate = new CustomRoleOption(8600, Types.Neutral, "workaholic", Workaholic.color, max: 3);
+            workaholicDeathCountdown = CustomOption.Create(8601, Types.Neutral, "workaholicDeathCountdown", 60f, 15f, 180f, 5f, workaholicSpawnRate, false, "unitSeconds");
+            workaholicGetTaskCooldown = CustomOption.Create(8602, Types.Neutral, "workaholicGetTaskCooldown", 180f, 30f, 300f, 10f, workaholicSpawnRate, false, "unitSeconds");
+            workaholicShieldDuration = CustomOption.Create(8603, Types.Neutral, "workaholicShieldDuration", 5f, 1f, 30f, 1f, workaholicSpawnRate, false, "unitSeconds");
+            workaholicMaxShieldCount = CustomOption.Create(8604, Types.Neutral, "workaholicMaxShieldCount", 1f, 1f, 10f, 1f, workaholicSpawnRate, false, "unitScrews");
 
             voidEaterSpawnRate = new CustomRoleOption(8800, Types.Impostor, "voidEater", VoidEater.color, max: 1);
+            voidEaterKillCooldownReduction = CustomOption.Create(8801, Types.Impostor, "voidEaterKillCooldownReduction", 10f, 0f, 30f, 1f, voidEaterSpawnRate, false, "unitSeconds");
             voidEaterSwallowCooldown = CustomOption.Create(8802, Types.Impostor, "voidEaterSwallowCooldown", 24f, 5f, 60f, 1f, voidEaterSpawnRate, false, "unitSeconds");
             voidEaterSpeedBoostDuration = CustomOption.Create(8803, Types.Impostor, "voidEaterSpeedBoostDuration", 5f, 1f, 15f, 1f, voidEaterSpawnRate, false, "unitSeconds");
             voidEaterSpeedBoostMultiplier = CustomOption.Create(8804, Types.Impostor, "voidEaterSpeedBoostMultiplier", 0.3f, 0.05f, 1f, 0.05f, voidEaterSpawnRate, false, "unitTimes");
@@ -1468,6 +1494,22 @@ namespace TheOtherRoles {
             agnosiaKillCooldownIdle = CustomOption.Create(11119, Types.Impostor, "agnosiaKillCooldownIdle", 45f, 5f, 120f, 2.5f, agnosiaSpawnRate, false, "unitSeconds");
             agnosiaMadnessKills = CustomOption.Create(11120, Types.Impostor, "agnosiaMadnessKills", 3f, 1f, 10f, 1f, agnosiaSpawnRate, false, "unitScrews");
             agnosiaMadnessDuration = CustomOption.Create(11121, Types.Impostor, "agnosiaMadnessDuration", 30f, 5f, 90f, 5f, agnosiaSpawnRate, false, "unitSeconds");
+
+            playerRoleSpawnRate = new CustomRoleOption(11130, Types.Neutral, "playerRole", PlayerRole.color, max: 3);
+            playerRoleKillCooldown = CustomOption.Create(11131, Types.Neutral, "playerRoleKillCooldown", 45f, 10f, 120f, 2.5f, playerRoleSpawnRate, false, "unitSeconds");
+            playerRoleCooldownReduce = CustomOption.Create(11132, Types.Neutral, "playerRoleCooldownReduce", 5f, 0f, 30f, 1f, playerRoleSpawnRate, false, "unitSeconds");
+            playerRoleMinKillCooldown = CustomOption.Create(11133, Types.Neutral, "playerRoleMinKillCooldown", 10f, 2.5f, 60f, 2.5f, playerRoleSpawnRate, false, "unitSeconds");
+            playerRoleExpPerTask = CustomOption.Create(11134, Types.Neutral, "playerRoleExpPerTask", 1f, 0f, 10f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleExpPerKill = CustomOption.Create(11135, Types.Neutral, "playerRoleExpPerKill", 3f, 0f, 20f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleExpPerLevel = CustomOption.Create(11136, Types.Neutral, "playerRoleExpPerLevel", 5f, 1f, 50f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleCommonTasks = CustomOption.Create(11137, Types.Neutral, "playerRoleCommonTasks", 1f, 0f, 4f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleShortTasks = CustomOption.Create(11138, Types.Neutral, "playerRoleShortTasks", 3f, 0f, 20f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleLongTasks = CustomOption.Create(11139, Types.Neutral, "playerRoleLongTasks", 2f, 0f, 6f, 1f, playerRoleSpawnRate, false, "unitScrews");
+
+            voteEaterSpawnRate = new CustomRoleOption(11140, Types.Neutral, "voteEater", VoteEater.color);
+            voteEaterAssignEqually = CustomOption.Create(11141, Types.Neutral, "voteEaterAssignEqually", ["optionOn", "optionOff"], voteEaterSpawnRate);
+            voteEaterIsImpVoteEaterRate = CustomOption.Create(11142, Types.Neutral, "voteEaterIsImpVoteEaterRate", rates, voteEaterAssignEqually);
+            voteEaterNumberOfUses = CustomOption.Create(11143, Types.Neutral, "voteEaterNumberOfUses", 2f, 1f, 15f, 1f, voteEaterSpawnRate, false, "unitShots");
 
             /*trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
             trapperCooldown = CustomOption.Create(420, Types.Crewmate, "Trapper Cooldown", 30f, 5f, 120f, 5f, trapperSpawnRate);
