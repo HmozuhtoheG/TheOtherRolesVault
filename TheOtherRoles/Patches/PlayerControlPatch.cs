@@ -46,6 +46,10 @@ namespace TheOtherRoles.Patches {
             if (Kataomoi.exists && Kataomoi.target != null && Kataomoi.isStalking()) {
                 untargetablePlayers.AddRange(Kataomoi.allPlayers);
             }
+            foreach (var gojo in Gojo.players) {
+                if (gojo.isInfinityActive && gojo.player != null && gojo.player.Data != null && !gojo.player.Data.IsDead)
+                    untargetablePlayers.Add(gojo.player);
+            }
 
             Vector2 truePosition = targetingPlayer.GetTruePosition();
             foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
@@ -55,7 +59,7 @@ namespace TheOtherRoles.Patches {
                     if (untargetablePlayers != null && untargetablePlayers.Any(x => x == @object)) {
                         // if that player is not targetable: skip check
                         continue;
-                    }                    
+                    }
 
                     if (@object && (!@object.inVent || targetPlayersInVents)) {
                         Vector2 vector = @object.GetTruePosition() - truePosition;

@@ -21,6 +21,8 @@ namespace TheOtherRoles.Patches
 {
     [HarmonyPatch]
     class MeetingHudPatch {
+        public static void completeVoting(MeetingHud __instance) => MeetingCalculateVotesPatch.completeVoting(__instance);
+
         static bool[] selections;
         static SpriteRenderer[] renderers;
         private static NetworkedPlayerInfo target = null;
@@ -106,8 +108,10 @@ namespace TheOtherRoles.Patches
             }
 
 
-            static bool Prefix(MeetingHud __instance) {
-                if (__instance.playerStates.All((PlayerVoteArea ps) => ps.AmDead || ps.DidVote || (Blackmailer.players.Any(x => x.player && x.blackmailed && x.blackmailed.PlayerId == ps.PlayerId) && Blackmailer.blockTargetVote))) {
+            public static void completeVoting(MeetingHud __instance) {
+                if (__instance == null) return;
+                if (__instance.state is MeetingHud.MeetingStates.Results or MeetingHud.MeetingStates.Proceeding or MeetingHud.MeetingStates.Animating) return;
+                {
                     // If skipping is disabled, replace skipps/no-votes with self vote
                     if (target == null && blockSkippingInEmergencyMeetings && noVoteIsSelfVote) {
                         foreach (PlayerVoteArea playerVoteArea in __instance.playerStates) {
@@ -179,6 +183,11 @@ namespace TheOtherRoles.Patches
                     // RPCVotingComplete
                     __instance.RpcVotingComplete(array, exiled, tie, false, 0);
                 }
+            }
+
+            static bool Prefix(MeetingHud __instance) {
+                if (__instance.playerStates.All((PlayerVoteArea ps) => ps.AmDead || ps.DidVote || (Blackmailer.players.Any(x => x.player && x.blackmailed && x.blackmailed.PlayerId == ps.PlayerId) && Blackmailer.blockTargetVote)))
+                    completeVoting(__instance);
                 return false;
             }
         }
@@ -704,6 +713,7 @@ namespace TheOtherRoles.Patches
                     if (roleInfo.roleId == RoleId.Yasuna && CustomOptionHolder.yasunaIsImpYasunaRate.getSelection() == 10) continue;
                 }
                 if (roleInfo.roleId == RoleId.Deputy && (CustomOptionHolder.deputySpawnRate.getSelection() == 0 || CustomOptionHolder.sheriffSpawnRate.getSelection() == 0)) continue;
+                if (roleInfo.roleId == RoleId.Auxiliary && (CustomOptionHolder.auxiliarySpawnRate.getSelection() == 0 || CustomOptionHolder.sheriffSpawnRate.getSelection() == 0)) continue;
                 if (roleInfo.roleId == RoleId.Pursuer && CustomOptionHolder.lawyerSpawnRate.getSelection() == 0) continue;
                 if (roleInfo.roleId == RoleId.Immoralist && (!CustomOptionHolder.foxCanCreateImmoralist.getBool() || CustomOptionHolder.foxSpawnRate.getSelection() == 0)) continue;
                 if (roleInfo.roleId == RoleId.Spy && roleData.impostors.Count <= 1) continue;

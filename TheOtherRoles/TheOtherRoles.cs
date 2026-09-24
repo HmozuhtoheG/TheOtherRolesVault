@@ -28,6 +28,9 @@ namespace TheOtherRoles
             Engineer.clearAndReload();
             Sheriff.clearAndReload();
             Deputy.clearAndReload();
+            Auxiliary.clearAndReload();
+            Gojo.clearAndReload();
+            Sukuna.clearAndReload();
             Lighter.clearAndReload();
             Godfather.clearAndReload();
             Mafioso.clearAndReload();
@@ -121,6 +124,7 @@ namespace TheOtherRoles
             Agnosia.clearAndReload();
             PlayerRole.clearAndReload();
             VoteEater.clearAndReload();
+            PoliceCommissioner.clearAndReload();
             Role.ClearAll();
 
             // Modifier
@@ -257,7 +261,11 @@ namespace TheOtherRoles
                 { RoleId.Agnosia, typeof(RoleBase<Agnosia>) },
                 { RoleId.PlayerRole, typeof(RoleBase<PlayerRole>) },
                 { RoleId.NiceVoteEater, typeof(RoleBase<NiceVoteEater>) },
-                { RoleId.EvilVoteEater, typeof(RoleBase<EvilVoteEater>) }
+                { RoleId.EvilVoteEater, typeof(RoleBase<EvilVoteEater>) },
+                { RoleId.PoliceCommissioner, typeof(RoleBase<PoliceCommissioner>) },
+                { RoleId.Auxiliary, typeof(RoleBase<Auxiliary>) },
+                { RoleId.Gojo, typeof(RoleBase<Gojo>) },
+                { RoleId.Sukuna, typeof(RoleBase<Sukuna>) }
             };
 
             public static IEnumerable<HelpSprite> GetHelp(RoleId roleId)

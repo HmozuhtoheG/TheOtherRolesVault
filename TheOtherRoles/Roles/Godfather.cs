@@ -174,10 +174,19 @@ public class Godfather : RoleBase<Godfather>
             if (area != null) success = (byte)area.VotedForId == godfather.PlayerId;
         }
 
-        Reckoning.Invoke((godfather.PlayerId, targetId, success));
+        Reckoning.Invoke((godfather.PlayerId, targetId, success, getAnnouncerId(godfather.PlayerId, targetId)));
     }
 
-    public static RemoteProcess<(byte godfatherId, byte targetId, bool success)> Reckoning = new("GodfatherReckoning", (message, _) =>
+    private static byte getAnnouncerId(byte godfatherId, byte targetId)
+    {
+        var candidates = PlayerControl.AllPlayerControls.ToArray()
+            .Where(x => x != null && x.Data != null && !x.Data.IsDead && !x.Data.Disconnected && x.PlayerId != godfatherId && x.PlayerId != targetId)
+            .ToList();
+        if (candidates.Count == 0) return targetId;
+        return candidates[rnd.Next(candidates.Count)].PlayerId;
+    }
+
+    public static RemoteProcess<(byte godfatherId, byte targetId, bool success, byte announcerId)> Reckoning = new("GodfatherReckoning", (message, _) =>
     {
         usesThisMeeting = Mathf.Max(0, usesThisMeeting - 1);
         usesTotal = Mathf.Max(0, usesTotal - 1);
@@ -201,8 +210,11 @@ public class Godfather : RoleBase<Godfather>
 
         if (AmongUsClient.Instance.AmClient && FastDestroyableSingleton<HudManager>.Instance != null)
         {
+            var announcer = Helpers.playerById(message.announcerId);
+            if (announcer == null || announcer.Data == null) announcer = godfather;
+
             ChatCommands.CurrentChatType = ChatCommands.ChatTypes.GodfatherMessage;
-            HudManager.Instance.Chat.AddChat(godfather,
+            HudManager.Instance.Chat.AddChat(announcer,
                 string.Format(ModTranslation.getString("godfatherReckoningAnnouncement"), Helpers.cs(target.Data.Color, target.Data.PlayerName)), false);
             ChatCommands.CurrentChatType = ChatCommands.ChatTypes.Default;
         }

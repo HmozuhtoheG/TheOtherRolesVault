@@ -236,6 +236,10 @@ namespace TheOtherRoles {
         public static CustomOption deputyHandcuffDuration;
         public static CustomOption deputyKnowsSheriff;
         public static CustomOption deputyStopsGameEnd;
+        public static CustomOption auxiliarySpawnRate;
+        public static CustomOption auxiliaryRoleCount;
+        public static CustomOption auxiliaryNumberOfMarks;
+        public static CustomOption auxiliaryMarkCooldown;
 
         public static CustomRoleOption lighterSpawnRate;
         public static CustomOption lighterModeLightsOnVision;
@@ -484,6 +488,16 @@ namespace TheOtherRoles {
         public static CustomOption energyAmplifierExtraSpeedPerPlayer;
         public static CustomOption energyAmplifierMaxSpeedBoost;
 
+        public static CustomRoleOption gojoSpawnRate;
+        public static CustomOption gojoMaxCursedEnergy;
+        public static CustomOption gojoDrainPerSecond;
+        public static CustomOption gojoRecoverPerTask;
+        public static CustomOption gojoRadius;
+
+        public static CustomRoleOption sukunaSpawnRate;
+        public static CustomOption sukunaCooldown;
+        public static CustomOption sukunaChantDuration;
+
         public static CustomRoleOption vultureSpawnRate;
         public static CustomOption vultureCooldown;
         public static CustomOption vultureNumberToWin;
@@ -626,6 +640,16 @@ namespace TheOtherRoles {
         public static CustomOption voteEaterAssignEqually;
         public static CustomOption voteEaterIsImpVoteEaterRate;
         public static CustomOption voteEaterNumberOfUses;
+
+        public static CustomRoleOption policeCommissionerSpawnRate;
+        public static CustomOption policeCommissionerCooldown;
+        public static CustomOption policeCommissionerUses;
+        public static CustomOption policeCommissionerCanRecruitImpostor;
+        public static CustomOption policeCommissionerCanRecruitNeutral;
+        public static CustomOption policeCommissionerDiesOnImpostor;
+        public static CustomOption policeCommissionerDiesOnNeutral;
+        public static CustomOption policeCommissionerCanKill;
+        public static CustomOption policeCommissionerKillCooldown;
 
         public static CustomRoleOption akujoSpawnRate;
         public static CustomOption akujoTimeLimit;
@@ -1153,6 +1177,16 @@ namespace TheOtherRoles {
             energyAmplifierExtraSpeedPerPlayer = CustomOption.Create(6110, Types.Crewmate, "energyAmplifierExtraSpeedPerPlayer", 0.1f, 0f, 0.5f, 0.05f, energyAmplifierSpawnRate, false, "unitTimes");
             energyAmplifierMaxSpeedBoost = CustomOption.Create(6111, Types.Crewmate, "energyAmplifierMaxSpeedBoost", 1f, 0.5f, 2f, 0.1f, energyAmplifierSpawnRate, false, "unitTimes");
 
+            gojoSpawnRate = new CustomRoleOption(4022, Types.Crewmate, "gojo", Gojo.color);
+            gojoMaxCursedEnergy = CustomOption.Create(4023, Types.Crewmate, "gojoMaxCursedEnergy", 100f, 20f, 200f, 10f, gojoSpawnRate, false, "");
+            gojoDrainPerSecond = CustomOption.Create(4024, Types.Crewmate, "gojoDrainPerSecond", 8f, 1f, 20f, 1f, gojoSpawnRate, false, "");
+            gojoRecoverPerTask = CustomOption.Create(4025, Types.Crewmate, "gojoRecoverPerTask", 25f, 0f, 100f, 5f, gojoSpawnRate, false, "");
+            gojoRadius = CustomOption.Create(4026, Types.Crewmate, "gojoRadius", 2.5f, 1f, 6f, 0.5f, gojoSpawnRate, false, "unitMeters");
+
+            sukunaSpawnRate = new CustomRoleOption(4033, Types.Impostor, "sukuna", Sukuna.color);
+            sukunaCooldown = CustomOption.Create(4034, Types.Impostor, "sukunaCooldown", 30f, 5f, 90f, 5f, sukunaSpawnRate, false, "unitSeconds");
+            sukunaChantDuration = CustomOption.Create(4035, Types.Impostor, "sukunaChantDuration", 8f, 2f, 20f, 1f, sukunaSpawnRate, false, "unitSeconds");
+
 
             shifterSpawnRate = new CustomRoleOption(1100, Types.Neutral, "shifter", Shifter.color, 1);
             shifterIsNeutralRate = CustomOption.Create(6007, Types.Neutral, "shifterIsNeutralRate", rates, shifterSpawnRate);
@@ -1289,6 +1323,10 @@ namespace TheOtherRoles {
             deputyGetsPromoted = CustomOption.Create(108, Types.Crewmate, "deputyGetsPromoted", ["optionOff", "deputyOnImmediately", "deputyOnAfterMeeting"], deputySpawnRate);
             deputyKeepsHandcuffs = CustomOption.Create(109, Types.Crewmate, "deputyKeepsHandcuffs", true, deputyGetsPromoted);
             deputyStopsGameEnd = CustomOption.Create(4016, Types.Crewmate, "deputyStopsGameEnd", false, deputySpawnRate);
+            auxiliarySpawnRate = CustomOption.Create(4018, Types.Crewmate, "sheriffAuxiliary", rates, sheriffSpawnRate);
+            auxiliaryRoleCount = CustomOption.Create(4019, Types.Crewmate, "auxiliaryRoleCount", 1f, 1f, 24f, 1f, auxiliarySpawnRate, format: "unitPlayers");
+            auxiliaryNumberOfMarks = CustomOption.Create(4020, Types.Crewmate, "auxiliaryNumberOfMarks", 2f, 1f, 10f, 1f, auxiliarySpawnRate, false, "unitShots");
+            auxiliaryMarkCooldown = CustomOption.Create(4021, Types.Crewmate, "auxiliaryMarkCooldown", 25f, 5f, 60f, 2.5f, auxiliarySpawnRate, false, "unitSeconds");
 
             lighterSpawnRate = new CustomRoleOption(110, Types.Crewmate, "lighter", Lighter.color);
             lighterModeLightsOnVision = CustomOption.Create(111, Types.Crewmate, "lighterModeLightsOnVision", 1.5f, 0.25f, 5f, 0.25f, lighterSpawnRate, false, "unitTimes");
@@ -1467,8 +1505,8 @@ namespace TheOtherRoles {
             moriartySherlockAddition = CustomOption.Create(8045, Types.Neutral, "moriartySherlockAddition", 2f, 0f, 5f, 1f, moriartySpawnRate, false, "unitScrews");
             moriartyKillIndicate = CustomOption.Create(8044, Types.Neutral, "moriartyKillIndicate", false, moriartySpawnRate);
 
-            martyrSpawnRate = new CustomRoleOption(9801, Types.Crewmate, "martyr", Martyr.color, 1);
-            martyrCooldown = CustomOption.Create(9802, Types.Crewmate, "martyrCooldown", 30f, 2.5f, 60f, 2.5f, martyrSpawnRate, false, "unitSeconds");
+            martyrSpawnRate = new CustomRoleOption(4037, Types.Crewmate, "martyr", Martyr.color, 1);
+            martyrCooldown = CustomOption.Create(4038, Types.Crewmate, "martyrCooldown", 30f, 2.5f, 60f, 2.5f, martyrSpawnRate, false, "unitSeconds");
 
             gremlinSpawnRate = new CustomRoleOption(11100, Types.Neutral, "gremlin", Gremlin.color, max: 3);
             gremlinCooldown = CustomOption.Create(11101, Types.Neutral, "gremlinCooldown", 15f, 3f, 60f, 1f, gremlinSpawnRate, false, "unitSeconds");
@@ -1510,6 +1548,16 @@ namespace TheOtherRoles {
             voteEaterAssignEqually = CustomOption.Create(11141, Types.Neutral, "voteEaterAssignEqually", ["optionOn", "optionOff"], voteEaterSpawnRate);
             voteEaterIsImpVoteEaterRate = CustomOption.Create(11142, Types.Neutral, "voteEaterIsImpVoteEaterRate", rates, voteEaterAssignEqually);
             voteEaterNumberOfUses = CustomOption.Create(11143, Types.Neutral, "voteEaterNumberOfUses", 2f, 1f, 15f, 1f, voteEaterSpawnRate, false, "unitShots");
+
+            policeCommissionerSpawnRate = new CustomRoleOption(11170, Types.Crewmate, "policeCommissioner", PoliceCommissioner.color);
+            policeCommissionerCooldown = CustomOption.Create(11171, Types.Crewmate, "policeCommissionerCooldown", 30f, 5f, 120f, 5f, policeCommissionerSpawnRate, false, "unitSeconds");
+            policeCommissionerUses = CustomOption.Create(11172, Types.Crewmate, "policeCommissionerUses", 1f, 1f, 5f, 1f, policeCommissionerSpawnRate, false, "unitShots");
+            policeCommissionerCanRecruitImpostor = CustomOption.Create(11173, Types.Crewmate, "policeCommissionerCanRecruitImpostor", true, policeCommissionerSpawnRate);
+            policeCommissionerCanRecruitNeutral = CustomOption.Create(11174, Types.Crewmate, "policeCommissionerCanRecruitNeutral", true, policeCommissionerSpawnRate);
+            policeCommissionerDiesOnImpostor = CustomOption.Create(11175, Types.Crewmate, "policeCommissionerDiesOnImpostor", true, policeCommissionerSpawnRate);
+            policeCommissionerDiesOnNeutral = CustomOption.Create(11176, Types.Crewmate, "policeCommissionerDiesOnNeutral", true, policeCommissionerSpawnRate);
+            policeCommissionerCanKill = CustomOption.Create(11177, Types.Crewmate, "policeCommissionerCanKill", true, policeCommissionerSpawnRate);
+            policeCommissionerKillCooldown = CustomOption.Create(11178, Types.Crewmate, "policeCommissionerKillCooldown", 30f, 5f, 120f, 2.5f, policeCommissionerSpawnRate, false, "unitSeconds");
 
             /*trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
             trapperCooldown = CustomOption.Create(420, Types.Crewmate, "Trapper Cooldown", 30f, 5f, 120f, 5f, trapperSpawnRate);

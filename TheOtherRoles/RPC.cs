@@ -153,6 +153,10 @@ namespace TheOtherRoles
         PlayerRole,
         NiceVoteEater,
         EvilVoteEater,
+        PoliceCommissioner,
+        Auxiliary,
+        Gojo,
+        Sukuna,
     }
 
     enum CustomRPC
@@ -224,7 +228,8 @@ namespace TheOtherRoles
         ZephyrBlowCannon,
         ZephyrCheckCannon,
         RacerSetOccupancy,
-        RacerSetGear
+        RacerSetGear,
+        ForceMurderPlayer
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
@@ -931,6 +936,16 @@ namespace TheOtherRoles
             }
         }
 
+        public static void forceMurderPlayer(byte sourceId, byte targetId, byte showAnimation) {
+            if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+            PlayerControl source = Helpers.playerById(sourceId);
+            PlayerControl target = Helpers.playerById(targetId);
+            if (source == null || target == null || target.Data == null || target.Data.IsDead) return;
+
+            if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
+            source.MurderPlayer(target, MurderResultFlags.Succeeded);
+        }
+
         public static void uncheckedCmdReportDeadBody(byte sourceId, byte targetId) {
             PlayerControl source = Helpers.playerById(sourceId);
             var t = targetId == Byte.MaxValue ? null : Helpers.playerById(targetId).Data;
@@ -1277,8 +1292,8 @@ namespace TheOtherRoles
         {
             var player = Helpers.playerById(message.playerId);
             if (player == null) return;
-            DeveloperCommand.Show(message.message);
-        }, false);
+            DeveloperCommand.Show(message.playerId, message.message);
+        });
 
         public static RemoteProcess RpcRequireHandShake = new("RequireHandShake", (isCalledByMe) =>
         {
@@ -2214,6 +2229,12 @@ namespace TheOtherRoles
                     byte target = reader.ReadByte();
                     byte showAnimation = reader.ReadByte();
                     RPCProcedure.uncheckedMurderPlayer(source, target, showAnimation);
+                    break;
+                case (byte)CustomRPC.ForceMurderPlayer:
+                    byte forceSource = reader.ReadByte();
+                    byte forceTarget = reader.ReadByte();
+                    byte forceShowAnimation = reader.ReadByte();
+                    RPCProcedure.forceMurderPlayer(forceSource, forceTarget, forceShowAnimation);
                     break;
                 case (byte)CustomRPC.UncheckedExilePlayer:
                     byte exileTarget = reader.ReadByte();
