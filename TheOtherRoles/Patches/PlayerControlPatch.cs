@@ -46,6 +46,10 @@ namespace TheOtherRoles.Patches {
             if (Kataomoi.exists && Kataomoi.target != null && Kataomoi.isStalking()) {
                 untargetablePlayers.AddRange(Kataomoi.allPlayers);
             }
+            foreach (var gojo in Gojo.players) {
+                if (gojo.isInfinityActive && gojo.player != null && gojo.player.Data != null && !gojo.player.Data.IsDead)
+                    untargetablePlayers.Add(gojo.player);
+            }
 
             Vector2 truePosition = targetingPlayer.GetTruePosition();
             foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator())
@@ -55,7 +59,7 @@ namespace TheOtherRoles.Patches {
                     if (untargetablePlayers != null && untargetablePlayers.Any(x => x == @object)) {
                         // if that player is not targetable: skip check
                         continue;
-                    }                    
+                    }
 
                     if (@object && (!@object.inVent || targetPlayersInVents)) {
                         Vector2 vector = @object.GetTruePosition() - truePosition;
@@ -99,13 +103,6 @@ namespace TheOtherRoles.Patches {
                 }
 
                 if (PlayerControl.LocalPlayer.Data.IsDead && Armored.armored != null && target == Armored.armored && !Armored.isBrokenArmor && !hasVisibleShield)
-                {
-                    hasVisibleShield = true;
-                    color = Color.yellow;
-                }
-
-                // Workaholic shield outline (yellow) when shield is active
-                if (Workaholic.isShielded(target) && !hasVisibleShield)
                 {
                     hasVisibleShield = true;
                     color = Color.yellow;
@@ -189,7 +186,10 @@ namespace TheOtherRoles.Patches {
             }
 
             PlayerControl target = null;
-            if (Spy.exists) {
+            if (Agnosia.isActive(PlayerControl.LocalPlayer)) {
+                target = setTarget(false, true);
+            }
+            else if (Spy.exists) {
                 if (Spy.impostorsCanKillAnyone) {
                     target = setTarget(false, true);
                 }
@@ -302,7 +302,7 @@ namespace TheOtherRoles.Patches {
 
                 if ((Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer.isRole(RoleId.Lawyer) && p == Lawyer.target) || (Akujo.knowsRoles && Akujo.isPartner(PlayerControl.LocalPlayer, p))
                     || p == PlayerControl.LocalPlayer || (PlayerControl.LocalPlayer.Data.IsDead && RoleManager.IsGhostRole(PlayerControl.LocalPlayer.Data.RoleType))
-                    || (Godfather.shouldShowInfo(PlayerControl.LocalPlayer) && Godfather.killed.Contains(p)) || (PlayerControl.LocalPlayer.isRole(RoleId.Snitch) && Snitch.shouldShowRole(PlayerControl.LocalPlayer, p)) || FreePlayGM.isFreePlayGM) {
+                    || (Godfather.shouldShowInfo(PlayerControl.LocalPlayer) && Godfather.killed.Contains(p)) || (PlayerControl.LocalPlayer.isRole(RoleId.Snitch) && Snitch.shouldShowRole(PlayerControl.LocalPlayer, p)) || (Gravedigger.isGravedigger(PlayerControl.LocalPlayer) && Gravedigger.knows(p)) || FreePlayGM.isFreePlayGM) {
                     Transform playerInfoTransform = p.cosmetics.nameText.transform.parent.FindChild("Info");
                     TMPro.TextMeshPro playerInfo = playerInfoTransform != null ? playerInfoTransform.GetComponent<TMPro.TextMeshPro>() : null;
                     if (playerInfo == null) {
@@ -362,6 +362,10 @@ namespace TheOtherRoles.Patches {
                         else {
                             playerInfoText = $"{roleText} {exTaskInfo}".Trim();
                         }
+                        meetingInfoText = playerInfoText;
+                    }
+                    else if (Gravedigger.isGravedigger(PlayerControl.LocalPlayer) && Gravedigger.knows(p)) {
+                        playerInfoText = RoleInfo.GetRolesString(p, true, false, true, true);
                         meetingInfoText = playerInfoText;
                     }
                     else if ((Lawyer.lawyerKnowsRole && PlayerControl.LocalPlayer.isRole(RoleId.Lawyer) && p == Lawyer.target)
@@ -792,7 +796,10 @@ namespace TheOtherRoles.Patches {
                         }*/
                     }
                 }
-            }  
+            }
+
+            if (target != null && Gravedigger.isGravedigger(__instance) && PlayerControl.LocalPlayer == __instance)
+                Gravedigger.learn(Helpers.playerById(target.PlayerId));
         }
     }
 
@@ -1205,6 +1212,19 @@ namespace TheOtherRoles.Patches {
 
                 if (Racer.isInjured(__instance.myPlayer) && (racerCar == null || racerCar.passengerId != __instance.myPlayer.PlayerId))
                     __instance.body.velocity *= Racer.injurySlowFactor;
+            }
+
+            if (__instance.AmOwner &&
+                AmongUsClient.Instance &&
+                AmongUsClient.Instance.GameState == InnerNet.InnerNetClient.GameStates.Started &&
+                !PlayerControl.LocalPlayer.Data.IsDead &&
+                GameData.Instance &&
+                __instance.body != null &&
+                __instance.myPlayer.CanMove &&
+                VoidEater.local != null &&
+                VoidEater.local.speedBoostTimer > 0f)
+            {
+                __instance.body.velocity *= 1f + VoidEater.speedBoostMultiplier;
             }
 
             Kataomoi.fixedUpdate(__instance);

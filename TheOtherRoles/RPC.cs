@@ -139,6 +139,24 @@ namespace TheOtherRoles
         Armored,
         Racer,
         //Shifter
+
+        Gremlin,
+        Illusionist,
+        Agnosia,
+        Gravedigger,
+        Gambler,
+        Layabout,
+        Peeker,
+        Superstar,
+        NightOwl,
+        Scatterer,
+        PlayerRole,
+        NiceVoteEater,
+        EvilVoteEater,
+        PoliceCommissioner,
+        Auxiliary,
+        Gojo,
+        Sukuna,
     }
 
     enum CustomRPC
@@ -210,7 +228,8 @@ namespace TheOtherRoles
         ZephyrBlowCannon,
         ZephyrCheckCannon,
         RacerSetOccupancy,
-        RacerSetGear
+        RacerSetGear,
+        ForceMurderPlayer
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
@@ -824,6 +843,27 @@ namespace TheOtherRoles
                     Racer.racer.Add(player);
                     Racer.CreateCarForOwner(player);
                     break;
+                case RoleId.Gravedigger:
+                    Gravedigger.gravedigger = player;
+                    break;
+                case RoleId.Gambler:
+                    Gambler.gambler = player;
+                    break;
+                case RoleId.Layabout:
+                    Layabout.layabout = player;
+                    break;
+                case RoleId.Peeker:
+                    Peeker.peeker = player;
+                    break;
+                case RoleId.Superstar:
+                    Superstar.superstar = player;
+                    break;
+                case RoleId.NightOwl:
+                    NightOwl.nightOwl = player;
+                    break;
+                case RoleId.Scatterer:
+                    Scatterer.scatterer.Add(player);
+                    break;
                     //case RoleId.Shifter:
                     //Shifter.shifter = player;
                     //break;
@@ -885,7 +925,7 @@ namespace TheOtherRoles
                     if (workaholic != null)
                     {
                         workaholic.shieldTimer = 0f;
-                        Workaholic.BreakShield.Invoke(sourceId);
+                        Workaholic.BreakShield.Invoke((sourceId, targetId));
                     }
                     source.killTimer = source.GetKillCooldown();
                     return;
@@ -894,6 +934,16 @@ namespace TheOtherRoles
                 if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
                 source.MurderPlayer(target, MurderResultFlags.Succeeded);
             }
+        }
+
+        public static void forceMurderPlayer(byte sourceId, byte targetId, byte showAnimation) {
+            if (AmongUsClient.Instance.GameState != InnerNet.InnerNetClient.GameStates.Started) return;
+            PlayerControl source = Helpers.playerById(sourceId);
+            PlayerControl target = Helpers.playerById(targetId);
+            if (source == null || target == null || target.Data == null || target.Data.IsDead) return;
+
+            if (showAnimation == 0) KillAnimationCoPerformKillPatch.hideNextAnimation = true;
+            source.MurderPlayer(target, MurderResultFlags.Succeeded);
         }
 
         public static void uncheckedCmdReportDeadBody(byte sourceId, byte targetId) {
@@ -997,6 +1047,11 @@ namespace TheOtherRoles
                     }
                 }
             });
+
+        public static RemoteProcess<(byte playerId, byte seed)> ScattererScatter = new("ScattererScatter", (message, _) =>
+        {
+            Scatterer.doScatter(message.playerId, message.seed);
+        });
 
         public static RemoteProcess<byte> RpcRevive = RemotePrimitiveProcess.OfByte("ModRpcRevive", (message, _) =>
         {
@@ -1237,8 +1292,8 @@ namespace TheOtherRoles
         {
             var player = Helpers.playerById(message.playerId);
             if (player == null) return;
-            DeveloperCommand.Show(message.message);
-        }, false);
+            DeveloperCommand.Show(message.playerId, message.message);
+        });
 
         public static RemoteProcess RpcRequireHandShake = new("RequireHandShake", (isCalledByMe) =>
         {
@@ -1532,6 +1587,7 @@ namespace TheOtherRoles
                         pva.Overlay.gameObject.SetActive(true);
                         MeetingHudPatch.swapperCheckAndReturnSwap(MeetingHud.Instance, targetId);
                         MeetingHudPatch.yasunaCheckAndReturnSpecialVote(MeetingHud.Instance, targetId);
+                        MeetingHudPatch.voteEaterCheckAndReturnUses(MeetingHud.Instance, targetId);
                     }
 
                     // Give players back their vote if target is shot dead
@@ -2173,6 +2229,12 @@ namespace TheOtherRoles
                     byte target = reader.ReadByte();
                     byte showAnimation = reader.ReadByte();
                     RPCProcedure.uncheckedMurderPlayer(source, target, showAnimation);
+                    break;
+                case (byte)CustomRPC.ForceMurderPlayer:
+                    byte forceSource = reader.ReadByte();
+                    byte forceTarget = reader.ReadByte();
+                    byte forceShowAnimation = reader.ReadByte();
+                    RPCProcedure.forceMurderPlayer(forceSource, forceTarget, forceShowAnimation);
                     break;
                 case (byte)CustomRPC.UncheckedExilePlayer:
                     byte exileTarget = reader.ReadByte();

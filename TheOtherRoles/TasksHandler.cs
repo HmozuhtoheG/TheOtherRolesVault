@@ -57,7 +57,10 @@ namespace TheOtherRoles {
                         || (CreatedMadmate.hasTasks && CreatedMadmate.createdMadmate.Any(x => x.PlayerId == playerInfo.PlayerId))
                         || (SchrodingersCat.hideRole && playerInfo.Object.isRole(RoleId.SchrodingersCat))
                         || playerInfo.Object.isRole(RoleId.JekyllAndHyde)
-                        || playerInfo.Object.isRole(RoleId.Fox))
+                        || playerInfo.Object.isRole(RoleId.Fox)
+                        || playerInfo.Object.isRole(RoleId.PlayerRole)
+                        || playerInfo.Object.isRole(RoleId.Workaholic)
+                        || Layabout.isLayabout(playerInfo.Object))
                         )
                         continue;
                     var (playerCompleted, playerTotal) = taskInfo(playerInfo);

@@ -4,6 +4,7 @@ using System.Linq;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using TheOtherRoles.MetaContext;
+using TheOtherRoles.Patches;
 using TheOtherRoles.Utilities;
 using TMPro;
 using UnityEngine;
@@ -319,6 +320,8 @@ namespace TheOtherRoles.Modules {
                     Alignment = IMetaContextOld.AlignmentOption.Center
                 });
             }
+
+            MainMenuBackground.Apply(__instance);
         }
 
         public static void loadSprite()

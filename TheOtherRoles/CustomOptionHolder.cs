@@ -66,6 +66,8 @@ namespace TheOtherRoles {
         public static CustomOption janitorCanSabotage;
         public static CustomOption janitorImpostorsCanSeeDeadBody;
         public static CustomOption mafiosoNumberOfSkips;
+        public static CustomOption godfatherReckoningPerMeeting;
+        public static CustomOption godfatherReckoningTotal;
 
         public static CustomRoleOption morphlingSpawnRate;
         public static CustomOption morphlingCooldown;
@@ -89,6 +91,7 @@ namespace TheOtherRoles {
         public static CustomRoleOption guesserSpawnRate;
         public static CustomOption guesserIsImpGuesserRate;
         public static CustomOption guesserNumberOfShots;
+        public static CustomOption guesserSafeGuesses;
         public static CustomOption guesserHasMultipleShotsPerMeeting;
         public static CustomOption guesserKillsThroughShield;
         public static CustomOption guesserEvilCanKillSpy;
@@ -233,6 +236,10 @@ namespace TheOtherRoles {
         public static CustomOption deputyHandcuffDuration;
         public static CustomOption deputyKnowsSheriff;
         public static CustomOption deputyStopsGameEnd;
+        public static CustomOption auxiliarySpawnRate;
+        public static CustomOption auxiliaryRoleCount;
+        public static CustomOption auxiliaryNumberOfMarks;
+        public static CustomOption auxiliaryMarkCooldown;
 
         public static CustomRoleOption lighterSpawnRate;
         public static CustomOption lighterModeLightsOnVision;
@@ -481,6 +488,16 @@ namespace TheOtherRoles {
         public static CustomOption energyAmplifierExtraSpeedPerPlayer;
         public static CustomOption energyAmplifierMaxSpeedBoost;
 
+        public static CustomRoleOption gojoSpawnRate;
+        public static CustomOption gojoMaxCursedEnergy;
+        public static CustomOption gojoDrainPerSecond;
+        public static CustomOption gojoRecoverPerTask;
+        public static CustomOption gojoRadius;
+
+        public static CustomRoleOption sukunaSpawnRate;
+        public static CustomOption sukunaCooldown;
+        public static CustomOption sukunaChantDuration;
+
         public static CustomRoleOption vultureSpawnRate;
         public static CustomOption vultureCooldown;
         public static CustomOption vultureNumberToWin;
@@ -525,10 +542,15 @@ namespace TheOtherRoles {
         public static CustomOption yandereHasImpVision;
 
         public static CustomRoleOption workaholicSpawnRate;
+        public static CustomOption workaholicDeathCountdown;
+        public static CustomOption workaholicGetTaskCooldown;
+        public static CustomOption workaholicShieldDuration;
+        public static CustomOption workaholicMaxShieldCount;
         public static CustomRoleOption voidEaterSpawnRate;
         public static CustomOption voidEaterSwallowCooldown;
         public static CustomOption voidEaterSpeedBoostDuration;
         public static CustomOption voidEaterSpeedBoostMultiplier;
+        public static CustomOption voidEaterKillCooldownReduction;
 
         public static CustomRoleOption lawyerSpawnRate;
         public static CustomOption lawyerTargetKnows;
@@ -578,6 +600,57 @@ namespace TheOtherRoles {
         public static CustomRoleOption martyrSpawnRate;
         public static CustomOption martyrCooldown;
 
+        public static CustomRoleOption gremlinSpawnRate;
+        public static CustomOption gremlinCooldown;
+        public static CustomOption gremlinPassiveInterval;
+        public static CustomOption gremlinComboChance;
+        public static CustomOption gremlinDashDuration;
+        public static CustomOption gremlinDashMultiplier;
+        public static CustomOption gremlinSlumpDuration;
+        public static CustomOption gremlinSlumpMultiplier;
+        public static CustomOption gremlinGiantDuration;
+        public static CustomOption gremlinGiantScale;
+        public static CustomOption gremlinFreezeDuration;
+
+        public static CustomRoleOption illusionistSpawnRate;
+        public static CustomOption illusionistCooldown;
+        public static CustomOption illusionistUses;
+        public static CustomOption illusionistTriggerRadius;
+
+        public static CustomRoleOption agnosiaSpawnRate;
+        public static CustomOption agnosiaCooldown;
+        public static CustomOption agnosiaDuration;
+        public static CustomOption agnosiaKillCooldownActive;
+        public static CustomOption agnosiaKillCooldownIdle;
+        public static CustomOption agnosiaMadnessKills;
+        public static CustomOption agnosiaMadnessDuration;
+
+        public static CustomRoleOption playerRoleSpawnRate;
+        public static CustomOption playerRoleKillCooldown;
+        public static CustomOption playerRoleCooldownReduce;
+        public static CustomOption playerRoleMinKillCooldown;
+        public static CustomOption playerRoleExpPerTask;
+        public static CustomOption playerRoleExpPerKill;
+        public static CustomOption playerRoleExpPerLevel;
+        public static CustomOption playerRoleCommonTasks;
+        public static CustomOption playerRoleShortTasks;
+        public static CustomOption playerRoleLongTasks;
+
+        public static CustomRoleOption voteEaterSpawnRate;
+        public static CustomOption voteEaterAssignEqually;
+        public static CustomOption voteEaterIsImpVoteEaterRate;
+        public static CustomOption voteEaterNumberOfUses;
+
+        public static CustomRoleOption policeCommissionerSpawnRate;
+        public static CustomOption policeCommissionerCooldown;
+        public static CustomOption policeCommissionerUses;
+        public static CustomOption policeCommissionerCanRecruitImpostor;
+        public static CustomOption policeCommissionerCanRecruitNeutral;
+        public static CustomOption policeCommissionerDiesOnImpostor;
+        public static CustomOption policeCommissionerDiesOnNeutral;
+        public static CustomOption policeCommissionerCanKill;
+        public static CustomOption policeCommissionerKillCooldown;
+
         public static CustomRoleOption akujoSpawnRate;
         public static CustomOption akujoTimeLimit;
         public static CustomOption akujoKnowsRoles;
@@ -605,6 +678,31 @@ namespace TheOtherRoles {
         public static CustomOption modifierRacerQuantity;
         public static CustomOption modifierRacerSpeedBoost;
         public static CustomOption modifierRacerMeetingsUntilDespawn;
+
+        public static CustomOption modifierGravedigger;
+        public static CustomOption modifierGravediggerQuantity;
+
+        public static CustomOption modifierGambler;
+        public static CustomOption modifierGamblerAssignCrew;
+        public static CustomOption modifierGamblerAssignImpostor;
+        public static CustomOption modifierGamblerAssignNeutral;
+        public static CustomOption modifierGamblerShotsPerMeeting;
+        public static CustomOption modifierGamblerShotsTotal;
+
+        public static CustomOption modifierLayabout;
+        public static CustomOption modifierLayaboutQuantity;
+
+        public static CustomOption modifierPeeker;
+        public static CustomOption modifierPeekerQuantity;
+
+        public static CustomOption modifierSuperstar;
+        public static CustomOption modifierSuperstarQuantity;
+
+        public static CustomOption modifierNightOwl;
+        public static CustomOption modifierNightOwlQuantity;
+
+        public static CustomOption modifierScatterer;
+        public static CustomOption modifierScattererQuantity;
 
         public static CustomRoleOption bomberSpawnRate;
         public static CustomOption bomberCooldown;
@@ -823,6 +921,8 @@ namespace TheOtherRoles {
             janitorImpostorsCanSeeDeadBody = CustomOption.Create(19, Types.Impostor, "janitorImpostorsCanSeeDeadBody", true, mafiaSpawnRate);
             janitorCanSabotage = CustomOption.Create(25, Types.Impostor, "janitorCanSabotage", true, mafiaSpawnRate);
             mafiosoNumberOfSkips = CustomOption.Create(23, Types.Impostor, "mafiosoNumberOfSkips", 2f, 1f, 15f, 1f, mafiaSpawnRate, false, "unitScrews");
+            godfatherReckoningPerMeeting = CustomOption.Create(921, Types.Impostor, "godfatherReckoningPerMeeting", 1f, 1f, 3f, 1f, mafiaSpawnRate, false, "unitTimes");
+            godfatherReckoningTotal = CustomOption.Create(922, Types.Impostor, "godfatherReckoningTotal", 2f, 1f, 5f, 1f, mafiaSpawnRate, false, "unitTimes");
 
             morphlingSpawnRate = new CustomRoleOption(20, Types.Impostor, "morphling", Morphling.color);
             morphlingCooldown = CustomOption.Create(21, Types.Impostor, "morphlingCooldown", 30f, 10f, 60f, 2.5f, morphlingSpawnRate, false, "unitSeconds");
@@ -999,6 +1099,7 @@ namespace TheOtherRoles {
             guesserIsImpGuesserRate = CustomOption.Create(311, Types.Neutral, "guesserIsImpGuesserRate", rates, guesserSpawnRate);
             guesserNumberOfShots = CustomOption.Create(312, Types.Neutral, "guesserNumberOfShots", 2f, 1f, 24f, 1f, guesserSpawnRate, false, "unitShots");
             guesserHasMultipleShotsPerMeeting = CustomOption.Create(313, Types.Neutral, "guesserHasMultipleShotsPerMeeting", false, guesserSpawnRate);
+            guesserSafeGuesses = CustomOption.Create(314, Types.Neutral, "guesserSafeGuesses", 0f, 0f, 10f, 1f, guesserSpawnRate, false, "unitShots");
             guesserKillsThroughShield  = CustomOption.Create(315, Types.Neutral, "guesserKillsThroughShield", true, guesserSpawnRate);
             guesserEvilCanKillSpy  = CustomOption.Create(316, Types.Neutral, "guesserEvilCanKillSpy", true, guesserSpawnRate);
             guesserSpawnBothRate = CustomOption.Create(317, Types.Neutral, "guesserSpawnBothRate", rates, guesserSpawnRate);
@@ -1076,6 +1177,16 @@ namespace TheOtherRoles {
             energyAmplifierExtraSpeedPerPlayer = CustomOption.Create(6110, Types.Crewmate, "energyAmplifierExtraSpeedPerPlayer", 0.1f, 0f, 0.5f, 0.05f, energyAmplifierSpawnRate, false, "unitTimes");
             energyAmplifierMaxSpeedBoost = CustomOption.Create(6111, Types.Crewmate, "energyAmplifierMaxSpeedBoost", 1f, 0.5f, 2f, 0.1f, energyAmplifierSpawnRate, false, "unitTimes");
 
+            gojoSpawnRate = new CustomRoleOption(4022, Types.Crewmate, "gojo", Gojo.color);
+            gojoMaxCursedEnergy = CustomOption.Create(4023, Types.Crewmate, "gojoMaxCursedEnergy", 100f, 20f, 200f, 10f, gojoSpawnRate, false, "");
+            gojoDrainPerSecond = CustomOption.Create(4024, Types.Crewmate, "gojoDrainPerSecond", 8f, 1f, 20f, 1f, gojoSpawnRate, false, "");
+            gojoRecoverPerTask = CustomOption.Create(4025, Types.Crewmate, "gojoRecoverPerTask", 25f, 0f, 100f, 5f, gojoSpawnRate, false, "");
+            gojoRadius = CustomOption.Create(4026, Types.Crewmate, "gojoRadius", 2.5f, 1f, 6f, 0.5f, gojoSpawnRate, false, "unitMeters");
+
+            sukunaSpawnRate = new CustomRoleOption(4033, Types.Impostor, "sukuna", Sukuna.color);
+            sukunaCooldown = CustomOption.Create(4034, Types.Impostor, "sukunaCooldown", 30f, 5f, 90f, 5f, sukunaSpawnRate, false, "unitSeconds");
+            sukunaChantDuration = CustomOption.Create(4035, Types.Impostor, "sukunaChantDuration", 8f, 2f, 20f, 1f, sukunaSpawnRate, false, "unitSeconds");
+
 
             shifterSpawnRate = new CustomRoleOption(1100, Types.Neutral, "shifter", Shifter.color, 1);
             shifterIsNeutralRate = CustomOption.Create(6007, Types.Neutral, "shifterIsNeutralRate", rates, shifterSpawnRate);
@@ -1145,8 +1256,13 @@ namespace TheOtherRoles {
             yandereHasImpVision = CustomOption.Create(8506, Types.Neutral, "yandereHasImpVision", true, yandereSpawnRate);
 
             workaholicSpawnRate = new CustomRoleOption(8600, Types.Neutral, "workaholic", Workaholic.color, max: 3);
+            workaholicDeathCountdown = CustomOption.Create(8601, Types.Neutral, "workaholicDeathCountdown", 60f, 15f, 180f, 5f, workaholicSpawnRate, false, "unitSeconds");
+            workaholicGetTaskCooldown = CustomOption.Create(8602, Types.Neutral, "workaholicGetTaskCooldown", 180f, 30f, 300f, 10f, workaholicSpawnRate, false, "unitSeconds");
+            workaholicShieldDuration = CustomOption.Create(8603, Types.Neutral, "workaholicShieldDuration", 5f, 1f, 30f, 1f, workaholicSpawnRate, false, "unitSeconds");
+            workaholicMaxShieldCount = CustomOption.Create(8604, Types.Neutral, "workaholicMaxShieldCount", 1f, 1f, 10f, 1f, workaholicSpawnRate, false, "unitScrews");
 
             voidEaterSpawnRate = new CustomRoleOption(8800, Types.Impostor, "voidEater", VoidEater.color, max: 1);
+            voidEaterKillCooldownReduction = CustomOption.Create(8801, Types.Impostor, "voidEaterKillCooldownReduction", 10f, 0f, 30f, 1f, voidEaterSpawnRate, false, "unitSeconds");
             voidEaterSwallowCooldown = CustomOption.Create(8802, Types.Impostor, "voidEaterSwallowCooldown", 24f, 5f, 60f, 1f, voidEaterSpawnRate, false, "unitSeconds");
             voidEaterSpeedBoostDuration = CustomOption.Create(8803, Types.Impostor, "voidEaterSpeedBoostDuration", 5f, 1f, 15f, 1f, voidEaterSpawnRate, false, "unitSeconds");
             voidEaterSpeedBoostMultiplier = CustomOption.Create(8804, Types.Impostor, "voidEaterSpeedBoostMultiplier", 0.3f, 0.05f, 1f, 0.05f, voidEaterSpawnRate, false, "unitTimes");
@@ -1207,6 +1323,10 @@ namespace TheOtherRoles {
             deputyGetsPromoted = CustomOption.Create(108, Types.Crewmate, "deputyGetsPromoted", ["optionOff", "deputyOnImmediately", "deputyOnAfterMeeting"], deputySpawnRate);
             deputyKeepsHandcuffs = CustomOption.Create(109, Types.Crewmate, "deputyKeepsHandcuffs", true, deputyGetsPromoted);
             deputyStopsGameEnd = CustomOption.Create(4016, Types.Crewmate, "deputyStopsGameEnd", false, deputySpawnRate);
+            auxiliarySpawnRate = CustomOption.Create(4018, Types.Crewmate, "sheriffAuxiliary", rates, sheriffSpawnRate);
+            auxiliaryRoleCount = CustomOption.Create(4019, Types.Crewmate, "auxiliaryRoleCount", 1f, 1f, 24f, 1f, auxiliarySpawnRate, format: "unitPlayers");
+            auxiliaryNumberOfMarks = CustomOption.Create(4020, Types.Crewmate, "auxiliaryNumberOfMarks", 2f, 1f, 10f, 1f, auxiliarySpawnRate, false, "unitShots");
+            auxiliaryMarkCooldown = CustomOption.Create(4021, Types.Crewmate, "auxiliaryMarkCooldown", 25f, 5f, 60f, 2.5f, auxiliarySpawnRate, false, "unitSeconds");
 
             lighterSpawnRate = new CustomRoleOption(110, Types.Crewmate, "lighter", Lighter.color);
             lighterModeLightsOnVision = CustomOption.Create(111, Types.Crewmate, "lighterModeLightsOnVision", 1.5f, 0.25f, 5f, 0.25f, lighterSpawnRate, false, "unitTimes");
@@ -1385,8 +1505,59 @@ namespace TheOtherRoles {
             moriartySherlockAddition = CustomOption.Create(8045, Types.Neutral, "moriartySherlockAddition", 2f, 0f, 5f, 1f, moriartySpawnRate, false, "unitScrews");
             moriartyKillIndicate = CustomOption.Create(8044, Types.Neutral, "moriartyKillIndicate", false, moriartySpawnRate);
 
-            martyrSpawnRate = new CustomRoleOption(9801, Types.Crewmate, "martyr", Martyr.color, 1);
-            martyrCooldown = CustomOption.Create(9802, Types.Crewmate, "martyrCooldown", 30f, 2.5f, 60f, 2.5f, martyrSpawnRate, false, "unitSeconds");
+            martyrSpawnRate = new CustomRoleOption(4037, Types.Crewmate, "martyr", Martyr.color, 1);
+            martyrCooldown = CustomOption.Create(4038, Types.Crewmate, "martyrCooldown", 30f, 2.5f, 60f, 2.5f, martyrSpawnRate, false, "unitSeconds");
+
+            gremlinSpawnRate = new CustomRoleOption(11100, Types.Neutral, "gremlin", Gremlin.color, max: 3);
+            gremlinCooldown = CustomOption.Create(11101, Types.Neutral, "gremlinCooldown", 15f, 3f, 60f, 1f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinPassiveInterval = CustomOption.Create(11102, Types.Neutral, "gremlinPassiveInterval", 45f, 10f, 120f, 5f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinComboChance = CustomOption.Create(11103, Types.Neutral, "gremlinComboChance", 35f, 0f, 100f, 5f, gremlinSpawnRate, false, "unitPercent");
+            gremlinDashDuration = CustomOption.Create(11104, Types.Neutral, "gremlinDashDuration", 6f, 1f, 20f, 1f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinDashMultiplier = CustomOption.Create(11105, Types.Neutral, "gremlinDashMultiplier", 0.5f, 0.1f, 1.5f, 0.05f, gremlinSpawnRate, false, "unitTimes");
+            gremlinSlumpDuration = CustomOption.Create(11106, Types.Neutral, "gremlinSlumpDuration", 5f, 1f, 20f, 1f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinSlumpMultiplier = CustomOption.Create(11107, Types.Neutral, "gremlinSlumpMultiplier", 0.45f, 0.1f, 0.9f, 0.05f, gremlinSpawnRate, false, "unitTimes");
+            gremlinGiantDuration = CustomOption.Create(11108, Types.Neutral, "gremlinGiantDuration", 8f, 2f, 30f, 1f, gremlinSpawnRate, false, "unitSeconds");
+            gremlinGiantScale = CustomOption.Create(11109, Types.Neutral, "gremlinGiantScale", 2f, 1.3f, 4f, 0.1f, gremlinSpawnRate, false, "unitTimes");
+            gremlinFreezeDuration = CustomOption.Create(11110, Types.Neutral, "gremlinFreezeDuration", 4f, 1f, 15f, 1f, gremlinSpawnRate, false, "unitSeconds");
+
+            illusionistSpawnRate = new CustomRoleOption(11111, Types.Impostor, "illusionist", Illusionist.color);
+            illusionistCooldown = CustomOption.Create(11112, Types.Impostor, "illusionistCooldown", 25f, 5f, 120f, 2.5f, illusionistSpawnRate, false, "unitSeconds");
+            illusionistUses = CustomOption.Create(11113, Types.Impostor, "illusionistUses", 3f, 1f, 10f, 1f, illusionistSpawnRate, false, "unitScrews");
+            illusionistTriggerRadius = CustomOption.Create(11114, Types.Impostor, "illusionistTriggerRadius", 1.5f, 0.5f, 4f, 0.1f, illusionistSpawnRate, false, "unitMeters");
+
+            agnosiaSpawnRate = new CustomRoleOption(11115, Types.Impostor, "agnosia", Agnosia.color);
+            agnosiaCooldown = CustomOption.Create(11116, Types.Impostor, "agnosiaCooldown", 30f, 5f, 120f, 2.5f, agnosiaSpawnRate, false, "unitSeconds");
+            agnosiaDuration = CustomOption.Create(11117, Types.Impostor, "agnosiaDuration", 15f, 3f, 40f, 1f, agnosiaSpawnRate, false, "unitSeconds");
+            agnosiaKillCooldownActive = CustomOption.Create(11118, Types.Impostor, "agnosiaKillCooldownActive", 10f, 2.5f, 60f, 2.5f, agnosiaSpawnRate, false, "unitSeconds");
+            agnosiaKillCooldownIdle = CustomOption.Create(11119, Types.Impostor, "agnosiaKillCooldownIdle", 45f, 5f, 120f, 2.5f, agnosiaSpawnRate, false, "unitSeconds");
+            agnosiaMadnessKills = CustomOption.Create(11120, Types.Impostor, "agnosiaMadnessKills", 3f, 1f, 10f, 1f, agnosiaSpawnRate, false, "unitScrews");
+            agnosiaMadnessDuration = CustomOption.Create(11121, Types.Impostor, "agnosiaMadnessDuration", 30f, 5f, 90f, 5f, agnosiaSpawnRate, false, "unitSeconds");
+
+            playerRoleSpawnRate = new CustomRoleOption(11130, Types.Neutral, "playerRole", PlayerRole.color, max: 3);
+            playerRoleKillCooldown = CustomOption.Create(11131, Types.Neutral, "playerRoleKillCooldown", 45f, 10f, 120f, 2.5f, playerRoleSpawnRate, false, "unitSeconds");
+            playerRoleCooldownReduce = CustomOption.Create(11132, Types.Neutral, "playerRoleCooldownReduce", 5f, 0f, 30f, 1f, playerRoleSpawnRate, false, "unitSeconds");
+            playerRoleMinKillCooldown = CustomOption.Create(11133, Types.Neutral, "playerRoleMinKillCooldown", 10f, 2.5f, 60f, 2.5f, playerRoleSpawnRate, false, "unitSeconds");
+            playerRoleExpPerTask = CustomOption.Create(11134, Types.Neutral, "playerRoleExpPerTask", 1f, 0f, 10f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleExpPerKill = CustomOption.Create(11135, Types.Neutral, "playerRoleExpPerKill", 3f, 0f, 20f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleExpPerLevel = CustomOption.Create(11136, Types.Neutral, "playerRoleExpPerLevel", 5f, 1f, 50f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleCommonTasks = CustomOption.Create(11137, Types.Neutral, "playerRoleCommonTasks", 1f, 0f, 4f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleShortTasks = CustomOption.Create(11138, Types.Neutral, "playerRoleShortTasks", 3f, 0f, 20f, 1f, playerRoleSpawnRate, false, "unitScrews");
+            playerRoleLongTasks = CustomOption.Create(11139, Types.Neutral, "playerRoleLongTasks", 2f, 0f, 6f, 1f, playerRoleSpawnRate, false, "unitScrews");
+
+            voteEaterSpawnRate = new CustomRoleOption(11140, Types.Neutral, "voteEater", VoteEater.color);
+            voteEaterAssignEqually = CustomOption.Create(11141, Types.Neutral, "voteEaterAssignEqually", ["optionOn", "optionOff"], voteEaterSpawnRate);
+            voteEaterIsImpVoteEaterRate = CustomOption.Create(11142, Types.Neutral, "voteEaterIsImpVoteEaterRate", rates, voteEaterAssignEqually);
+            voteEaterNumberOfUses = CustomOption.Create(11143, Types.Neutral, "voteEaterNumberOfUses", 2f, 1f, 15f, 1f, voteEaterSpawnRate, false, "unitShots");
+
+            policeCommissionerSpawnRate = new CustomRoleOption(11170, Types.Crewmate, "policeCommissioner", PoliceCommissioner.color);
+            policeCommissionerCooldown = CustomOption.Create(11171, Types.Crewmate, "policeCommissionerCooldown", 30f, 5f, 120f, 5f, policeCommissionerSpawnRate, false, "unitSeconds");
+            policeCommissionerUses = CustomOption.Create(11172, Types.Crewmate, "policeCommissionerUses", 1f, 1f, 5f, 1f, policeCommissionerSpawnRate, false, "unitShots");
+            policeCommissionerCanRecruitImpostor = CustomOption.Create(11173, Types.Crewmate, "policeCommissionerCanRecruitImpostor", true, policeCommissionerSpawnRate);
+            policeCommissionerCanRecruitNeutral = CustomOption.Create(11174, Types.Crewmate, "policeCommissionerCanRecruitNeutral", true, policeCommissionerSpawnRate);
+            policeCommissionerDiesOnImpostor = CustomOption.Create(11175, Types.Crewmate, "policeCommissionerDiesOnImpostor", true, policeCommissionerSpawnRate);
+            policeCommissionerDiesOnNeutral = CustomOption.Create(11176, Types.Crewmate, "policeCommissionerDiesOnNeutral", true, policeCommissionerSpawnRate);
+            policeCommissionerCanKill = CustomOption.Create(11177, Types.Crewmate, "policeCommissionerCanKill", true, policeCommissionerSpawnRate);
+            policeCommissionerKillCooldown = CustomOption.Create(11178, Types.Crewmate, "policeCommissionerKillCooldown", 30f, 5f, 120f, 2.5f, policeCommissionerSpawnRate, false, "unitSeconds");
 
             /*trapperSpawnRate = CustomOption.Create(410, Types.Crewmate, cs(Trapper.color, "Trapper"), rates, null, true);
             trapperCooldown = CustomOption.Create(420, Types.Crewmate, "Trapper Cooldown", 30f, 5f, 120f, 5f, trapperSpawnRate);
@@ -1421,6 +1592,31 @@ namespace TheOtherRoles {
             modifierRacerQuantity = CustomOption.Create(9201, Types.Modifier, cs(Color.yellow, "racerQuantity"), ratesModifier, modifierRacer);
             modifierRacerSpeedBoost = CustomOption.Create(9202, Types.Modifier, "modifierRacerSpeedBoost", 0.3f, 0.1f, 1f, 0.1f, modifierRacer, false, "unitTimes");
             modifierRacerMeetingsUntilDespawn = CustomOption.Create(9203, Types.Modifier, "modifierRacerMeetingsUntilDespawn", 3f, 1f, 10f, 1f, modifierRacer, false, "unitMeetings");
+
+            modifierGravedigger = CustomOption.Create(1110, Types.Modifier, cs(Color.yellow, "gravedigger"), rates, null, true, color: Color.yellow);
+            modifierGravediggerQuantity = CustomOption.Create(1123, Types.Modifier, cs(Color.yellow, "gravediggerQuantity"), ratesModifier, modifierGravedigger);
+
+            modifierGambler = CustomOption.Create(1111, Types.Modifier, cs(Gambler.color, "gambler"), rates, null, true, color: Gambler.color);
+            modifierGamblerAssignCrew = CustomOption.Create(1112, Types.Modifier, "modifierGamblerAssignCrew", true, modifierGambler);
+            modifierGamblerAssignImpostor = CustomOption.Create(1113, Types.Modifier, "modifierGamblerAssignImpostor", true, modifierGambler);
+            modifierGamblerAssignNeutral = CustomOption.Create(1114, Types.Modifier, "modifierGamblerAssignNeutral", true, modifierGambler);
+            modifierGamblerShotsPerMeeting = CustomOption.Create(1115, Types.Modifier, "modifierGamblerShotsPerMeeting", 1f, 0f, 10f, 1f, modifierGambler, false, "unitShots");
+            modifierGamblerShotsTotal = CustomOption.Create(1116, Types.Modifier, "modifierGamblerShotsTotal", 2f, 1f, 20f, 1f, modifierGambler, false, "unitShots");
+
+            modifierLayabout = CustomOption.Create(1117, Types.Modifier, cs(Color.yellow, "layabout"), rates, null, true, color: Color.yellow);
+            modifierLayaboutQuantity = CustomOption.Create(1124, Types.Modifier, cs(Color.yellow, "layaboutQuantity"), ratesModifier, modifierLayabout);
+
+            modifierPeeker = CustomOption.Create(1118, Types.Modifier, cs(Color.yellow, "peeker"), rates, null, true, color: Color.yellow);
+            modifierPeekerQuantity = CustomOption.Create(1125, Types.Modifier, cs(Color.yellow, "peekerQuantity"), ratesModifier, modifierPeeker);
+
+            modifierSuperstar = CustomOption.Create(1119, Types.Modifier, cs(Superstar.color, "superstar"), rates, null, true, color: Superstar.color);
+            modifierSuperstarQuantity = CustomOption.Create(1126, Types.Modifier, cs(Superstar.color, "superstarQuantity"), ratesModifier, modifierSuperstar);
+
+            modifierNightOwl = CustomOption.Create(1120, Types.Modifier, cs(Color.yellow, "nightOwl"), rates, null, true, color: Color.yellow);
+            modifierNightOwlQuantity = CustomOption.Create(1127, Types.Modifier, cs(Color.yellow, "nightOwlQuantity"), ratesModifier, modifierNightOwl);
+
+            modifierScatterer = CustomOption.Create(1121, Types.Modifier, cs(Color.yellow, "scatterer"), rates, null, true, color: Color.yellow);
+            modifierScattererQuantity = CustomOption.Create(1122, Types.Modifier, cs(Color.yellow, "scattererQuantity"), ratesModifier, modifierScatterer);
 
             modifierSunglasses = CustomOption.Create(1050, Types.Modifier, cs(Color.yellow, "sunglasses"), rates, null, true, color: Color.yellow);
             modifierSunglassesQuantity = CustomOption.Create(1051, Types.Modifier, cs(Color.yellow, "sunglassesQuantity"), ratesModifier, modifierSunglasses);

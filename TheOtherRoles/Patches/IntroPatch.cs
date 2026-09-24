@@ -29,6 +29,7 @@ namespace TheOtherRoles.Patches
 #endif
 
         public static void Prefix(IntroCutscene __instance) {
+            Agnosia.seekerSpawnAnim = __instance.HnSSeekerSpawnAnim;
             // Generate and initialize player icons
             int playerCounter = 0;
             int hideNSeekCounter = 0;
@@ -476,6 +477,8 @@ namespace TheOtherRoles.Patches
         {
             public static bool Prefix(IntroCutscene __instance, ref Il2CppSystem.Collections.IEnumerator __result)
             {
+                Agnosia.seekerSpawnAnim = __instance.HnSSeekerSpawnAnim;
+
                 __result = CoBegin(__instance).WrapToIl2Cpp();
 
                 return false;
@@ -545,6 +548,14 @@ namespace TheOtherRoles.Patches
                     }
                     else if (infos.Any(info => info.roleId == RoleId.Deputy))
                         __instance.RoleBlurbText.text += Helpers.cs(Sheriff.color, string.Format(ModTranslation.getString("sheriffIntroLine"), Deputy.getRole(PlayerControl.LocalPlayer)?.sheriff?.player?.Data?.PlayerName ?? ""));
+                }
+                if (Auxiliary.exists && Sheriff.exists) {
+                    if (infos.Any(info => info.roleId == RoleId.Sheriff)) {
+                        var auxiliary = Auxiliary.getAuxiliary(PlayerControl.LocalPlayer);
+                        if (auxiliary != null) __instance.RoleBlurbText.text += Helpers.cs(Sheriff.color, string.Format(ModTranslation.getString("auxiliaryIntroLine"), auxiliary?.player?.Data?.PlayerName ?? ""));
+                    }
+                    else if (infos.Any(info => info.roleId == RoleId.Auxiliary))
+                        __instance.RoleBlurbText.text += Helpers.cs(Sheriff.color, string.Format(ModTranslation.getString("sheriffIntroLine"), Auxiliary.getRole(PlayerControl.LocalPlayer)?.sheriff?.player?.Data?.PlayerName ?? ""));
                 }
                 if (infos.Any(info => info.roleId == RoleId.Kataomoi)) {
                     __instance.RoleBlurbText.text += Helpers.cs(Kataomoi.color, string.Format(ModTranslation.getString("kataomoiIntroLine"), Kataomoi.target?.Data?.PlayerName ?? ""));

@@ -28,6 +28,9 @@ namespace TheOtherRoles
             Engineer.clearAndReload();
             Sheriff.clearAndReload();
             Deputy.clearAndReload();
+            Auxiliary.clearAndReload();
+            Gojo.clearAndReload();
+            Sukuna.clearAndReload();
             Lighter.clearAndReload();
             Godfather.clearAndReload();
             Mafioso.clearAndReload();
@@ -116,6 +119,12 @@ namespace TheOtherRoles
             Workaholic.clearAndReload();
             VoidEater.clearAndReload();
             Martyr.clearAndReload();
+            Gremlin.clearAndReload();
+            Illusionist.clearAndReload();
+            Agnosia.clearAndReload();
+            PlayerRole.clearAndReload();
+            VoteEater.clearAndReload();
+            PoliceCommissioner.clearAndReload();
             Role.ClearAll();
 
             // Modifier
@@ -132,6 +141,13 @@ namespace TheOtherRoles
             Diseased.clearAndReload();
             Radar.clearAndReload();
             Racer.clearAndReload();
+            Gravedigger.clearAndReload();
+            Gambler.clearAndReload();
+            Layabout.clearAndReload();
+            Peeker.clearAndReload();
+            Superstar.clearAndReload();
+            NightOwl.clearAndReload();
+            Scatterer.clearAndReload();
 
             // Gamemodes
             HandleGuesser.clearAndReload();
@@ -239,7 +255,17 @@ namespace TheOtherRoles
                 { RoleId.Pelican, typeof(RoleBase<Pelican>) },
                 { RoleId.Yandere, typeof(RoleBase<Yandere>) },
                 { RoleId.Workaholic, typeof(RoleBase<Workaholic>) },
-                { RoleId.VoidEater, typeof(RoleBase<VoidEater>) }
+                { RoleId.VoidEater, typeof(RoleBase<VoidEater>) },
+                { RoleId.Gremlin, typeof(RoleBase<Gremlin>) },
+                { RoleId.Illusionist, typeof(RoleBase<Illusionist>) },
+                { RoleId.Agnosia, typeof(RoleBase<Agnosia>) },
+                { RoleId.PlayerRole, typeof(RoleBase<PlayerRole>) },
+                { RoleId.NiceVoteEater, typeof(RoleBase<NiceVoteEater>) },
+                { RoleId.EvilVoteEater, typeof(RoleBase<EvilVoteEater>) },
+                { RoleId.PoliceCommissioner, typeof(RoleBase<PoliceCommissioner>) },
+                { RoleId.Auxiliary, typeof(RoleBase<Auxiliary>) },
+                { RoleId.Gojo, typeof(RoleBase<Gojo>) },
+                { RoleId.Sukuna, typeof(RoleBase<Sukuna>) }
             };
 
             public static IEnumerable<HelpSprite> GetHelp(RoleId roleId)
@@ -1392,6 +1418,202 @@ namespace TheOtherRoles
             cars.Clear();
             speedBoost = CustomOptionHolder.modifierRacerSpeedBoost.getFloat();
             meetingsUntilDespawn = Mathf.RoundToInt(CustomOptionHolder.modifierRacerMeetingsUntilDespawn.getFloat());
+        }
+    }
+
+    public static class Gravedigger
+    {
+        public static Color color = Color.yellow;
+        public static PlayerControl gravedigger;
+        public static List<byte> known = [];
+
+        public static bool isGravedigger(PlayerControl player) => player != null && player == gravedigger;
+
+        public static bool knows(PlayerControl player) => player != null && known.Contains(player.PlayerId);
+
+        public static void learn(PlayerControl victim)
+        {
+            if (victim == null || known.Contains(victim.PlayerId)) return;
+            known.Add(victim.PlayerId);
+        }
+
+        public static void clearAndReload()
+        {
+            gravedigger = null;
+            known = [];
+        }
+    }
+
+    public static class Gambler
+    {
+        public static Color color = new Color32(255, 200, 60, byte.MaxValue);
+        public static PlayerControl gambler;
+        public static int shotsThisMeeting = 1;
+        public static int shotsTotal = 2;
+
+        public static bool isGambler(PlayerControl player) => player != null && player == gambler;
+
+        public static int remainingShot(bool shoot)
+        {
+            int remaining = Mathf.Min(shotsThisMeeting, shotsTotal);
+            if (shoot)
+            {
+                shotsThisMeeting = Mathf.Max(0, shotsThisMeeting - 1);
+                shotsTotal = Mathf.Max(0, shotsTotal - 1);
+            }
+            return remaining;
+        }
+
+        public static void OnMeetingBegin()
+        {
+            shotsThisMeeting = Mathf.RoundToInt(CustomOptionHolder.modifierGamblerShotsPerMeeting.getFloat());
+        }
+
+        public static void clearAndReload()
+        {
+            gambler = null;
+            shotsTotal = Mathf.RoundToInt(CustomOptionHolder.modifierGamblerShotsTotal.getFloat());
+            shotsThisMeeting = Mathf.RoundToInt(CustomOptionHolder.modifierGamblerShotsPerMeeting.getFloat());
+        }
+    }
+
+    public static class Layabout
+    {
+        public static Color color = Color.yellow;
+        public static PlayerControl layabout;
+
+        public static bool isLayabout(PlayerControl player) => player != null && player == layabout;
+
+        public static void clearAndReload()
+        {
+            layabout = null;
+        }
+    }
+
+    public static class Peeker
+    {
+        public static Color color = Color.yellow;
+        public static PlayerControl peeker;
+
+        public static bool isPeeker(PlayerControl player) => player != null && player == peeker;
+
+        public static void clearAndReload()
+        {
+            peeker = null;
+        }
+    }
+
+    public static class Superstar
+    {
+        public static Color color = new Color32(255, 215, 0, byte.MaxValue);
+        public static PlayerControl superstar;
+
+        public static bool isSuperstar(PlayerControl player) => player != null && player == superstar;
+
+        public static void clearAndReload()
+        {
+            superstar = null;
+        }
+    }
+
+    public static class NightOwl
+    {
+        public static Color color = Color.yellow;
+        public static PlayerControl nightOwl;
+        public static float visionMultiplier = 1.5f;
+        public static bool lastActive = false;
+
+        public static bool isNightOwl(PlayerControl player) => player != null && player == nightOwl;
+
+        public static void clearAndReload()
+        {
+            nightOwl = null;
+            lastActive = false;
+        }
+    }
+
+    public static class Scatterer
+    {
+        public static Color color = Color.yellow;
+        public static List<PlayerControl> scatterer = [];
+        public static List<byte> used = [];
+
+        public static CustomButton scattererButton;
+        private static Sprite buttonSprite;
+
+        public static bool isScatterer(PlayerControl player) => player != null && scatterer.Any(x => x != null && x.PlayerId == player.PlayerId);
+
+        public static bool hasUsed(PlayerControl player) => player != null && used.Contains(player.PlayerId);
+
+        public static Sprite getButtonSprite()
+        {
+            if (buttonSprite) return buttonSprite;
+            buttonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.TeleporterButton.png", 115f);
+            return buttonSprite;
+        }
+
+        public static void createButton()
+        {
+            if (scattererButton != null || HudManager.Instance == null) return;
+            if (!isScatterer(PlayerControl.LocalPlayer)) return;
+
+            scattererButton = new CustomButton(
+                () =>
+                {
+                    RPCProcedure.ScattererScatter.Invoke((PlayerControl.LocalPlayer.PlayerId, (byte)UnityEngine.Random.Range(0, 256)));
+                    scattererButton.Timer = 0f;
+                },
+                () => isScatterer(PlayerControl.LocalPlayer) && !hasUsed(PlayerControl.LocalPlayer) && !PlayerControl.LocalPlayer.Data.IsDead,
+                () => PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance && !Minigame.Instance,
+                () => { },
+                getButtonSprite(),
+                CustomButton.ButtonPositions.upperRowFarLeft,
+                HudManager.Instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("scattererScatter"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+            scattererButton.MaxTimer = 0f;
+            scattererButton.Timer = 0f;
+        }
+
+        public static void doScatter(byte ownerId, byte seed)
+        {
+            if (used.Contains(ownerId)) return;
+            used.Add(ownerId);
+
+            var vents = MapUtilities.CachedShipStatus?.AllVents;
+            if (vents == null || vents.Length == 0) return;
+
+            var random = new System.Random(seed);
+            foreach (var p in PlayerControl.AllPlayerControls.ToArray())
+            {
+                var vent = vents[random.Next(vents.Length)];
+
+                if (p == null || p.Data == null || p.Data.IsDead || p.Data.Disconnected) continue;
+                if (p.MyPhysics == null || p.NetTransform == null || vent == null) continue;
+
+                p.MyPhysics.ResetMoveState();
+                p.NetTransform.SnapTo(vent.transform.position);
+            }
+            SoundEffectsManager.play("teleporterTeleport");
+        }
+
+        public static void destroyButton()
+        {
+            if (scattererButton != null)
+            {
+                UnityEngine.Object.Destroy(scattererButton.actionButtonGameObject);
+                scattererButton = null;
+            }
+        }
+
+        public static void clearAndReload()
+        {
+            scatterer = [];
+            used = [];
+            destroyButton();
+            buttonSprite = null;
         }
     }
 }

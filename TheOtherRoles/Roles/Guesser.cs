@@ -18,12 +18,20 @@ namespace TheOtherRoles.Roles
 
         public static AchievementToken<int> acTokenNiceGuesser;
         public static int remainingShotsNiceGuesser = 2;
+        public static int safeGuessesNiceGuesser = 0;
 
         public static int remainingShot(bool shoot)
         {
             int remainingShots = remainingShotsNiceGuesser;
             if (shoot) remainingShotsNiceGuesser = Mathf.Max(0, remainingShotsNiceGuesser - 1);
             return remainingShots;
+        }
+
+        public static bool consumeSafeGuess()
+        {
+            if (safeGuessesNiceGuesser <= 0) return false;
+            safeGuessesNiceGuesser--;
+            return true;
         }
 
         public override void PostInit()
@@ -36,6 +44,7 @@ namespace TheOtherRoles.Roles
         {
             acTokenNiceGuesser = null;
             remainingShotsNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
+            safeGuessesNiceGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserSafeGuesses.getFloat());
             players = [];
         }
     }
@@ -48,7 +57,15 @@ namespace TheOtherRoles.Roles
         }
 
         public static int remainingShotsEvilGuesser = 2;
+        public static int safeGuessesEvilGuesser = 0;
         public static AchievementToken<int> acTokenEvilGuesser;
+
+        public static bool consumeSafeGuess()
+        {
+            if (safeGuessesEvilGuesser <= 0) return false;
+            safeGuessesEvilGuesser--;
+            return true;
+        }
 
         public override void PostInit()
         {
@@ -67,6 +84,7 @@ namespace TheOtherRoles.Roles
         {
             acTokenEvilGuesser = null;
             remainingShotsEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserNumberOfShots.getFloat());
+            safeGuessesEvilGuesser = Mathf.RoundToInt(CustomOptionHolder.guesserSafeGuesses.getFloat());
             players = [];
         }
     }
@@ -78,6 +96,7 @@ namespace TheOtherRoles.Roles
         public static bool isGuesser(byte playerId)
         {
             PlayerControl player = Helpers.playerById(playerId);
+            if (Gambler.isGambler(player)) return true;
             if (player.isRole(RoleId.NiceGuesser) || player.isRole(RoleId.EvilGuesser)) return true;
             return false;
         }
@@ -85,6 +104,7 @@ namespace TheOtherRoles.Roles
         public static int remainingShots(byte playerId, bool shoot = false)
         {
             PlayerControl player = Helpers.playerById(playerId);
+            if (Gambler.isGambler(player)) return Gambler.remainingShot(shoot);
             if (player.isRole(RoleId.NiceGuesser)) return NiceGuesser.remainingShot(shoot);
             else return EvilGuesser.remainingShot(shoot);
         }

@@ -85,7 +85,10 @@ namespace TheOtherRoles.Modules
             RoleManagerSelectRolesPatch.RoleAssignmentData roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
             roleData.crewSettings.Add((byte)RoleId.Sheriff, CustomOptionHolder.sheriffSpawnRate.data);
             if (CustomOptionHolder.sheriffSpawnRate.getSelection() > 0)
+            {
                 roleData.crewSettings.Add((byte)RoleId.Deputy, (CustomOptionHolder.deputySpawnRate.getSelection(), (int)CustomOptionHolder.deputyRoleCount.getFloat()));
+                roleData.crewSettings.Add((byte)RoleId.Auxiliary, (CustomOptionHolder.auxiliarySpawnRate.getSelection(), (int)CustomOptionHolder.auxiliaryRoleCount.getFloat()));
+            }
 
             // Assign paired roles
             if (impostorCount >= 2)
@@ -123,6 +126,13 @@ namespace TheOtherRoles.Modules
                 (Mathf.CeilToInt(CustomOptionHolder.watcherSpawnRate.getSelection() * (10 - CustomOptionHolder.watcherIsImpWatcherRate.getSelection()) / 10f), CustomOptionHolder.watcherSpawnRate.count));
             roleData.impSettings.Add((byte)RoleId.EvilWatcher, assignWatcherEqually ? (CustomOptionHolder.watcherSpawnRate.getSelection(), CustomOptionHolder.watcherSpawnRate.count - niceWatcherCount) :
                 (Mathf.CeilToInt(CustomOptionHolder.watcherSpawnRate.getSelection() * CustomOptionHolder.watcherIsImpWatcherRate.getSelection() / 10f), CustomOptionHolder.watcherSpawnRate.count));
+
+            bool assignVoteEaterEqually = CustomOptionHolder.voteEaterAssignEqually.getSelection() == 0;
+            int niceVoteEaterCount = Mathf.CeilToInt(CustomOptionHolder.voteEaterSpawnRate.count / 2f);
+            roleData.crewSettings.Add((byte)RoleId.NiceVoteEater, assignVoteEaterEqually ? (CustomOptionHolder.voteEaterSpawnRate.getSelection(), niceVoteEaterCount) :
+                (Mathf.CeilToInt(CustomOptionHolder.voteEaterSpawnRate.getSelection() * (10 - CustomOptionHolder.voteEaterIsImpVoteEaterRate.getSelection()) / 10f), CustomOptionHolder.voteEaterSpawnRate.count));
+            roleData.impSettings.Add((byte)RoleId.EvilVoteEater, assignVoteEaterEqually ? (CustomOptionHolder.voteEaterSpawnRate.getSelection(), CustomOptionHolder.voteEaterSpawnRate.count - niceVoteEaterCount) :
+                (Mathf.CeilToInt(CustomOptionHolder.voteEaterSpawnRate.getSelection() * CustomOptionHolder.voteEaterIsImpVoteEaterRate.getSelection() / 10f), CustomOptionHolder.voteEaterSpawnRate.count));
             
             roleData.crewSettings.Add((byte)RoleId.Shifter, (Mathf.CeilToInt((10 - CustomOptionHolder.shifterIsNeutralRate.getSelection()) * CustomOptionHolder.shifterSpawnRate.getSelection() / 10f), 1));
             roleData.neutralSettings.Add((byte)RoleId.Shifter, (Mathf.CeilToInt(CustomOptionHolder.shifterIsNeutralRate.getSelection() * CustomOptionHolder.shifterSpawnRate.getSelection() / 10f), 1));
@@ -180,6 +190,7 @@ namespace TheOtherRoles.Modules
                             else if (roleInfo.roleId == RoleId.Sidekick) continue;
                             else if (roleInfo.roleId == RoleId.Immoralist) continue;
                             if (roleInfo.roleId == RoleId.Deputy && (!Sheriff.exists || Sheriff.players.Count <= Deputy.players.Count)) continue;
+                            if (roleInfo.roleId == RoleId.Auxiliary && (!Sheriff.exists || Sheriff.players.Count <= Auxiliary.players.Count)) continue;
                             if (roleInfo.roleId == RoleId.Pursuer) continue;
                             if (roleInfo.roleId == RoleId.Spy && impostorCount < 2) continue;
                             if (roleInfo.roleId == RoleId.Yasuna && alreadyPicked.Any(x => x.Item1 == (byte)RoleId.EvilYasuna)) continue;
@@ -187,6 +198,8 @@ namespace TheOtherRoles.Modules
                             if (TORMapOptions.gameMode == CustomGamemodes.Guesser && (roleInfo.roleId == RoleId.EvilGuesser || roleInfo.roleId == RoleId.NiceGuesser)) continue;
                             if ((roleInfo.roleId == RoleId.NiceWatcher || roleInfo.roleId == RoleId.EvilWatcher) && alreadyPicked.Where(x => x.Item1 is ((byte)RoleId.NiceWatcher) or ((byte)RoleId.EvilWatcher)).ToList().Count
                                 >= CustomOptionHolder.watcherSpawnRate.count) continue;
+                            if ((roleInfo.roleId == RoleId.NiceVoteEater || roleInfo.roleId == RoleId.EvilVoteEater) && alreadyPicked.Where(x => x.Item1 is ((byte)RoleId.NiceVoteEater) or ((byte)RoleId.EvilVoteEater)).ToList().Count
+                                >= CustomOptionHolder.voteEaterSpawnRate.count) continue;
                             if (alreadyPicked.Any(x => x.Item1 == (byte)roleInfo.roleId) && roleInfo.roleId != RoleId.Crewmate) {
                                 var list = roleData.crewSettings;
                                 if (roleData.impSettings.ContainsKey((byte)roleInfo.roleId)) list = roleData.impSettings;

@@ -20,6 +20,7 @@ namespace TheOtherRoles.Modules {
             JailorChat,
             ImpostorChat,
             GuesserMessage,
+            GodfatherMessage,
         }
 
         public enum ChannelType
@@ -235,6 +236,10 @@ namespace TheOtherRoles.Modules {
                     case ChatTypes.GuesserMessage:
                         __instance.NameText.color = Color.yellow;
                         __instance.NameText.text = $"{__instance.NameText.text} ({ModTranslation.getString("guesser")})";
+                        break;
+                    case ChatTypes.GodfatherMessage:
+                        __instance.NameText.color = Palette.ImpostorRed;
+                        __instance.NameText.text = $"{__instance.NameText.text} ({ModTranslation.getString("godfatherChatTag")})";
                         break;
                     case ChatTypes.ImpostorChat:
                         __instance.NameText.color = Palette.ImpostorRed;

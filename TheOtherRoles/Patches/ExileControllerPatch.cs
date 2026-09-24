@@ -232,6 +232,9 @@ namespace TheOtherRoles.Patches {
             // Reset Yasuna settings.
             Yasuna.specialVoteTargetPlayerId = byte.MaxValue;
 
+            // Reset VoteEater settings.
+            VoteEater.eatenTargetPlayerIds.Clear();
+
             // Tracker reset deadBodyPositions
             Tracker.deadBodyPositions = [];
 

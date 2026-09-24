@@ -29,7 +29,8 @@ namespace TheOtherRoles.Patches
             ToggleCursor,
             ShowVentsOnMap,
             ShowExtraInfo,
-            ScreenshotOnEnd
+            ScreenshotOnEnd,
+            VeteranCounterSound
         }
         static private readonly DataSaver ClientOptionSaver = new("ClientOption");
 
@@ -91,6 +92,7 @@ namespace TheOtherRoles.Patches
             };
             _ = new ClientOption(ClientOptionType.ShowLighterDarker, "showLighterDarker", simpleSwitch, 0);
             _ = new ClientOption(ClientOptionType.EnableSoundEffects, "enableSoundEffects", simpleSwitch, 1);
+            _ = new ClientOption(ClientOptionType.VeteranCounterSound, "veteranCounterSound", simpleSwitch, 1);
             _ = new ClientOption(ClientOptionType.ShowChatNotification, "showChatNotification", simpleSwitch, 1);
             _ = new ClientOption(ClientOptionType.ShowVentsOnMap, "showVentsOnMap", simpleSwitch, 0);
             _ = new ClientOption(ClientOptionType.ShowExtraInfo, "showExtraInfo", simpleSwitch, 1);
