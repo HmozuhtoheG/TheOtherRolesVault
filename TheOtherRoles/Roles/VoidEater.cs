@@ -1,10 +1,7 @@
 using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
 using TheOtherRoles.Patches;
-using TMPro;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
 
@@ -18,11 +15,15 @@ namespace TheOtherRoles.Roles
         public static float swallowCooldown = 24f;
         public static float speedBoostDuration = 5f;
         public static float speedBoostMultiplier = 0.3f;
+        public static float killCooldownReduction = 10f;
+
+        private const float BodyScanInterval = 0.2f;
 
         public float speedBoostTimer = 0f;
-        public List<Arrow> bodyArrows = new List<Arrow>();
+        public List<Arrow> bodyArrows = new();
         private int lastBodyCount = -1;
-        private bool bodiesDirty = true;
+        private float scanTimer = 0f;
+        private readonly List<DeadBody> seenBodies = new();
 
         public static CustomButton swallowButton;
         private static TMPro.TMP_Text countdownText;
@@ -31,15 +32,13 @@ namespace TheOtherRoles.Roles
         public VoidEater()
         {
             RoleId = roleId = RoleId.VoidEater;
-            lastBodyCount = -1;
-            speedBoostTimer = 0f;
-            bodyArrows = new List<Arrow>();
         }
 
         public override void PostInit()
         {
             if (PlayerControl.LocalPlayer != player) return;
             var hudManager = HudManager.Instance;
+            if (hudManager == null) return;
 
             swallowButton = new CustomButton(
                 OnSwallowClick,
@@ -48,9 +47,9 @@ namespace TheOtherRoles.Roles
                 {
                     if (countdownText != null)
                         countdownText.text = Mathf.CeilToInt(swallowButton.Timer).ToString();
-                    return HudManager.Instance.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
+                    return HudManager.Instance != null && HudManager.Instance.ReportButton.graphic.color == Palette.EnabledColor && PlayerControl.LocalPlayer.CanMove;
                 },
-                () => { swallowButton.Timer = swallowButton.MaxTimer; },
+                () => { if (swallowButton != null) swallowButton.Timer = swallowButton.MaxTimer; },
                 getSwallowButtonSprite(),
                 CustomButton.ButtonPositions.lowerRowCenter,
                 hudManager,
@@ -58,8 +57,10 @@ namespace TheOtherRoles.Roles
                 buttonText: ModTranslation.getString("voidEaterSwallow"),
                 abilityTexture: CustomButton.ButtonLabelType.UseButton
             );
+            swallowButton.MaxTimer = swallowCooldown;
+            swallowButton.Timer = swallowCooldown;
 
-            if (countdownText == null)
+            if (countdownText == null && hudManager.roomTracker != null)
             {
                 GameObject textObj = UnityEngine.Object.Instantiate(hudManager.roomTracker.gameObject);
                 textObj.transform.SetParent(hudManager.transform);
@@ -74,33 +75,50 @@ namespace TheOtherRoles.Roles
 
         private void OnSwallowClick()
         {
-            if (Helpers.checkSuspendAction(PlayerControl.LocalPlayer, null)) return;
-            foreach (Collider2D collider2D in Physics2D.OverlapCircleAll(PlayerControl.LocalPlayer.GetTruePosition(), PlayerControl.LocalPlayer.MaxReportDistance, Constants.PlayersOnlyMask))
+            var local = PlayerControl.LocalPlayer;
+            if (local == null || local.Data == null || !local.CanMove) return;
+
+            DeadBody body = findSwallowTarget(local);
+            if (body == null) return;
+
+            var playerInfo = GameData.Instance != null ? GameData.Instance.GetPlayerById(body.ParentId) : null;
+            if (playerInfo == null) return;
+
+            RPCProcedure.CleanBody.Invoke((playerInfo.PlayerId, local.PlayerId));
+            if (swallowButton != null) swallowButton.Timer = swallowButton.MaxTimer;
+
+            float maxCooldown = local.GetKillCooldown();
+            local.killTimer = Mathf.Max(0f, local.killTimer - killCooldownReduction);
+            local.SetKillTimerUnchecked(local.killTimer, maxCooldown);
+
+            speedBoostTimer = speedBoostDuration;
+            scanTimer = 0f;
+            SoundEffectsManager.play("vultureEat");
+        }
+
+        private static DeadBody findSwallowTarget(PlayerControl local)
+        {
+            Vector2 origin = local.GetTruePosition();
+            float maxDistance = local.MaxReportDistance;
+            DeadBody nearest = null;
+            float nearestDistance = float.MaxValue;
+
+            foreach (Collider2D collider2D in Physics2D.OverlapCircleAll(origin, maxDistance, Constants.PlayersOnlyMask))
             {
-                if (collider2D.tag == "DeadBody")
-                {
-                    DeadBody component = collider2D.GetComponent<DeadBody>();
-                    if (component != null && !component.Reported)
-                    {
-                        Vector2 truePosition = PlayerControl.LocalPlayer.GetTruePosition();
-                        Vector2 truePosition2 = component.TruePosition;
-                        if (Vector2.Distance(truePosition2, truePosition) <= PlayerControl.LocalPlayer.MaxReportDistance && PlayerControl.LocalPlayer.CanMove && !PhysicsHelpers.AnythingBetween(truePosition, truePosition2, Constants.ShipAndObjectsMask, false))
-                        {
-                            NetworkedPlayerInfo playerInfo = GameData.Instance.GetPlayerById(component.ParentId);
-                            RPCProcedure.CleanBody.Invoke((playerInfo.PlayerId, PlayerControl.LocalPlayer.PlayerId));
-                            swallowButton.Timer = swallowCooldown;
-                            
-                            var ke = PlayerControl.LocalPlayer;
-                            float maxCooldown = ke.GetKillCooldown();
-                            ke.killTimer = Mathf.Max(0f, ke.killTimer - 10f);
-                            ke.SetKillTimerUnchecked(ke.killTimer, maxCooldown);
-                            speedBoostTimer = speedBoostDuration;
-                            SoundEffectsManager.play("vultureEat");
-                            break;
-                        }
-                    }
-                }
+                if (collider2D.tag != "DeadBody") continue;
+
+                DeadBody body = collider2D.GetComponent<DeadBody>();
+                if (body == null || body.Reported) continue;
+
+                Vector2 bodyPosition = body.TruePosition;
+                float distance = Vector2.Distance(bodyPosition, origin);
+                if (distance > maxDistance || distance >= nearestDistance) continue;
+                if (PhysicsHelpers.AnythingBetween(origin, bodyPosition, Constants.ShipAndObjectsMask, false)) continue;
+
+                nearest = body;
+                nearestDistance = distance;
             }
+            return nearest;
         }
 
         public static Sprite getSwallowButtonSprite()
@@ -110,28 +128,10 @@ namespace TheOtherRoles.Roles
             return swallowButtonSprite;
         }
 
-        public static void clearAndReload()
-        {
-            swallowCooldown = CustomOptionHolder.voidEaterSwallowCooldown.getFloat();
-            speedBoostDuration = CustomOptionHolder.voidEaterSpeedBoostDuration.getFloat();
-            speedBoostMultiplier = CustomOptionHolder.voidEaterSpeedBoostMultiplier.getFloat();
-            if (swallowButton != null)
-            {
-                UnityEngine.Object.Destroy(swallowButton.actionButtonGameObject);
-                swallowButton = null;
-            }
-            if (countdownText != null)
-            {
-                UnityEngine.Object.Destroy(countdownText.gameObject);
-                countdownText = null;
-            }
-            swallowButtonSprite = null;
-            players = new List<VoidEater>();
-        }
-
         public override void FixedUpdate()
         {
             if (player != PlayerControl.LocalPlayer) return;
+            if (player.Data == null) return;
 
             if (speedBoostTimer > 0f)
             {
@@ -139,9 +139,22 @@ namespace TheOtherRoles.Roles
                 if (speedBoostTimer < 0f) speedBoostTimer = 0f;
             }
 
-            
-            DeadBody[] deadBodies = UnityEngine.Object.FindObjectsOfType<DeadBody>();
-            int bodyCount = deadBodies.Length;
+            scanTimer -= Time.deltaTime;
+            if (scanTimer <= 0f)
+            {
+                scanTimer = BodyScanInterval;
+                scanBodies();
+            }
+
+            updateArrowPositions();
+        }
+
+        private void scanBodies()
+        {
+            seenBodies.Clear();
+            seenBodies.AddRange(UnityEngine.Object.FindObjectsOfType<DeadBody>());
+
+            int bodyCount = seenBodies.Count;
             if (lastBodyCount >= 0 && bodyCount > lastBodyCount)
             {
                 Helpers.flashScreen(Color.red, 0.1f, 0.3f, 0.5f, 0.2f,
@@ -149,34 +162,44 @@ namespace TheOtherRoles.Roles
             }
             lastBodyCount = bodyCount;
 
-            if (bodyArrows.Count != bodyCount)
-                bodiesDirty = true;
+            if (player.Data.IsDead || bodyArrows.Count == bodyCount) return;
+            rebuildArrows();
+        }
 
-            if (bodiesDirty && player.Data.IsDead == false)
+        private void rebuildArrows()
+        {
+            destroyArrows();
+            for (int i = 0; i < seenBodies.Count; i++)
             {
-                for (int i = 0; i < bodyArrows.Count; i++)
-                {
-                    var arrow = bodyArrows[i];
-                    if (arrow != null && arrow.arrow != null) UnityEngine.Object.Destroy(arrow.arrow);
-                }
-                bodyArrows = new List<Arrow>();
+                var body = seenBodies[i];
+                if (body == null) continue;
+                var arrow = new Arrow(color);
+                arrow.arrow.SetActive(true);
+                arrow.Update(body.transform.position);
+                bodyArrows.Add(arrow);
+            }
+        }
 
-                for (int i = 0; i < deadBodies.Length; i++)
-                {
-                    bodyArrows.Add(new Arrow(Color.red));
-                    bodyArrows[i].arrow.SetActive(true);
-                    bodyArrows[i].Update(deadBodies[i].transform.position);
-                }
-                bodiesDirty = false;
-            }
-            else if (bodiesDirty == false && bodyArrows.Count == bodyCount && bodyCount > 0)
+        private void updateArrowPositions()
+        {
+            int count = Mathf.Min(bodyArrows.Count, seenBodies.Count);
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < bodyArrows.Count; i++)
-                {
-                    var arrow = bodyArrows[i];
-                    if (arrow != null) arrow.Update(deadBodies[i].transform.position);
-                }
+                var arrow = bodyArrows[i];
+                var body = seenBodies[i];
+                if (arrow?.arrow == null || body == null) continue;
+                arrow.Update(body.transform.position);
             }
+        }
+
+        private void destroyArrows()
+        {
+            for (int i = 0; i < bodyArrows.Count; i++)
+            {
+                var arrow = bodyArrows[i];
+                if (arrow?.arrow != null) UnityEngine.Object.Destroy(arrow.arrow);
+            }
+            bodyArrows.Clear();
         }
 
         public override void OnMeetingStart()
@@ -188,19 +211,25 @@ namespace TheOtherRoles.Roles
 
         public override void OnMeetingEnd(PlayerControl exiled = null)
         {
+            if (swallowButton == null) return;
+            swallowButton.MaxTimer = swallowCooldown;
+            swallowButton.Timer = swallowCooldown;
         }
 
-        public override void OnDeath(PlayerControl killer = null)
+        public override void OnDeath(PlayerControl killer = null) => cleanup();
+
+        public override void ResetRole(bool isShifted) => cleanup();
+
+        private void cleanup()
         {
-            CleanupUI(this);
+            destroyUi();
+            destroyArrows();
+            lastBodyCount = -1;
+            speedBoostTimer = 0f;
+            scanTimer = 0f;
         }
 
-        public override void ResetRole(bool isShifted)
-        {
-            CleanupUI(this);
-        }
-
-        private static void CleanupUI(VoidEater self)
+        private static void destroyUi()
         {
             if (swallowButton != null)
             {
@@ -212,74 +241,30 @@ namespace TheOtherRoles.Roles
                 UnityEngine.Object.Destroy(countdownText.gameObject);
                 countdownText = null;
             }
-            for (int i = 0; i < self.bodyArrows.Count; i++)
-            {
-                var arrow = self.bodyArrows[i];
-                if (arrow != null && arrow.arrow != null) UnityEngine.Object.Destroy(arrow.arrow);
-            }
-            self.bodyArrows = new List<Arrow>();
-            self.lastBodyCount = -1;
-            self.speedBoostTimer = 0f;
+        }
+
+        public static void clearAndReload()
+        {
+            swallowCooldown = CustomOptionHolder.voidEaterSwallowCooldown.getFloat();
+            speedBoostDuration = CustomOptionHolder.voidEaterSpeedBoostDuration.getFloat();
+            speedBoostMultiplier = CustomOptionHolder.voidEaterSpeedBoostMultiplier.getFloat();
+            killCooldownReduction = CustomOptionHolder.voidEaterKillCooldownReduction.getFloat();
+            destroyUi();
+            swallowButtonSprite = null;
+            players = [];
         }
 
         static public IEnumerable<HelpSprite> GetHelpSprites()
         {
             yield return new(getSwallowButtonSprite(), "voidEaterSwallowHint");
         }
-    }
 
-    
-    [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]
-    public static class VoidEaterSpeedPatch
-    {
-        public static void Postfix(PlayerPhysics __instance)
+        static public IEnumerable<DocumentReplacement> GetReplacementPart()
         {
-            if (!__instance.AmOwner || __instance.body == null) return;
-            var player = __instance.myPlayer;
-            if (player == null || player.Data.IsDead) return;
-            var voidEater = VoidEater.getRole(player);
-            if (voidEater == null || voidEater.speedBoostTimer <= 0f) return;
-            __instance.body.velocity *= 1f + VoidEater.speedBoostMultiplier;
+            yield return new("%CDR%", Mathf.RoundToInt(killCooldownReduction).ToString());
+            yield return new("%SBD%", Mathf.RoundToInt(speedBoostDuration).ToString());
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //I see you

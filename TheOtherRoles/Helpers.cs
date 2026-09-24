@@ -244,6 +244,75 @@ namespace TheOtherRoles
             //if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(exampleClip, false, 0.8f);
             
         }*/
+        public static AudioClip loadWavFromResources(string path, string clipName = "TOR_AUDIO_CLIP")
+        {
+            try
+            {
+                using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(path);
+                if (stream == null)
+                {
+                    TheOtherRolesPlugin.Logger.LogWarning("Audio resource not found: " + path);
+                    return null;
+                }
+
+                using var buffer = new MemoryStream();
+                stream.CopyTo(buffer);
+                var bytes = buffer.ToArray();
+
+                if (bytes.Length < 44 || bytes[0] != 'R' || bytes[1] != 'I' || bytes[2] != 'F' || bytes[3] != 'F'
+                    || bytes[8] != 'W' || bytes[9] != 'A' || bytes[10] != 'V' || bytes[11] != 'E')
+                {
+                    TheOtherRolesPlugin.Logger.LogWarning("Audio resource is not a PCM WAV: " + path);
+                    return null;
+                }
+
+                int channels = 1;
+                int sampleRate = 44100;
+                int bits = 16;
+                int dataOffset = -1;
+                int dataLength = 0;
+
+                int position = 12;
+                while (position + 8 <= bytes.Length)
+                {
+                    var id = Encoding.ASCII.GetString(bytes, position, 4);
+                    int size = BitConverter.ToInt32(bytes, position + 4);
+                    int body = position + 8;
+
+                    if (id == "fmt " && size >= 16)
+                    {
+                        channels = BitConverter.ToInt16(bytes, body + 2);
+                        sampleRate = BitConverter.ToInt32(bytes, body + 4);
+                        bits = BitConverter.ToInt16(bytes, body + 14);
+                    }
+                    else if (id == "data")
+                    {
+                        dataOffset = body;
+                        dataLength = Math.Min(size, bytes.Length - body);
+                        break;
+                    }
+
+                    position = body + size + (size & 1);
+                }
+
+                if (dataOffset < 0 || bits != 16 || channels < 1) return null;
+
+                int sampleCount = dataLength / 2;
+                float[] samples = new float[sampleCount];
+                for (int i = 0; i < sampleCount; i++)
+                    samples[i] = BitConverter.ToInt16(bytes, dataOffset + i * 2) / 32768f;
+
+                var clip = AudioClip.Create(clipName, sampleCount / channels, channels, sampleRate, false);
+                clip.SetData(samples, 0);
+                return clip;
+            }
+            catch (Exception e)
+            {
+                TheOtherRolesPlugin.Logger.LogWarning("Error loading audio resource " + path + ": " + e.Message);
+            }
+            return null;
+        }
+
         public static PlayerControl playerById(byte id)
         {
             foreach (PlayerControl player in PlayerControl.AllPlayerControls)
@@ -696,7 +765,7 @@ namespace TheOtherRoles
         }
 
         public static bool shouldClearTask(this PlayerControl target) => (target.hasFakeTasks() || target.isRole(RoleId.Thief) || (target.isRole(RoleId.Shifter) && Shifter.isNeutral) || (target.isRole(RoleId.TaskMaster) && target.PlayerId == PlayerControl.LocalPlayer.PlayerId && TaskMaster.isTaskComplete)
-                || Madmate.madmate.Any(x => x.PlayerId == target.PlayerId) || CreatedMadmate.createdMadmate.Any(x => x.PlayerId == target.PlayerId) || target.isRole(RoleId.JekyllAndHyde) || target.isRole(RoleId.Fox)) && !FreePlayGM.isFreePlayGM;
+                || Madmate.madmate.Any(x => x.PlayerId == target.PlayerId) || CreatedMadmate.createdMadmate.Any(x => x.PlayerId == target.PlayerId) || target.isRole(RoleId.JekyllAndHyde) || target.isRole(RoleId.Fox) || target.isRole(RoleId.PlayerRole)) && !FreePlayGM.isFreePlayGM;
 
         public static void clearAllTasks(this PlayerControl player) {
             if (player == null) return;
@@ -985,8 +1054,10 @@ namespace TheOtherRoles
 
         static public float GetKillCooldown(this PlayerControl player)
         {
+            if (player.isRole(RoleId.Agnosia)) return Agnosia.isActive(player) ? Agnosia.killCooldownActive : Agnosia.killCooldownIdle;
             if (player.isRole(RoleId.SerialKiller)) return SerialKiller.killCooldown;
             if (player.isRole(RoleId.SchrodingersCat)) return SchrodingersCat.killCooldown;
+            if (player.isRole(RoleId.PlayerRole)) return PlayerRole.getCooldownOf(player);
             return GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
         }
 
@@ -1520,6 +1591,7 @@ namespace TheOtherRoles
         static public float Distance(this Vector2 myVec, Vector2 vector) => (myVec - vector).magnitude;
 
         public static bool hidePlayerName(PlayerControl source, PlayerControl target) {
+            if (source != target && Agnosia.isActive(source)) return true;
             if (Camouflager.camouflageTimer > 0f || MushroomSabotageActive()) return true; // No names are visible
             if (!source.Data.Role.IsImpostor && Ninja.isStealthed(target)) return true; // Hide Ninja nametags from non-impostors
             if (Sprinter.isSprinting(target) && source != target) return true; // Hide Sprinter nametags
@@ -1982,6 +2054,7 @@ namespace TheOtherRoles
         }
 
         public static bool roleCanUseVents(this PlayerControl player) {
+            if (Agnosia.madnessActive) return false;
             bool roleCouldUse = false;
             if (player.isRole(RoleId.Engineer))
                 roleCouldUse = true;
@@ -2052,6 +2125,9 @@ namespace TheOtherRoles
             if (target == null || target.Data == null || target.Data.IsDead || target.Data.Disconnected) return MurderAttemptResult.SuppressKill; // Allow killing players in vents compared to vanilla code
 
             if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return MurderAttemptResult.PerformKill;
+
+            // Gojo's Infinity blocks every attempt on the caster
+            if (killer != target && Gojo.isInfinityProtected(target)) return MurderAttemptResult.SuppressKill;
 
             // Zombie mode: infect instead of kill, fully isolated from every other role check
             if (Zombie.isZombieGM) {
@@ -2154,7 +2230,7 @@ namespace TheOtherRoles
                 if (workaholic != null)
                 {
                     workaholic.shieldTimer = 0f;
-                    Workaholic.BreakShield.Invoke(killer.PlayerId);
+                    Workaholic.BreakShield.Invoke((killer.PlayerId, target.PlayerId));
                 }
                 return MurderAttemptResult.SuppressKill;
             }
@@ -2189,6 +2265,16 @@ namespace TheOtherRoles
             RPCProcedure.uncheckedMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? Byte.MaxValue : (byte)0);
         }
 
+        public static void forceMurderPlayer(PlayerControl killer, PlayerControl target, bool showAnimation = false)
+        {
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ForceMurderPlayer, Hazel.SendOption.Reliable, -1);
+            writer.Write(killer.PlayerId);
+            writer.Write(target.PlayerId);
+            writer.Write(showAnimation ? Byte.MaxValue : 0);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.forceMurderPlayer(killer.PlayerId, target.PlayerId, showAnimation ? Byte.MaxValue : (byte)0);
+        }
+
         public static MurderAttemptResult checkMurderAttemptAndKill(PlayerControl killer, PlayerControl target, bool isMeetingStart = false, bool showAnimation = true, bool ignoreBlank = false, bool ignoreIfKillerIsDead = false)  {
             // The local player checks for the validity of the kill and performs it afterwards (different to vanilla, where the host performs all the checks)
             // The kill attempt will be shared using a custom RPC, hence combining modded and unmodded versions is impossible
@@ -2210,6 +2296,7 @@ namespace TheOtherRoles
 
             if (murder == MurderAttemptResult.ReverseKill)
             {
+                Veteran.onCounterKill(target);
                 checkMurderAttemptAndKill(target, killer, isMeetingStart);
             }
             return murder;            
@@ -2251,11 +2338,13 @@ namespace TheOtherRoles
         public static bool checkSuspendAction(PlayerControl player, PlayerControl target)
         {
             if (player == null || target == null) return false;
+            if (player != target && Gojo.isInfinityProtected(target)) return true;
             if (Veteran.players.Any(x => x.player == target && x.alertActive))
             {
                 if (isEvil(player))
                 {
                     _ = checkMuderAttempt(player, target);  // Gives the Veteran the achievement
+                    Veteran.onCounterKill(target);
                     checkMurderAttemptAndKill(target, player);
                     return true;
                 }
@@ -2282,6 +2371,7 @@ namespace TheOtherRoles
                 !player.isRole(RoleId.Akujo) &&
                 !player.isRole(RoleId.PlagueDoctor) &&
                 !player.isRole(RoleId.Cupid) &&
+                !player.isRole(RoleId.Gremlin) &&
                 !(player.isRole(RoleId.SchrodingersCat) && !SchrodingersCat.hasTeam()));
 
         }

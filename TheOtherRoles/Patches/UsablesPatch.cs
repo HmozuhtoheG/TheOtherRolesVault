@@ -303,6 +303,11 @@ namespace TheOtherRoles.Patches {
                 roleCanCallEmergency = false;
                 statusText = ModTranslation.getString("fortuneTellerMeetingButton");
             }
+            if (Agnosia.madnessActive)
+            {
+                roleCanCallEmergency = false;
+                statusText = ModTranslation.getString("agnosiaMeetingButton");
+            }
 
             if (!roleCanCallEmergency) {
                 __instance.StatusText.text = statusText;

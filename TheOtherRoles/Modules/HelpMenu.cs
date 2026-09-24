@@ -411,9 +411,15 @@ public static class HelpMenu
 
         void AddAllAdditional(CustomOption option, List<GUIContext> context)
         {
-            if (option == CustomOptionHolder.sheriffSpawnRate && CustomOptionHolder.deputySpawnRate.getSelection() > 0)
-                context.Add(AddAdditional(RoleInfo.deputy, $"x{CustomOptionHolder.deputyRoleCount.getFloat()}" +
-                    (CustomOptionHolder.deputySpawnRate.getSelection() == 10 ? "" : $" ({CustomOptionHolder.deputySpawnRate.getString()})")));
+            if (option == CustomOptionHolder.sheriffSpawnRate)
+            {
+                if (CustomOptionHolder.deputySpawnRate.getSelection() > 0)
+                    context.Add(AddAdditional(RoleInfo.deputy, $"x{CustomOptionHolder.deputyRoleCount.getFloat()}" +
+                        (CustomOptionHolder.deputySpawnRate.getSelection() == 10 ? "" : $" ({CustomOptionHolder.deputySpawnRate.getString()})")));
+                if (CustomOptionHolder.auxiliarySpawnRate.getSelection() > 0)
+                    context.Add(AddAdditional(RoleInfo.auxiliary, $"x{CustomOptionHolder.auxiliaryRoleCount.getFloat()}" +
+                        (CustomOptionHolder.auxiliarySpawnRate.getSelection() == 10 ? "" : $" ({CustomOptionHolder.auxiliarySpawnRate.getString()})")));
+            }
             else if (option == CustomOptionHolder.jackalSpawnRate)
                 context.Add(AddAdditional(RoleInfo.sidekick, CustomOptionHolder.jackalCanCreateSidekick.getString()));
             else if (option == CustomOptionHolder.foxSpawnRate)
@@ -666,6 +672,7 @@ public static class HelpMenu
                 { RoleId.Engineer, CustomOptionHolder.engineerSpawnRate },
                 { RoleId.Sheriff, CustomOptionHolder.sheriffSpawnRate },
                 { RoleId.Deputy, CustomOptionHolder.deputySpawnRate },
+                { RoleId.Auxiliary, CustomOptionHolder.auxiliarySpawnRate },
                 { RoleId.Lighter, CustomOptionHolder.lighterSpawnRate },
                 { RoleId.Godfather, CustomOptionHolder.mafiaSpawnRate },
                 { RoleId.Mafioso, CustomOptionHolder.mafiaSpawnRate },
@@ -727,6 +734,16 @@ public static class HelpMenu
                 { RoleId.Yandere, CustomOptionHolder.yandereSpawnRate },
                 { RoleId.Workaholic, CustomOptionHolder.workaholicSpawnRate },
                 { RoleId.VoidEater, CustomOptionHolder.voidEaterSpawnRate },
+                { RoleId.Gremlin, CustomOptionHolder.gremlinSpawnRate },
+                { RoleId.PlayerRole, CustomOptionHolder.playerRoleSpawnRate },
+                { RoleId.NiceVoteEater, CustomOptionHolder.voteEaterSpawnRate },
+                { RoleId.EvilVoteEater, CustomOptionHolder.voteEaterSpawnRate },
+                { RoleId.PoliceCommissioner, CustomOptionHolder.policeCommissionerSpawnRate },
+                { RoleId.Gojo, CustomOptionHolder.gojoSpawnRate },
+                { RoleId.Sukuna, CustomOptionHolder.sukunaSpawnRate },
+                { RoleId.Martyr, CustomOptionHolder.martyrSpawnRate },
+                { RoleId.Illusionist, CustomOptionHolder.illusionistSpawnRate },
+                { RoleId.Agnosia, CustomOptionHolder.agnosiaSpawnRate },
                 { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate },
                 { RoleId.Sprinter, CustomOptionHolder.sprinterSpawnRate },
                 { RoleId.Sherlock, CustomOptionHolder.sherlockSpawnRate },
@@ -781,7 +798,9 @@ public static class HelpMenu
             ("yandereWin", Yandere.color, ["yandereWinCondHint"], CustomOptionHolder.yandereSpawnRate),
             ("plagueDoctorWin", PlagueDoctor.color, ["plagueDoctorWinCondHint"], CustomOptionHolder.plagueDoctorSpawnRate),
             ("akujoWin", Akujo.color, ["akujoWinCondHint"], CustomOptionHolder.akujoSpawnRate),
-            ("foxWin", Fox.color, ["foxWinCondHint"], CustomOptionHolder.foxSpawnRate)
+            ("foxWin", Fox.color, ["foxWinCondHint"], CustomOptionHolder.foxSpawnRate),
+            ("gremlinWin", Gremlin.color, ["gremlinWinCondHint"], CustomOptionHolder.gremlinSpawnRate),
+            ("playerRoleWin", PlayerRole.color, ["playerRoleWinCondHint"], CustomOptionHolder.playerRoleSpawnRate)
         ];
     }
 

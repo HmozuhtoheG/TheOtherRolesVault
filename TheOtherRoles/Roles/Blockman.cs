@@ -2,6 +2,7 @@
 using System.Linq;
 using HarmonyLib;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Patches;
 using UnityEngine;
 using TMPro;
 using static TheOtherRoles.TheOtherRoles;
@@ -17,16 +18,7 @@ namespace TheOtherRoles.Roles
         {
             RoleId = roleId = RoleId.Blockman;
             currentEnergy = maxEnergy;
-            blocks = new();
-            triggerBlockmanWin = false;
             AssignBlueprint();
-            isPreviewing = false;
-            previewLine = null;
-            previewBlockGhost = null;
-            ghostBlocks = new();
-            mapIndicator = null;
-            lastAimDirection = Vector2.right;
-            dashKeyGuideInitialized = false;
         }
 
         public static float maxEnergy = 100f;
@@ -46,25 +38,25 @@ namespace TheOtherRoles.Roles
         public const float breakRange = 1.8f;
 
         public float currentEnergy;
-        public List<Block> blocks;
+        public List<Block> blocks = [];
         public bool triggerBlockmanWin;
         public Blueprint blueprint;
         public bool isPreviewing;
         private GameObject previewLine;
         private GameObject previewBlockGhost;
-        private List<GameObject> ghostBlocks;
+        private List<GameObject> ghostBlocks = [];
         private GameObject mapIndicator;
         private bool ghostsVisible = false;
         private Vector2 lastAimDirection = Vector2.right;
 
         private static bool dashKeyGuideInitialized = false;
+        private static float dashKeyCheckTimer = 0f;
 
 
         public class Block
         {
             public int id;
             public Vector2 position;
-            public float age;
             public float placedAtRealtime;
             public bool settled => Time.time - placedAtRealtime >= settleTimeSeconds;
             public GameObject gameObject;
@@ -115,7 +107,12 @@ namespace TheOtherRoles.Roles
             Vector2 chosenOrigin = (Vector2)player.transform.position;
             bool found = false;
 
-            foreach (var corner in MapCorners.OrderBy(c => UnityEngine.Random.value))
+            List<Vector2> seeds = [];
+            foreach (var spawn in MapData.GetCurrentMapData().SpawnPos) seeds.Add(spawn);
+            if (seeds.Count == 0) seeds.AddRange(MapCorners);
+            seeds.Shuffle();
+
+            foreach (var corner in seeds)
             {
                 if (!TryFindFittingOrigin(corner, 3f, 10, out var candidate)) continue;
                 chosenOrigin = candidate;
@@ -192,7 +189,7 @@ namespace TheOtherRoles.Roles
             if (role == null) return;
             if (role.blocks.Count >= maxBlocks) return;
 
-            Block block = new() { id = message.blockId, position = message.pos, age = 0f, placedAtRealtime = Time.time };
+            Block block = new() { id = message.blockId, position = message.pos, placedAtRealtime = Time.time };
             block.gameObject = CreateBlockGameObject(message.pos, block);
             role.blocks.Add(block);
         });
@@ -216,6 +213,9 @@ namespace TheOtherRoles.Roles
             var obj = new GameObject("BlockmanBlock");
             obj.transform.position = new Vector3(pos.x, pos.y, pos.y / 1000f);
 
+            int shipLayer = LayerMask.NameToLayer("Ship");
+            if (shipLayer >= 0) obj.layer = shipLayer;
+
             var renderer = obj.AddComponent<SpriteRenderer>();
             renderer.sprite = getBlockSprite();
 
@@ -228,6 +228,7 @@ namespace TheOtherRoles.Roles
             textMesh.alignment = TextAlignmentOptions.Center;
             textMesh.color = Color.white;
             blockRef.timerText = textMesh;
+            textObj.layer = shipLayer >= 0 ? shipLayer : textObj.layer;
 
             var collider = obj.AddComponent<BoxCollider2D>();
             collider.isTrigger = false;
@@ -296,12 +297,6 @@ namespace TheOtherRoles.Roles
             currentEnergy -= placeCost;
             int id = nextLocalBlockId++;
             PlaceBlock.Invoke((player.PlayerId, id, placePos));
-        }
-
-        public void TryRemoveOwnBlock(int blockId)
-        {
-            if (player != PlayerControl.LocalPlayer) return;
-            RemoveBlock.Invoke((player.PlayerId, blockId, 1));
         }
 
         public static void TryUniversalBreak()
@@ -383,8 +378,6 @@ namespace TheOtherRoles.Roles
         {
             if (player == null) return;
 
-            Vector2 placePos = GetMousePlacePos();
-
             if (previewLine == null)
             {
                 previewLine = new GameObject("PreviewLine");
@@ -396,11 +389,6 @@ namespace TheOtherRoles.Roles
                 line.endWidth = 0.1f;
                 line.positionCount = 2;
             }
-            var lineRenderer = previewLine.GetComponent<LineRenderer>();
-            Vector3 start = player.transform.position + Vector3.up * 0.1f;
-            Vector3 end = new(placePos.x, placePos.y, placePos.y / 1000f + 0.1f);
-            lineRenderer.SetPosition(0, start);
-            lineRenderer.SetPosition(1, end);
 
             if (previewBlockGhost == null)
             {
@@ -408,18 +396,17 @@ namespace TheOtherRoles.Roles
                 var sr = previewBlockGhost.AddComponent<SpriteRenderer>();
                 sr.sprite = getBlockSprite();
                 sr.color = new Color(1f, 1f, 1f, 0.5f);
-                previewBlockGhost.transform.position = new Vector3(placePos.x, placePos.y, placePos.y / 1000f + 0.05f);
             }
-            else
-            {
-                previewBlockGhost.transform.position = new Vector3(placePos.x, placePos.y, placePos.y / 1000f + 0.05f);
-            }
+
+            UpdatePreview();
         }
 
         private void ClearPreview()
         {
             if (previewLine != null)
             {
+                var line = previewLine.GetComponent<LineRenderer>();
+                if (line != null && line.material != null) UnityEngine.Object.Destroy(line.material);
                 UnityEngine.Object.Destroy(previewLine);
                 previewLine = null;
             }
@@ -536,6 +523,7 @@ namespace TheOtherRoles.Roles
 
         private static void UpdateAllBlockTexts()
         {
+            var camera = Camera.main;
             foreach (var bm in players)
             {
                 if (bm.blocks == null) continue;
@@ -543,9 +531,10 @@ namespace TheOtherRoles.Roles
                 {
                     if (block.gameObject == null || block.timerText == null) continue;
                     float remaining = Mathf.Max(0f, settleTimeSeconds - (Time.time - block.placedAtRealtime));
-                    block.timerText.text = remaining.ToString("F1") + "s";
-                    if (Camera.main != null)
-                        block.timerText.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward);
+                    string timerText = remaining.ToString("F1") + "s";
+                    if (block.timerText.text != timerText) block.timerText.text = timerText;
+                    if (camera != null)
+                        block.timerText.transform.rotation = Quaternion.LookRotation(camera.transform.forward);
                 }
             }
         }
@@ -570,8 +559,7 @@ namespace TheOtherRoles.Roles
             List<Block> expired = null;
             foreach (var block in blocks)
             {
-                block.age += Time.fixedDeltaTime;
-                if (block.age >= blockLifetime) (expired ??= new List<Block>()).Add(block);
+                if (Time.time - block.placedAtRealtime >= blockLifetime) (expired ??= new List<Block>()).Add(block);
             }
             if (expired != null)
                 foreach (var block in expired)
@@ -587,6 +575,10 @@ namespace TheOtherRoles.Roles
                 UpdateEnergyText(HudManagerStartPatch.blockmanEnergyText);
 
             // 参考原版击杀键显示逻辑：游戏内改键后立即同步方块人冲刺按钮的绑定与显示
+            dashKeyCheckTimer -= Time.fixedDeltaTime;
+            if (dashKeyCheckTimer > 0f) return;
+            dashKeyCheckTimer = 0.5f;
+
             var blockmanKeyboardMap = Rewired.ReInput.mapping.GetKeyboardMapInstanceSavedOrDefault(0, 0, 0);
             var blockmanKillMaps = blockmanKeyboardMap.GetButtonMapsWithAction(8);
             if (blockmanKillMaps.Count > 0 && HudManagerStartPatch.blockmanDashButton != null)
@@ -624,17 +616,27 @@ namespace TheOtherRoles.Roles
 
         public override void OnMeetingStart()
         {
+            isPreviewing = false;
+            ClearPreview();
         }
 
         public override void OnDeath(PlayerControl killer = null)
         {
+            isPreviewing = false;
+            ClearGhosts();
+            ClearPreview();
+        }
+
+        public override void ResetRole(bool isShifted)
+        {
+            isPreviewing = false;
             ClearGhosts();
             ClearPreview();
         }
 
         public static void clearAndReload()
         {
-            if (players != null) players.Do(x => x.triggerBlockmanWin = false);
+            if (players != null) players.Do(x => { x.triggerBlockmanWin = false; x.isPreviewing = false; x.ClearGhosts(); x.ClearPreview(); });
             maxEnergy = CustomOptionHolder.blockmanMaxEnergy.getFloat();
             energyRegenPerSecond = CustomOptionHolder.blockmanEnergyRegenRate.getFloat();
             placeCost = CustomOptionHolder.blockmanPlaceCost.getFloat();

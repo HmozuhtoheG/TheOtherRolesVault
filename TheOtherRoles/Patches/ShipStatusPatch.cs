@@ -25,6 +25,20 @@ namespace TheOtherRoles.Patches {
                 return false;
             }
 
+            bool nightOwlActive = NightOwl.isNightOwl(player.Object) && Werewolf.IsLightsOff();
+            if (nightOwlActive != NightOwl.lastActive)
+            {
+                NightOwl.lastActive = nightOwlActive;
+                TheOtherRolesPlugin.Logger.LogMessage($"[NightOwl] active={nightOwlActive} max={__instance.MaxLightRadius}");
+            }
+            if (nightOwlActive)
+            {
+                float half = Camera.main != null ? Camera.main.orthographicSize : 3f;
+                float aspect = Camera.main != null ? Camera.main.aspect : 1.78f;
+                __result = Mathf.Sqrt(half * half * (1f + aspect * aspect)) * NightOwl.visionMultiplier;
+                return false;
+            }
+
             if (!HideNSeek.isHideNSeekGM || (HideNSeek.isHideNSeekGM && !Hunter.lightActive.Contains(player.PlayerId))) {
                 // If player is a role which has Impostor vision
                 if (Helpers.hasImpVision(player)) {

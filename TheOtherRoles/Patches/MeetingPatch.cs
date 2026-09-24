@@ -21,6 +21,8 @@ namespace TheOtherRoles.Patches
 {
     [HarmonyPatch]
     class MeetingHudPatch {
+        public static void completeVoting(MeetingHud __instance) => MeetingCalculateVotesPatch.completeVoting(__instance);
+
         static bool[] selections;
         static SpriteRenderer[] renderers;
         private static NetworkedPlayerInfo target = null;
@@ -60,6 +62,7 @@ namespace TheOtherRoles.Patches
                         PlayerControl player = Helpers.playerById((byte)playerVoteArea.PlayerId);
                         if (player == null || player.Data == null || player.Data.IsDead || player.Data.Disconnected) continue;
                         if (Blackmailer.players.Any(x => x.player && x.blackmailed == player) && Blackmailer.blockTargetVote) continue;
+                        if (VoteEater.isVoteEaten((byte)playerVoteArea.VotedForId)) continue;
 
                         float additionalVotes = 1;
 
@@ -105,8 +108,10 @@ namespace TheOtherRoles.Patches
             }
 
 
-            static bool Prefix(MeetingHud __instance) {
-                if (__instance.playerStates.All((PlayerVoteArea ps) => ps.AmDead || ps.DidVote || (Blackmailer.players.Any(x => x.player && x.blackmailed && x.blackmailed.PlayerId == ps.PlayerId) && Blackmailer.blockTargetVote))) {
+            public static void completeVoting(MeetingHud __instance) {
+                if (__instance == null) return;
+                if (__instance.state is MeetingHud.MeetingStates.Results or MeetingHud.MeetingStates.Proceeding or MeetingHud.MeetingStates.Animating) return;
+                {
                     // If skipping is disabled, replace skipps/no-votes with self vote
                     if (target == null && blockSkippingInEmergencyMeetings && noVoteIsSelfVote) {
                         foreach (PlayerVoteArea playerVoteArea in __instance.playerStates) {
@@ -178,6 +183,11 @@ namespace TheOtherRoles.Patches
                     // RPCVotingComplete
                     __instance.RpcVotingComplete(array, exiled, tie, false, 0);
                 }
+            }
+
+            static bool Prefix(MeetingHud __instance) {
+                if (__instance.playerStates.All((PlayerVoteArea ps) => ps.AmDead || ps.DidVote || (Blackmailer.players.Any(x => x.player && x.blackmailed && x.blackmailed.PlayerId == ps.PlayerId) && Blackmailer.blockTargetVote)))
+                    completeVoting(__instance);
                 return false;
             }
         }
@@ -326,6 +336,9 @@ namespace TheOtherRoles.Patches
                             j--;
                         }
                     }
+
+                    if (VoteEater.isVoteEaten(targetPlayerId))
+                        VoteEater.addEatenVoteIcon(__instance, playerVoteArea);
                 }
                 return false;
             }
@@ -544,6 +557,9 @@ namespace TheOtherRoles.Patches
             Yasuna._remainingSpecialVotes++;
         }
 
+        public static void voteEaterCheckAndReturnUses(MeetingHud __instance, byte dyingPlayerId)
+            => VoteEater.checkAndReturnUses(__instance, dyingPlayerId);
+
         public static GameObject guesserUI;
         public static PassiveButton guesserUIExitButton;
         public static byte guesserCurrentTarget;
@@ -697,6 +713,7 @@ namespace TheOtherRoles.Patches
                     if (roleInfo.roleId == RoleId.Yasuna && CustomOptionHolder.yasunaIsImpYasunaRate.getSelection() == 10) continue;
                 }
                 if (roleInfo.roleId == RoleId.Deputy && (CustomOptionHolder.deputySpawnRate.getSelection() == 0 || CustomOptionHolder.sheriffSpawnRate.getSelection() == 0)) continue;
+                if (roleInfo.roleId == RoleId.Auxiliary && (CustomOptionHolder.auxiliarySpawnRate.getSelection() == 0 || CustomOptionHolder.sheriffSpawnRate.getSelection() == 0)) continue;
                 if (roleInfo.roleId == RoleId.Pursuer && CustomOptionHolder.lawyerSpawnRate.getSelection() == 0) continue;
                 if (roleInfo.roleId == RoleId.Immoralist && (!CustomOptionHolder.foxCanCreateImmoralist.getBool() || CustomOptionHolder.foxSpawnRate.getSelection() == 0)) continue;
                 if (roleInfo.roleId == RoleId.Spy && roleData.impostors.Count <= 1) continue;
@@ -779,6 +796,20 @@ namespace TheOtherRoles.Patches
                                 return;
                             }
 
+                            // Handle Nice / Evil Guesser safe guess
+                            if (dyingTarget == PlayerControl.LocalPlayer) {
+                                if (PlayerControl.LocalPlayer.isRole(RoleId.NiceGuesser) && NiceGuesser.consumeSafeGuess()) {
+                                    Helpers.showFlash(Color.yellow, duration: 0.5f, ModTranslation.getString("guesserSafeGuess"));
+                                    SoundEffectsManager.play("fail");
+                                    return;
+                                }
+                                if (PlayerControl.LocalPlayer.isRole(RoleId.EvilGuesser) && EvilGuesser.consumeSafeGuess()) {
+                                    Helpers.showFlash(Palette.ImpostorRed, duration: 0.5f, ModTranslation.getString("guesserSafeGuess"));
+                                    SoundEffectsManager.play("fail");
+                                    return;
+                                }
+                            }
+
                             bool isSpecialRole = roleInfo == RoleInfo.niceshifter || roleInfo == RoleInfo.niceSwapper;
                             // Shoot player and send chat info if activated
                             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.GuesserShoot, Hazel.SendOption.Reliable, -1);
@@ -830,6 +861,47 @@ namespace TheOtherRoles.Patches
             }
 
             __instance.playerStates[buttonTarget].VoteForMe();
+        }
+
+        private static GameObject voteEaterSelectedButton;
+
+        static void voteEaterOnClick(int buttonTarget, MeetingHud __instance)
+        {
+            if (!VoteEater.isVoteEater(PlayerControl.LocalPlayer.PlayerId) || PlayerControl.LocalPlayer.Data.IsDead) return;
+            if (VoteEater.remainingUses() <= 0) return;
+            if (__instance.state is not (MeetingHud.MeetingStates.Voted or MeetingHud.MeetingStates.NotVoted)) return;
+            if (__instance.playerStates[buttonTarget].AmDead) return;
+
+            byte targetId = __instance.playerStates[buttonTarget].PlayerId;
+            if (VoteEater.isVoteEaten(targetId)) return;
+
+            Transform clicked = __instance.playerStates[buttonTarget].transform.FindChild("EatVoteButton");
+            if (clicked == null) return;
+
+            if (voteEaterSelectedButton != clicked.gameObject)
+            {
+                voteEaterSelectedButton = clicked.gameObject;
+                for (int i = 0; i < __instance.playerStates.Length; i++)
+                {
+                    Transform t = __instance.playerStates[i].transform.FindChild("EatVoteButton");
+                    if (t == null) continue;
+                    t.GetComponent<SpriteRenderer>().color = t.gameObject == voteEaterSelectedButton ? Color.red : Color.white;
+                }
+                new CustomMessage(ModTranslation.getString("voteEaterConfirm"), 2f);
+                return;
+            }
+
+            voteEaterSelectedButton = null;
+            VoteEater.EatVote.Invoke((PlayerControl.LocalPlayer.PlayerId, targetId));
+
+            clicked.gameObject.SetActive(false);
+
+            if (VoteEater.remainingUses() > 0) return;
+            for (int i = 0; i < __instance.playerStates.Length; i++)
+            {
+                Transform t = __instance.playerStates[i].transform.FindChild("EatVoteButton");
+                if (t != null) t.gameObject.SetActive(false);
+            }
         }
 
         [HarmonyPatch(typeof(PlayerVoteArea), nameof(PlayerVoteArea.Select))]
@@ -1078,7 +1150,32 @@ namespace TheOtherRoles.Patches
                 }
             }
 
+            // Add VoteEater Buttons
+            voteEaterSelectedButton = null;
+            if (VoteEater.isVoteEater(PlayerControl.LocalPlayer.PlayerId) && !PlayerControl.LocalPlayer.Data.IsDead && VoteEater.remainingUses() > 0 && !Jailor.isJailed(PlayerControl.LocalPlayer.PlayerId) && !IsBlockedBlackmail())
+            {
+                for (int i = 0; i < __instance.playerStates.Length; i++)
+                {
+                    PlayerVoteArea playerVoteArea = __instance.playerStates[i];
+                    if (playerVoteArea.AmDead || playerVoteArea.PlayerId == PlayerControl.LocalPlayer.PlayerId) continue;
+                    if (Jailor.isJailed(playerVoteArea.PlayerId)) continue;
+
+                    GameObject template = playerVoteArea.Buttons.transform.Find("CancelButton").gameObject;
+                    GameObject targetBox = UnityEngine.Object.Instantiate(template, playerVoteArea.transform);
+                    targetBox.name = "EatVoteButton";
+                    targetBox.transform.localPosition = new Vector3(-0.95f, 0.03f, -1.3f);
+                    SpriteRenderer renderer = targetBox.GetComponent<SpriteRenderer>();
+                    renderer.sprite = HandleGuesser.getTargetSprite();
+                    PassiveButton button = targetBox.GetComponent<PassiveButton>();
+                    button.OnClick.RemoveAllListeners();
+                    int copiedIndex = i;
+                    button.OnClick.AddListener((Action)(() => voteEaterOnClick(copiedIndex, __instance)));
+                    addButtonGuide(button, string.Format(ModTranslation.getString("buttonLeftClick"), ModTranslation.getString("buttonEatVote")));
+                }
+            }
+
             // Add Godfather Reckoning Buttons
+            Gambler.OnMeetingBegin();
             Godfather.ClearButtons();
 
             if (PlayerControl.LocalPlayer.isRole(RoleId.Godfather))
@@ -1140,6 +1237,11 @@ namespace TheOtherRoles.Patches
                 int numSpecialVotes = Yasuna.isYasuna(PlayerControl.LocalPlayer.PlayerId) ? Yasuna.remainingSpecialVotes() : 0;
                 if (numSpecialVotes > 0 && !PlayerControl.LocalPlayer.Data.IsDead) {
                     newText += "\n" + string.Format(ModTranslation.getString("yasunaSpecialVotes"), numSpecialVotes);
+                }
+
+                int numVoteEaterUses = VoteEater.isVoteEater(PlayerControl.LocalPlayer.PlayerId) ? VoteEater.remainingUses() : 0;
+                if (numVoteEaterUses > 0 && !PlayerControl.LocalPlayer.Data.IsDead) {
+                    newText += "\n" + string.Format(ModTranslation.getString("voteEaterUses"), numVoteEaterUses);
                 } if (!PlayerControl.LocalPlayer.Data.IsDead && Akujo.players.Any(x => x.player == PlayerControl.LocalPlayer && x.honmei == null && x.cupidHonmei == null)) {
                     newText += "\n" + string.Format(ModTranslation.getString("akujoTimeRemaining"), $"{TimeSpan.FromSeconds(Akujo.local.timeLeft):mm\\:ss}");
                 } if (!PlayerControl.LocalPlayer.Data.IsDead && Cupid.players.Any(x => x.player == PlayerControl.LocalPlayer && x.lovers1 == null && x.lovers2 == null)) {
@@ -1448,6 +1550,18 @@ namespace TheOtherRoles.Patches
         [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.StartMeeting))]
         public static void MeetingHudIntroPrefix() {
             EventUtility.meetingStartsUpdate();
+        }
+
+        [HarmonyPatch(typeof(LogicOptionsNormal), nameof(LogicOptionsNormal.GetAnonymousVotes))]
+        class PeekerAnonymousVotesPatch
+        {
+            public static void Postfix(ref bool __result)
+            {
+                if (!__result) return;
+                if (MeetingHud.Instance == null) return;
+                if (!Peeker.isPeeker(PlayerControl.LocalPlayer)) return;
+                __result = false;
+            }
         }
 
     }

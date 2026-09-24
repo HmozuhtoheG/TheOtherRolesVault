@@ -30,6 +30,7 @@ namespace TheOtherRoles
         private static CustomButton engineerRepairButton;
         public static CustomButton sheriffKillButton;
         private static CustomButton deputyHandcuffButton;
+        private static CustomButton auxiliaryMarkButton;
         private static CustomButton timeMasterShieldButton;
         private static CustomButton medicShieldButton;
         private static CustomButton shifterShiftButton;
@@ -86,6 +87,10 @@ namespace TheOtherRoles
         public static CustomButton evilHackerButton;
         public static CustomButton evilHackerCreatesMadmateButton;
         public static CustomButton pelicanKillButton;
+        public static CustomButton playerRoleKillButton;
+        public static CustomButton policeCommissionerRecruitButton;
+        public static CustomButton policeCommissionerKillButton;
+        public static TMPro.TextMeshPro policeCommissionerUsesText;
         public static CustomButton trapperSetTrapButton;
         public static CustomButton blackmailerButton;
         public static CustomButton moriartyBrainwashButton;
@@ -116,6 +121,9 @@ namespace TheOtherRoles
         public static CustomButton yoyoButton;
         public static CustomButton energyAmplifierButton;
         public static TMPro.TMP_Text energyAmplifierEnergyText;
+        public static CustomButton gojoInfinityButton;
+        public static TMPro.TMP_Text gojoInfinityEnergyText;
+        public static CustomButton sukunaSlashButton;
         public static CustomButton archaeologistDetectButton;
         public static CustomButton archaeologistExcavateButton;
         public static CustomButton medicVitalsButton;
@@ -158,6 +166,7 @@ namespace TheOtherRoles
         public static TMPro.TMP_Text securityGuardButtonScrewsText;
         public static TMPro.TMP_Text securityGuardChargesText;
         public static TMPro.TMP_Text deputyButtonHandcuffsText;
+        public static TMPro.TMP_Text auxiliaryMarksText;
         public static TMPro.TMP_Text tricksterBoxesText;
         public static TMPro.TMP_Text engineerRepairText;
         public static TMPro.TMP_Text foxRepairText;
@@ -211,6 +220,7 @@ namespace TheOtherRoles
             engineerRepairButton.MaxTimer = 0f;
             sheriffKillButton.MaxTimer = Sheriff.cooldown;
             deputyHandcuffButton.MaxTimer = Deputy.handcuffCooldown;
+            auxiliaryMarkButton.MaxTimer = Auxiliary.markCooldown;
             timeMasterShieldButton.MaxTimer = TimeMaster.cooldown;
             medicShieldButton.MaxTimer = 0f;
             shifterShiftButton.MaxTimer = 0f;
@@ -236,8 +246,13 @@ namespace TheOtherRoles
             warlockCurseButton.MaxTimer = Warlock.cooldown;
             yoyoButton.MaxTimer = Yoyo.markCooldown;
             pelicanKillButton.MaxTimer = Pelican.cooldown;
-            energyAmplifierButton.MaxTimer = 0f; 
+            if (PlayerRole.local != null) playerRoleKillButton.MaxTimer = PlayerRole.local.currentCooldown;
+            policeCommissionerRecruitButton.MaxTimer = PoliceCommissioner.cooldown;
+            policeCommissionerKillButton.MaxTimer = PoliceCommissioner.killCooldown;
+            energyAmplifierButton.MaxTimer = 0f;
             energyAmplifierButton.EffectDuration = Energyamplifier.fieldDuration;
+            gojoInfinityButton.MaxTimer = 0f;
+            sukunaSlashButton.MaxTimer = Sukuna.cooldown;
             securityGuardButton.MaxTimer = SecurityGuard.cooldown;
             securityGuardCamButton.MaxTimer = SecurityGuard.cooldown;
             securityGuardFlushButton.MaxTimer = SecurityGuard.flushCooldown;
@@ -584,36 +599,7 @@ namespace TheOtherRoles
             sheriffKillButton = new CustomButton(
                 () =>
                 {
-                    MurderAttemptResult murderAttemptResult = Helpers.checkMuderAttempt(Sheriff.local.player, Sheriff.local.currentTarget);
-                    if (murderAttemptResult == MurderAttemptResult.SuppressKill) return;
-
-                    if (murderAttemptResult is MurderAttemptResult.PerformKill or MurderAttemptResult.ReverseKill)
-                    {
-                        byte targetId = 0;
-                        if (((Sheriff.local.currentTarget.Data.Role.IsImpostor && (Sheriff.local.currentTarget != Mini.mini || Mini.isGrownUp())) ||
-                            (Sheriff.spyCanDieToSheriff && Sheriff.local.currentTarget.isRole(RoleId.Spy)) ||
-                            (Sheriff.canKillNeutrals && Helpers.isNeutral(Sheriff.local.currentTarget)) ||
-                            Sheriff.local.currentTarget.isRole(RoleId.Jackal) || Sheriff.local.currentTarget.isRole(RoleId.Sidekick) ||
-                            (CreatedMadmate.createdMadmate.Any(x => x.PlayerId == Sheriff.local.currentTarget.PlayerId) && CreatedMadmate.canDieToSheriff) ||
-                            (Madmate.canDieToSheriff && Madmate.madmate.Any(x => x.PlayerId == Sheriff.local.currentTarget.PlayerId))) &&
-                            !Madmate.madmate.Any(y => y.PlayerId == Sheriff.local.player.PlayerId))
-                        {
-                            _ = new StaticAchievementToken("sheriff.common1");
-                            targetId = Sheriff.local.currentTarget.PlayerId;
-                        }
-                        else
-                        {
-                            _ = new StaticAchievementToken("sheriff.another1");
-                            targetId = PlayerControl.LocalPlayer.PlayerId;
-                        }
-
-                        MessageWriter killWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedMurderPlayer, Hazel.SendOption.Reliable, -1);
-                        killWriter.Write(Sheriff.local.player.Data.PlayerId);
-                        killWriter.Write(targetId);
-                        killWriter.Write(byte.MaxValue);
-                        AmongUsClient.Instance.FinishRpcImmediately(killWriter);
-                        RPCProcedure.uncheckedMurderPlayer(Sheriff.local.player.Data.PlayerId, targetId, Byte.MaxValue);
-                    }
+                    if (Sheriff.trySheriffKill(Sheriff.local.player, Sheriff.local.currentTarget) == MurderAttemptResult.SuppressKill) return;
 
                     sheriffKillButton.Timer = sheriffKillButton.MaxTimer;
                     Sheriff.local.currentTarget = null;
@@ -724,6 +710,35 @@ namespace TheOtherRoles
             );
             // Deputy Handcuff button handcuff counter
             deputyButtonHandcuffsText = deputyHandcuffButton.ShowUsesIcon(3);
+
+            // Auxiliary Mark
+            auxiliaryMarkButton = new CustomButton(
+                () =>
+                {
+                    if (Auxiliary.local == null || Auxiliary.local.currentTarget == null) return;
+                    byte targetId = Auxiliary.local.currentTarget.PlayerId;
+
+                    Auxiliary.Mark.Invoke((PlayerControl.LocalPlayer.PlayerId, targetId));
+                    Auxiliary.local.currentTarget = null;
+                    auxiliaryMarkButton.Timer = auxiliaryMarkButton.MaxTimer;
+
+                    SoundEffectsManager.play("warlockCurse");
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Auxiliary) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = Auxiliary.local;
+                    return role != null && role.currentTarget != null && role.remainingMarks > 0 && PlayerControl.LocalPlayer.CanMove;
+                },
+                () => { auxiliaryMarkButton.Timer = auxiliaryMarkButton.MaxTimer; },
+                Auxiliary.getButtonSprite(),
+                CustomButton.ButtonPositions.lowerRowRight,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("AuxiliaryMarkText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+            auxiliaryMarksText = auxiliaryMarkButton.ShowUsesIcon(3);
 
             jackalAndSidekickSabotageLightsButton = new CustomButton(
                 () =>
@@ -1676,6 +1691,72 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.Q
             );
+
+            playerRoleKillButton = new CustomButton(
+                () =>
+                {
+                    var localRole = PlayerRole.local;
+                    if (localRole == null) return;
+                    if (Helpers.checkMurderAttemptAndKill(PlayerControl.LocalPlayer, localRole.currentTarget) == MurderAttemptResult.SuppressKill) return;
+
+                    playerRoleKillButton.Timer = playerRoleKillButton.MaxTimer;
+                    localRole.currentTarget = null;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.PlayerRole) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { var localRole = PlayerRole.local; return localRole != null && localRole.currentTarget && PlayerControl.LocalPlayer.CanMove; },
+                () => { playerRoleKillButton.Timer = playerRoleKillButton.MaxTimer; },
+                __instance.KillButton.graphic.sprite,
+                CustomButton.ButtonPositions.upperRowRight,
+                __instance,
+                KeyCode.Q
+            );
+            playerRoleKillButton.MaxTimer = PlayerRole.baseKillCooldown;
+            playerRoleKillButton.Timer = PlayerRole.baseKillCooldown;
+
+            policeCommissionerRecruitButton = new CustomButton(
+                () =>
+                {
+                    var role = PoliceCommissioner.local;
+                    if (role == null || role.currentTarget == null || role.usesLeft <= 0) return;
+
+                    PoliceCommissioner.Recruit.Invoke((role.currentTarget.PlayerId, role.player.PlayerId));
+                    policeCommissionerRecruitButton.Timer = policeCommissionerRecruitButton.MaxTimer;
+                    role.currentTarget = null;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.PoliceCommissioner) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { var role = PoliceCommissioner.local; return role != null && role.usesLeft > 0 && role.currentTarget && PlayerControl.LocalPlayer.CanMove; },
+                () => { policeCommissionerRecruitButton.Timer = policeCommissionerRecruitButton.MaxTimer; },
+                PoliceCommissioner.getRecruitButtonSprite(),
+                CustomButton.ButtonPositions.lowerRowRight,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("policeCommissionerRecruitText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+            policeCommissionerRecruitButton.MaxTimer = PoliceCommissioner.cooldown;
+            policeCommissionerRecruitButton.Timer = PoliceCommissioner.cooldown;
+            policeCommissionerUsesText = policeCommissionerRecruitButton.ShowUsesIcon(2);
+
+            policeCommissionerKillButton = new CustomButton(
+                () =>
+                {
+                    var role = PoliceCommissioner.local;
+                    if (role == null) return;
+                    if (Sheriff.trySheriffKill(PlayerControl.LocalPlayer, role.killTarget) == MurderAttemptResult.SuppressKill) return;
+
+                    policeCommissionerKillButton.Timer = policeCommissionerKillButton.MaxTimer;
+                    role.killTarget = null;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.PoliceCommissioner) && PoliceCommissioner.canKill && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { var role = PoliceCommissioner.local; return role != null && role.killTarget && PlayerControl.LocalPlayer.CanMove; },
+                () => { policeCommissionerKillButton.Timer = policeCommissionerKillButton.MaxTimer; },
+                __instance.KillButton.graphic.sprite,
+                CustomButton.ButtonPositions.upperRowRight,
+                __instance,
+                KeyCode.Q
+            );
+            policeCommissionerKillButton.MaxTimer = PoliceCommissioner.killCooldown;
+            policeCommissionerKillButton.Timer = PoliceCommissioner.killCooldown;
 
             yandereButton = new CustomButton(
                 () =>
@@ -4764,6 +4845,67 @@ namespace TheOtherRoles
             energyAmplifierEnergyText.enableWordWrapping = false;
             energyAmplifierEnergyText.transform.localScale = Vector3.one * 0.5f;
             energyAmplifierEnergyText.transform.localPosition += new Vector3(0.35f, 0.7f, 0);
+
+            // Gojo Infinity
+            gojoInfinityButton = new CustomButton(
+                () => { },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Gojo) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = Gojo.local;
+                    return role != null && PlayerControl.LocalPlayer.CanMove && (role.isInfinityActive || role.cursedEnergy > 0f);
+                },
+                () => { gojoInfinityButton.Timer = 0f; },
+                Gojo.getButtonSprite(),
+                CustomButton.ButtonPositions.lowerRowRight,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("GojoInfinityText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            )
+            {
+                Timer = 0f
+            };
+
+            gojoInfinityEnergyText = GameObject.Instantiate(gojoInfinityButton.actionButton.cooldownTimerText, gojoInfinityButton.actionButton.cooldownTimerText.transform.parent);
+            gojoInfinityEnergyText.text = "";
+            gojoInfinityEnergyText.enableWordWrapping = false;
+            gojoInfinityEnergyText.transform.localScale = Vector3.one * 0.5f;
+            gojoInfinityEnergyText.transform.localPosition += new Vector3(0.35f, 0.7f, 0);
+
+            var gojoPassiveButton = gojoInfinityButton.actionButton.GetComponent<PassiveButton>();
+            if (gojoPassiveButton != null)
+            {
+                gojoPassiveButton.OnMouseOver ??= new UnityEngine.Events.UnityEvent();
+                gojoPassiveButton.OnMouseOut ??= new UnityEngine.Events.UnityEvent();
+                gojoPassiveButton.OnMouseOver.AddListener((Action)(() => Gojo.buttonHovering = true));
+                gojoPassiveButton.OnMouseOut.AddListener((Action)(() => Gojo.buttonHovering = false));
+            }
+
+            // Sukuna Dismantle
+            sukunaSlashButton = new CustomButton(
+                () =>
+                {
+                    var role = Sukuna.local;
+                    if (role == null || role.isChanting) return;
+
+                    role.TryStartChant();
+                    sukunaSlashButton.Timer = sukunaSlashButton.MaxTimer;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Sukuna) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = Sukuna.local;
+                    return role != null && !role.isChanting && PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance;
+                },
+                () => { sukunaSlashButton.Timer = sukunaSlashButton.MaxTimer; },
+                Sukuna.getButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("SukunaSlashText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            );
 
             thiefKillButton = new CustomButton(
                 () =>
