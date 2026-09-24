@@ -34,7 +34,8 @@ namespace TheOtherRoles.Patches {
         YandereWin = 25,
         BlockmanWin = 26,
         WorkaholicWin = 27,
-        PlayerRoleWin = 28
+        PlayerRoleWin = 28,
+        InvalidGame = 29
         //ProsecutorWin = 16
     }
 
@@ -65,7 +66,8 @@ namespace TheOtherRoles.Patches {
         BlockmanWin,
         WorkaholicWin,
         GremlinWin,
-        PlayerRoleWin
+        PlayerRoleWin,
+        InvalidGame
 
         //ProsecutorWin
     }
@@ -230,6 +232,7 @@ namespace TheOtherRoles.Patches {
             bool foxWin = Fox.exists && gameOverReason == (GameOverReason)CustomGameOverReason.FoxWin;
             bool jekyllAndHydeWin = JekyllAndHyde.exists && gameOverReason == (GameOverReason)CustomGameOverReason.JekyllAndHydeWin;
             bool everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
+            bool invalidGame = gameOverReason == (GameOverReason)CustomGameOverReason.InvalidGame;
             bool blockmanWin = Blockman.exists && gameOverReason == (GameOverReason)CustomGameOverReason.BlockmanWin;
             bool workaholicWin = Workaholic.exists && gameOverReason == (GameOverReason)CustomGameOverReason.WorkaholicWin;
             bool playerRoleWin = PlayerRole.exists && gameOverReason == (GameOverReason)CustomGameOverReason.PlayerRoleWin;
@@ -238,8 +241,15 @@ namespace TheOtherRoles.Patches {
             // Here we changed this to: The Pursuer wins no matter who wins except for sabotage
             //bool isPursurerLose = jesterWin || arsonistWin || miniLose || vultureWin || teamJackalWin;
 
+            // Invalid game
+            if (invalidGame)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.InvalidGame;
+            }
+
             // Crewmates Win
-            if (crewmateWin)
+            else if (crewmateWin)
             {
                 if (SchrodingersCat.team == SchrodingersCat.Team.Crewmate)
                 {
@@ -914,6 +924,12 @@ namespace TheOtherRoles.Patches {
             else if (AdditionalTempData.winCondition == WinCondition.EveryoneDied)
             {
                 textRenderer.text = ModTranslation.getString("everyoneDied");
+                textRenderer.color = Palette.DisabledGrey;
+                __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
+            }
+            else if (AdditionalTempData.winCondition == WinCondition.InvalidGame)
+            {
+                textRenderer.text = ModTranslation.getString("invalidGame");
                 textRenderer.color = Palette.DisabledGrey;
                 __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
             }

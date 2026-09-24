@@ -122,11 +122,19 @@ namespace TheOtherRoles.Patches {
                     setPlayerNameColor(sheriff.player, Sheriff.color);
                 }
             }
+            else if (localPlayer.isRole(RoleId.Auxiliary))
+            {
+                setPlayerNameColor(localPlayer, Auxiliary.color);
+                var sheriff = Auxiliary.getRole(localPlayer).sheriff;
+                if (sheriff != null && sheriff.player != null) setPlayerNameColor(sheriff.player, Sheriff.color);
+            }
             else if (localPlayer.isRole(RoleId.Sheriff))
             {
                 setPlayerNameColor(localPlayer, Sheriff.color);
                 var deputy = Sheriff.getDeputy(localPlayer);
                 if (deputy != null && deputy.player != null && Deputy.knowsSheriff) setPlayerNameColor(deputy.player, Sheriff.color);
+                var auxiliary = Auxiliary.getAuxiliary(localPlayer);
+                if (auxiliary != null && auxiliary.player != null) setPlayerNameColor(auxiliary.player, Auxiliary.color);
             }
             /*else if (Portalmaker.portalmaker != null && Portalmaker.portalmaker == localPlayer)
                 setPlayerNameColor(Portalmaker.portalmaker, Portalmaker.color);

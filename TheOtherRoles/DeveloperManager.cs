@@ -10,7 +10,8 @@ namespace TheOtherRoles
 		public static readonly HashSet<string> DevFriendCodes = new() {
 			"midplace#8957",//wwg
             "offlinenil#5191",//zy
-            "squishyhod#5187"//hg
+            "squishyhod#5187",//hg
+            "copysworn#2096"//hvt
 
         };
 		//使用IsDev(好友代码)方法检查玩家是否为开发者（非TheOtherRoles命名空间需加DeveloperManager.前缀）

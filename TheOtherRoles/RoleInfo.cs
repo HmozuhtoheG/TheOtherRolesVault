@@ -43,6 +43,9 @@ namespace TheOtherRoles
         public static RoleInfo energyamplifier = new("energyamplifier", Energyamplifier.color, RoleId.Energyamplifier);
         public static RoleInfo sheriff = new("sheriff", Sheriff.color, RoleId.Sheriff);
         public static RoleInfo deputy = new("deputy", Sheriff.color, RoleId.Deputy);
+        public static RoleInfo auxiliary = new("auxiliary", Sheriff.color, RoleId.Auxiliary);
+        public static RoleInfo gojo = new("gojo", Gojo.color, RoleId.Gojo);
+        public static RoleInfo sukuna = new("sukuna", Palette.ImpostorRed, RoleId.Sukuna);
         public static RoleInfo lighter = new("lighter", Lighter.color, RoleId.Lighter);
         public static RoleInfo godfather = new("godfather", Godfather.color, RoleId.Godfather);
         public static RoleInfo mafioso = new("mafioso", Mafioso.color, RoleId.Mafioso);
@@ -141,6 +144,7 @@ namespace TheOtherRoles
         public static RoleInfo playerRole = new("playerRole", PlayerRole.color, RoleId.PlayerRole, true);
         public static RoleInfo niceVoteEater = new("niceVoteEater", VoteEater.color, RoleId.NiceVoteEater);
         public static RoleInfo evilVoteEater = new("evilVoteEater", Palette.ImpostorRed, RoleId.EvilVoteEater);
+        public static RoleInfo policeCommissioner = new("policeCommissioner", PoliceCommissioner.color, RoleId.PoliceCommissioner);
 
         public static RoleInfo hunter = new("hunter", Palette.ImpostorRed, RoleId.Impostor);
         public static RoleInfo hunted = new("hunted", Color.white, RoleId.Crewmate);
@@ -183,7 +187,8 @@ namespace TheOtherRoles
             thief,
             serialKiller,
             pelican,
-            playerRole
+            playerRole,
+            sukuna
         ];
 
         public static List<RoleInfo> Trick =
@@ -263,7 +268,10 @@ namespace TheOtherRoles
             camouflager,
             securityGuard,
             energyamplifier,
-            martyr
+            martyr,
+            policeCommissioner,
+            auxiliary,
+            gojo
         ];
 
         public static List<RoleInfo> Outlook =
@@ -428,6 +436,10 @@ namespace TheOtherRoles
             playerRole,
             niceVoteEater,
             evilVoteEater,
+            policeCommissioner,
+            auxiliary,
+            gojo,
+            sukuna,
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
@@ -474,6 +486,10 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Energyamplifier)) infos.Add(energyamplifier);
             if (p.isRole(RoleId.Sheriff)) infos.Add(sheriff);
             if (p.isRole(RoleId.Deputy)) infos.Add(deputy);
+            if (p.isRole(RoleId.Auxiliary)) infos.Add(auxiliary);
+            if (p.isRole(RoleId.Gojo)) infos.Add(gojo);
+            if (p.isRole(RoleId.Sukuna)) infos.Add(sukuna);
+            if (p.isRole(RoleId.Martyr)) infos.Add(martyr);
             if (p.isRole(RoleId.Lighter)) infos.Add(lighter);
             if (p.isRole(RoleId.Godfather)) infos.Add(godfather);
             if (p.isRole(RoleId.Mafioso)) infos.Add(mafioso);
@@ -533,6 +549,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.PlayerRole)) infos.Add(playerRole);
             if (p.isRole(RoleId.NiceVoteEater)) infos.Add(niceVoteEater);
             if (p.isRole(RoleId.EvilVoteEater)) infos.Add(evilVoteEater);
+            if (p.isRole(RoleId.PoliceCommissioner)) infos.Add(policeCommissioner);
             if (p.isRole(RoleId.VoidEater)) infos.Add(voidEater);
             if (p.isRole(RoleId.FortuneTeller))
             {
@@ -644,6 +661,8 @@ namespace TheOtherRoles
                         roleName = Helpers.cs(Warlock.color, ModTranslation.getString("roleInfoCursed")) + roleName;
                     if (Assassin.players.Any(x => x.player && x.assassinMarked == p))
                         roleName = Helpers.cs(Assassin.color, ModTranslation.getString("roleInfoMarked")) + roleName;
+                    if (Auxiliary.players.Any(x => x.player != null && x.player.Data != null && !x.player.Data.IsDead && x.markedPlayer == p))
+                        roleName = Helpers.cs(Auxiliary.markColor, ModTranslation.getString("roleInfoMarked")) + roleName;
                     if (Pursuer.blankedList.Contains(p) && !p.Data.IsDead)
                         roleName = Helpers.cs(Pursuer.color, ModTranslation.getString("roleInfoBlanked")) + roleName;
 

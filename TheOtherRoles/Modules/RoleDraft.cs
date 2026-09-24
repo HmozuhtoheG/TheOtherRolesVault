@@ -85,7 +85,10 @@ namespace TheOtherRoles.Modules
             RoleManagerSelectRolesPatch.RoleAssignmentData roleData = RoleManagerSelectRolesPatch.getRoleAssignmentData();
             roleData.crewSettings.Add((byte)RoleId.Sheriff, CustomOptionHolder.sheriffSpawnRate.data);
             if (CustomOptionHolder.sheriffSpawnRate.getSelection() > 0)
+            {
                 roleData.crewSettings.Add((byte)RoleId.Deputy, (CustomOptionHolder.deputySpawnRate.getSelection(), (int)CustomOptionHolder.deputyRoleCount.getFloat()));
+                roleData.crewSettings.Add((byte)RoleId.Auxiliary, (CustomOptionHolder.auxiliarySpawnRate.getSelection(), (int)CustomOptionHolder.auxiliaryRoleCount.getFloat()));
+            }
 
             // Assign paired roles
             if (impostorCount >= 2)
@@ -187,6 +190,7 @@ namespace TheOtherRoles.Modules
                             else if (roleInfo.roleId == RoleId.Sidekick) continue;
                             else if (roleInfo.roleId == RoleId.Immoralist) continue;
                             if (roleInfo.roleId == RoleId.Deputy && (!Sheriff.exists || Sheriff.players.Count <= Deputy.players.Count)) continue;
+                            if (roleInfo.roleId == RoleId.Auxiliary && (!Sheriff.exists || Sheriff.players.Count <= Auxiliary.players.Count)) continue;
                             if (roleInfo.roleId == RoleId.Pursuer) continue;
                             if (roleInfo.roleId == RoleId.Spy && impostorCount < 2) continue;
                             if (roleInfo.roleId == RoleId.Yasuna && alreadyPicked.Any(x => x.Item1 == (byte)RoleId.EvilYasuna)) continue;
