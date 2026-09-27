@@ -335,11 +335,28 @@ namespace TheOtherRoles.Patches {
                     }
                 }
             }
+            if (HotPotato.isHotPotatoGM && HotPotato.holderId != byte.MaxValue)
+            {
+                var holder = Helpers.playerById(HotPotato.holderId);
+                if (holder != null && holder.Data != null && !holder.Data.IsDead) setPlayerNameColor(holder, HotPotato.color);
+            }
             // Crewmate roles with no changes: Mini
             // Impostor roles with no changes: Morphling, Camouflager, Vampire, Godfather, Eraser, Janitor, Cleaner, Warlock, BountyHunter,  Witch and Mafioso
         }
 
         static void setNameTags() {
+            // Kira only sees grey crewmates with hidden names
+            if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data != null && !PlayerControl.LocalPlayer.Data.IsDead
+                && PlayerControl.LocalPlayer.isRole(RoleId.Kira)) {
+                foreach (PlayerControl player in PlayerControl.AllPlayerControls)
+                    if (player != PlayerControl.LocalPlayer)
+                        player.cosmetics.nameText.text = "？？？";
+                if (MeetingHud.Instance != null)
+                    foreach (PlayerVoteArea area in MeetingHud.Instance.playerStates)
+                        if ((byte)area.PlayerId != PlayerControl.LocalPlayer.PlayerId)
+                            area.NameText.text = "？？？";
+            }
+
             // Mafia
             if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor) {
                 foreach (PlayerControl player in PlayerControl.AllPlayerControls)
@@ -568,7 +585,7 @@ namespace TheOtherRoles.Patches {
 
         static void updateReportButton(HudManager __instance) {
             if (GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek) return;
-            if (Deputy.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) && Deputy.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0 || MeetingHud.Instance) __instance.ReportButton.Hide();
+            if (Deputy.handcuffedKnows.ContainsKey(PlayerControl.LocalPlayer.PlayerId) && Deputy.handcuffedKnows[PlayerControl.LocalPlayer.PlayerId] > 0 || MeetingHud.Instance || HotPotato.isHotPotatoGM) __instance.ReportButton.Hide();
             else if (!__instance.ReportButton.isActiveAndEnabled) __instance.ReportButton.Show();
         }
          
@@ -640,6 +657,7 @@ namespace TheOtherRoles.Patches {
             updateImpostorKillButton(__instance);
             // Timer updates
             timerUpdate();
+            HotPotato.hotPotatoUpdate();
             // Mini
             miniUpdate();
 

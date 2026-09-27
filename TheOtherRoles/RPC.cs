@@ -157,6 +157,11 @@ namespace TheOtherRoles
         Auxiliary,
         Gojo,
         Sukuna,
+        Kira,
+        Zeus,
+        Painter,
+        Aoi,
+        Itadori,
     }
 
     enum CustomRPC
@@ -227,8 +232,6 @@ namespace TheOtherRoles
         SetLovers,
         ZephyrBlowCannon,
         ZephyrCheckCannon,
-        RacerSetOccupancy,
-        RacerSetGear,
         ForceMurderPlayer
     }
 
@@ -425,17 +428,42 @@ namespace TheOtherRoles
             var newMethod = harmony.Patch(method, new HarmonyMethod(prefixInfo.Method));
         }
 
+        static private bool HoldsRemoteProcess(Type type)
+        {
+            try
+            {
+                return type.GetFields(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
+                    .Any(field => typeof(RemoteProcessBase).IsAssignableFrom(field.FieldType));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         static public void Load()
         {
-            var types = Assembly.GetAssembly(typeof(RemoteProcessBase))?.GetTypes().Where((type) => type.IsDefined(typeof(TORRPCHolder))).ToList();
-            if (types == null) return;
+            var allTypes = Assembly.GetAssembly(typeof(RemoteProcessBase))?.GetTypes();
+            if (allTypes == null) return;
+
+            var types = allTypes.Where(type => type.IsDefined(typeof(TORRPCHolder)) || HoldsRemoteProcess(type)).ToList();
 
             foreach (var type in types)
             {
-                RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+                try
+                {
+                    RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+                }
+                catch (Exception ex)
+                {
+                    TheOtherRolesPlugin.Logger.LogError($"[RemoteProcess] Could not initialize {type.FullName}: {ex.Message}");
+                }
+
                 var methods = type.GetMethods().Where(m => m.IsDefined(typeof(CustomTORRPC))).ToList();
                 foreach (var method in methods) WrapRpcMethod(TheOtherRolesPlugin.Instance.Harmony, method);
             }
+
+            TheOtherRolesPlugin.Logger.LogMessage($"Remote processes: {AllTORProcess.Count} total, {types.Count} holder type(s) scanned.");
         }
 
         public virtual void Receive(MessageReader reader) { }
@@ -578,7 +606,16 @@ namespace TheOtherRoles
         public override void Receive(MessageReader reader)
         {
             int num = reader.ReadInt32();
-            for (int i = 0; i < num; i++) AllTORProcess[reader.ReadInt32()].Receive(reader);
+            for (int i = 0; i < num; i++)
+            {
+                int hash = reader.ReadInt32();
+                if (!AllTORProcess.TryGetValue(hash, out var process))
+                {
+                    TheOtherRolesPlugin.Logger.LogError($"[RemoteProcess] Unknown hash {hash}; the rest of this batch is dropped.");
+                    return;
+                }
+                process.Receive(reader);
+            }
         }
 
         public void Invoke(params RPCInvoker[] invokers)
@@ -873,19 +910,6 @@ namespace TheOtherRoles
         public static void setLovers(byte playerId1, byte playerId2)
         {
             Lovers.addCouple(Helpers.playerById(playerId1), Helpers.playerById(playerId2));
-        }
-
-        public static void racerSetOccupancy(byte ownerId, byte driverByte, byte passengerByte)
-        {
-            if (!Racer.cars.TryGetValue(ownerId, out var car)) return;
-            car.driverId = driverByte == byte.MaxValue ? null : driverByte;
-            car.passengerId = passengerByte == byte.MaxValue ? null : passengerByte;
-        }
-
-        public static void racerSetGear(byte ownerId, byte gear)
-        {
-            if (!Racer.cars.TryGetValue(ownerId, out var car)) return;
-            car.gear = gear;
         }
 
         public static void versionHandshake(int major, int minor, int build, int revision, Guid guid, int clientId, string subVer, bool isAndroid) {
@@ -2062,7 +2086,6 @@ namespace TheOtherRoles
             Hunted.timeshieldActive.Remove(playerId); // Shield is no longer active when rewinding
             SoundEffectsManager.stop("timemasterShield");  // Shield sound stopped when rewinding
             if (playerId == PlayerControl.LocalPlayer.PlayerId) {
-                resetHuntedRewindButton();
             }
             FastDestroyableSingleton<HudManager>.Instance.FullScreen.color = new Color(0f, 0.5f, 0.8f, 0.3f);
             FastDestroyableSingleton<HudManager>.Instance.FullScreen.enabled = true;
@@ -2187,17 +2210,6 @@ namespace TheOtherRoles
                     byte pId = reader.ReadByte();
                     byte flag = reader.ReadByte();
                     RPCProcedure.setModifier(modifierId, pId, flag);
-                    break;
-                case (byte)CustomRPC.RacerSetOccupancy:
-                    byte racerOwnerId = reader.ReadByte();
-                    byte racerDriverByte = reader.ReadByte();
-                    byte racerPassengerByte = reader.ReadByte();
-                    RPCProcedure.racerSetOccupancy(racerOwnerId, racerDriverByte, racerPassengerByte);
-                    break;
-                case (byte)CustomRPC.RacerSetGear:
-                    byte racerGearOwnerId = reader.ReadByte();
-                    byte racerGear = reader.ReadByte();
-                    RPCProcedure.racerSetGear(racerGearOwnerId, racerGear);
                     break;
                 case (byte)CustomRPC.VersionHandshake:
                     byte major = reader.ReadByte();

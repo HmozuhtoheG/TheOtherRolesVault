@@ -23,6 +23,48 @@
         "13": "\u9884\u8bbe",
         "14": "\u9810\u8a2d"
     },
+    "presetExport": {
+        "0": "Export Preset",
+        "11": "\u30d7\u30ea\u30bb\u30c3\u30c8\u3092\u66f8\u304d\u51fa\u3059",
+        "13": "\u5bfc\u51fa\u9884\u8bbe",
+        "14": "\u532f\u51fa\u9810\u8a2d"
+    },
+    "presetImport": {
+        "0": "Import Preset",
+        "11": "\u30d7\u30ea\u30bb\u30c3\u30c8\u3092\u8aad\u307f\u8fbc\u3080",
+        "13": "\u5bfc\u5165\u9884\u8bbe",
+        "14": "\u532f\u5165\u9810\u8a2d"
+    },
+    "presetExportDone": {
+        "0": "Exported: {0}",
+        "11": "\u66f8\u304d\u51fa\u3057\u307e\u3057\u305f: {0}",
+        "13": "\u5df2\u5bfc\u51fa: {0}",
+        "14": "\u5df2\u532f\u51fa: {0}"
+    },
+    "presetImportDone": {
+        "0": "Imported: {0}",
+        "11": "\u8aad\u307f\u8fbc\u307f\u307e\u3057\u305f: {0}",
+        "13": "\u5df2\u5bfc\u5165: {0}",
+        "14": "\u5df2\u532f\u5165: {0}"
+    },
+    "presetImportFailed": {
+        "0": "Failed to read the preset file",
+        "11": "\u30d7\u30ea\u30bb\u30c3\u30c8\u306e\u8aad\u307f\u8fbc\u307f\u306b\u5931\u6557",
+        "13": "\u9884\u8bbe\u6587\u4ef6\u8bfb\u53d6\u5931\u8d25",
+        "14": "\u9810\u8a2d\u6a94\u6848\u8b80\u53d6\u5931\u6557"
+    },
+    "presetImportTitle": {
+        "0": "Select a preset to import",
+        "11": "\u8aad\u307f\u8fbc\u3080\u30d7\u30ea\u30bb\u30c3\u30c8\u3092\u9078\u629e",
+        "13": "\u9009\u62e9\u8981\u5bfc\u5165\u7684\u9884\u8bbe",
+        "14": "\u9078\u64c7\u8981\u532f\u5165\u7684\u9810\u8a2d"
+    },
+    "presetImportNoFiles": {
+        "0": "No preset files. Put .txt files in: {0}",
+        "11": "\u30d7\u30ea\u30bb\u30c3\u30c8\u304c\u3042\u308a\u307e\u305b\u3093: {0}",
+        "13": "\u6ca1\u6709\u9884\u8bbe\u6587\u4ef6\u3002\u628a .txt \u653e\u5230: {0}",
+        "14": "\u6c92\u6709\u9810\u8a2d\u6a94\u6848\u3002\u628a .txt \u653e\u5230: {0}"
+    },
     "crewmateRolesCountMin": {
         "0": "Minimum Crewmate Roles",
         "11": "\u30af\u30eb\u30fc\u306e\u6700\u5c0f\u30ed\u30fc\u30eb\u6570",
@@ -846,6 +888,36 @@
         "11": "\u30b3\u30fc\u30c9\u3092\u5165\u529b",
         "13": "\u8f93\u5165\u623f\u53f7",
         "14": "\u8f38\u5165\u623f\u865f"
+    },
+    "enterCodeServer": {
+        "0": "Server",
+        "11": "\u30b5\u30fc\u30d0\u30fc",
+        "13": "\u670d\u52a1\u5668",
+        "14": "\u4f3a\u670d\u5668"
+    },
+    "enterCodeServerTitle": {
+        "0": "Search Server",
+        "11": "\u691c\u7d22\u30b5\u30fc\u30d0\u30fc",
+        "13": "\u641c\u7d22\u670d\u52a1\u5668",
+        "14": "\u641c\u5c0b\u4f3a\u670d\u5668"
+    },
+    "enterCodeServerOfficialGroup": {
+        "0": "Official (Unavailable)",
+        "11": "\u516c\u5f0f\uff08\u975e\u5bfe\u5fdc\uff09",
+        "13": "\u5b98\u65b9\uff08\u4e0d\u517c\u5bb9\uff09",
+        "14": "\u5b98\u65b9\uff08\u4e0d\u76f8\u5bb9\uff09"
+    },
+    "enterCodeServerIncompatible": {
+        "0": "Unavailable",
+        "11": "\u975e\u5bfe\u5fdc",
+        "13": "\u4e0d\u517c\u5bb9",
+        "14": "\u4e0d\u76f8\u5bb9"
+    },
+    "enterCodeServerHint": {
+        "0": "Only the selected server is searched.",
+        "11": "\u9078\u629e\u3057\u305f\u30b5\u30fc\u30d0\u30fc\u306e\u307f\u691c\u7d22\u3057\u307e\u3059\u3002",
+        "13": "\u53ea\u4f1a\u5728\u9009\u4e2d\u7684\u670d\u52a1\u5668\u4e0a\u641c\u7d22\u3002",
+        "14": "\u53ea\u6703\u5728\u9078\u53d6\u7684\u4f3a\u670d\u5668\u4e0a\u641c\u5c0b\u3002"
     },
     "godfatherChatTag": {
         "0": "Gang",
@@ -1961,6 +2033,66 @@
         "13": "\u541f\u5531\u65f6\u95f4",
         "14": "\u541f\u5531\u6642\u9593"
     },
+    "sukunaHasDomain": {
+        "0": "Sukuna Has A Domain Expansion",
+        "11": "\u5bbf\u513a\u306b\u9818\u57df\u5c55\u958b\u3092\u4ed8\u4e0e",
+        "13": "\u5bbf\u50a9\u62e5\u6709\u9886\u57df",
+        "14": "\u5bbf\u513a\u64c1\u6709\u9818\u57df"
+    },
+    "sukunaDomainUses": {
+        "0": "Domain Uses",
+        "11": "\u9818\u57df\u306e\u4f7f\u7528\u56de\u6570",
+        "13": "\u9886\u57df\u53ef\u4f7f\u7528\u6b21\u6570",
+        "14": "\u9818\u57df\u53ef\u4f7f\u7528\u6b21\u6578"
+    },
+    "sukunaDomainRadius": {
+        "0": "Domain Radius",
+        "11": "\u9818\u57df\u306e\u534a\u5f84",
+        "13": "\u9886\u57df\u534a\u5f84",
+        "14": "\u9818\u57df\u534a\u5f91"
+    },
+    "sukunaDomainDuration": {
+        "0": "Domain Duration",
+        "11": "\u9818\u57df\u306e\u6301\u7d9a\u6642\u9593",
+        "13": "\u9886\u57df\u6301\u7eed\u65f6\u95f4",
+        "14": "\u9818\u57df\u6301\u7e8c\u6642\u9593"
+    },
+    "sukunaDomainSimpleClicks": {
+        "0": "Simple Domain Clicks Needed",
+        "11": "\u7c21\u6613\u9818\u57df\u306b\u5fc5\u8981\u306a\u30af\u30ea\u30c3\u30af\u6570",
+        "13": "\u7b80\u6613\u9886\u57df\u9700\u8981\u70b9\u51fb\u6b21\u6570",
+        "14": "\u7c21\u6613\u9818\u57df\u9700\u8981\u9ede\u64ca\u6b21\u6578"
+    },
+    "sukunaDomainSimpleTime": {
+        "0": "Simple Domain Time Limit",
+        "11": "\u7c21\u6613\u9818\u57df\u306e\u5236\u9650\u6642\u9593",
+        "13": "\u7b80\u6613\u9886\u57df\u65f6\u9650",
+        "14": "\u7c21\u6613\u9818\u57df\u6642\u9650"
+    },
+    "sukunaDomainBurnoutMeetings": {
+        "0": "Technique Burnout (Meetings)",
+        "11": "\u8853\u5f0f\u7194\u65ad\uff08\u4f1a\u8b70\u6570\uff09",
+        "13": "\u672f\u5f0f\u7194\u65ad\u6301\u7eed\u4f1a\u8bae\u6570",
+        "14": "\u8853\u5f0f\u7194\u65b7\u6301\u7e8c\u6703\u8b70\u6578"
+    },
+    "kiraKillsToWin": {
+        "0": "Kills Needed To Win",
+        "11": "\u52dd\u5229\u306b\u5fc5\u8981\u306a\u30ad\u30eb\u6570",
+        "13": "\u83b7\u80dc\u6240\u9700\u51fb\u6740\u6570",
+        "14": "\u7372\u52dd\u6240\u9700\u64ca\u6bba\u6578"
+    },
+    "kiraWritesPerMeeting": {
+        "0": "Writes Per Meeting",
+        "11": "\u4f1a\u8b70\u3054\u3068\u306e\u66f8\u304d\u8fbc\u307f\u56de\u6570",
+        "13": "\u6bcf\u573a\u4f1a\u8bae\u53ef\u4e66\u5199\u6b21\u6570",
+        "14": "\u6bcf\u5834\u6703\u8b70\u53ef\u66f8\u5beb\u6b21\u6578"
+    },
+    "kiraCanContinueAfterFail": {
+        "0": "Can Keep Writing After A Wrong Name",
+        "11": "\u66f8\u304d\u9593\u9055\u3048\u3066\u3082\u7d9a\u3051\u3089\u308c\u308b",
+        "13": "\u5199\u9519\u540e\u53ef\u4ee5\u7ee7\u7eed\u4e66\u5199",
+        "14": "\u5beb\u932f\u5f8c\u53ef\u4ee5\u7e7c\u7e8c\u66f8\u5beb"
+    },
     "deputy": {
         "0": "Deputy",
         "11": "\u526f\u5b98",
@@ -2098,6 +2230,132 @@
         "11": "\u89e3",
         "13": "\u89e3",
         "14": "\u89e3"
+    },
+    "SukunaDomainText": {
+        "0": "Malevolent Shrine",
+        "11": "\u4f0f\u9b54\u5fa1\u53a8\u5b50",
+        "13": "\u4f0f\u9b54\u5fa1\u53a8\u5b50",
+        "14": "\u4f0f\u9b54\u5fa1\u5eda\u5b50"
+    },
+    "kira": {
+        "0": "Kira",
+        "11": "\u591c\u795e\u6708",
+        "13": "\u591c\u795e\u6708",
+        "14": "\u591c\u795e\u6708"
+    },
+    "kiraIntroDesc": {
+        "0": "You already know how this ends.",
+        "11": "\u7d50\u672b\u306f\u3001\u3082\u3046\u77e5\u3063\u3066\u3044\u308b\u3002",
+        "13": "\u7ed3\u5c40\uff0c\u4f60\u65e9\u5c31\u77e5\u9053\u4e86\u3002",
+        "14": "\u7d50\u5c40\uff0c\u4f60\u65e9\u5c31\u77e5\u9053\u4e86\u3002"
+    },
+    "kiraShortDesc": {
+        "0": "Write names in the notebook to kill",
+        "11": "\u30ce\u30fc\u30c8\u306b\u540d\u524d\u3092\u66f8\u3044\u3066\u6bba\u3059",
+        "13": "\u5728\u7b14\u8bb0\u4e0a\u5199\u4e0b\u540d\u5b57\u6740\u4eba",
+        "14": "\u5728\u7b46\u8a18\u4e0a\u5beb\u4e0b\u540d\u5b57\u6bba\u4eba"
+    },
+    "kiraWrite": {
+        "0": "Write",
+        "11": "\u66f8\u304d\u8fbc\u3080",
+        "13": "\u4e66\u5199",
+        "14": "\u66f8\u5beb"
+    },
+    "kiraWriteTitle": {
+        "0": "Write the real name",
+        "11": "\u672c\u540d\u3092\u66f8\u304d\u8fbc\u3080",
+        "13": "\u5199\u4e0b\u771f\u5b9e\u59d3\u540d",
+        "14": "\u5beb\u4e0b\u771f\u5be6\u59d3\u540d"
+    },
+    "kiraWriteHint": {
+        "0": "type a name...",
+        "11": "\u540d\u524d\u3092\u5165\u529b...",
+        "13": "\u8f93\u5165\u540d\u5b57...",
+        "14": "\u8f38\u5165\u540d\u5b57..."
+    },
+    "kiraWriteConfirm": {
+        "0": "Write",
+        "11": "\u66f8\u304f",
+        "13": "\u5199\u4e0b",
+        "14": "\u5beb\u4e0b"
+    },
+    "kiraWriteCancel": {
+        "0": "Cancel",
+        "11": "\u30ad\u30e3\u30f3\u30bb\u30eb",
+        "13": "\u53d6\u6d88",
+        "14": "\u53d6\u6d88"
+    },
+    "kiraWriteFail": {
+        "0": "Wrong name - the notebook burns one page",
+        "11": "\u540d\u524d\u304c\u9055\u3046\u3001\u30ce\u30fc\u30c8\u304c\u4e00\u9801\u71c3\u3048\u305f",
+        "13": "\u540d\u5b57\u4e0d\u5bf9\uff0c\u7b14\u8bb0\u70e7\u6389\u4e86\u4e00\u9875",
+        "14": "\u540d\u5b57\u4e0d\u5c0d\uff0c\u7b46\u8a18\u71d2\u6389\u4e86\u4e00\u9801"
+    },
+    "kiraKillCount": {
+        "0": "Names written: {0}/{1}",
+        "11": "\u66f8\u304d\u8fbc\u3093\u3060\u4eba\u6570: {0}/{1}",
+        "13": "\u5df2\u5199\u4e0b: {0}/{1}",
+        "14": "\u5df2\u5beb\u4e0b: {0}/{1}"
+    },
+    "kiraDeathNote": {
+        "0": "{0} \u306f<color=#808080FF>\u5fc3\u81d3\u9ebb\u75fa</color>\u3067<color=#FF0000FF>\u6b7b\u3093\u3060</color>",
+        "11": "{0} \u306f<color=#808080FF>\u5fc3\u81d3\u9ebb\u75fa</color>\u3067<color=#FF0000FF>\u6b7b\u3093\u3060</color>",
+        "13": "{0} \u306f<color=#808080FF>\u5fc3\u81d3\u9ebb\u75fa</color>\u3067<color=#FF0000FF>\u6b7b\u3093\u3060</color>",
+        "14": "{0} \u306f<color=#808080FF>\u5fc3\u81d3\u9ebb\u75fa</color>\u3067<color=#FF0000FF>\u6b7b\u3093\u3060</color>"
+    },
+    "kiraVoteInfo": {
+        "0": "A player voted for {0}",
+        "11": "\u4e00\u540d\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u304c {0} \u306b\u6295\u7968\u3057\u305f",
+        "13": "\u4e00\u540d\u73a9\u5bb6\u6295\u7968\u7ed9\u4e86 {0}",
+        "14": "\u4e00\u540d\u73a9\u5bb6\u6295\u7968\u7d66\u4e86 {0}"
+    },
+    "kiraVoteSkipInfo": {
+        "0": "A player voted to skip",
+        "11": "\u4e00\u540d\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u304c\u30b9\u30ad\u30c3\u30d7\u3057\u305f",
+        "13": "\u4e00\u540d\u73a9\u5bb6\u6295\u7968\u8df3\u8fc7\u4e86",
+        "14": "\u4e00\u540d\u73a9\u5bb6\u6295\u7968\u8df3\u904e\u4e86"
+    },
+    "kiraWin": {
+        "0": "Kira Wins",
+        "11": "\u30ad\u30e9\u306e\u52dd\u5229",
+        "13": "\u591c\u795e\u6708\u83b7\u80dc",
+        "14": "\u591c\u795e\u6708\u7372\u52dd"
+    },
+    "kiraWinCondHint": {
+        "0": "Write enough real names in the notebook.",
+        "11": "\u30ce\u30fc\u30c8\u306b\u5341\u5206\u306a\u6570\u306e\u672c\u540d\u3092\u66f8\u304d\u8fbc\u3080\u3002",
+        "13": "\u5728\u7b14\u8bb0\u4e0a\u5199\u4e0b\u8db3\u591f\u591a\u7684\u771f\u5b9e\u59d3\u540d\u3002",
+        "14": "\u5728\u7b46\u8a18\u4e0a\u5beb\u4e0b\u8db3\u5920\u591a\u7684\u771f\u5be6\u59d3\u540d\u3002"
+    },
+    "simpleDomain": {
+        "0": "Simple Domain",
+        "11": "\u7c21\u6613\u9818\u57df",
+        "13": "\u7b80\u6613\u9886\u57df",
+        "14": "\u7c21\u6613\u9818\u57df"
+    },
+    "sukunaDomainStart": {
+        "0": "Domain Expansion: Malevolent Shrine!",
+        "11": "\u9818\u57df\u5c55\u958b\u30fb\u4f0f\u9b54\u5fa1\u53a8\u5b50\uff01",
+        "13": "\u9886\u57df\u5c55\u5f00\u00b7\u4f0f\u9b54\u5fa1\u53a8\u5b50\uff01",
+        "14": "\u9818\u57df\u5c55\u958b\u00b7\u4f0f\u9b54\u5fa1\u5eda\u5b50\uff01"
+    },
+    "sukunaSimpleDomainOk": {
+        "0": "Simple Domain deployed - the slashes miss you",
+        "11": "\u7c21\u6613\u9818\u57df\u3092\u5c55\u958b\u3057\u305f\u3001\u65ac\u6483\u306f\u5c4a\u304b\u306a\u3044",
+        "13": "\u7b80\u6613\u9886\u57df\u5c55\u5f00\u6210\u529f\uff0c\u65a9\u51fb\u4f24\u4e0d\u5230\u4f60",
+        "14": "\u7c21\u6613\u9818\u57df\u5c55\u958b\u6210\u529f\uff0c\u65ac\u64ca\u50b7\u4e0d\u5230\u4f60"
+    },
+    "sukunaBurnout": {
+        "0": "Technique burnout! No Dismantle for the next {0} meeting(s).",
+        "11": "\u8853\u5f0f\u7194\u65ad\uff01\u6b21\u306e {0} \u56de\u306e\u4f1a\u8b70\u3067\u306f\u300c\u89e3\u300d\u3092\u4f7f\u3048\u306a\u3044\u3002",
+        "13": "\u672f\u5f0f\u7194\u65ad\uff01\u63a5\u4e0b\u6765 {0} \u6b21\u4f1a\u8bae\u5185\u65e0\u6cd5\u4f7f\u7528\u300c\u89e3\u300d\u3002",
+        "14": "\u8853\u5f0f\u7194\u65b7\uff01\u63a5\u4e0b\u4f86 {0} \u6b21\u6703\u8b70\u5167\u7121\u6cd5\u4f7f\u7528\u300c\u89e3\u300d\u3002"
+    },
+    "sukunaBurnoutOver": {
+        "0": "Technique burnout is over - Dismantle is back",
+        "11": "\u8853\u5f0f\u7194\u65ad\u304c\u660e\u3051\u305f\u3001\u89e3\u304c\u623b\u3063\u305f",
+        "13": "\u672f\u5f0f\u7194\u65ad\u7ed3\u675f\uff0c\u300c\u89e3\u300d\u5df2\u6062\u590d",
+        "14": "\u8853\u5f0f\u7194\u65b7\u7d50\u675f\uff0c\u300c\u89e3\u300d\u5df2\u6062\u5fa9"
     },
     "sukunaVerse1": {
         "0": "Dragon Scales",
@@ -4483,17 +4741,98 @@
         "13": "\u4f7f\u7528\u6a21\u7ec4\u5149\u6807",
         "14": "\u4f7f\u7528\u6a21\u7d44\u6e38\u6a19"
     },
-    "playLobbyMusic": {
-        "0": "Play Lobby Music",
-        "13": "\u64ad\u653e\u5927\u5385\u97f3\u4e50",
-        "14": "\u64ad\u653e\u5927\u5385\u97f3\u4e50"
+    "hostMusic": {
+        "0": "Play Host Music",
+        "11": "\u30db\u30b9\u30c8\u306e\u97f3\u697d\u3092\u518d\u751f",
+        "13": "\u64ad\u653e\u623f\u4e3b\u70b9\u7684\u97f3\u4e50",
+        "14": "\u64ad\u653e\u623f\u4e3b\u9ede\u7684\u97f3\u6a02"
     },
-    "playLobbyMusicDetail": {
-        "0": "When turned off, the BGM playing in the lobby stops",
-        "13": "\u82e5\u5173\u95ed\u8be5\u9009\u9879, \u5728\u51c6\u5907\u5927\u5385\u65f6\u7684\u97f3\u4e50\u5c06\u505c\u6b62\u64ad\u653e",
-        "14": "\u82e5\u95dc\u9589\u8a72\u9078\u9805\uff0c\u5728\u6e96\u5099\u5927\u5ef3\u6642\u7684\u97f3\u6a02\u5c07\u505c\u6b62\u64ad\u653e"
+    "hostMusicDetail": {
+        "0": "When turned off, you won't hear the music the host plays in the lobby",
+        "11": "\u30aa\u30d5\u306b\u3059\u308b\u3068\u3001\u30db\u30b9\u30c8\u304c\u30ed\u30d3\u30fc\u3067\u518d\u751f\u3059\u308b\u97f3\u697d\u304c\u805e\u3053\u3048\u306a\u304f\u306a\u308a\u307e\u3059",
+        "13": "\u82e5\u5173\u95ed\u8be5\u9009\u9879\uff0c\u4f60\u5c06\u542c\u4e0d\u5230\u623f\u4e3b\u5728\u5927\u5385\u64ad\u653e\u7684\u97f3\u4e50",
+        "14": "\u82e5\u95dc\u9589\u8a72\u9078\u9805\uff0c\u4f60\u5c07\u807d\u4e0d\u5230\u623f\u4e3b\u5728\u5927\u5ef3\u64ad\u653e\u7684\u97f3\u6a02"
     },
-    "enableSoundEffects": {
+    "musicNoApi": {
+        "0": "NetEase API not set. Host: /music api <url>",
+        "13": "\u672a\u8bbe\u7f6e\u7f51\u6613\u4e91 API \u5730\u5740\u3002\u623f\u4e3b\u53ef\u7528 /music api <\u5730\u5740> \u8bbe\u7f6e",
+        "14": "\u672a\u8a2d\u5b9a\u7db2\u6613\u96f2 API \u4f4d\u5740\u3002\u623f\u4e3b\u53ef\u7528 /music api <\u4f4d\u5740> \u8a2d\u5b9a"
+    },
+    "musicNoResult": {
+        "0": "No result",
+        "13": "\u6ca1\u6709\u641c\u5230\u7ed3\u679c",
+        "14": "\u6c92\u6709\u641c\u5230\u7d50\u679c"
+    },
+    "musicNoUrl": {
+        "0": "This song has no playable url (VIP or region locked)",
+        "13": "\u8fd9\u9996\u6b4c\u62ff\u4e0d\u5230\u64ad\u653e\u5730\u5740\uff08\u9700\u8981\u4f1a\u5458\u6216\u9501\u533a\uff09",
+        "14": "\u9019\u9996\u6b4c\u62ff\u4e0d\u5230\u64ad\u653e\u4f4d\u5740\uff08\u9700\u8981\u6703\u54e1\u6216\u9396\u5340\uff09"
+    },
+    "musicWeapiFailed": {
+        "0": "NetEase rejected the request (bad crypto params). Point at a community server with /music api <url>",
+        "13": "\u7f51\u6613\u62d2\u7edd\u4e86\u8bf7\u6c42\uff08\u52a0\u5bc6\u53c2\u6570\u4e0d\u5bf9\uff09\u3002\u53ef\u4ee5\u6539\u7528 /music api <\u5730\u5740> \u6307\u5411\u81ea\u5efa\u670d\u52a1",
+        "14": "\u7db2\u6613\u62d2\u7d55\u4e86\u8acb\u6c42\uff08\u52a0\u5bc6\u53c3\u6578\u4e0d\u5c0d\uff09\u3002\u53ef\u4ee5\u6539\u7528 /music api <\u4f4d\u5740> \u6307\u5411\u81ea\u5efa\u670d\u52d9"
+    },
+    "musicDownloadFailed": {
+        "0": "Download failed",
+        "13": "\u4e0b\u8f7d\u5931\u8d25",
+        "14": "\u4e0b\u8f09\u5931\u6557"
+    },
+    "musicLobbyOnly": {
+        "0": "Music only works in the lobby",
+        "13": "\u53ea\u80fd\u5728\u51c6\u5907\u5927\u5385\u70b9\u6b4c",
+        "14": "\u53ea\u80fd\u5728\u6e96\u5099\u5927\u5ef3\u9ede\u6b4c"
+    },
+    "musicUsage": {
+        "0": "Usage: /music <keyword> | /music play <n> | /music stop | /music api [url]",
+        "13": "\u7528\u6cd5\uff1a/music \u6b4c\u540d \u641c\u7d22 | /music play \u5e8f\u53f7 \u64ad\u653e | /music stop \u505c\u6b62 | /music api [\u5730\u5740] \u5207\u6362\u63a5\u53e3",
+        "14": "\u7528\u6cd5\uff1a/music \u6b4c\u540d \u641c\u5c0b | /music play \u5e8f\u865f \u64ad\u653e | /music stop \u505c\u6b62 | /music api [\u4f4d\u5740] \u5207\u63db\u4ecb\u9762"
+    },
+    "musicApiSet": {
+        "0": "Using custom API: {0}",
+        "13": "\u5df2\u5207\u6362\u4e3a\u81ea\u5efa\u63a5\u53e3\uff1a{0}",
+        "14": "\u5df2\u5207\u63db\u70ba\u81ea\u5efa\u4ecb\u9762\uff1a{0}"
+    },
+    "musicDirect": {
+        "0": "Using direct NetEase API",
+        "13": "\u5df2\u5207\u6362\u4e3a\u76f4\u8fde\u7f51\u6613\u4e91",
+        "14": "\u5df2\u5207\u63db\u70ba\u76f4\u9023\u7db2\u6613\u96f2"
+    },
+    "musicHostOnly": {
+        "0": "Only the host can do that",
+        "13": "\u53ea\u6709\u623f\u4e3b\u53ef\u4ee5\u64cd\u4f5c",
+        "14": "\u53ea\u6709\u623f\u4e3b\u53ef\u4ee5\u64cd\u4f5c"
+    },
+    "musicBadIndex": {
+        "0": "Invalid index, search first",
+        "13": "\u5e8f\u53f7\u65e0\u6548\uff0c\u8bf7\u5148\u641c\u7d22",
+        "14": "\u5e8f\u865f\u7121\u6548\uff0c\u8acb\u5148\u641c\u5c0b"
+    },
+    "musicSearchResult": {
+        "0": "Results for \"{0}\"",
+        "13": "\u641c\u7d22 \"{0}\" \u7684\u7ed3\u679c",
+        "14": "\u641c\u5c0b \"{0}\" \u7684\u7d50\u679c"
+    },
+    "musicPickHint": {
+        "0": "Host: /music play <n> to play",
+        "13": "\u623f\u4e3b\u7528 /music play \u5e8f\u53f7 \u64ad\u653e",
+        "14": "\u623f\u4e3b\u7528 /music play \u5e8f\u865f \u64ad\u653e"
+    },
+    "musicNowPlaying": {
+        "0": "Now playing: {0}",
+        "13": "\u6b63\u5728\u64ad\u653e\uff1a{0}",
+        "14": "\u6b63\u5728\u64ad\u653e\uff1a{0}"
+    },
+    "musicLoading": {
+        "0": "Loading \"{0}\"...",
+        "13": "\u6b63\u5728\u52a0\u8f7d\u300c{0}\u300d\u2026",
+        "14": "\u6b63\u5728\u8f09\u5165\u300c{0}\u300d\u2026"
+    },
+    "musicApiSynced": {
+        "0": "Host set API to {0}",
+        "13": "\u623f\u4e3b\u5df2\u8bbe\u7f6e\u63a5\u53e3\u5730\u5740\uff1a{0}",
+        "14": "\u623f\u4e3b\u5df2\u8a2d\u5b9a\u4ecb\u9762\u4f4d\u5740\uff1a{0}"
+    },    "enableSoundEffects": {
         "0": "Enable Sound Effects",
         "11": "\u7279\u6b8a\u30b5\u30a6\u30f3\u30c9\u3092\u6709\u52b9\u5316",
         "13": "\u4f7f\u7528\u7279\u6b8a\u58f0\u6548",
@@ -9680,10 +10019,16 @@
         "14": "<title>\u9663\u71df</title>\u8239\u54e1\u3002\n<title>\u6280\u80fd</title>\u6309\u4f4f <var>F</var> \u5c55\u958b\u7121\u4e0b\u9650\uff1a\u534a\u5f91 <var>%R%</var>m \u5167\u7684\u6240\u6709\u4eba\u90fd\u88ab\u64cb\u5728\u9ad4\u5916\uff0c\u8a66\u5716\u9760\u8fd1\u7684\u4eba\u6703\u88ab\u63a8\u56de\u53bb\u3002\n<title>\u5c01\u9396</title>\u7121\u4e0b\u9650\u5c55\u958b\u671f\u9593\uff0c\u4efb\u4f55\u4eba\u90fd\u7121\u6cd5\u5c0d\u4f60\u4f7f\u7528\u6280\u80fd\uff0c\u4e5f\u7121\u6cd5\u64ca\u6bba\u4f60\u3002\n<title>\u5492\u529b</title>\u4e0a\u9650 <var>%MAX%</var> \u9ede\uff0c\u5c55\u958b\u6642\u6bcf\u79d2\u6d88\u8017 <var>%DRAIN%</var> \u9ede\uff0c\u6eff\u5492\u529b\u53ef\u7dad\u6301 <var>%DURATION%</var>s\u3002\n<title>\u6062\u5fa9</title>\u6bcf\u5b8c\u6210\u4e00\u500b\u4efb\u52d9\u6062\u5fa9 <var>%TASK%</var> \u9ede\u5492\u529b\u3002\u5492\u529b\u8017\u76e1\u6642\u7121\u4e0b\u9650\u6703\u81ea\u52d5\u95dc\u9589\u3002\n<title>\u516d\u773c</title>\u5e38\u99d0\u88ab\u52d5\uff1a\u7bad\u982d\u5373\u6642\u6307\u5411\u5834\u5167\u6240\u6709\u5b58\u6d3b\u73a9\u5bb6\uff0c\u8a72\u73a9\u5bb6\u6b7b\u4ea1\u6642\u7bad\u982d\u7acb\u523b\u6d88\u5931\uff1b\u4f60\u7684\u8996\u91ce\u5e38\u99d0\u9752\u8272\u3002"
     },
     "sukunaFullDesc": {
-        "0": "<title>Faction</title>Impostor.\n<title>Ability</title>Press <var>F</var> (cooldown <var>%CD%s</var>) to start chanting: you are rooted in place, cannot turn, and cannot cancel it. Everyone sees the verses appear above your head, in step with the <var>%CHANT%</var>s incantation.\n<title>Dismantle</title>When the chant ends a slash cuts forward along the way you are facing, in a line one player wide.\n<title>Unstoppable</title>The slash ignores every defense - Infinity, shields, first-kill protection - and every wall: it pierces the whole ship and kills everyone standing in its path.",
-        "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u80fd\u529b</title><var>F</var>\uff08\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%CD%s</var>\uff09\u3067\u8a60\u5531\u3092\u958b\u59cb\u3059\u308b\u3002\u305d\u306e\u5834\u304b\u3089\u52d5\u3051\u305a\u3001\u5411\u304d\u3082\u5909\u3048\u3089\u308c\u305a\u3001\u4e2d\u65ad\u3082\u3067\u304d\u306a\u3044\u3002\u8a60\u5531 <var>%CHANT%</var>s \u306e\u9593\u3001\u982d\u4e0a\u306b\u546a\u8a5e\u304c\u5168\u54e1\u306b\u898b\u3048\u308b\u5f62\u3067\u6d6e\u304b\u3076\u3002\n<title>\u89e3</title>\u8a60\u5531\u304c\u7d42\u308f\u308b\u3068\u3001\u5411\u3044\u3066\u3044\u308b\u65b9\u5411\u3078\u4e00\u76f4\u7dda\u306b\u65ac\u6483\u304c\u653e\u305f\u308c\u308b\u3002\u592a\u3055\u306f\u30d7\u30ec\u30a4\u30e4\u30fc\u4e00\u4eba\u5206\u3002\n<title>\u7121\u9632\u5099</title>\u65ac\u6483\u306f\u3042\u3089\u3086\u308b\u9632\u5fa1\uff08\u7121\u4e0b\u9650\u3001\u30b7\u30fc\u30eb\u30c9\u3001\u521d\u6483\u7121\u52b9\u306a\u3069\uff09\u3068\u58c1\u3092\u7121\u8996\u3059\u308b\u3002\u8239\u3092\u8cab\u304d\u3001\u9032\u8def\u4e0a\u306e\u5168\u54e1\u3092\u6bba\u3059\u3002",
-        "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var>\uff08\u51b7\u5374 <var>%CD%s</var>\uff09\u5f00\u59cb\u541f\u5531\uff1a\u539f\u5730\u4e0d\u52a8\u3001\u65e0\u6cd5\u8f6c\u5411\u3001\u65e0\u6cd5\u53d6\u6d88\u3002\u541f\u5531 <var>%CHANT%</var>s \u671f\u95f4\uff0c\u4f60\u5934\u9876\u4f1a\u6d6e\u73b0\u6240\u6709\u4eba\u90fd\u770b\u5f97\u89c1\u7684\u5492\u8bcd\u3002\n<title>\u89e3</title>\u541f\u5531\u7ed3\u675f\u540e\uff0c\u6cbf\u4f60\u9762\u671d\u7684\u65b9\u5411\u653e\u51fa\u4e00\u9053\u8d2f\u7a7f\u7684\u65a9\u51fb\uff0c\u5bbd\u5ea6\u4e3a\u4e00\u4e2a\u73a9\u5bb6\u4f53\u578b\u3002\n<title>\u65e0\u89c6</title>\u65a9\u51fb\u65e0\u89c6\u4e00\u5207\u9632\u5fa1\uff08\u65e0\u4e0b\u9650\u3001\u62a4\u76fe\u3001\u9996\u53d1\u4fdd\u62a4\u7b49\uff09\u4e0e\u5899\u58c1\uff0c\u8d2f\u7a7f\u6574\u8258\u98de\u8239\uff0c\u6740\u6389\u8def\u5f84\u4e0a\u7684\u6240\u6709\u4eba\u3002",
-        "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var>\uff08\u51b7\u537b <var>%CD%s</var>\uff09\u958b\u59cb\u541f\u5531\uff1a\u539f\u5730\u4e0d\u52d5\u3001\u7121\u6cd5\u8f49\u5411\u3001\u7121\u6cd5\u53d6\u6d88\u3002\u541f\u5531 <var>%CHANT%</var>s \u671f\u9593\uff0c\u4f60\u982d\u9802\u6703\u6d6e\u73fe\u6240\u6709\u4eba\u90fd\u770b\u5f97\u898b\u7684\u5492\u8a5e\u3002\n<title>\u89e3</title>\u541f\u5531\u7d50\u675f\u5f8c\uff0c\u6cbf\u4f60\u9762\u671d\u7684\u65b9\u5411\u653e\u51fa\u4e00\u9053\u8cab\u7a7f\u7684\u65ac\u64ca\uff0c\u5bec\u5ea6\u70ba\u4e00\u500b\u73a9\u5bb6\u9ad4\u578b\u3002\n<title>\u7121\u8996</title>\u65ac\u64ca\u7121\u8996\u4e00\u5207\u9632\u79a6\uff08\u7121\u4e0b\u9650\u3001\u8b77\u76fe\u3001\u9996\u767c\u4fdd\u8b77\u7b49\uff09\u8207\u7246\u58c1\uff0c\u8cab\u7a7f\u6574\u8258\u98db\u8239\uff0c\u6bba\u6389\u8def\u5f91\u4e0a\u7684\u6240\u6709\u4eba\u3002"
+        "0": "<title>Faction</title>Impostor.\n<title>Ability</title>Press <var>F</var> (cooldown <var>%CD%s</var>) to start chanting: you are rooted in place, cannot turn, and cannot cancel it. Everyone sees the verses appear above your head, in step with the <var>%CHANT%</var>s incantation.\n<title>Dismantle</title>When the chant ends a slash cuts forward along the way you are facing, in a line one player wide.\n<title>Unstoppable</title>The slash ignores every defense - Infinity, shields, first-kill protection - and every wall: it pierces the whole ship and kills everyone standing in its path.\n<title>Domain</title>Press <var>G</var> to expand Malevolent Shrine centred on yourself (<var>%DUSES%</var> uses), radius <var>%DR%</var>m, lasting <var>%DDUR%</var>s. Everyone inside except you is cut by slashes; whoever fails to mash the Simple Domain button <var>%SCLICKS%</var> times within <var>%STIME%</var>s is executed.\n<title>Vision</title>Nobody inside can see anything outside the domain, and nobody outside can see anyone inside.\n<title>Burnout</title>However the domain ends, your Dismantle is locked for the next <var>%BURNOUT%</var> meeting(s).",
+        "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u80fd\u529b</title><var>F</var>\uff08\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%CD%s</var>\uff09\u3067\u8a60\u5531\u3092\u958b\u59cb\u3059\u308b\u3002\u305d\u306e\u5834\u304b\u3089\u52d5\u3051\u305a\u3001\u5411\u304d\u3082\u5909\u3048\u3089\u308c\u305a\u3001\u4e2d\u65ad\u3082\u3067\u304d\u306a\u3044\u3002\u8a60\u5531 <var>%CHANT%</var>s \u306e\u9593\u3001\u982d\u4e0a\u306b\u546a\u8a5e\u304c\u5168\u54e1\u306b\u898b\u3048\u308b\u5f62\u3067\u6d6e\u304b\u3076\u3002\n<title>\u89e3</title>\u8a60\u5531\u304c\u7d42\u308f\u308b\u3068\u3001\u5411\u3044\u3066\u3044\u308b\u65b9\u5411\u3078\u4e00\u76f4\u7dda\u306b\u65ac\u6483\u304c\u653e\u305f\u308c\u308b\u3002\u592a\u3055\u306f\u30d7\u30ec\u30a4\u30e4\u30fc\u4e00\u4eba\u5206\u3002\n<title>\u7121\u9632\u5099</title>\u65ac\u6483\u306f\u3042\u3089\u3086\u308b\u9632\u5fa1\uff08\u7121\u4e0b\u9650\u3001\u30b7\u30fc\u30eb\u30c9\u3001\u521d\u6483\u7121\u52b9\u306a\u3069\uff09\u3068\u58c1\u3092\u7121\u8996\u3059\u308b\u3002\u8239\u3092\u8cab\u304d\u3001\u9032\u8def\u4e0a\u306e\u5168\u54e1\u3092\u6bba\u3059\u3002\n<title>\u9818\u57df</title><var>G</var> \u3067\u81ea\u8eab\u3092\u4e2d\u5fc3\u306b\u4f0f\u9b54\u5fa1\u53a8\u5b50\u3092\u5c55\u958b\u3059\u308b\uff08<var>%DUSES%</var> \u56de\u307e\u3067\uff09\u3002\u534a\u5f84 <var>%DR%</var>m\u3001\u6301\u7d9a <var>%DDUR%</var>s\u3002\u9818\u57df\u5185\u306e\u81ea\u5206\u4ee5\u5916\u306f\u5168\u54e1\u65ac\u6483\u3092\u53d7\u3051\u7d9a\u3051\u3001<var>%STIME%</var>s \u4ee5\u5185\u306b\u300c\u7c21\u6613\u9818\u57df\u300d\u3092 <var>%SCLICKS%</var> \u56de\u9023\u6253\u3067\u304d\u306a\u304b\u3063\u305f\u8005\u306f\u65ac\u3089\u308c\u308b\u3002\n<title>\u8996\u754c</title>\u9818\u57df\u5185\u304b\u3089\u306f\u5916\u306e\u4f55\u3082\u898b\u3048\u305a\u3001\u5916\u304b\u3089\u306f\u4e2d\u306e\u8ab0\u3082\u898b\u3048\u306a\u3044\u3002\n<title>\u7194\u65ad</title>\u9818\u57df\u304c\u3069\u306e\u3088\u3046\u306b\u7d42\u308f\u3063\u3066\u3082\u3001\u6b21\u306e <var>%BURNOUT%</var> \u56de\u306e\u4f1a\u8b70\u3067\u306f\u300c\u89e3\u300d\u3092\u4f7f\u3048\u306a\u3044\u3002",
+        "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var>\uff08\u51b7\u5374 <var>%CD%s</var>\uff09\u5f00\u59cb\u541f\u5531\uff1a\u539f\u5730\u4e0d\u52a8\u3001\u65e0\u6cd5\u8f6c\u5411\u3001\u65e0\u6cd5\u53d6\u6d88\u3002\u541f\u5531 <var>%CHANT%</var>s \u671f\u95f4\uff0c\u4f60\u5934\u9876\u4f1a\u6d6e\u73b0\u6240\u6709\u4eba\u90fd\u770b\u5f97\u89c1\u7684\u5492\u8bcd\u3002\n<title>\u89e3</title>\u541f\u5531\u7ed3\u675f\u540e\uff0c\u6cbf\u4f60\u9762\u671d\u7684\u65b9\u5411\u653e\u51fa\u4e00\u9053\u8d2f\u7a7f\u7684\u65a9\u51fb\uff0c\u5bbd\u5ea6\u4e3a\u4e00\u4e2a\u73a9\u5bb6\u4f53\u578b\u3002\n<title>\u65e0\u89c6</title>\u65a9\u51fb\u65e0\u89c6\u4e00\u5207\u9632\u5fa1\uff08\u65e0\u4e0b\u9650\u3001\u62a4\u76fe\u3001\u9996\u53d1\u4fdd\u62a4\u7b49\uff09\u4e0e\u5899\u58c1\uff0c\u8d2f\u7a7f\u6574\u8258\u98de\u8239\uff0c\u6740\u6389\u8def\u5f84\u4e0a\u7684\u6240\u6709\u4eba\u3002\n<title>\u9886\u57df</title>\u6309 <var>G</var> \u4ee5\u81ea\u8eab\u4e3a\u4e2d\u5fc3\u5c55\u5f00\u4f0f\u9b54\u5fa1\u53a8\u5b50\uff08\u53ef\u7528 <var>%DUSES%</var> \u6b21\uff09\uff0c\u534a\u5f84 <var>%DR%</var>m\uff0c\u6301\u7eed <var>%DDUR%</var>s\u3002\u9886\u57df\u5185\u9664\u4f60\u4ee5\u5916\u7684\u6240\u6709\u4eba\u90fd\u4f1a\u88ab\u6301\u7eed\u65a9\u51fb\uff1b<var>%STIME%</var>s \u5185\u6ca1\u8fde\u70b9\u591f <var>%SCLICKS%</var> \u6b21\u300c\u7b80\u6613\u9886\u57df\u300d\u7684\u4eba\u4f1a\u88ab\u65a9\u6740\u3002\n<title>\u89c6\u91ce</title>\u9886\u57df\u5185\u7684\u4eba\u770b\u4e0d\u5230\u9886\u57df\u5916\u7684\u4e00\u5207\uff0c\u9886\u57df\u5916\u7684\u4eba\u4e5f\u770b\u4e0d\u5230\u9886\u57df\u91cc\u7684\u4efb\u4f55\u4eba\u3002\n<title>\u7194\u65ad</title>\u9886\u57df\u65e0\u8bba\u4ee5\u4f55\u79cd\u65b9\u5f0f\u7ed3\u675f\uff0c\u4f60\u5728\u63a5\u4e0b\u6765 <var>%BURNOUT%</var> \u6b21\u4f1a\u8bae\u5185\u90fd\u65e0\u6cd5\u4f7f\u7528\u300c\u89e3\u300d\u3002",
+        "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var>\uff08\u51b7\u537b <var>%CD%s</var>\uff09\u958b\u59cb\u541f\u5531\uff1a\u539f\u5730\u4e0d\u52d5\u3001\u7121\u6cd5\u8f49\u5411\u3001\u7121\u6cd5\u53d6\u6d88\u3002\u541f\u5531 <var>%CHANT%</var>s \u671f\u9593\uff0c\u4f60\u982d\u9802\u6703\u6d6e\u73fe\u6240\u6709\u4eba\u90fd\u770b\u5f97\u898b\u7684\u5492\u8a5e\u3002\n<title>\u89e3</title>\u541f\u5531\u7d50\u675f\u5f8c\uff0c\u6cbf\u4f60\u9762\u671d\u7684\u65b9\u5411\u653e\u51fa\u4e00\u9053\u8cab\u7a7f\u7684\u65ac\u64ca\uff0c\u5bec\u5ea6\u70ba\u4e00\u500b\u73a9\u5bb6\u9ad4\u578b\u3002\n<title>\u7121\u8996</title>\u65ac\u64ca\u7121\u8996\u4e00\u5207\u9632\u79a6\uff08\u7121\u4e0b\u9650\u3001\u8b77\u76fe\u3001\u9996\u767c\u4fdd\u8b77\u7b49\uff09\u8207\u7246\u58c1\uff0c\u8cab\u7a7f\u6574\u8258\u98db\u8239\uff0c\u6bba\u6389\u8def\u5f91\u4e0a\u7684\u6240\u6709\u4eba\u3002\n<title>\u9818\u57df</title>\u6309 <var>G</var> \u4ee5\u81ea\u8eab\u70ba\u4e2d\u5fc3\u5c55\u958b\u4f0f\u9b54\u5fa1\u5eda\u5b50\uff08\u53ef\u7528 <var>%DUSES%</var> \u6b21\uff09\uff0c\u534a\u5f91 <var>%DR%</var>m\uff0c\u6301\u7e8c <var>%DDUR%</var>s\u3002\u9818\u57df\u5167\u9664\u4f60\u4ee5\u5916\u7684\u6240\u6709\u4eba\u90fd\u6703\u88ab\u6301\u7e8c\u65ac\u64ca\uff1b<var>%STIME%</var>s \u5167\u6c92\u9023\u9ede\u5920 <var>%SCLICKS%</var> \u6b21\u300c\u7c21\u6613\u9818\u57df\u300d\u7684\u4eba\u6703\u88ab\u65ac\u6bba\u3002\n<title>\u8996\u91ce</title>\u9818\u57df\u5167\u7684\u4eba\u770b\u4e0d\u5230\u9818\u57df\u5916\u7684\u4e00\u5207\uff0c\u9818\u57df\u5916\u7684\u4eba\u4e5f\u770b\u4e0d\u5230\u9818\u57df\u88e1\u7684\u4efb\u4f55\u4eba\u3002\n<title>\u7194\u65b7</title>\u9818\u57df\u7121\u8ad6\u4ee5\u4f55\u7a2e\u65b9\u5f0f\u7d50\u675f\uff0c\u4f60\u5728\u63a5\u4e0b\u4f86 <var>%BURNOUT%</var> \u6b21\u6703\u8b70\u5167\u90fd\u7121\u6cd5\u4f7f\u7528\u300c\u89e3\u300d\u3002"
+    },
+    "kiraFullDesc": {
+        "0": "<title>Faction</title>Neutral. You win alone.\n<title>Vision</title>Everyone you look at is a nameless grey crewmate, and in meetings their name and level always read ??? and only the plain white nameplate shows - you have to find out who is who by other means.\n<title>Ability</title>During a meeting press the button next to a player and type their real name. Get it right and they die of a heart attack; get it wrong and you only burn one page.\n<title>Writes</title><var>%WRITES%</var> writes per meeting. Whether a wrong name also ends your writing for that meeting is up to the host.\n<title>Votes</title>The instant anyone votes you alone learn which name that vote went to. The voter stays anonymous.\n<title>Win</title>Kill <var>%WIN%</var> players with the notebook.",
+        "11": "<title>\u9663\u55b6</title>\u4e2d\u7acb\u3002\u5358\u72ec\u52dd\u5229\u3002\n<title>\u8996\u754c</title>\u898b\u3048\u308b\u76f8\u624b\u306f\u5168\u54e1\u540d\u524d\u306e\u306a\u3044\u7070\u8272\u306e\u30af\u30eb\u30fc\u3067\u3001\u4f1a\u8b70\u3067\u306f\u540d\u524d\u3082\u30ec\u30d9\u30eb\u3082\u300c\uff1f\uff1f\uff1f\u300d\u3001\u30cd\u30fc\u30e0\u30d7\u30ec\u30fc\u30c8\u3082\u7121\u5730\u306e\u767d\u3060\u3051\u3067\u3059\u3002\u4ed6\u306e\u624b\u304c\u304b\u308a\u3067\u6b63\u4f53\u3092\u7a81\u304d\u6b62\u3081\u308b\u3057\u304b\u3042\u308a\u307e\u305b\u3093\u3002\n<title>\u80fd\u529b</title>\u4f1a\u8b70\u4e2d\u306b\u5404\u30d7\u30ec\u30a4\u30e4\u30fc\u6a2a\u306e\u30dc\u30bf\u30f3\u3092\u62bc\u3057\u3001\u672c\u540d\u3092\u5165\u529b\u3059\u308b\u3002\u6b63\u3057\u3051\u308c\u3070\u5fc3\u81d3\u9ebb\u75fa\u3067\u6b7b\u4ea1\u3001\u9593\u9055\u3048\u308c\u3070\u30da\u30fc\u30b8\u3092\u4e00\u679a\u7121\u99c4\u306b\u3059\u308b\u3060\u3051\u3002\n<title>\u66f8\u304d\u8fbc\u307f</title>1\u56de\u306e\u4f1a\u8b70\u306b\u3064\u304d <var>%WRITES%</var> \u56de\u3002\u66f8\u304d\u9593\u9055\u3048\u305f\u6642\u306b\u305d\u306e\u4f1a\u8b70\u3067\u7d9a\u3051\u3089\u308c\u308b\u304b\u306f\u30db\u30b9\u30c8\u8a2d\u5b9a\u3002\n<title>\u7968</title>\u8ab0\u304b\u304c\u6295\u7968\u3057\u305f\u77ac\u9593\u3001\u305d\u306e\u7968\u304c\u8ab0\u306b\u5165\u3063\u305f\u304b\u3092\u3042\u306a\u305f\u3060\u3051\u304c\u77e5\u308b\u3002\u6295\u7968\u8005\u306f\u533f\u540d\u3002\n<title>\u52dd\u5229</title>\u30ce\u30fc\u30c8\u3067 <var>%WIN%</var> \u4eba\u3092\u6bba\u3059\u3002",
+        "13": "<title>\u9635\u8425</title>\u4e2d\u7acb\uff0c\u72ec\u81ea\u83b7\u80dc\u3002\n<title>\u89c6\u91ce</title>\u5728\u4f60\u773c\u91cc\u6240\u6709\u4eba\u90fd\u662f\u65e0\u540d\u7684\u7070\u8272\u5c0f\u4eba\uff0c\u4f1a\u8bae\u91cc\u540d\u5b57\u548c\u7b49\u7ea7\u4e00\u5f8b\u663e\u793a\u4e3a\u300c\uff1f\uff1f\uff1f\u300d\uff0c\u94ed\u724c\u4e5f\u53ea\u4f1a\u662f\u7eaf\u767d\u7684\u90a3\u6b3e\uff0c\u53ea\u80fd\u9760\u522b\u7684\u7ebf\u7d22\u786e\u8ba4\u8c01\u662f\u8c01\u3002\n<title>\u6280\u80fd</title>\u4f1a\u8bae\u4e2d\u70b9\u51fb\u73a9\u5bb6\u65c1\u7684\u6309\u94ae\u5e76\u8f93\u5165\u4ed6\u7684\u771f\u5b9e\u59d3\u540d\uff1a\u5199\u5bf9\u4e86\u4ed6\u4f1a\u6b7b\u4e8e\u5fc3\u810f\u9ebb\u75f9\uff0c\u5199\u9519\u4e86\u53ea\u662f\u767d\u8d39\u4e00\u9875\u3002\n<title>\u4e66\u5199</title>\u6bcf\u573a\u4f1a\u8bae <var>%WRITES%</var> \u6b21\uff1b\u5199\u9519\u540e\u672c\u573a\u4f1a\u8bae\u8fd8\u80fd\u4e0d\u80fd\u7ee7\u7eed\u5199\u7531\u623f\u4e3b\u8bbe\u5b9a\u3002\n<title>\u7968\u60c5</title>\u6709\u4eba\u6295\u7968\u7684\u77ac\u95f4\uff0c\u53ea\u6709\u4f60\u4f1a\u77e5\u9053\u8fd9\u7968\u6295\u7ed9\u4e86\u8c01\uff1b\u6295\u7968\u8005\u672c\u4eba\u4e0d\u4f1a\u88ab\u66b4\u9732\u3002\n<title>\u80dc\u5229</title>\u7528\u7b14\u8bb0\u6740\u6b7b <var>%WIN%</var> \u540d\u73a9\u5bb6\u5373\u83b7\u80dc\u3002",
+        "14": "<title>\u9663\u71df</title>\u4e2d\u7acb\uff0c\u7368\u81ea\u7372\u52dd\u3002\n<title>\u8996\u91ce</title>\u5728\u4f60\u773c\u88e1\u6240\u6709\u4eba\u90fd\u662f\u7121\u540d\u7684\u7070\u8272\u5c0f\u4eba\uff0c\u6703\u8b70\u88e1\u540d\u5b57\u548c\u7b49\u7d1a\u4e00\u5f8b\u986f\u793a\u70ba\u300c\uff1f\uff1f\uff1f\u300d\uff0c\u9298\u724c\u4e5f\u53ea\u6703\u662f\u7d14\u767d\u7684\u90a3\u6b3e\uff0c\u53ea\u80fd\u9760\u5225\u7684\u7dda\u7d22\u78ba\u8a8d\u8ab0\u662f\u8ab0\u3002\n<title>\u6280\u80fd</title>\u6703\u8b70\u4e2d\u9ede\u64ca\u73a9\u5bb6\u65c1\u7684\u6309\u9215\u4e26\u8f38\u5165\u4ed6\u7684\u771f\u5be6\u59d3\u540d\uff1a\u5beb\u5c0d\u4e86\u4ed6\u6703\u6b7b\u65bc\u5fc3\u81df\u9ebb\u75fa\uff0c\u5beb\u932f\u4e86\u53ea\u662f\u767d\u8cbb\u4e00\u9801\u3002\n<title>\u66f8\u5beb</title>\u6bcf\u5834\u6703\u8b70 <var>%WRITES%</var> \u6b21\uff1b\u5beb\u932f\u5f8c\u672c\u5834\u6703\u8b70\u9084\u80fd\u4e0d\u80fd\u7e7c\u7e8c\u5beb\u7531\u623f\u4e3b\u8a2d\u5b9a\u3002\n<title>\u7968\u60c5</title>\u6709\u4eba\u6295\u7968\u7684\u77ac\u9593\uff0c\u53ea\u6709\u4f60\u6703\u77e5\u9053\u9019\u7968\u6295\u7d66\u4e86\u8ab0\uff1b\u6295\u7968\u8005\u672c\u4eba\u4e0d\u6703\u88ab\u66b4\u9732\u3002\n<title>\u52dd\u5229</title>\u7528\u7b46\u8a18\u6bba\u6b7b <var>%WIN%</var> \u540d\u73a9\u5bb6\u5373\u7372\u52dd\u3002"
     },
     "thiefFullDesc": {
         "0": "The Thief has to kill another killer (Impostor, Jackal/Sidekick and if enabled Sheriff) in order to have a win condition.\nIf the Thief doesn't kill another killer they will lose the game.\nIf the Thief kills one of the other killers, the Thief overtakes their role (e.g. Ninja) and joins their team (in this case team Impostor).\nThey then have the new Role's win condition (e.g. Impostor-Win).\nIf the Thief tries to kill any non-killing role (Crewmate or Neutral), they die similar to a misfiring Sheriff.",
@@ -13074,6 +13419,21 @@
         "13": "\u4e0a\u8f6e\u6e38\u620f\u7ed3\u679c\u4e3a\u7a7a",
         "14": "\u4e0a\u502b\u904a\u6232\u7d50\u679c\u70ba\u7a7a"
     },
+    "helpEmotesKey": {
+        "0": "Emotes",
+        "13": "\u8868\u60c5",
+        "14": "\u8868\u60c5"
+    },
+    "emoteToggleHint": {
+        "0": "Click an emote to equip or unequip it.",
+        "13": "\u70b9\u51fb\u8868\u60c5\u5305\u4ee5\u88c5\u8f7d/\u5207\u6362",
+        "14": "\u9ede\u64ca\u8868\u60c5\u5305\u4ee5\u88dd\u8f09/\u5207\u63db"
+    },
+    "emoteImportButton": {
+        "0": "Import Emote Files",
+        "13": "导入表情包",
+        "14": "匯入表情包"
+    },
     "hintHelpInGameDetail": {
         "0": "You can press key H to view the descriptions of your role in the game.\nYou may also use your scroller if your description is too long.",
         "13": "\u4f60\u53ef\u4ee5\u901a\u8fc7\u5728\u6e38\u620f\u4e2d\u6309H\u952e\u6765\u67e5\u770b\u81ea\u5df1\u89d2\u8272\u7684\u529f\u80fd\n\u5982\u679c\u4f60\u7684\u804c\u4e1a\u4ecb\u7ecd\u592a\u957f\uff0c\u4f60\u8fd8\u53ef\u4ee5\u4f7f\u7528\u6eda\u8f6e\u6765\u7ffb\u9875",
@@ -13940,6 +14300,12 @@
         "11": "\u5bbf\u513a\u306f\u546a\u8a5e\u3092\u4e09\u3064\u8a60\u307f\u3001\u8239\u3092\u4e21\u65ad\u3059\u308b\u3002\u4f55\u8005\u3082\u305d\u308c\u3092\u6b62\u3081\u3089\u308c\u306a\u3044\u3002",
         "13": "\u5bbf\u50a9\u541f\u5531\u4e09\u53e5\u5492\u8bcd\uff0c\u4e00\u5200\u628a\u98de\u8239\u4ece\u4e2d\u65a9\u65ad\uff0c\u4ec0\u4e48\u90fd\u6321\u4e0d\u4f4f\u3002",
         "14": "\u5bbf\u513a\u541f\u5531\u4e09\u53e5\u5492\u8a5e\uff0c\u4e00\u5200\u628a\u98db\u8239\u5f9e\u4e2d\u65ac\u65b7\uff0c\u4ec0\u9ebc\u90fd\u64cb\u4e0d\u4f4f\u3002"
+    },
+    "kiraBlurb": {
+        "0": "Write a name, and the heart stops. He cannot even see your face.",
+        "11": "\u540d\u524d\u3092\u66f8\u3051\u3070\u3001\u5fc3\u81d3\u304c\u6b62\u307e\u308b\u3002\u5f7c\u306b\u306f\u9854\u3059\u3089\u898b\u3048\u306a\u3044\u3002",
+        "13": "\u5199\u4e0b\u540d\u5b57\uff0c\u5fc3\u810f\u505c\u8df3\uff1b\u800c\u4ed6\u8fde\u4f60\u7684\u8138\u90fd\u770b\u4e0d\u89c1\u3002",
+        "14": "\u5beb\u4e0b\u540d\u5b57\uff0c\u5fc3\u81df\u505c\u8df3\uff1b\u800c\u4ed6\u9023\u4f60\u7684\u81c9\u90fd\u770b\u4e0d\u898b\u3002"
     },
     "hostMessage": {
         "0": "Host Message",
@@ -15181,4 +15547,370 @@
     "policeCommissionerKillCooldown": {
         "0": "Police Commissioner Kill Cooldown",
         "13": "\u8b66\u5bdf\u5c40\u5c40\u957f\u51fb\u6740\u51b7\u5374"
-    }}
+    },
+    "kiraDeathNoteSender": {
+        "0": "Death Note",
+        "11": "\u30c7\u30b9\u30ce\u30fc\u30c8",
+        "13": "\u6b7b\u4ea1\u7b14\u8bb0",
+        "14": "\u6b7b\u4ea1\u7b46\u8a18"
+    },
+    "gamemodeHotPotato": {
+        "0": "Hot Potato",
+        "11": "\u71b1\u3044\u30b8\u30e3\u30ac\u30a4\u30e2",
+        "13": "\u70eb\u624b\u5c71\u828b",
+        "14": "\u71d9\u624b\u5c71\u828b"
+    },
+    "torHotPotato": {
+        "0": "Hot Potato",
+        "11": "\u71b1\u3044\u30b8\u30e3\u30ac\u30a4\u30e2",
+        "13": "\u70eb\u624b\u5c71\u828b",
+        "14": "\u71d9\u624b\u5c71\u828b"
+    },
+    "hotPotatoMain": {
+        "0": "Hot Potato Settings",
+        "11": "\u71b1\u3044\u30b8\u30e3\u30ac\u30a4\u30e2\u8a2d\u5b9a",
+        "13": "\u70eb\u624b\u5c71\u828b\u8bbe\u7f6e",
+        "14": "\u71d9\u624b\u5c71\u828b\u8a2d\u5b9a"
+    },
+    "hotPotatoTimer": {
+        "0": "Countdown",
+        "11": "\u30ab\u30a6\u30f3\u30c8\u30c0\u30a6\u30f3",
+        "13": "\u5012\u8ba1\u65f6\u65f6\u957f",
+        "14": "\u5012\u6578\u8a08\u6642\u6642\u9577"
+    },
+    "hotPotatoPassRange": {
+        "0": "Pass Range",
+        "11": "\u53d7\u3051\u6e21\u3057\u8ddd\u96e2",
+        "13": "\u4f20\u9012\u8ddd\u79bb",
+        "14": "\u50b3\u905e\u8ddd\u96e2"
+    },
+    "hotPotatoKeepBody": {
+        "0": "Keep Bodies",
+        "11": "\u6b7b\u4f53\u3092\u6b8b\u3059",
+        "13": "\u4fdd\u7559\u5c38\u4f53",
+        "14": "\u4fdd\u7559\u5c4d\u9ad4"
+    },
+    "hotPotatoSpeedBoost": {
+        "0": "Holder Speed",
+        "11": "\u79fb\u52d5\u901f\u5ea6\u500d\u7387",
+        "13": "\u52a0\u901f\u500d\u7387",
+        "14": "\u52a0\u901f\u500d\u7387"
+    },
+    "hotPotatoMeetingButton": {
+        "0": "Meetings are disabled in Hot Potato mode",
+        "11": "\u71b1\u3044\u30b8\u30e3\u30ac\u30a4\u30e2\u30e2\u30fc\u30c9\u3067\u306f\u4f1a\u8b70\u3092\u958b\u3051\u306a\u3044",
+        "13": "\u70eb\u624b\u5c71\u828b\u6a21\u5f0f\u4e2d\u65e0\u6cd5\u53ec\u5f00\u4f1a\u8bae",
+        "14": "\u71d9\u624b\u5c71\u828b\u6a21\u5f0f\u4e2d\u7121\u6cd5\u53ec\u958b\u6703\u8b70"
+    },
+    "hotPotatoPassText": {
+        "0": "Pass",
+        "11": "\u6e21\u3059",
+        "13": "\u4f20\u9012",
+        "14": "\u50b3\u905e"
+    },
+    "hotPotatoWin": {
+        "0": "Hot Potato Over",
+        "11": "\u71b1\u3044\u30b8\u30e3\u30ac\u30a4\u30e2\u7d42\u4e86",
+        "13": "\u70eb\u624b\u5c71\u828b\u7ed3\u675f",
+        "14": "\u71d9\u624b\u5c71\u828b\u7d50\u675f"
+    },
+
+    "zeus": {
+        "0": "Zeus",
+        "11": "\u30bc\u30a6\u30b9",
+        "13": "\u5b99\u65af",
+        "14": "\u5b99\u65af"
+    },
+
+    "zeusIntroDesc": {
+        "0": "The sky answers to me.",
+        "11": "\u7a7a\u306e\u96f7\u306f\u3001\u79c1\u304c\u843d\u3068\u3057\u3066\u3044\u308b\u3002",
+        "13": "\u5929\u4e0a\u90a3\u9053\u96f7\uff0c\u662f\u6211\u8ba9\u5b83\u843d\u7684\u3002",
+        "14": "\u5929\u4e0a\u90a3\u9053\u96f7\uff0c\u662f\u6211\u8b93\u5b83\u843d\u7684\u3002"
+    },
+
+    "zeusShortDesc": {
+        "0": "Open the admin map from anywhere and call lightning down on anyone.",
+        "11": "\u3069\u3053\u304b\u3089\u3067\u3082\u30a2\u30c9\u30df\u30f3\u30de\u30c3\u30d7\u3092\u958b\u304d\u3001\u597d\u304d\u306a\u5834\u6240\u306b\u96f7\u3092\u843d\u3068\u3059\u3002",
+        "13": "\u53ef\u8fdc\u7a0b\u6253\u5f00\u7ba1\u7406\u53f0\uff0c\u5728\u5730\u56fe\u4e0a\u70b9\u54ea\u91cc\u5c31\u5f80\u54ea\u91cc\u843d\u96f7\u3002",
+        "14": "\u53ef\u9060\u7aef\u6253\u958b\u7ba1\u7406\u53f0\uff0c\u5728\u5730\u5716\u4e0a\u9ede\u54ea\u88e1\u5c31\u5f80\u54ea\u88e1\u843d\u96f7\u3002"
+    },
+
+    "zeusFullDesc": {
+        "0": "<title>Faction</title>Impostor.\n<title>Ability</title>Press <var>F</var> to open the admin map from anywhere. Click a spot on it and lightning comes down right there - whoever is hit dies instantly, your own teammates included.\n<title>Cooldown</title>Close the map without striking: <var>%CCD%s</var>. Strike: <var>%CD%s</var>. Strike radius <var>%RADIUS%</var>.\n<title>Notes</title>Lightning ignores every shield. You cannot use the map during a meeting.",
+        "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u80fd\u529b</title><var>F</var> \u3067\u3069\u3053\u304b\u3089\u3067\u3082\u30a2\u30c9\u30df\u30f3\u30de\u30c3\u30d7\u3092\u958b\u3051\u307e\u3059\u3002\u30de\u30c3\u30d7\u4e0a\u306e\u597d\u304d\u306a\u5834\u6240\u3092\u30af\u30ea\u30c3\u30af\u3059\u308b\u3068\u3001\u305d\u3053\u306b\u96f7\u304c\u843d\u3061\u3001\u5f53\u305f\u3063\u305f\u4eba\u306f\u5373\u6b7b\u3057\u307e\u3059\u2014\u2014\u5473\u65b9\u306e\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3082\u542b\u307f\u307e\u3059\u3002\n<title>\u30af\u30fc\u30eb\u30c0\u30a6\u30f3</title>\u843d\u3068\u3055\u305a\u306b\u9589\u3058\u305f\u5834\u5408\uff1a<var>%CCD%s</var>\u3002\u843d\u96f7\uff1a<var>%CD%s</var>\u3002\u843d\u96f7\u534a\u5f84 <var>%RADIUS%</var>\u3002\n<title>\u6ce8\u610f</title>\u96f7\u306f\u3042\u3089\u3086\u308b\u30b7\u30fc\u30eb\u30c9\u3092\u7121\u8996\u3057\u307e\u3059\u3002\u4f1a\u8b70\u4e2d\u306f\u4f7f\u3048\u307e\u305b\u3093\u3002",
+        "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var> \u53ef\u4ee5\u8fdc\u7a0b\u6253\u5f00\u7ba1\u7406\u53f0\u5730\u56fe\u3002\u5728\u5730\u56fe\u4e0a\u70b9\u4e00\u5904\uff0c\u90a3\u4e2a\u4f4d\u7f6e\u5c31\u4f1a\u964d\u4e0b\u95ea\u7535\uff1b\u88ab\u5288\u5230\u7684\u4eba\u7acb\u5373\u6b7b\u4ea1\uff0c\u5305\u62ec\u4f60\u81ea\u5df1\u7684\u961f\u53cb\u3002\n<title>\u51b7\u5374</title>\u5173\u6389\u5730\u56fe\u4e0d\u843d\u96f7\uff1a<var>%CCD%s</var>\uff1b\u843d\u4e0b\u95ea\u7535\uff1a<var>%CD%s</var>\u3002\u843d\u96f7\u534a\u5f84 <var>%RADIUS%</var>\u3002\n<title>\u6ce8\u610f</title>\u95ea\u7535\u65e0\u89c6\u4e00\u5207\u62a4\u76fe\u3002\u4f1a\u8bae\u4e2d\u65e0\u6cd5\u4f7f\u7528\u3002",
+        "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var> \u53ef\u4ee5\u9060\u7aef\u6253\u958b\u7ba1\u7406\u53f0\u5730\u5716\u3002\u5728\u5730\u5716\u4e0a\u9ede\u4e00\u8655\uff0c\u90a3\u500b\u4f4d\u7f6e\u5c31\u6703\u964d\u4e0b\u9583\u96fb\uff1b\u88ab\u5288\u5230\u7684\u4eba\u7acb\u5373\u6b7b\u4ea1\uff0c\u5305\u62ec\u4f60\u81ea\u5df1\u7684\u968a\u53cb\u3002\n<title>\u51b7\u537b</title>\u95dc\u6389\u5730\u5716\u4e0d\u843d\u96f7\uff1a<var>%CCD%s</var>\uff1b\u843d\u4e0b\u9583\u96fb\uff1a<var>%CD%s</var>\u3002\u843d\u96f7\u534a\u5f91 <var>%RADIUS%</var>\u3002\n<title>\u6ce8\u610f</title>\u9583\u96fb\u7121\u8996\u4e00\u5207\u8b77\u76fe\u3002\u6703\u8b70\u4e2d\u7121\u6cd5\u4f7f\u7528\u3002"
+    },
+
+    "zeusBlurb": {
+        "0": "Borrowed from a certain god. He wants it back.",
+        "11": "\u3068\u3042\u308b\u795e\u304b\u3089\u501f\u308a\u305f\u96f7\u3002\u8fd4\u3057\u3066\u307b\u3057\u305d\u3046\u306b\u3057\u3066\u3044\u308b\u3002",
+        "13": "\u4ece\u67d0\u4f4d\u795e\u90a3\u513f\u501f\u6765\u7684\u3002\u4ed6\u8fd8\u60f3\u8981\u56de\u53bb\u3002",
+        "14": "\u5f9e\u67d0\u4f4d\u795e\u90a3\u5152\u501f\u4f86\u7684\u3002\u4ed6\u9084\u60f3\u8981\u56de\u53bb\u3002"
+    },
+
+    "zeusStrike": {
+        "0": "Lightning",
+        "11": "\u843d\u96f7",
+        "13": "\u843d\u96f7",
+        "14": "\u843d\u96f7"
+    },
+
+    "zeusStrikeHint": {
+        "0": "Press F to open the map, then click a spot to strike it.",
+        "11": "F \u3067\u30de\u30c3\u30d7\u3092\u958b\u304d\u3001\u30af\u30ea\u30c3\u30af\u3057\u305f\u5834\u6240\u306b\u96f7\u3092\u843d\u3068\u3057\u307e\u3059\u3002",
+        "13": "\u6309 F \u6253\u5f00\u5730\u56fe\uff0c\u70b9\u54ea\u91cc\u5c31\u5f80\u54ea\u91cc\u843d\u96f7\u3002",
+        "14": "\u6309 F \u6253\u958b\u5730\u5716\uff0c\u9ede\u54ea\u88e1\u5c31\u5f80\u54ea\u88e1\u843d\u96f7\u3002"
+    },
+
+    "zeusStrikeCooldown": {
+        "0": "Strike cooldown",
+        "11": "\u843d\u96f7\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u843d\u96f7\u51b7\u5374",
+        "14": "\u843d\u96f7\u51b7\u537b"
+    },
+
+    "zeusCancelCooldown": {
+        "0": "Cancel cooldown",
+        "11": "\u30ad\u30e3\u30f3\u30bb\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u53d6\u6d88\u51b7\u5374",
+        "14": "\u53d6\u6d88\u51b7\u537b"
+    },
+
+    "zeusKillRadius": {
+        "0": "Strike radius",
+        "11": "\u843d\u96f7\u534a\u5f84",
+        "13": "\u843d\u96f7\u534a\u5f84",
+        "14": "\u843d\u96f7\u534a\u5f91"
+    },
+
+    "roleSummaryZeusStruck": {
+        "0": " - struck by lightning from {0}",
+        "11": " - {0} \u306e\u96f7\u306b\u6483\u305f\u308c\u305f",
+        "13": " - \u88ab {0} \u7684\u95ea\u7535\u5288\u6b7b",
+        "14": " - \u88ab {0} \u7684\u9583\u96fb\u5288\u6b7b"
+    },
+    "hideNSeekBotCount": {
+        "0": "Decoy bots",
+        "11": "\u30c7\u30b3\u30a4\u4eba\u5f62\u306e\u6570",
+        "13": "\u4f2a\u88c5\u4eba\u673a\u6570\u91cf",
+        "14": "\u507d\u88dd\u4eba\u6a5f\u6578\u91cf"
+    },
+    "hideNSeekBotPenalty": {
+        "0": "Bot kill penalty",
+        "11": "\u4eba\u5f62\u3092\u6483\u3063\u305f\u7f70",
+        "13": "\u5200\u9519\u4eba\u673a\u60e9\u7f5a",
+        "14": "\u5200\u932f\u4eba\u6a5f\u61f2\u7f70"
+    },
+    "hideNSeekDisguiseCooldown": {
+        "0": "Disguise cooldown",
+        "11": "\u5909\u8eab\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u53d8\u8eab\u51b7\u5374",
+        "14": "\u8b8a\u8eab\u51b7\u537b"
+    },
+    "hideNSeekInvisCount": {
+        "0": "Invisibility uses",
+        "11": "\u900f\u660e\u5316\u306e\u56de\u6570",
+        "13": "\u9690\u8eab\u6b21\u6570",
+        "14": "\u96b1\u8eab\u6b21\u6578"
+    },
+    "hideNSeekInvisDuration": {
+        "0": "Invisibility duration",
+        "11": "\u900f\u660e\u5316\u306e\u6301\u7d9a\u6642\u9593",
+        "13": "\u9690\u8eab\u65f6\u957f",
+        "14": "\u96b1\u8eab\u6642\u9577"
+    },
+    "hideNSeekInvisCooldown": {
+        "0": "Invisibility cooldown",
+        "11": "\u900f\u660e\u5316\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u9690\u8eab\u51b7\u5374",
+        "14": "\u96b1\u8eab\u51b7\u537b"
+    },
+    "hiderDisguiseText": {
+        "0": "Disguise",
+        "11": "\u5909\u8eab",
+        "13": "\u53d8\u8eab",
+        "14": "\u8b8a\u8eab"
+    },
+    "hiderInvisibleText": {
+        "0": "Vanish",
+        "11": "\u900f\u660e\u5316",
+        "13": "\u9690\u8eab",
+        "14": "\u96b1\u8eab"
+    },
+    "painter": {
+        "0": "Painter",
+        "11": "\u7d75\u5e2b",
+        "13": "\u753b\u5e08",
+        "14": "\u756b\u5e2b"
+    },
+    "painterIntroDesc": {
+        "0": "A painting is a door.",
+        "11": "\u7d75\u306f\u6249\u3067\u3042\u308b\u3002",
+        "13": "\u4e00\u5e45\u753b\uff0c\u5c31\u662f\u4e00\u6247\u95e8\u3002",
+        "14": "\u4e00\u5e45\u756b\uff0c\u5c31\u662f\u4e00\u6247\u9580\u3002"
+    },
+    "painterShortDesc": {
+        "0": "Paint a task console; whoever does that task falls into an illusion.",
+        "11": "\u30bf\u30b9\u30af\u7aef\u672b\u3092\u63cf\u304d\u3001\u305d\u306e\u30bf\u30b9\u30af\u3092\u3084\u3063\u305f\u8005\u3092\u5e7b\u5883\u306b\u843d\u3068\u3059\u3002",
+        "13": "\u7ed9\u4efb\u52a1\u70b9\u753b\u753b\uff0c\u505a\u90a3\u4e2a\u4efb\u52a1\u7684\u8239\u5458\u4f1a\u6389\u8fdb\u5e7b\u5883\u3002",
+        "14": "\u7d66\u4efb\u52d9\u9ede\u756b\u756b\uff0c\u505a\u90a3\u500b\u4efb\u52d9\u7684\u8239\u54e1\u6703\u6389\u9032\u5e7b\u5883\u3002"
+    },
+    "painterFullDesc": {
+        "0": "<title>Faction</title>Impostor.\n<title>Ability</title>Press <var>F</var> to open the task list and paint a task console. Anyone who then does that task is pulled into an illusion.\n<title>Illusion</title>Lasts <var>%DUR%s</var>: they see nobody, cannot do tasks, only knives can hit them, and skills do nothing to them.\n<title>Cooldown</title><var>%CD%s</var> cooldown, <var>%USES%</var> uses per game.",
+        "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u80fd\u529b</title><var>F</var> \u3067\u30bf\u30b9\u30af\u4e00\u89a7\u3092\u958b\u304d\u3001\u30bf\u30b9\u30af\u7aef\u672b\u3092\u4e00\u679a\u63cf\u304f\u3002\u4ee5\u5f8c\u305d\u306e\u30bf\u30b9\u30af\u3092\u884c\u3063\u305f\u30af\u30eb\u30fc\u306f\u5e7b\u5883\u306b\u5f15\u304d\u8fbc\u307e\u308c\u308b\u3002\n<title>\u5e7b\u5883</title><var>%DUR%s</var> \u79d2\u9593\uff1a\u8ab0\u3082\u898b\u3048\u305a\u3001\u30bf\u30b9\u30af\u3082\u3067\u304d\u305a\u3001\u5203\u3092\u6301\u3064\u8005\u306b\u3057\u304b\u653b\u6483\u3055\u308c\u305a\u3001\u30b9\u30ad\u30eb\u3082\u52b9\u304b\u306a\u3044\u3002\n<title>\u30af\u30fc\u30eb\u30c0\u30a6\u30f3</title>\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%CD%s</var>\u30011\u8a66\u5408 <var>%USES%</var> \u56de\u3002",
+        "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var> \u6253\u5f00\u4efb\u52a1\u5217\u8868\uff0c\u9009\u4e00\u4e2a\u4efb\u52a1\u70b9\u753b\u4e0a\u53bb\u3002\u6b64\u540e\u4efb\u4f55\u8239\u5458\u505a\u90a3\u4e2a\u4efb\u52a1\u65f6\u90fd\u4f1a\u88ab\u62c9\u8fdb\u5e7b\u5883\u3002\n<title>\u5e7b\u5883</title>\u6301\u7eed <var>%DUR%s</var>\uff1a\u4ed6\u770b\u4e0d\u5230\u4efb\u4f55\u4eba\u3001\u505a\u4e0d\u4e86\u4efb\u52a1\uff0c\u53ea\u6709\u5e26\u5200\u7684\u4eba\u6253\u5f97\u5230\u4ed6\uff0c\u522b\u4eba\u5bf9\u4ed6\u7528\u6280\u80fd\u65e0\u6548\u3002\n<title>\u51b7\u5374</title>\u51b7\u5374 <var>%CD%s</var>\uff0c\u6bcf\u5c40 <var>%USES%</var> \u6b21\u3002",
+        "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var> \u6253\u958b\u4efb\u52d9\u5217\u8868\uff0c\u9078\u4e00\u500b\u4efb\u52d9\u9ede\u756b\u4e0a\u53bb\u3002\u6b64\u5f8c\u4efb\u4f55\u8239\u54e1\u505a\u90a3\u500b\u4efb\u52d9\u6642\u90fd\u6703\u88ab\u62c9\u9032\u5e7b\u5883\u3002\n<title>\u5e7b\u5883</title>\u6301\u7e8c <var>%DUR%s</var>\uff1a\u4ed6\u770b\u4e0d\u5230\u4efb\u4f55\u4eba\u3001\u505a\u4e0d\u4e86\u4efb\u52d9\uff0c\u53ea\u6709\u5e36\u5200\u7684\u4eba\u6253\u5f97\u5230\u4ed6\uff0c\u5225\u4eba\u5c0d\u4ed6\u7528\u6280\u80fd\u7121\u6548\u3002\n<title>\u51b7\u537b</title>\u51b7\u537b <var>%CD%s</var>\uff0c\u6bcf\u5c40 <var>%USES%</var> \u6b21\u3002"
+    },
+    "painterBlurb": {
+        "0": "He left a door on the canvas. Only crewmates walk through it.",
+        "11": "\u30ad\u30e3\u30f3\u30d0\u30b9\u306b\u6249\u3092\u6b8b\u3057\u305f\u3002\u304f\u3050\u308b\u306e\u306f\u30af\u30eb\u30fc\u3060\u3051\u3060\u304c\u3002",
+        "13": "\u4ed6\u5728\u753b\u5e03\u4e0a\u7559\u4e86\u4e00\u6247\u95e8\uff0c\u53ef\u60dc\u53ea\u6709\u8239\u5458\u4f1a\u8d70\u8fdb\u53bb\u3002",
+        "14": "\u4ed6\u5728\u756b\u5e03\u4e0a\u7559\u4e86\u4e00\u6247\u9580\uff0c\u53ef\u60dc\u53ea\u6709\u8239\u54e1\u6703\u8d70\u9032\u53bb\u3002"
+    },
+    "painterPaintText": {
+        "0": "Paint",
+        "11": "\u63cf\u304f",
+        "13": "\u753b\u753b",
+        "14": "\u756b\u756b"
+    },
+    "painterCooldown": {
+        "0": "Paint cooldown",
+        "11": "\u63cf\u753b\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u753b\u753b\u51b7\u5374",
+        "14": "\u756b\u756b\u51b7\u537b"
+    },
+    "painterUses": {
+        "0": "Paint uses",
+        "11": "\u63cf\u753b\u306e\u56de\u6570",
+        "13": "\u753b\u753b\u6b21\u6570",
+        "14": "\u756b\u756b\u6b21\u6578"
+    },
+    "painterDuration": {
+        "0": "Illusion duration",
+        "11": "\u5e7b\u5883\u306e\u6301\u7d9a\u6642\u9593",
+        "13": "\u5e7b\u5883\u65f6\u957f",
+        "14": "\u5e7b\u5883\u6642\u9577"
+    },
+    "aoi": {
+        "0": "Aoi",
+        "11": "\u6771\u5858\u8475",
+        "13": "\u4e1c\u5858\u8475",
+        "14": "\u6771\u5858\u8475"
+    },
+    "aoiIntroDesc": {
+        "0": "When the applause starts, the seats have already changed.",
+        "11": "\u62cd\u624b\u304c\u9cf4\u308b\u9803\u306b\u306f\u3001\u5e2d\u306f\u3082\u3046\u5165\u308c\u66ff\u308f\u3063\u3066\u3044\u308b\u3002",
+        "13": "\u638c\u58f0\u54cd\u8d77\u6765\u7684\u65f6\u5019\uff0c\u4f4d\u7f6e\u5df2\u7ecf\u6362\u4e86\u3002",
+        "14": "\u638c\u8072\u97ff\u8d77\u4f86\u7684\u6642\u5019\uff0c\u4f4d\u7f6e\u5df2\u7d93\u63db\u4e86\u3002"
+    },
+    "aoiShortDesc": {
+        "0": "Applause rings out, and you swap places with a random living player.",
+        "11": "\u62cd\u624b\u3068\u3068\u3082\u306b\u3001\u30e9\u30f3\u30c0\u30e0\u306a\u751f\u5b58\u8005\u3068\u4f4d\u7f6e\u3092\u4ea4\u63db\u3059\u308b\u3002",
+        "13": "\u638c\u58f0\u54cd\u8d77\uff0c\u4e0e\u968f\u673a\u4e00\u540d\u5b58\u6d3b\u73a9\u5bb6\u4ea4\u6362\u4f4d\u7f6e\u3002",
+        "14": "\u638c\u8072\u97ff\u8d77\uff0c\u8207\u96a8\u6a5f\u4e00\u540d\u5b58\u6d3b\u73a9\u5bb6\u4ea4\u63db\u4f4d\u7f6e\u3002"
+    },
+    "aoiFullDesc": {
+        "0": "<title>Faction</title>Impostor.\n<title>Ability</title>Press <var>F</var> to play the Unjust Game: applause rings out across the map, then you swap places with a random living player.\n<title>Cooldown</title><var>%CD%s</var> cooldown, <var>%USES%</var> uses per game.\n<title>Note</title>Everyone hears the applause, but it does not reveal who you are.",
+        "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u80fd\u529b</title><var>F</var> \u3067\u4e0d\u7fa9\u30b2\u30fc\u30e0\u3092\u767a\u52d5\uff1a\u30de\u30c3\u30d7\u4e2d\u306b\u62cd\u624b\u304c\u97ff\u304d\u3001\u305d\u306e\u5f8c\u30e9\u30f3\u30c0\u30e0\u306a\u751f\u5b58\u8005\u3068\u4f4d\u7f6e\u3092\u4ea4\u63db\u3059\u308b\u3002\n<title>\u30af\u30fc\u30eb\u30c0\u30a6\u30f3</title>\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%CD%s</var>\u30011\u8a66\u5408 <var>%USES%</var> \u56de\u3002\n<title>\u6ce8\u610f</title>\u62cd\u624b\u306f\u5168\u54e1\u306b\u805e\u3053\u3048\u308b\u304c\u3001\u8ab0\u304c\u4f7f\u3063\u305f\u304b\u306f\u5206\u304b\u3089\u306a\u3044\u3002",
+        "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var> \u65bd\u5c55\u4e0d\u4e49\u6e38\u620f\uff1a\u5168\u573a\u54cd\u8d77\u638c\u58f0\uff0c\u968f\u540e\u4f60\u4e0e\u968f\u673a\u4e00\u540d\u5b58\u6d3b\u73a9\u5bb6\u4ea4\u6362\u4f4d\u7f6e\u3002\n<title>\u51b7\u5374</title>\u51b7\u5374 <var>%CD%s</var>\uff0c\u6bcf\u5c40 <var>%USES%</var> \u6b21\u3002\n<title>\u6ce8\u610f</title>\u638c\u58f0\u5168\u573a\u90fd\u542c\u5f97\u5230\uff0c\u4f46\u4e0d\u4f1a\u66b4\u9732\u4f60\u662f\u8c01\u3002",
+        "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var> \u65bd\u5c55\u4e0d\u7fa9\u904a\u6232\uff1a\u5168\u5834\u97ff\u8d77\u638c\u8072\uff0c\u96a8\u5f8c\u4f60\u8207\u96a8\u6a5f\u4e00\u540d\u5b58\u6d3b\u73a9\u5bb6\u4ea4\u63db\u4f4d\u7f6e\u3002\n<title>\u51b7\u537b</title>\u51b7\u537b <var>%CD%s</var>\uff0c\u6bcf\u5c40 <var>%USES%</var> \u6b21\u3002\n<title>\u6ce8\u610f</title>\u638c\u8072\u5168\u5834\u90fd\u807d\u5f97\u5230\uff0c\u4f46\u4e0d\u6703\u66b4\u9732\u4f60\u662f\u8ab0\u3002"
+    },
+    "aoiBlurb": {
+        "0": "He calls it a game. He never says who is playing whom.",
+        "11": "\u5f7c\u306f\u305d\u308c\u3092\u30b2\u30fc\u30e0\u3068\u547c\u3076\u3002\u8ab0\u304c\u8ab0\u3092\u5f04\u3093\u3067\u3044\u308b\u306e\u304b\u306f\u8a00\u308f\u306a\u3044\u3002",
+        "13": "\u4ed6\u8bf4\u8fd9\u662f\u4e00\u573a\u6e38\u620f\uff0c\u53ea\u662f\u6ca1\u8bf4\u662f\u8c01\u5728\u73a9\u8c01\u3002",
+        "14": "\u4ed6\u8aaa\u9019\u662f\u4e00\u5834\u904a\u6232\uff0c\u53ea\u662f\u6c92\u8aaa\u662f\u8ab0\u5728\u73a9\u8ab0\u3002"
+    },
+    "aoiUnjustGameText": {
+        "0": "Unjust Game",
+        "11": "\u4e0d\u7fa9\u30b2\u30fc\u30e0",
+        "13": "\u4e0d\u4e49\u6e38\u620f",
+        "14": "\u4e0d\u7fa9\u904a\u6232"
+    },
+    "aoiCooldown": {
+        "0": "Unjust Game cooldown",
+        "11": "\u4e0d\u7fa9\u30b2\u30fc\u30e0\u306e\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u4e0d\u4e49\u6e38\u620f\u51b7\u5374",
+        "14": "\u4e0d\u7fa9\u904a\u6232\u51b7\u537b"
+    },
+    "aoiUses": {
+        "0": "Unjust Game uses",
+        "11": "\u4e0d\u7fa9\u30b2\u30fc\u30e0\u306e\u56de\u6570",
+        "13": "\u4e0d\u4e49\u6e38\u620f\u6b21\u6570",
+        "14": "\u4e0d\u7fa9\u904a\u6232\u6b21\u6578"
+    },
+    "itadori": {
+        "0": "Itadori",
+        "11": "\u864e\u6756\u60a0\u4ec1",
+        "13": "\u864e\u6756\u60a0\u4ec1",
+        "14": "\u864e\u6756\u60a0\u4ec1"
+    },
+    "itadoriIntroDesc": {
+        "0": "Something else lives in this body.",
+        "11": "\u3053\u306e\u4f53\u306b\u306f\u3001\u5225\u306e\u4f55\u304b\u304c\u4f4f\u3093\u3067\u3044\u308b\u3002",
+        "13": "\u8fd9\u5177\u8eab\u4f53\u91cc\uff0c\u4f4f\u7740\u522b\u7684\u4e1c\u897f\u3002",
+        "14": "\u9019\u5177\u8eab\u9ad4\u88e1\uff0c\u4f4f\u8457\u5225\u7684\u6771\u897f\u3002"
+    },
+    "itadoriShortDesc": {
+        "0": "One kill, twenty fingers. Eat them all and become Sukuna.",
+        "11": "\u4e00\u5ea6\u304d\u308a\u306e\u5fc5\u6bba\u3068\u3001\u4e8c\u5341\u672c\u306e\u6307\u3002\u55b0\u3044\u5c3d\u304f\u305b\u3070\u5bbf\u513a\u306b\u306a\u308b\u3002",
+        "13": "\u4e00\u6b21\u5fc5\u6740\uff0c20 \u6839\u624b\u6307\uff1b\u5403\u6ee1\u5c31\u53d8\u6210\u5bbf\u50a9\u3002",
+        "14": "\u4e00\u6b21\u5fc5\u6bba\uff0c20 \u6839\u624b\u6307\uff1b\u5403\u6eff\u5c31\u8b8a\u6210\u5bbf\u513a\u3002"
+    },
+    "itadoriFullDesc": {
+        "0": "<title>Faction</title>Neutral. You act alone.\n<title>One Shot</title>Once per game you may kill someone. Kill an impostor and you win alongside the crew; kill a crewmate and that road is closed.\n<title>Fingers</title><var>%FINGERS%</var> Sukuna fingers are scattered around the map and everyone can see them. Press <var>F</var> to eat the one next to you (cooldown <var>%EATCD%s</var>).\n<title>Awakening</title>Eat all <var>%FINGERS%</var> and you become Sukuna, winning alongside the impostors.\n<title>Win</title>Killed an impostor: you win when the crew does. Became Sukuna: you win when the impostors do. Neither, and you win with nobody.",
+        "11": "<title>\u9663\u55b6</title>\u4e2d\u7acb\u3002\u5358\u72ec\u884c\u52d5\u3002\n<title>\u4e00\u6483</title>\u8a66\u5408\u4e2d\u4e00\u5ea6\u3060\u3051\u8ab0\u304b\u3092\u6bba\u305b\u308b\u3002\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u6bba\u305b\u3070\u30af\u30eb\u30fc\u3068\u5171\u306b\u52dd\u5229\u3001\u30af\u30eb\u30fc\u3092\u6bba\u305b\u3070\u305d\u306e\u9053\u306f\u9589\u3058\u308b\u3002\n<title>\u6307</title>\u30de\u30c3\u30d7\u306b\u5bbf\u513a\u306e\u6307\u304c <var>%FINGERS%</var> \u672c\u6563\u3089\u3070\u308a\u3001\u5168\u54e1\u306b\u898b\u3048\u308b\u3002<var>F</var> \u3067\u8fd1\u304f\u306e\u6307\u3092\u55b0\u3046\uff08\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%EATCD%s</var>\uff09\u3002\n<title>\u899a\u9192</title><var>%FINGERS%</var> \u672c\u3059\u3079\u3066\u55b0\u3046\u3068\u5bbf\u513a\u306b\u306a\u308a\u3001\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3068\u5171\u306b\u52dd\u5229\u3059\u308b\u3002\n<title>\u52dd\u5229</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u6bba\u3057\u305f\u306a\u3089\u30af\u30eb\u30fc\u52dd\u5229\u6642\u3001\u5bbf\u513a\u306b\u306a\u3063\u305f\u306a\u3089\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u52dd\u5229\u6642\u306b\u52dd\u3064\u3002\u3069\u3061\u3089\u3082\u7121\u3051\u308c\u3070\u8ab0\u3068\u3082\u52dd\u3066\u306a\u3044\u3002",
+        "13": "<title>\u9635\u8425</title>\u4e2d\u7acb\uff0c\u72ec\u81ea\u884c\u52a8\u3002\n<title>\u4e00\u51fb</title>\u5168\u5c40\u53ea\u80fd\u7528\u4e00\u6b21\uff1a\u51fb\u6740\u4e00\u540d\u73a9\u5bb6\u3002\u82e5\u6740\u7684\u662f\u5185\u9b3c\uff0c\u4f60\u53ef\u8ddf\u968f\u8239\u5458\u83b7\u80dc\uff1b\u82e5\u6740\u7684\u662f\u8239\u5458\uff0c\u8fd9\u6761\u8def\u5c31\u65ad\u4e86\u3002\n<title>\u624b\u6307</title>\u573a\u4e0a\u4f1a\u6563\u843d <var>%FINGERS%</var> \u6839\u5bbf\u50a9\u624b\u6307\uff0c\u6240\u6709\u4eba\u90fd\u770b\u5f97\u89c1\u3002\u6309 <var>F</var> \u5403\u6389\u8eab\u8fb9\u7684\u624b\u6307\uff08\u51b7\u5374 <var>%EATCD%s</var>\uff09\u3002\n<title>\u6210\u9b54</title>\u5403\u6ee1 <var>%FINGERS%</var> \u6839\u540e\u4f60\u4f1a\u53d8\u6210\u5bbf\u50a9\uff0c\u4ece\u6b64\u8ddf\u968f\u5185\u9b3c\u83b7\u80dc\u3002\n<title>\u80dc\u5229</title>\u51fb\u6740\u8fc7\u5185\u9b3c \u2192 \u8239\u5458\u80dc\u65f6\u4f60\u80dc\uff1b\u6210\u4e3a\u5bbf\u50a9 \u2192 \u5185\u9b3c\u80dc\u65f6\u4f60\u80dc\u3002\u4e24\u8005\u90fd\u6ca1\u505a\u5230\uff0c\u4f60\u8c01\u4e5f\u8d62\u4e0d\u4e86\u3002",
+        "14": "<title>\u9663\u71df</title>\u4e2d\u7acb\uff0c\u7368\u81ea\u884c\u52d5\u3002\n<title>\u4e00\u64ca</title>\u5168\u57df\u53ea\u80fd\u7528\u4e00\u6b21\uff1a\u64ca\u6bba\u4e00\u540d\u73a9\u5bb6\u3002\u82e5\u6bba\u7684\u662f\u5167\u9b3c\uff0c\u4f60\u53ef\u8ddf\u96a8\u8239\u54e1\u7372\u52dd\uff1b\u82e5\u6bba\u7684\u662f\u8239\u54e1\uff0c\u9019\u689d\u8def\u5c31\u65b7\u4e86\u3002\n<title>\u624b\u6307</title>\u5834\u4e0a\u6703\u6563\u843d <var>%FINGERS%</var> \u6839\u5bbf\u513a\u624b\u6307\uff0c\u6240\u6709\u4eba\u90fd\u770b\u5f97\u898b\u3002\u6309 <var>F</var> \u5403\u6389\u8eab\u908a\u7684\u624b\u6307\uff08\u51b7\u537b <var>%EATCD%s</var>\uff09\u3002\n<title>\u6210\u9b54</title>\u5403\u6eff <var>%FINGERS%</var> \u6839\u5f8c\u4f60\u6703\u8b8a\u6210\u5bbf\u513a\uff0c\u5f9e\u6b64\u8ddf\u96a8\u5167\u9b3c\u7372\u52dd\u3002\n<title>\u52dd\u5229</title>\u64ca\u6bba\u904e\u5167\u9b3c \u2192 \u8239\u54e1\u52dd\u6642\u4f60\u52dd\uff1b\u6210\u70ba\u5bbf\u513a \u2192 \u5167\u9b3c\u52dd\u6642\u4f60\u52dd\u3002\u5169\u8005\u90fd\u6c92\u505a\u5230\uff0c\u4f60\u8ab0\u4e5f\u8d0f\u4e0d\u4e86\u3002"
+    },
+    "itadoriBlurb": {
+        "0": "He just wants to finish eating in peace.",
+        "11": "\u5f7c\u306f\u305f\u3060\u3001\u9759\u304b\u306b\u55b0\u3044\u7d42\u308f\u308a\u305f\u3044\u3060\u3051\u3060\u3002",
+        "13": "\u4ed6\u53ea\u662f\u60f3\u5b89\u9759\u5730\u5403\u5b8c\u8fd9\u4e9b\u4e1c\u897f\u3002",
+        "14": "\u4ed6\u53ea\u662f\u60f3\u5b89\u975c\u5730\u5403\u5b8c\u9019\u4e9b\u6771\u897f\u3002"
+    },
+    "itadoriEatText": {
+        "0": "Eat Finger",
+        "11": "\u6307\u3092\u55b0\u3046",
+        "13": "\u5403\u624b\u6307",
+        "14": "\u5403\u624b\u6307"
+    },
+    "itadoriJudgeText": {
+        "0": "One Shot",
+        "11": "\u4e00\u6483",
+        "13": "\u4e00\u51fb",
+        "14": "\u4e00\u64ca"
+    },
+    "itadoriSukunaAnnounce": {
+        "0": "You have become Sukuna.",
+        "11": "\u304a\u524d\u306f\u5bbf\u513a\u306b\u306a\u3063\u305f\u3002",
+        "13": "\u4f60\u5df2\u7ecf\u6210\u4e3a\u5bbf\u50a9\u3002",
+        "14": "\u4f60\u5df2\u7d93\u6210\u70ba\u5bbf\u513a\u3002"
+    },
+    "itadoriFingerCount": {
+        "0": "Finger count",
+        "11": "\u6307\u306e\u6570",
+        "13": "\u624b\u6307\u6570\u91cf",
+        "14": "\u624b\u6307\u6578\u91cf"
+    },
+    "itadoriEatCooldown": {
+        "0": "Eat cooldown",
+        "11": "\u6355\u98df\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u5403\u624b\u6307\u51b7\u5374",
+        "14": "\u5403\u624b\u6307\u51b7\u537b"
+    },
+    "itadoriKillCooldown": {
+        "0": "One-shot cooldown",
+        "11": "\u4e00\u6483\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u4e00\u51fb\u51b7\u5374",
+        "14": "\u4e00\u64ca\u51b7\u537b"
+    },
+    "itadoriEatRange": {
+        "0": "Eat range",
+        "11": "\u6355\u98df\u8ddd\u96e2",
+        "13": "\u5403\u624b\u6307\u8ddd\u79bb",
+        "14": "\u5403\u624b\u6307\u8ddd\u96e2"
+    }
+}

@@ -29,6 +29,9 @@ namespace TheOtherRoles.Patches {
             else if (TORMapOptions.gameMode == CustomGamemodes.FreePlay) {
                 __result = 0; // No imps for freeplay
             }
+            else if (TORMapOptions.gameMode == CustomGamemodes.HotPotato) {
+                __result = 0; // No imps for hot potato
+            }
             else if (TORMapOptions.gameMode == CustomGamemodes.Zombie) {
                 __result = Mathf.RoundToInt(CustomOptionHolder.zombieInitialCount.getFloat()); // Set initial Zombie Num
             }
@@ -57,7 +60,7 @@ namespace TheOtherRoles.Patches {
             MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ResetVaribles, Hazel.SendOption.Reliable, -1);
             AmongUsClient.Instance.FinishRpcImmediately(writer);
             RPCProcedure.resetVariables();
-            if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.FreePlay || TORMapOptions.gameMode == CustomGamemodes.Zombie || RoleDraft.isEnabled) return; // Don't assign Roles in Hide N Seek or Zombie
+            if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek || GameOptionsManager.Instance.currentGameOptions.GameMode == GameModes.HideNSeek || TORMapOptions.gameMode == CustomGamemodes.FreePlay || TORMapOptions.gameMode == CustomGamemodes.Zombie || TORMapOptions.gameMode == CustomGamemodes.HotPotato || RoleDraft.isEnabled) return; // Don't assign Roles in Hide N Seek or Zombie
             DeveloperCommand.applyFactionSwaps();
             assignRoles();
         }
@@ -192,11 +195,16 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.Blackmailer, CustomOptionHolder.blackmailerSpawnRate.data);
             impSettings.Add((byte)RoleId.Yoyo, CustomOptionHolder.yoyoSpawnRate.data);
             impSettings.Add((byte)RoleId.Zephyr, CustomOptionHolder.zephyrSpawnRate.data);
+            impSettings.Add((byte)RoleId.Zeus, CustomOptionHolder.zeusSpawnRate.data);
+            impSettings.Add((byte)RoleId.Painter, CustomOptionHolder.painterSpawnRate.data);
+            impSettings.Add((byte)RoleId.Aoi, CustomOptionHolder.aoiSpawnRate.data);
             impSettings.Add((byte)RoleId.Illusionist, CustomOptionHolder.illusionistSpawnRate.data);
             impSettings.Add((byte)RoleId.Agnosia, CustomOptionHolder.agnosiaSpawnRate.data);
             impSettings.Add((byte)RoleId.VoidEater, CustomOptionHolder.voidEaterSpawnRate.data);
             impSettings.Add((byte)RoleId.Sukuna, CustomOptionHolder.sukunaSpawnRate.data);
 
+            neutralSettings.Add((byte)RoleId.Kira, CustomOptionHolder.kiraSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Itadori, CustomOptionHolder.itadoriSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Jester, CustomOptionHolder.jesterSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Arsonist, CustomOptionHolder.arsonistSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Jackal, CustomOptionHolder.jackalSpawnRate.data);

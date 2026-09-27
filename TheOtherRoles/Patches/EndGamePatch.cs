@@ -35,7 +35,9 @@ namespace TheOtherRoles.Patches {
         BlockmanWin = 26,
         WorkaholicWin = 27,
         PlayerRoleWin = 28,
-        InvalidGame = 29
+        InvalidGame = 29,
+        KiraWin = 30,
+        HotPotatoWin = 31
         //ProsecutorWin = 16
     }
 
@@ -67,7 +69,9 @@ namespace TheOtherRoles.Patches {
         WorkaholicWin,
         GremlinWin,
         PlayerRoleWin,
-        InvalidGame
+        InvalidGame,
+        KiraWin,
+        HotPotatoWin
 
         //ProsecutorWin
     }
@@ -202,6 +206,13 @@ namespace TheOtherRoles.Patches {
             ];
             if (Shifter.isNeutral) notWinners.AddRange(Shifter.allPlayers);
 
+            // Itadori only wins with the crew if he killed an impostor, and with the impostors once he became Sukuna
+            foreach (var itadori in Itadori.players)
+            {
+                if (itadori.player == null || itadori.becameSukuna || itadori.crewWinEarned) continue;
+                notWinners.Add(itadori.player);
+            }
+
             List<CachedPlayerData> winnersToRemove = [];
             foreach (CachedPlayerData winner in EndGameResult.CachedWinners.GetFastEnumerator()) {
                 if (notWinners.Any(x => x.Data.PlayerName == winner.PlayerName)) winnersToRemove.Add(winner);
@@ -233,16 +244,30 @@ namespace TheOtherRoles.Patches {
             bool jekyllAndHydeWin = JekyllAndHyde.exists && gameOverReason == (GameOverReason)CustomGameOverReason.JekyllAndHydeWin;
             bool everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
             bool invalidGame = gameOverReason == (GameOverReason)CustomGameOverReason.InvalidGame;
+            bool kiraWin = Kira.exists && gameOverReason == (GameOverReason)CustomGameOverReason.KiraWin;
             bool blockmanWin = Blockman.exists && gameOverReason == (GameOverReason)CustomGameOverReason.BlockmanWin;
             bool workaholicWin = Workaholic.exists && gameOverReason == (GameOverReason)CustomGameOverReason.WorkaholicWin;
             bool playerRoleWin = PlayerRole.exists && gameOverReason == (GameOverReason)CustomGameOverReason.PlayerRoleWin;
+            bool hotPotatoWin = gameOverReason == (GameOverReason)CustomGameOverReason.HotPotatoWin;
             //bool prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
 
             // Here we changed this to: The Pursuer wins no matter who wins except for sabotage
             //bool isPursurerLose = jesterWin || arsonistWin || miniLose || vultureWin || teamJackalWin;
 
+            // Kira Win
+            if (kiraWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.KiraWin;
+                foreach (var kira in Kira.players)
+                {
+                    if (kira.player == null || kira.kills < Kira.killsToWin) continue;
+                    EndGameResult.CachedWinners.Add(new(kira.player.Data));
+                }
+            }
+
             // Invalid game
-            if (invalidGame)
+            else if (invalidGame)
             {
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
                 AdditionalTempData.winCondition = WinCondition.InvalidGame;
@@ -407,6 +432,14 @@ namespace TheOtherRoles.Patches {
                 {
                     EndGameResult.CachedWinners.Add(new CachedPlayerData(playerRole.Data));
                 }
+            }
+
+            else if (hotPotatoWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.HotPotatoWin;
+                var survivor = HotPotato.getSurvivor();
+                if (survivor != null && survivor.Data != null) EndGameResult.CachedWinners.Add(new CachedPlayerData(survivor.Data));
             }
 
             else if (jekyllAndHydeWin)
@@ -933,6 +966,12 @@ namespace TheOtherRoles.Patches {
                 textRenderer.color = Palette.DisabledGrey;
                 __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
             }
+            else if (AdditionalTempData.winCondition == WinCondition.KiraWin)
+            {
+                textRenderer.text = ModTranslation.getString("kiraWin");
+                textRenderer.color = Kira.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Kira.color);
+            }
             else if (AdditionalTempData.winCondition == WinCondition.MiniLose)
             {
                 nonModTranslationText = "miniDied";
@@ -968,6 +1007,12 @@ namespace TheOtherRoles.Patches {
                 nonModTranslationText = "playerRoleWin";
                 textRenderer.color = PlayerRole.color;
                 __instance.BackgroundBar.material.SetColor("_Color", PlayerRole.color);
+            }
+            else if (AdditionalTempData.winCondition == WinCondition.HotPotatoWin)
+            {
+                nonModTranslationText = "hotPotatoWin";
+                textRenderer.color = HotPotato.color;
+                __instance.BackgroundBar.material.SetColor("_Color", HotPotato.color);
             }
 
             if (!string.IsNullOrEmpty(nonModTranslationText)) textRenderer.text = ModTranslation.getString(nonModTranslationText);
@@ -1051,7 +1096,7 @@ namespace TheOtherRoles.Patches {
                 }
             }
 
-            if (ClientOption.GetValue(ClientOption.ClientOptionType.ShowRoleSummary) == 1 || HideNSeek.isHideNSeekGM || Zombie.isZombieGM) {
+            if (ClientOption.GetValue(ClientOption.ClientOptionType.ShowRoleSummary) == 1 || HideNSeek.isHideNSeekGM || Zombie.isZombieGM || HotPotato.isHotPotatoGM) {
                 var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
                 GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
                 roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -214f); 
@@ -1062,6 +1107,10 @@ namespace TheOtherRoles.Patches {
                     int minutes = (int)AdditionalTempData.timer / 60;
                     int seconds = (int)AdditionalTempData.timer % 60;
                     roleSummaryText.AppendLine($"<color=#FAD934FF>Time: {minutes:00}:{seconds:00}</color> \n");
+                }
+                if (HotPotato.isHotPotatoGM) {
+                    foreach (var rankLine in HotPotato.rankSummary()) roleSummaryText.AppendLine(rankLine);
+                    roleSummaryText.AppendLine();
                 }
                 roleSummaryText.AppendLine(ModTranslation.getString("roleSummaryText"));
                 bool plagueExists = AdditionalTempData.playerRoles.Any(x => x.Roles.Contains(RoleInfo.plagueDoctor));
@@ -1128,6 +1177,7 @@ namespace TheOtherRoles.Patches {
             if (DestroyableSingleton<TutorialManager>.InstanceExists) // InstanceExists | Don't check Custom Criteria when in Tutorial
                 return true;
             if (FreePlayGM.isFreePlayGM) return false;
+            if (HotPotato.isHotPotatoGM) return false;
             if (CustomOptionHolder.neverEndGame.getBool()) return false; // Testing mode: skip every win-condition check so the game never ends
             var statistics = new PlayerStatistics(__instance);
             if (CheckAndEndGameForBlockmanWin(__instance)) return false;
@@ -1416,6 +1466,7 @@ namespace TheOtherRoles.Patches {
             if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive && statistics.TeamPelicanAlive == 0 && statistics.YandereAlive == 0
                 && statistics.TeamJackalAlive == 0 && statistics.TeamSheriffAlive == 0 && statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 &&
                 PlayerRole.livingPlayers.Count == 0 &&
+                Kira.livingPlayers.Count == 0 &&
                 (statistics.TeamImpostorLovers == 0 || statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)) {
                 //__instance.enabled = false;
                 GameOverReason endReason;
@@ -1448,7 +1499,7 @@ namespace TheOtherRoles.Patches {
             }
             if (statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamPelicanAlive == 0 &&
                 statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 && statistics.YandereAlive == 0
-                && PlayerRole.livingPlayers.Count == 0) {
+                && PlayerRole.livingPlayers.Count == 0 && Kira.livingPlayers.Count == 0) {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByVote, false);
                 return true;
@@ -1519,6 +1570,14 @@ namespace TheOtherRoles.Patches {
                         }
                     }
                 }
+            }
+
+            // Itadori who became Sukuna counts as an impostor for the win checks
+            foreach (var itadori in Itadori.players)
+            {
+                if (itadori.player == null || !itadori.becameSukuna) continue;
+                if (itadori.player.Data == null || itadori.player.Data.IsDead || itadori.player.Data.Disconnected) continue;
+                numImpostorsAlive++;
             }
 
             // Count the Mimic as one if enabled

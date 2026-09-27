@@ -44,7 +44,8 @@ namespace TheOtherRoles
         Guesser,
         HideNSeek,
         FreePlay,
-        Zombie
+        Zombie,
+        HotPotato
     }
 
     public static class Direction
@@ -2039,6 +2040,7 @@ namespace TheOtherRoles
         }
 
         public static bool roleCanUseSabotage(this PlayerControl player) {
+            if (HotPotato.isHotPotatoGM) return false;
             bool roleCouldUse = false;
             if (Madmate.madmate.Any(x => x.PlayerId == player?.PlayerId) && Madmate.canSabotage)
                 roleCouldUse = true;
@@ -2055,6 +2057,7 @@ namespace TheOtherRoles
 
         public static bool roleCanUseVents(this PlayerControl player) {
             if (Agnosia.madnessActive) return false;
+            if (HotPotato.isHotPotatoGM) return false;
             bool roleCouldUse = false;
             if (player.isRole(RoleId.Engineer))
                 roleCouldUse = true;
@@ -2338,6 +2341,7 @@ namespace TheOtherRoles
         public static bool checkSuspendAction(PlayerControl player, PlayerControl target)
         {
             if (player == null || target == null) return false;
+            if (player != target && Painter.isInIllusion(target)) return true;
             if (player != target && Gojo.isInfinityProtected(target)) return true;
             if (Veteran.players.Any(x => x.player == target && x.alertActive))
             {

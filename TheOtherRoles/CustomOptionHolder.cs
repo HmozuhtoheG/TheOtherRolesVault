@@ -497,6 +497,18 @@ namespace TheOtherRoles {
         public static CustomRoleOption sukunaSpawnRate;
         public static CustomOption sukunaCooldown;
         public static CustomOption sukunaChantDuration;
+        public static CustomOption sukunaHasDomain;
+        public static CustomOption sukunaDomainUses;
+        public static CustomOption sukunaDomainRadius;
+        public static CustomOption sukunaDomainDuration;
+        public static CustomOption sukunaDomainSimpleClicks;
+        public static CustomOption sukunaDomainSimpleTime;
+        public static CustomOption sukunaDomainBurnoutMeetings;
+
+        public static CustomRoleOption kiraSpawnRate;
+        public static CustomOption kiraKillsToWin;
+        public static CustomOption kiraWritesPerMeeting;
+        public static CustomOption kiraCanContinueAfterFail;
 
         public static CustomRoleOption vultureSpawnRate;
         public static CustomOption vultureCooldown;
@@ -611,6 +623,26 @@ namespace TheOtherRoles {
         public static CustomOption gremlinGiantDuration;
         public static CustomOption gremlinGiantScale;
         public static CustomOption gremlinFreezeDuration;
+
+        public static CustomRoleOption itadoriSpawnRate;
+        public static CustomOption itadoriFingerCount;
+        public static CustomOption itadoriEatCooldown;
+        public static CustomOption itadoriKillCooldown;
+        public static CustomOption itadoriEatRange;
+
+        public static CustomRoleOption aoiSpawnRate;
+        public static CustomOption aoiCooldown;
+        public static CustomOption aoiUses;
+
+        public static CustomRoleOption painterSpawnRate;
+        public static CustomOption painterCooldown;
+        public static CustomOption painterUses;
+        public static CustomOption painterDuration;
+
+        public static CustomRoleOption zeusSpawnRate;
+        public static CustomOption zeusStrikeCooldown;
+        public static CustomOption zeusCancelCooldown;
+        public static CustomOption zeusKillRadius;
 
         public static CustomRoleOption illusionistSpawnRate;
         public static CustomOption illusionistCooldown;
@@ -849,6 +881,12 @@ namespace TheOtherRoles {
         public static CustomOption hideNSeekCanSabotage;
         public static CustomOption hideNSeekMap;
         public static CustomOption hideNSeekHunterWaiting;
+        public static CustomOption hideNSeekBotCount;
+        public static CustomOption hideNSeekBotPenalty;
+        public static CustomOption hideNSeekDisguiseCooldown;
+        public static CustomOption hideNSeekInvisCount;
+        public static CustomOption hideNSeekInvisDuration;
+        public static CustomOption hideNSeekInvisCooldown;
 
         public static CustomOption hunterLightCooldown;
         public static CustomOption hunterLightDuration;
@@ -871,6 +909,12 @@ namespace TheOtherRoles {
         public static CustomOption zombieTimer;
         public static CustomOption zombieTaskWin;
         public static CustomOption zombieWaitingTime;
+
+        // Hot Potato Gamemode
+        public static CustomOption hotPotatoTimer;
+        public static CustomOption hotPotatoPassRange;
+        public static CustomOption hotPotatoKeepBody;
+        public static CustomOption hotPotatoSpeedBoost;
 
         internal static Dictionary<byte, byte[]> blockedRolePairings = new();
 
@@ -1186,6 +1230,18 @@ namespace TheOtherRoles {
             sukunaSpawnRate = new CustomRoleOption(4033, Types.Impostor, "sukuna", Sukuna.color);
             sukunaCooldown = CustomOption.Create(4034, Types.Impostor, "sukunaCooldown", 30f, 5f, 90f, 5f, sukunaSpawnRate, false, "unitSeconds");
             sukunaChantDuration = CustomOption.Create(4035, Types.Impostor, "sukunaChantDuration", 8f, 2f, 20f, 1f, sukunaSpawnRate, false, "unitSeconds");
+            sukunaHasDomain = CustomOption.Create(4060, Types.Impostor, "sukunaHasDomain", true, sukunaSpawnRate);
+            sukunaDomainUses = CustomOption.Create(4061, Types.Impostor, "sukunaDomainUses", 1f, 1f, 5f, 1f, sukunaHasDomain, false, "unitTimes");
+            sukunaDomainRadius = CustomOption.Create(4062, Types.Impostor, "sukunaDomainRadius", 5f, 2f, 12f, 0.5f, sukunaHasDomain, false, "unitMeters");
+            sukunaDomainDuration = CustomOption.Create(4063, Types.Impostor, "sukunaDomainDuration", 20f, 5f, 60f, 5f, sukunaHasDomain, false, "unitSeconds");
+            sukunaDomainSimpleClicks = CustomOption.Create(4064, Types.Impostor, "sukunaDomainSimpleClicks", 5f, 1f, 20f, 1f, sukunaHasDomain, false, "unitTimes");
+            sukunaDomainSimpleTime = CustomOption.Create(4065, Types.Impostor, "sukunaDomainSimpleTime", 6f, 2f, 20f, 1f, sukunaHasDomain, false, "unitSeconds");
+            sukunaDomainBurnoutMeetings = CustomOption.Create(4066, Types.Impostor, "sukunaDomainBurnoutMeetings", 2f, 1f, 5f, 1f, sukunaHasDomain, false, "unitTimes");
+
+            kiraSpawnRate = new CustomRoleOption(4080, Types.Neutral, "kira", Kira.color);
+            kiraKillsToWin = CustomOption.Create(4081, Types.Neutral, "kiraKillsToWin", 3f, 1f, 10f, 1f, kiraSpawnRate, false, "unitTimes");
+            kiraWritesPerMeeting = CustomOption.Create(4082, Types.Neutral, "kiraWritesPerMeeting", 1f, 1f, 5f, 1f, kiraSpawnRate, false, "unitTimes");
+            kiraCanContinueAfterFail = CustomOption.Create(4083, Types.Neutral, "kiraCanContinueAfterFail", false, kiraSpawnRate);
 
 
             shifterSpawnRate = new CustomRoleOption(1100, Types.Neutral, "shifter", Shifter.color, 1);
@@ -1520,6 +1576,26 @@ namespace TheOtherRoles {
             gremlinGiantScale = CustomOption.Create(11109, Types.Neutral, "gremlinGiantScale", 2f, 1.3f, 4f, 0.1f, gremlinSpawnRate, false, "unitTimes");
             gremlinFreezeDuration = CustomOption.Create(11110, Types.Neutral, "gremlinFreezeDuration", 4f, 1f, 15f, 1f, gremlinSpawnRate, false, "unitSeconds");
 
+            itadoriSpawnRate = new CustomRoleOption(12040, Types.Neutral, "itadori", Itadori.color, 1);
+            itadoriFingerCount = CustomOption.Create(12041, Types.Neutral, "itadoriFingerCount", 20f, 5f, 30f, 1f, itadoriSpawnRate, false, "unitScrews");
+            itadoriEatCooldown = CustomOption.Create(12042, Types.Neutral, "itadoriEatCooldown", 5f, 1f, 30f, 1f, itadoriSpawnRate, false, "unitSeconds");
+            itadoriKillCooldown = CustomOption.Create(12043, Types.Neutral, "itadoriKillCooldown", 45f, 10f, 120f, 5f, itadoriSpawnRate, false, "unitSeconds");
+            itadoriEatRange = CustomOption.Create(12044, Types.Neutral, "itadoriEatRange", 1.6f, 0.5f, 4f, 0.1f, itadoriSpawnRate, false, "unitMeters");
+
+            aoiSpawnRate = new CustomRoleOption(12030, Types.Impostor, "aoi", Aoi.color);
+            aoiCooldown = CustomOption.Create(12031, Types.Impostor, "aoiCooldown", 30f, 5f, 120f, 5f, aoiSpawnRate, false, "unitSeconds");
+            aoiUses = CustomOption.Create(12032, Types.Impostor, "aoiUses", 3f, 1f, 10f, 1f, aoiSpawnRate, false, "unitScrews");
+
+            painterSpawnRate = new CustomRoleOption(12020, Types.Impostor, "painter", Painter.color);
+            painterCooldown = CustomOption.Create(12021, Types.Impostor, "painterCooldown", 30f, 5f, 120f, 5f, painterSpawnRate, false, "unitSeconds");
+            painterUses = CustomOption.Create(12022, Types.Impostor, "painterUses", 2f, 1f, 10f, 1f, painterSpawnRate, false, "unitScrews");
+            painterDuration = CustomOption.Create(12023, Types.Impostor, "painterDuration", 15f, 5f, 60f, 5f, painterSpawnRate, false, "unitSeconds");
+
+            zeusSpawnRate = new CustomRoleOption(12010, Types.Impostor, "zeus", Zeus.color);
+            zeusStrikeCooldown = CustomOption.Create(12011, Types.Impostor, "zeusStrikeCooldown", 30f, 10f, 120f, 5f, zeusSpawnRate, false, "unitSeconds");
+            zeusCancelCooldown = CustomOption.Create(12012, Types.Impostor, "zeusCancelCooldown", 5f, 1f, 30f, 1f, zeusSpawnRate, false, "unitSeconds");
+            zeusKillRadius = CustomOption.Create(12013, Types.Impostor, "zeusKillRadius", 1.2f, 0.5f, 3f, 0.1f, zeusSpawnRate, false, "unitMeters");
+
             illusionistSpawnRate = new CustomRoleOption(11111, Types.Impostor, "illusionist", Illusionist.color);
             illusionistCooldown = CustomOption.Create(11112, Types.Impostor, "illusionistCooldown", 25f, 5f, 120f, 2.5f, illusionistSpawnRate, false, "unitSeconds");
             illusionistUses = CustomOption.Create(11113, Types.Impostor, "illusionistUses", 3f, 1f, 10f, 1f, illusionistSpawnRate, false, "unitScrews");
@@ -1705,6 +1781,12 @@ namespace TheOtherRoles {
             hideNSeekTaskPunish = CustomOption.Create(3017, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekTaskPunish"), 10f, 0f, 30f, 1f, format: "unitSeconds");
             hideNSeekCanSabotage = CustomOption.Create(3019, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekCanSabotage"), false);
             hideNSeekHunterWaiting = CustomOption.Create(3022, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekHunterWaiting"), 15f, 2.5f, 60f, 2.5f, format: "unitSeconds");
+            hideNSeekBotCount = CustomOption.Create(3030, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekBotCount"), 3f, 0f, 30f, 1f, format: "unitPlayers");
+            hideNSeekBotPenalty = CustomOption.Create(3031, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekBotPenalty"), 15f, 0f, 60f, 5f, format: "unitSeconds");
+            hideNSeekDisguiseCooldown = CustomOption.Create(3032, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekDisguiseCooldown"), 10f, 1f, 30f, 1f, format: "unitSeconds");
+            hideNSeekInvisCount = CustomOption.Create(3033, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekInvisCount"), 2f, 0f, 5f, 1f, format: "unitScrews");
+            hideNSeekInvisDuration = CustomOption.Create(3034, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekInvisDuration"), 5f, 1f, 15f, 1f, format: "unitSeconds");
+            hideNSeekInvisCooldown = CustomOption.Create(3035, Types.HideNSeekMain, cs(Color.yellow, "hideNSeekInvisCooldown"), 20f, 5f, 60f, 5f, format: "unitSeconds");
 
             hunterLightCooldown = CustomOption.Create(3005, Types.HideNSeekRoles, cs(Color.red, "hunterLightCooldown"), 30f, 5f, 60f, 1f, null, true, "unitSeconds", heading: "headingHunterLight");
             hunterLightDuration = CustomOption.Create(3006, Types.HideNSeekRoles, cs(Color.red, "hunterLightDuration"), 5f, 1f, 60f, 1f, format: "unitSeconds");
@@ -1726,6 +1808,12 @@ namespace TheOtherRoles {
             zombieTimer = CustomOption.Create(11001, Types.ZombieMain, cs(Color.yellow, "zombieTimer"), 5f, 1f, 30f, 1f);
             zombieTaskWin = CustomOption.Create(11002, Types.ZombieMain, cs(Color.yellow, "zombieTaskWin"), false);
             zombieWaitingTime = CustomOption.Create(11003, Types.ZombieMain, cs(Color.yellow, "zombieWaitingTime"), 15f, 2.5f, 60f, 2.5f, format: "unitSeconds");
+
+            hotPotatoTimer = CustomOption.Create(12000, Types.HotPotatoMain, cs(new Color(1f, 0.6f, 0.2f, 1f), "hotPotatoTimer"), 30f, 10f, 120f, 10f, format: "unitSeconds");
+            hotPotatoPassRange = CustomOption.Create(12001, Types.HotPotatoMain, cs(new Color(1f, 0.6f, 0.2f, 1f), "hotPotatoPassRange"), 1.5f, 0.5f, 4f, 0.25f);
+            hotPotatoKeepBody = CustomOption.Create(12002, Types.HotPotatoMain, cs(new Color(1f, 0.6f, 0.2f, 1f), "hotPotatoKeepBody"), false);
+
+            hotPotatoSpeedBoost = CustomOption.Create(12003, Types.HotPotatoMain, cs(new Color(1f, 0.6f, 0.2f, 1f), "hotPotatoSpeedBoost"), 1.25f, 1f, 2f, 0.25f, format: "unitTimes");
 
             // Other options
             maxNumberOfMeetings = CustomOption.Create(3, Types.General, "maxNumberOfMeetings", 10, 0, 15, 1, null, true, "unitShots", heading: "headingGameplay");

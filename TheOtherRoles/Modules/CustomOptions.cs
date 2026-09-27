@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,6 +7,7 @@ using System.Text;
 using AmongUs.Data;
 using AmongUs.GameOptions;
 using BepInEx.Configuration;
+using BepInEx.Unity.IL2CPP.Utils.Collections;
 using HarmonyLib;
 using Hazel;
 using Il2CppSystem.Linq;
@@ -29,7 +31,8 @@ namespace TheOtherRoles {
             Guesser,
             HideNSeekMain,
             HideNSeekRoles,
-            ZombieMain
+            ZombieMain,
+            HotPotatoMain
         }
 
         public static List<CustomOption> options = new();
@@ -130,7 +133,7 @@ namespace TheOtherRoles {
             if (AmongUsClient.Instance?.AmHost == true)
             {
                 GameOptionsMenuStartPatch.MarkAllTabsDirty();
-                GameOptionsMenuStartPatch.RebuildActiveTabIfDirty();
+                GameOptionsMenuStartPatch.RebuildActiveTabDeferred();
             }
         }
 
@@ -266,7 +269,10 @@ namespace TheOtherRoles {
                     }
                     HelpMenu.OnUpdateOptions();
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    TheOtherRolesPlugin.Logger.LogError($"[TOROptions] rebuild after changing option {id} to {newSelection} failed: {ex}");
+                }
             }
             selection = newSelection;
             try {
@@ -300,15 +306,15 @@ namespace TheOtherRoles {
                 ShareOptionSelections();// Share all selections
             }
 
-            if (AmongUsClient.Instance?.AmHost == true)
+            if (AmongUsClient.Instance?.AmHost == true && id != 0)
             {
-                var currentTab = GameOptionsMenuStartPatch.currentTabs.FirstOrDefault(x => x.active).GetComponent<GameOptionsMenu>();
-                if (currentTab != null)
+                var activeTab = GameOptionsMenuStartPatch.currentTabs.FirstOrDefault(x => x != null && x.active);
+                var currentTab = activeTab != null ? activeTab.GetComponent<GameOptionsMenu>() : null;
+                if (currentTab != null && currentTab.Children.Count > 0)
                 {
-                    var optionType = options.First(x => x.optionBehaviour == currentTab.Children[0]).type;
-                    GameOptionsMenuStartPatch.updateGameOptionsMenu(optionType, currentTab);
+                    var firstOption = options.FirstOrDefault(x => x.optionBehaviour == currentTab.Children[0]);
+                    if (firstOption != null) GameOptionsMenuStartPatch.updateGameOptionsMenu(firstOption.type, currentTab);
                 }
-
             }
         }
 
@@ -369,12 +375,19 @@ namespace TheOtherRoles {
         }
 
         // Copy to or paste from clipboard (as string)
+        public static string BuildSettingsPayload() {
+            return $"{TheOtherRolesPlugin.VersionString}!{Convert.ToBase64String(serializeOptions())}!{vanillaSettings.Value}";
+        }
+
         public static void copyToClipboard() {
-            GUIUtility.systemCopyBuffer = $"{TheOtherRolesPlugin.VersionString}!{Convert.ToBase64String(serializeOptions())}!{vanillaSettings.Value}";
+            GUIUtility.systemCopyBuffer = BuildSettingsPayload();
         }
 
         public static int pasteFromClipboard() {
-            string allSettings = GUIUtility.systemCopyBuffer;
+            return applySettingsPayload(GUIUtility.systemCopyBuffer, "clipboard");
+        }
+
+        public static int applySettingsPayload(string allSettings, string source) {
             int torOptionsFine = 0;
             bool vanillaOptionsFine = false;
             try {
@@ -389,7 +402,7 @@ namespace TheOtherRoles {
                     if (AmongUsClient.Instance?.AmHost == true)
                     {
                         GameOptionsMenuStartPatch.MarkAllTabsDirty();
-                        GameOptionsMenuStartPatch.RebuildActiveTabIfDirty();
+                        GameOptionsMenuStartPatch.RebuildActiveTabDeferred();
                     }
                 }
                 catch
@@ -407,8 +420,9 @@ namespace TheOtherRoles {
                     vanillaOptionsFine = loadVanillaOptions();
                 }
             } catch (Exception e) {
-                TheOtherRolesPlugin.Logger.LogWarning($"{e}: tried to paste invalid settings!\n{allSettings}");
-                string errorStr = allSettings.Length > 2 ? allSettings.Substring(0, 3) : "(empty clipboard) ";
+                TheOtherRolesPlugin.Logger.LogWarning($"{e}: tried to paste invalid settings from {source}!\n{allSettings}");
+                int length = allSettings?.Length ?? 0;
+                string errorStr = length > 2 ? allSettings.Substring(0, 3) : $"(empty {source}) ";
                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"Host Info: You tried to paste invalid settings: \"{errorStr}...\"");
                 SoundEffectsManager.play("fail");
             }
@@ -657,111 +671,121 @@ namespace TheOtherRoles {
             if (TORMapOptions.gameMode != CustomGamemodes.FreePlay)
                 relevantOptions = relevantOptions.Where(x => x.id != 10429).ToList();
 
-            for (int j = 0; j < __instance.settingsInfo.Count; j++)
-            {
-                __instance.settingsInfo[j].gameObject.Destroy();
-            }
+            var previousRows = new List<GameObject>();
+            foreach (var row in __instance.settingsInfo) previousRows.Add(row);
             __instance.settingsInfo.Clear();
 
-            float num = 1.44f;
-            int i = 0;
-            int singles = 1;
-            int headers = 0;
-            int lines = 0;
-            var curType = CustomOptionType.Modifier;
-            int numBonus = 0;
-            var animatedRows = new List<(GameObject Obj, Vector3 TargetPos)>();
-
-            foreach (var option in relevantOptions)
+            try
             {
-                if (option.isHeader && (int)optionType != 99 || (int)optionType == 99 && curType != option.type)
+
+                float num = 1.44f;
+                int i = 0;
+                int singles = 1;
+                int headers = 0;
+                int lines = 0;
+                var curType = CustomOptionType.Modifier;
+                int numBonus = 0;
+                var animatedRows = new List<(GameObject Obj, Vector3 TargetPos)>();
+
+                foreach (var option in relevantOptions)
                 {
-                    curType = option.type;
-                    if (i != 0) {
-                        num -= 0.85f;
-                        numBonus++;
-                    }
-                    if (i % 2 != 0) singles++;
-                    headers++; // for header
-                    CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate<CategoryHeaderMasked>(__instance.categoryHeaderOrigin);
-                    categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
-                    string titleText = option.heading != "" ? option.getHeading() : option.getName();
-                    categoryHeaderMasked.Title.text = titleText;
-                    if ((int)optionType == 99)
-                        categoryHeaderMasked.Title.text = new Dictionary<CustomOptionType, string>() { { CustomOptionType.Impostor, ModTranslation.getString("impostorRoles") }, { CustomOptionType.Neutral, ModTranslation.getString("neutralRoles") },
-                            { CustomOptionType.Crewmate, ModTranslation.getString("crewmateRoles") }, { CustomOptionType.Modifier, ModTranslation.getString("modifiers") } }[curType];
-                    categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);
-                    var headerTargetPos = new Vector3(-9.77f, num, -2f);
-                    categoryHeaderMasked.transform.localScale = Vector3.zero;
-                    categoryHeaderMasked.transform.localPosition = headerTargetPos + new Vector3(0f, -RowSlideOffset, 0f);
-                    __instance.settingsInfo.Add(categoryHeaderMasked.gameObject);
-                    animatedRows.Add((categoryHeaderMasked.gameObject, headerTargetPos));
-                    if ((int)optionType != 99) {
-                        categoryHeaderMasked.transform.GetChild(0).GetComponent<SpriteRenderer>().color = option.getColor();
-                        categoryHeaderMasked.transform.GetChild(1).GetComponent<SpriteRenderer>().color = option.getColor();
-                    }
-                    num -= 1.05f;
-                    i = 0;
-                }
-                else if (!ShouldBeEnabled(option)) continue;  // Hides options, for which the parent is disabled!
-                if (option == CustomOptionHolder.crewmateRolesCountMax || option == CustomOptionHolder.neutralRolesCountMax || option == CustomOptionHolder.impostorRolesCountMax || option == CustomOptionHolder.modifiersCountMax || option == CustomOptionHolder.crewmateRolesFill)
-                    continue;
-
-                ViewSettingsInfoPanel viewSettingsInfoPanel = UnityEngine.Object.Instantiate<ViewSettingsInfoPanel>(__instance.infoPanelOrigin);
-                viewSettingsInfoPanel.transform.SetParent(__instance.settingsContainer);
-                float num2;
-                if (i % 2 == 0) {
-                    lines++;
-                    num2 = -8.95f;
-                    if (i > 0) {
-                        num -= 0.85f;
-                    }
-                }
-                else {
-                    num2 = -3f;
-                }
-                var rowTargetPos = new Vector3(num2, num, -2f);
-                viewSettingsInfoPanel.transform.localScale = Vector3.zero;
-                viewSettingsInfoPanel.transform.localPosition = rowTargetPos + new Vector3(0f, -RowSlideOffset, 0f);
-                int value = option.getSelection();
-                var settingTuple = handleSpecialOptionsView(option, option.getName(), option.getString());
-                viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, settingTuple.Item2, 61);
-                viewSettingsInfoPanel.titleText.text = settingTuple.Item1;
-                if (option.isHeader && (int)optionType != 99 && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier)) {
-                    viewSettingsInfoPanel.titleText.text = ModTranslation.getString("optionSpawnChance");
-                }
-                if ((int)optionType == 99) {
-                    if (option.type == CustomOptionType.Modifier)
-                        viewSettingsInfoPanel.settingText.text = viewSettingsInfoPanel.settingText.text + GameOptionsDataPatch.buildModifierExtras(option);
-                    if (option is CustomRoleOption roleOption)
-                        viewSettingsInfoPanel.settingText.text += roleOption.enabled && roleOption.countOption != null ? $" ({roleOption.count})" : "";
-                }
-                __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);
-                animatedRows.Add((viewSettingsInfoPanel.gameObject, rowTargetPos));
-
-                i++;
-            }
-            float actual_spacing = (headers * 1.05f + lines * 0.85f) / (headers + lines) * 1.01f;
-            __instance.scrollBar.CalculateAndSetYBounds(__instance.settingsInfo.Count + singles * 2 + headers, 2f, 6f, actual_spacing);
-
-            if (animatedRows.Count > 0)
-            {
-                int total = animatedRows.Count;
-                const float duration = 0.32f;
-                const float staggerSpan = 0.6f;
-                __instance.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
-                {
-                    for (int k = 0; k < total; k++)
+                    if (option.isHeader && (int)optionType != 99 || (int)optionType == 99 && curType != option.type)
                     {
-                        var (row, targetPos) = animatedRows[k];
-                        if (row == null) continue;
-                        float rowStart = staggerSpan * k / Mathf.Max(1, total - 1);
-                        float rowP = Mathf.Clamp01((p - rowStart) / (1f - staggerSpan));
-                        float eased = 1f - Mathf.Pow(1f - rowP, 3f);
-                        row.transform.localScale = Vector3.one * eased;
-                        row.transform.localPosition = targetPos + new Vector3(0f, -RowSlideOffset * (1f - eased), 0f);
+                        curType = option.type;
+                        if (i != 0) {
+                            num -= 0.85f;
+                            numBonus++;
+                        }
+                        if (i % 2 != 0) singles++;
+                        headers++; // for header
+                        CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate<CategoryHeaderMasked>(__instance.categoryHeaderOrigin);
+                        categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 61);
+                        string titleText = option.heading != "" ? option.getHeading() : option.getName();
+                        categoryHeaderMasked.Title.text = titleText;
+                        if ((int)optionType == 99)
+                            categoryHeaderMasked.Title.text = new Dictionary<CustomOptionType, string>() { { CustomOptionType.Impostor, ModTranslation.getString("impostorRoles") }, { CustomOptionType.Neutral, ModTranslation.getString("neutralRoles") },
+                                { CustomOptionType.Crewmate, ModTranslation.getString("crewmateRoles") }, { CustomOptionType.Modifier, ModTranslation.getString("modifiers") } }[curType];
+                        categoryHeaderMasked.transform.SetParent(__instance.settingsContainer);
+                        var headerTargetPos = new Vector3(-9.77f, num, -2f);
+                        categoryHeaderMasked.transform.localScale = Vector3.zero;
+                        categoryHeaderMasked.transform.localPosition = headerTargetPos + new Vector3(0f, -RowSlideOffset, 0f);
+                        __instance.settingsInfo.Add(categoryHeaderMasked.gameObject);
+                        animatedRows.Add((categoryHeaderMasked.gameObject, headerTargetPos));
+                        if ((int)optionType != 99) {
+                            categoryHeaderMasked.transform.GetChild(0).GetComponent<SpriteRenderer>().color = option.getColor();
+                            categoryHeaderMasked.transform.GetChild(1).GetComponent<SpriteRenderer>().color = option.getColor();
+                        }
+                        num -= 1.05f;
+                        i = 0;
                     }
-                })));
+                    else if (!ShouldBeEnabled(option)) continue;  // Hides options, for which the parent is disabled!
+                    if (option == CustomOptionHolder.crewmateRolesCountMax || option == CustomOptionHolder.neutralRolesCountMax || option == CustomOptionHolder.impostorRolesCountMax || option == CustomOptionHolder.modifiersCountMax || option == CustomOptionHolder.crewmateRolesFill)
+                        continue;
+
+                    ViewSettingsInfoPanel viewSettingsInfoPanel = UnityEngine.Object.Instantiate<ViewSettingsInfoPanel>(__instance.infoPanelOrigin);
+                    viewSettingsInfoPanel.transform.SetParent(__instance.settingsContainer);
+                    float num2;
+                    if (i % 2 == 0) {
+                        lines++;
+                        num2 = -8.95f;
+                        if (i > 0) {
+                            num -= 0.85f;
+                        }
+                    }
+                    else {
+                        num2 = -3f;
+                    }
+                    var rowTargetPos = new Vector3(num2, num, -2f);
+                    viewSettingsInfoPanel.transform.localScale = Vector3.zero;
+                    viewSettingsInfoPanel.transform.localPosition = rowTargetPos + new Vector3(0f, -RowSlideOffset, 0f);
+                    int value = option.getSelection();
+                    var settingTuple = handleSpecialOptionsView(option, option.getName(), option.getString());
+                    viewSettingsInfoPanel.SetInfo(StringNames.ImpostorsCategory, settingTuple.Item2, 61);
+                    viewSettingsInfoPanel.titleText.text = settingTuple.Item1;
+                    if (option.isHeader && (int)optionType != 99 && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier)) {
+                        viewSettingsInfoPanel.titleText.text = ModTranslation.getString("optionSpawnChance");
+                    }
+                    if ((int)optionType == 99) {
+                        if (option.type == CustomOptionType.Modifier)
+                            viewSettingsInfoPanel.settingText.text = viewSettingsInfoPanel.settingText.text + GameOptionsDataPatch.buildModifierExtras(option);
+                        if (option is CustomRoleOption roleOption)
+                            viewSettingsInfoPanel.settingText.text += roleOption.enabled && roleOption.countOption != null ? $" ({roleOption.count})" : "";
+                    }
+                    __instance.settingsInfo.Add(viewSettingsInfoPanel.gameObject);
+                    animatedRows.Add((viewSettingsInfoPanel.gameObject, rowTargetPos));
+
+                    i++;
+                }
+                    float actual_spacing = headers + lines > 0 ? (headers * 1.05f + lines * 0.85f) / (headers + lines) * 1.01f : 0.9f;
+                __instance.scrollBar.CalculateAndSetYBounds(__instance.settingsInfo.Count + singles * 2 + headers, 2f, 6f, actual_spacing);
+
+                if (animatedRows.Count > 0)
+                {
+                    int total = animatedRows.Count;
+                    const float duration = 0.32f;
+                    const float staggerSpan = 0.6f;
+                    __instance.StartCoroutine(Effects.Lerp(duration, new Action<float>(p =>
+                    {
+                        for (int k = 0; k < total; k++)
+                        {
+                            var (row, targetPos) = animatedRows[k];
+                            if (row == null) continue;
+                            float rowStart = staggerSpan * k / Mathf.Max(1, total - 1);
+                            float rowP = Mathf.Clamp01((p - rowStart) / (1f - staggerSpan));
+                            float eased = 1f - Mathf.Pow(1f - rowP, 3f);
+                            row.transform.localScale = Vector3.one * eased;
+                            row.transform.localPosition = targetPos + new Vector3(0f, -RowSlideOffset * (1f - eased), 0f);
+                        }
+                    })));
+                }
+                foreach (var row in previousRows) if (row != null) row.Destroy();
+            }
+            catch (Exception ex)
+            {
+                foreach (var row in __instance.settingsInfo) if (row != null) row.Destroy();
+                __instance.settingsInfo.Clear();
+                foreach (var row in previousRows) if (row != null) __instance.settingsInfo.Add(row);
+                TheOtherRolesPlugin.Logger.LogError($"[TOROptions] drawTab {optionType} failed: {ex}");
             }
         }
         private static Tuple<string, string> handleSpecialOptionsView(CustomOption option, string defaultString, string defaultVal)
@@ -851,6 +875,10 @@ namespace TheOtherRoles {
                 // create Zombie settings
                 createCustomButton(__instance, next++, "ZombieMain", ModTranslation.getString("zombieMain"), CustomOptionType.ZombieMain);
             }
+            else if (TORMapOptions.gameMode == CustomGamemodes.HotPotato)
+            {
+                createCustomButton(__instance, next++, "HotPotatoMain", ModTranslation.getString("hotPotatoMain"), CustomOptionType.HotPotatoMain);
+            }
         }
     }
 
@@ -861,6 +889,9 @@ namespace TheOtherRoles {
         {
             if (__instance.gameObject.name == "GAME SETTINGS TAB")
                 adaptTaskCount(__instance);
+
+            GameOptionsMenuStartPatch.InvalidateVisibleSignatures();
+            GameOptionsMenuStartPatch.MarkAllTabsDirty();
         }
 
         private static void adaptTaskCount(GameOptionsMenu __instance)
@@ -1062,7 +1093,9 @@ namespace TheOtherRoles {
             __instance.containerConfirm.GetChild(5).GetChild(2).GetComponent<TextMeshPro>().SetText(
                 TORMapOptions.gameMode is CustomGamemodes.Classic ? DestroyableSingleton<TranslationController>.Instance.GetString(StringNames.GameTypeClassic) :
                 (TORMapOptions.gameMode is CustomGamemodes.Guesser ? ModTranslation.getString("gamemodeGuesser") :
-                (TORMapOptions.gameMode is CustomGamemodes.Zombie ? ModTranslation.getString("gamemodeZombie") : ModTranslation.getString("gamemodeHideNSeek"))));
+                (TORMapOptions.gameMode is CustomGamemodes.Zombie ? ModTranslation.getString("gamemodeZombie") :
+                (TORMapOptions.gameMode is CustomGamemodes.FreePlay ? ModTranslation.getString("gamemodeFreePlay") :
+                (TORMapOptions.gameMode is CustomGamemodes.HotPotato ? ModTranslation.getString("gamemodeHotPotato") : ModTranslation.getString("gamemodeHideNSeek"))))));
         }
     }
 
@@ -1073,6 +1106,8 @@ namespace TheOtherRoles {
         {
             if ((CreateGameOptionsPatch.modeButtonGS != null && CreateGameOptionsPatch.modeButtonGS.IsSelected()) ||
                 (CreateGameOptionsPatch.modeButtonHK != null && CreateGameOptionsPatch.modeButtonHK.IsSelected()) ||
+                (CreateGameOptionsPatch.modeButtonFP != null && CreateGameOptionsPatch.modeButtonFP.IsSelected()) ||
+                (CreateGameOptionsPatch.modeButtonHP != null && CreateGameOptionsPatch.modeButtonHP.IsSelected()) ||
                 (CreateGameOptionsPatch.modeButtonZM != null && CreateGameOptionsPatch.modeButtonZM.IsSelected()))
                 __instance.modeButtons[0].SelectButton(false);
         }
@@ -1084,6 +1119,8 @@ namespace TheOtherRoles {
         public static PassiveButton modeButtonGS;
         public static PassiveButton modeButtonHK;
         public static PassiveButton modeButtonZM;
+        public static PassiveButton modeButtonFP;
+        public static PassiveButton modeButtonHP;
 
         private static void Postfix(CreateGameOptions __instance)
         {
@@ -1093,7 +1130,7 @@ namespace TheOtherRoles {
             __instance.levelButtons[0].transform.parent.gameObject.SetActive(false);
             __instance.serverButton.transform.parent.SetLocalY(-1.84f);
             __instance.serverDropdown.transform.SetLocalY(-2.63f);
-            __instance.modeButtons[0].transform.parent.SetLocalY(-2.55f);
+            __instance.modeButtons[0].transform.parent.SetLocalY(-2.175f);
             __instance.modeButtons[1].gameObject.SetActive(false);
 
             TORMapOptions.gameMode = CustomGamemodes.Classic;
@@ -1111,6 +1148,8 @@ namespace TheOtherRoles {
                 __instance.modeButtons[0].SelectButton(false);
                 modeButtonHK.SelectButton(false);
                 modeButtonZM.SelectButton(false);
+                modeButtonFP.SelectButton(false);
+                modeButtonHP.SelectButton(false);
             }
             ));
 
@@ -1127,6 +1166,8 @@ namespace TheOtherRoles {
                 __instance.modeButtons[0].SelectButton(false);
                 modeButtonGS.SelectButton(false);
                 modeButtonZM.SelectButton(false);
+                modeButtonFP.SelectButton(false);
+                modeButtonHP.SelectButton(false);
             }
             ));
 
@@ -1143,6 +1184,44 @@ namespace TheOtherRoles {
                 __instance.modeButtons[0].SelectButton(false);
                 modeButtonGS.SelectButton(false);
                 modeButtonHK.SelectButton(false);
+                modeButtonFP.SelectButton(false);
+                modeButtonHP.SelectButton(false);
+            }
+            ));
+
+            modeButtonFP = UnityEngine.Object.Instantiate(modeButtonZM, __instance.modeButtons[0].transform);
+            modeButtonFP.name = "TORFREEPLAY";
+            changeButtonText(modeButtonFP, ModTranslation.getString("torFreePlay"));
+            modeButtonFP.transform.localPosition = new Vector3(0f, -1.5f, -3f);
+            modeButtonFP.OnClick.RemoveAllListeners();
+            __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => modeButtonFP.SelectButton(false))));
+            modeButtonFP.OnClick.AddListener((Action)(() =>
+            {
+                TORMapOptions.gameMode = CustomGamemodes.FreePlay;
+                modeButtonFP.SelectButton(true);
+                __instance.modeButtons[0].SelectButton(false);
+                modeButtonGS.SelectButton(false);
+                modeButtonHK.SelectButton(false);
+                modeButtonZM.SelectButton(false);
+                modeButtonHP.SelectButton(false);
+            }
+            ));
+
+            modeButtonHP = UnityEngine.Object.Instantiate(modeButtonFP, __instance.modeButtons[0].transform);
+            modeButtonHP.name = "TORHOTPOTATO";
+            changeButtonText(modeButtonHP, ModTranslation.getString("torHotPotato"));
+            modeButtonHP.transform.localPosition = new Vector3(2.91f, -1.5f, -3f);
+            modeButtonHP.OnClick.RemoveAllListeners();
+            __instance.StartCoroutine(Effects.Lerp(0.1f, new Action<float>(p => modeButtonHP.SelectButton(false))));
+            modeButtonHP.OnClick.AddListener((Action)(() =>
+            {
+                TORMapOptions.gameMode = CustomGamemodes.HotPotato;
+                modeButtonHP.SelectButton(true);
+                __instance.modeButtons[0].SelectButton(false);
+                modeButtonGS.SelectButton(false);
+                modeButtonHK.SelectButton(false);
+                modeButtonZM.SelectButton(false);
+                modeButtonFP.SelectButton(false);
             }
             ));
 
@@ -1152,6 +1231,8 @@ namespace TheOtherRoles {
                 modeButtonGS.SelectButton(false);
                 modeButtonHK.SelectButton(false);
                 modeButtonZM.SelectButton(false);
+                modeButtonFP.SelectButton(false);
+                modeButtonHP.SelectButton(false);
             }
             ));
         }
@@ -1233,6 +1314,9 @@ namespace TheOtherRoles {
             currentGOMs.Clear();
             currentTabTypes = new();
             currentTabsDirty = new();
+            lastVisibleSignatures.Clear();
+            spawnedHeaders.Clear();
+            spawnedRows.Clear();
             activeTabIndex = -1;
             headerTabButtons.ForEach(x => { if (x != null) x?.Destroy(); });
             headerTabButtons = new();
@@ -1318,6 +1402,58 @@ namespace TheOtherRoles {
             }));
         }
 
+        private static readonly Dictionary<CustomOption, CategoryHeaderMasked> spawnedHeaders = new();
+        private static readonly Dictionary<CustomOption, OptionBehaviour> spawnedRows = new();
+
+        private static CategoryHeaderMasked SpawnHeader(GameOptionsMenu menu, CustomOption option)
+        {
+            if (spawnedHeaders.TryGetValue(option, out var cached) && cached != null) return cached;
+
+            var header = UnityEngine.Object.Instantiate<CategoryHeaderMasked>(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+            header.SetHeader(StringNames.ImpostorsCategory, 20);
+            header.Title.text = option.heading != "" ? option.getHeading() : option.getName();
+            header.transform.localScale = Vector3.one * 0.63f;
+            header.transform.GetChild(0).GetComponent<SpriteRenderer>().color = option.getColor();
+            header.transform.GetChild(1).GetComponent<SpriteRenderer>().color = option.getColor();
+            spawnedHeaders[option] = header;
+            return header;
+        }
+
+        private static OptionBehaviour SpawnRow(GameOptionsMenu menu, CustomOption option)
+        {
+            if (spawnedRows.TryGetValue(option, out var cached) && cached != null) return cached;
+
+            OptionBehaviour optionBehaviour = UnityEngine.Object.Instantiate<StringOption>(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+            optionBehaviour.SetClickMask(menu.ButtonClickMask);
+
+            // "SetUpFromData"
+            SpriteRenderer[] componentsInChildren = optionBehaviour.GetComponentsInChildren<SpriteRenderer>(true);
+            for (int i = 0; i < componentsInChildren.Length; i++)
+            {
+                componentsInChildren[i].material.SetInt(PlayerMaterial.MaskLayer, 20);
+            }
+            foreach (TextMeshPro textMeshPro in optionBehaviour.GetComponentsInChildren<TextMeshPro>(true))
+            {
+                textMeshPro.fontMaterial.SetFloat("_StencilComp", 3f);
+                textMeshPro.fontMaterial.SetFloat("_Stencil", 20);
+            }
+
+            var stringOption = optionBehaviour as StringOption;
+            stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => { });
+            stringOption.TitleText.text = option.getName();
+            if (option.isHeader && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier))
+            {
+                stringOption.TitleText.text = ModTranslation.getString("optionSpawnChance");
+            }
+            if (stringOption.TitleText.text.Length > 25)
+                stringOption.TitleText.fontSize = 2.2f;
+            if (stringOption.TitleText.text.Length > 40)
+                stringOption.TitleText.fontSize = 2f;
+
+            spawnedRows[option] = optionBehaviour;
+            return optionBehaviour;
+        }
+
         private static void createSettings(GameOptionsMenu menu, List<CustomOption> options)
         {
             float num = 1.5f;
@@ -1325,48 +1461,37 @@ namespace TheOtherRoles {
             {
                 if (option.isHeader)
                 {
-                    CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate<CategoryHeaderMasked>(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
-                    categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
-                    string titleText = option.heading != "" ? option.getHeading() : option.getName();
-                    categoryHeaderMasked.Title.text = titleText;
-                    categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
-                    categoryHeaderMasked.transform.localPosition = new Vector3(-0.903f, num, -2f);
-                    categoryHeaderMasked.transform.GetChild(0).GetComponent<SpriteRenderer>().color = option.getColor();
-                    categoryHeaderMasked.transform.GetChild(1).GetComponent<SpriteRenderer>().color = option.getColor();
+                    SpawnHeader(menu, option).transform.localPosition = new Vector3(-0.903f, num, -2f);
                     num -= 0.63f;
                 }
-                else if (!ShouldBeEnabled(option)) continue;  // Hides options, for which the parent is disabled!
-                else if (option.parent != null && option.parent.selection != 0 && option.invertedParent) continue;
-                OptionBehaviour optionBehaviour = UnityEngine.Object.Instantiate<StringOption>(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
-                optionBehaviour.transform.localPosition = new Vector3(0.952f, num, -2f);
-                optionBehaviour.SetClickMask(menu.ButtonClickMask);
 
-                // "SetUpFromData"
-                SpriteRenderer[] componentsInChildren = optionBehaviour.GetComponentsInChildren<SpriteRenderer>(true);
-                for (int i = 0; i < componentsInChildren.Length; i++)
-                {
-                    componentsInChildren[i].material.SetInt(PlayerMaterial.MaskLayer, 20);
-                }
-                foreach (TextMeshPro textMeshPro in optionBehaviour.GetComponentsInChildren<TextMeshPro>(true))
-                {
-                    textMeshPro.fontMaterial.SetFloat("_StencilComp", 3f);
-                    textMeshPro.fontMaterial.SetFloat("_Stencil", 20);
-                }
+                bool visible = option.isHeader
+                    || (ShouldBeEnabled(option)  // Hides options, for which the parent is disabled!
+                        && !(option.parent != null && option.parent.selection != 0 && option.invertedParent));
 
+                OptionBehaviour optionBehaviour = SpawnRow(menu, option);
                 var stringOption = optionBehaviour as StringOption;
-                stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => { });
-                stringOption.TitleText.text = option.getName();
+                option.optionBehaviour = stringOption;
+
+                optionBehaviour.gameObject.SetActive(visible);
+                if (!visible) continue;
+
+                optionBehaviour.transform.localPosition = new Vector3(0.952f, num, -2f);
+
+                string titleText = option.getName();
                 if (option.isHeader && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier))
                 {
-                    stringOption.TitleText.text = ModTranslation.getString("optionSpawnChance");
+                    titleText = ModTranslation.getString("optionSpawnChance");
                 }
-                if (stringOption.TitleText.text.Length > 25)
-                    stringOption.TitleText.fontSize = 2.2f;
-                if (stringOption.TitleText.text.Length > 40)
-                    stringOption.TitleText.fontSize = 2f;
+                if (stringOption.TitleText.text != titleText)
+                {
+                    stringOption.TitleText.text = titleText;
+                    if (titleText.Length > 25) stringOption.TitleText.fontSize = 2.2f;
+                    if (titleText.Length > 40) stringOption.TitleText.fontSize = 2f;
+                }
+                string valueText = option.getString();
+                if (stringOption.ValueText.text != valueText) stringOption.ValueText.text = valueText;
                 stringOption.Value = stringOption.oldValue = option.selection;
-                stringOption.ValueText.text = option.getString();
-                option.optionBehaviour = stringOption;
 
                 menu.Children.Add(optionBehaviour);
                 num -= 0.45f;
@@ -1443,6 +1568,7 @@ namespace TheOtherRoles {
             currentTabsDirty.Add(true);
             torSettingsTab.SetActive(false);
             currentGOMs.Add((byte)optionType, torSettingsGOM);
+            lastVisibleSignatures.Remove(optionType);
         }
 
         public static void RebuildTabIfDirty(int index)
@@ -1459,18 +1585,65 @@ namespace TheOtherRoles {
             if (activeTabIndex >= 0) RebuildTabIfDirty(activeTabIndex);
         }
 
+        private static bool deferredRebuildPending;
+
+        public static void RebuildActiveTabDeferred()
+        {
+            if (deferredRebuildPending) return;
+            if (TORGUIManager.Instance == null)
+            {
+                RebuildActiveTabIfDirty();
+                return;
+            }
+            deferredRebuildPending = true;
+            try
+            {
+                TORGUIManager.Instance.StartCoroutine(CoRebuildActiveTabDeferred().WrapToIl2Cpp());
+            }
+            catch
+            {
+                deferredRebuildPending = false;
+                RebuildActiveTabIfDirty();
+            }
+        }
+
+        private static IEnumerator CoRebuildActiveTabDeferred()
+        {
+            yield return null;
+            deferredRebuildPending = false;
+            RebuildActiveTabIfDirty();
+        }
+
+        public static void InvalidateVisibleSignatures()
+        {
+            lastVisibleSignatures.Clear();
+        }
+
         public static void MarkAllTabsDirty()
         {
             for (int i = 0; i < currentTabsDirty.Count; i++) currentTabsDirty[i] = true;
         }
+        private static readonly Dictionary<CustomOptionType, string> lastVisibleSignatures = new();
+
+        private static string BuildVisibleSignature(List<CustomOption> relevantOptions)
+        {
+            var sb = new StringBuilder();
+            foreach (var option in relevantOptions)
+            {
+                if (option.isHeader) sb.Append('h').Append(option.id).Append(',');
+
+                if (!option.isHeader)
+                {
+                    if (!ShouldBeEnabled(option)) continue;
+                    if (option.parent != null && option.parent.selection != 0 && option.invertedParent) continue;
+                }
+                sb.Append('o').Append(option.id).Append(',');
+            }
+            return sb.ToString();
+        }
+
         public static void updateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu torSettingsGOM)
         {
-            foreach (var child in torSettingsGOM.Children)
-            {
-                child.Destroy();
-            }
-            torSettingsGOM.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
-            torSettingsGOM.Children.Clear();
             var relevantOptions = options.Where(x => x.type == optionType).ToList();
             if (TORMapOptions.gameMode == CustomGamemodes.Guesser) // Exclude guesser options in neutral mode
                 relevantOptions = relevantOptions.Where(x => !(new List<int> { 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 7006 }).Contains(x.id)).ToList();
@@ -1479,7 +1652,15 @@ namespace TheOtherRoles {
 
             if (TORMapOptions.gameMode != CustomGamemodes.FreePlay)
                 relevantOptions = relevantOptions.Where(x => x.id != 10429).ToList();
+
+            string signature = BuildVisibleSignature(relevantOptions);
+            if (lastVisibleSignatures.TryGetValue(optionType, out var previous) && previous == signature && torSettingsGOM.Children.Count > 0) return;
+            lastVisibleSignatures[optionType] = signature;
+
+            torSettingsGOM.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
+            torSettingsGOM.Children.Clear();
             createSettings(torSettingsGOM, relevantOptions);
+
         }
 
         private static void createSettingTabs(GameSettingMenu __instance)
@@ -1521,6 +1702,11 @@ namespace TheOtherRoles {
                 createGameOptionsMenu(__instance, CustomOptionType.ZombieMain, "ZombieMain");
                 headerTabTargets.Add(next++); // Main == 3
             }
+            else if (TORMapOptions.gameMode == CustomGamemodes.HotPotato)
+            {
+                createGameOptionsMenu(__instance, CustomOptionType.HotPotatoMain, "HotPotatoMain");
+                headerTabTargets.Add(next++); // Main == 3
+            }
 
             generalTabTarget = 3;
 
@@ -1541,22 +1727,68 @@ namespace TheOtherRoles {
             }
 
             int roleTarget = headerTabTargets.Count > 0 ? headerTabTargets[0] : generalTabTarget;
-            createNavButton(__instance, roleTarget, "TOR-RoleSettings", ModTranslation.getString("roleSettingsTab"));
+
+            const float leftPanelSpacing = 0.55f;
+            Vector3 basePos = vanillaGameBtn.transform.localPosition;
+
+            createNavButton(__instance, roleTarget, "TOR-RoleSettings", ModTranslation.getString("roleSettingsTab"),
+                basePos + Vector3.up * leftPanelSpacing);
+
+            createPresetButton(__instance, "TOR-PresetExport", ModTranslation.getString("presetExport"), () => PresetIO.Export(),
+                basePos - Vector3.up * leftPanelSpacing);
+
+            createPresetButton(__instance, "TOR-PresetImport", ModTranslation.getString("presetImport"), PresetIO.ShowImportDialog,
+                basePos - Vector3.up * (leftPanelSpacing * 2f));
         }
         /// 创建左侧「角色设置」导航按钮（实例化自原生模板，上移放置）。
         /// 点击后切换到第一个阵营 tab 并显示顶部标签栏。
 
-        private static void createNavButton(GameSettingMenu __instance, int targetMenu, string buttonName, string buttonText)
+        private static GameObject createNavButton(GameSettingMenu __instance, int targetMenu, string buttonName, string buttonText, Vector3 localPosition)
+        {
+            return createLeftPanelButton(__instance, buttonName, buttonText, localPosition, (System.Action)(() =>
+            {
+                __instance.ChangeTab(targetMenu, false); // ChangeTab 内会据 tabNum 显隐顶栏
+            }));
+        }
+
+        private static GameObject createPresetButton(GameSettingMenu __instance, string buttonName, string buttonText, System.Action onClick, Vector3 localPosition)
+        {
+            var button = createLeftPanelButton(__instance, buttonName, buttonText, localPosition, onClick);
+            if (button != null) ClampSortingBelow(button, 9);
+            return button;
+        }
+
+        private static int MaxSortingOrder(GameObject target)
+        {
+            int max = int.MinValue;
+            foreach (var sr in target.GetComponentsInChildren<SpriteRenderer>(true))
+                if (sr.sortingOrder > max) max = sr.sortingOrder;
+            foreach (var tmp in target.GetComponentsInChildren<TextMeshPro>(true))
+                if (tmp.sortingOrder > max) max = tmp.sortingOrder;
+            return max;
+        }
+
+        private static void ClampSortingBelow(GameObject target, int cap)
+        {
+            int max = MaxSortingOrder(target);
+            if (max <= cap) return;
+            int delta = max - cap;
+
+            foreach (var sr in target.GetComponentsInChildren<SpriteRenderer>(true)) sr.sortingOrder -= delta;
+            foreach (var tmp in target.GetComponentsInChildren<TextMeshPro>(true)) tmp.sortingOrder -= delta;
+        }
+
+        private static GameObject createLeftPanelButton(GameSettingMenu __instance, string buttonName, string buttonText, Vector3 localPosition, System.Action onClick)
         {
             var leftPanel = GameObject.Find("LeftPanel");
             var buttonTemplate = GameObject.Find("GameSettingsButton");
-            if (leftPanel == null || buttonTemplate == null) return;
+            if (leftPanel == null || buttonTemplate == null) return null;
 
-            if (GameObject.Find(buttonName) != null) return;
+            if (GameObject.Find(buttonName) != null) return null;
 
             var navButton = GameObject.Instantiate(buttonTemplate, leftPanel.transform);
             navButton.name = buttonName;
-            navButton.transform.localPosition += Vector3.up * 1f; // 上移，紧邻「游戏设置」按钮
+            navButton.transform.localPosition = localPosition;
 
             __instance.StartCoroutine(Effects.Lerp(2f, new Action<float>(p =>
             {
@@ -1569,13 +1801,12 @@ namespace TheOtherRoles {
             })));
             var passiveButton = navButton.GetComponent<PassiveButton>();
             passiveButton.OnClick.RemoveAllListeners();
-            passiveButton.OnClick.AddListener((System.Action)(() =>
-            {
-                __instance.ChangeTab(targetMenu, false); // ChangeTab 内会据 tabNum 显隐顶栏
-            }));
+            passiveButton.OnClick.AddListener(onClick);
             passiveButton.OnMouseOut.RemoveAllListeners();
             passiveButton.OnMouseOver.RemoveAllListeners();
             passiveButton.SelectButton(false);
+
+            return navButton;
         }
 
         private static string GetTabIconResource(CustomOptionType type)
@@ -1632,7 +1863,7 @@ namespace TheOtherRoles {
                 frame.tileMode = SpriteTileMode.Continuous;
                 frame.size = new Vector2(0.62f, 0.65f);
                 frame.color = Color.white;
-                frame.sortingOrder = 11;
+                frame.sortingOrder = 21;
                 headerTabFrames.Add(frame.gameObject);
 
                 // 圆角矩形内底（深色，形成描边效果）
@@ -1642,13 +1873,13 @@ namespace TheOtherRoles {
                 inner.tileMode = SpriteTileMode.Continuous;
                 inner.size = new Vector2(0.54f, 0.52f);
                 inner.color = new Color(0.12f, 0.13f, 0.16f, 1f);
-                inner.sortingOrder = 11;
+                inner.sortingOrder = 21;
 
                 // 保留阵营图标（叠在圆角框内部）
                 var icon = Helpers.CreateObject<SpriteRenderer>("Icon", tab.transform, new Vector3(0f, 0f, -0.1f), uiLayer);
                 icon.sprite = sprite;
                 icon.transform.localScale = new Vector3(0.52f, 0.52f, 1f);
-                icon.sortingOrder = 12;
+                icon.sortingOrder = 22;
                 headerTabIcons.Add(icon);
 
                 var collider = tab.AddComponent<BoxCollider2D>();
@@ -1829,6 +2060,8 @@ namespace TheOtherRoles {
                 options = options.Where(x => (x.type == CustomOption.CustomOptionType.HideNSeekMain || x.type == CustomOption.CustomOptionType.HideNSeekRoles));
             else if (TORMapOptions.gameMode == CustomGamemodes.Zombie)
                 options = options.Where(x => x.type == CustomOption.CustomOptionType.ZombieMain);
+            else if (TORMapOptions.gameMode == CustomGamemodes.HotPotato)
+                options = options.Where(x => x.type == CustomOption.CustomOptionType.HotPotatoMain);
             if (TORMapOptions.gameMode != CustomGamemodes.FreePlay)
                 options = options.Where(x => x.id != 10429);
             foreach (var option in options) {
@@ -1857,6 +2090,7 @@ namespace TheOtherRoles {
             foreach (CustomOption option in options) {
                 if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek && option.type != CustomOptionType.HideNSeekMain && option.type != CustomOptionType.HideNSeekRoles) continue;
                 if (TORMapOptions.gameMode == CustomGamemodes.Zombie && option.type != CustomOptionType.ZombieMain) continue;
+                if (TORMapOptions.gameMode == CustomGamemodes.HotPotato && option.type != CustomOptionType.HotPotatoMain) continue;
                 if (option.parent != null) {
                     bool isIrrelevant = !ShouldBeEnabled(option);
 
@@ -1965,6 +2199,8 @@ namespace TheOtherRoles {
                 hudString += buildOptionsOfType(CustomOptionType.HideNSeekMain, false) + buildOptionsOfType(CustomOptionType.HideNSeekRoles, false);
             } else if (TORMapOptions.gameMode == CustomGamemodes.Zombie) {
                 hudString += buildOptionsOfType(CustomOptionType.ZombieMain, false);
+            } else if (TORMapOptions.gameMode == CustomGamemodes.HotPotato) {
+                hudString += buildOptionsOfType(CustomOptionType.HotPotatoMain, false);
             } else {
                 hudString += buildOptionsOfType(CustomOptionType.General, false) + buildRoleOptions() + buildOptionsOfType(CustomOptionType.Impostor, false) +
                     buildOptionsOfType(CustomOptionType.Neutral, false) + buildOptionsOfType(CustomOptionType.Crewmate, false) +

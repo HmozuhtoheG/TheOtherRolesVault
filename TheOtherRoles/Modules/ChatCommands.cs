@@ -90,6 +90,10 @@ namespace TheOtherRoles.Modules {
                         {
                             gameMode = CustomGamemodes.Zombie;
                         }
+                        else if (gm.StartsWith("potato") || gm.StartsWith("hp")) // /gm potato -> hot potato
+                        {
+                            gameMode = CustomGamemodes.HotPotato;
+                        }
                         // else its classic!
 
                         if (AmongUsClient.Instance.AmHost)
@@ -148,6 +152,69 @@ namespace TheOtherRoles.Modules {
                     }
                 }
 
+                if (!handled && text.ToLower().StartsWith("/music"))
+                {
+                    handled = true;
+                    var musicChat = PlayerControl.LocalPlayer;
+                    void Say(string message) => __instance.AddChat(musicChat, message);
+
+                    if (!AmongUsClient.Instance.AmHost)
+                    {
+                        Say(ModTranslation.getString("musicHostOnly"));
+                    }
+                    else if (!Music.LobbyMusic.InLobby)
+                    {
+                        Say(ModTranslation.getString("musicLobbyOnly"));
+                    }
+                    else
+                    {
+                        string rest = text.Length > 6 ? text.Substring(6).Trim() : string.Empty;
+                        string lower = rest.ToLowerInvariant();
+
+                        if (rest.Length == 0)
+                        {
+                            Say(ModTranslation.getString("musicUsage"));
+                        }
+                        else if (lower == "api" || lower.StartsWith("api "))
+                        {
+                            string url = rest.Length > 3 ? rest.Substring(3).Trim() : string.Empty;
+                            Music.NeteaseClient.SetApiBase(url);
+                            Music.MusicPreference.Save(Music.NeteaseClient.ApiBase);
+                            if (AmongUsClient.Instance.AmHost)
+                                Music.LobbyMusic.SyncApi.Invoke((PlayerControl.LocalPlayer.PlayerId, url));
+                            Say(Music.NeteaseClient.HasApi
+                                ? string.Format(ModTranslation.getString("musicApiSet"), Music.NeteaseClient.ApiBase)
+                                : ModTranslation.getString("musicDirect"));
+                        }
+                        else if (lower == "stop")
+                        {
+                            if (AmongUsClient.Instance.AmHost) Music.LobbyMusic.HostStop();
+                            else Say(ModTranslation.getString("musicHostOnly"));
+                        }
+                        else if (lower.StartsWith("play "))
+                        {
+                            if (!AmongUsClient.Instance.AmHost)
+                            {
+                                Say(ModTranslation.getString("musicHostOnly"));
+                            }
+                            else if (int.TryParse(rest.Substring(5).Trim(), out int pick) && pick >= 1
+                                     && pick <= Music.LobbyMusic.LastResults.Count)
+                            {
+                                var song = Music.LobbyMusic.LastResults[pick - 1];
+                                Music.LobbyMusic.HostPlay(song.Id, song.Display);
+                            }
+                            else
+                            {
+                                Say(ModTranslation.getString("musicBadIndex"));
+                            }
+                        }
+                        else
+                        {
+                            Music.LobbyMusic.Search(rest);
+                        }
+                    }
+                }
+
                 if (!handled && CurrentChannel != ChannelType.Default)
                 {
                     switch (CurrentChannel)
@@ -190,6 +257,14 @@ namespace TheOtherRoles.Modules {
         [HarmonyPatch(typeof(ChatBubble), nameof(ChatBubble.SetName))]
         public static class SetBubbleName { 
             public static void Postfix(ChatBubble __instance, [HarmonyArgument(0)] string playerName) {
+                if (Kira.deathNoteAnnouncing && __instance != null) {
+                    if (__instance.NameText != null) {
+                        __instance.NameText.text = ModTranslation.getString("kiraDeathNoteSender");
+                        __instance.NameText.color = Kira.senderColor;
+                    }
+                    return;
+                }
+
                 PlayerControl sourcePlayer = PlayerControl.AllPlayerControls.ToArray().ToList().FirstOrDefault(x => x.Data != null && x.Data.PlayerName.Equals(playerName));
                 if (sourcePlayer == null) return;
                 if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data?.Role?.IsImpostor == true && (sourcePlayer.isRole(RoleId.Spy) || Sidekick.players.Any(x => x.wasTeamRed && x.player != null && x.player == sourcePlayer) || Jackal.players.Any(x => x.wasTeamRed && x.player != null && x.player == sourcePlayer)) && __instance != null) __instance.NameText.color = Palette.ImpostorRed;
@@ -257,6 +332,7 @@ namespace TheOtherRoles.Modules {
                 if (__instance != FastDestroyableSingleton<HudManager>.Instance.Chat)
                     return true;
                 PlayerControl localPlayer = PlayerControl.LocalPlayer;
+                if (localPlayer == null || localPlayer.Data == null) return true;
                 if (sourcePlayer == localPlayer) return true;
                 var flag = MeetingHud.Instance
                     || LobbyBehaviour.Instance

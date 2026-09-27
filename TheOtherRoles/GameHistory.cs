@@ -30,6 +30,7 @@ namespace TheOtherRoles {
             Bomb,
             Arson,
             Reckoning,
+            ZeusStrike,
         };
 
         public PlayerControl player;

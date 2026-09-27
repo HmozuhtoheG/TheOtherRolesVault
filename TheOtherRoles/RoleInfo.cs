@@ -46,6 +46,11 @@ namespace TheOtherRoles
         public static RoleInfo auxiliary = new("auxiliary", Sheriff.color, RoleId.Auxiliary);
         public static RoleInfo gojo = new("gojo", Gojo.color, RoleId.Gojo);
         public static RoleInfo sukuna = new("sukuna", Palette.ImpostorRed, RoleId.Sukuna);
+        public static RoleInfo kira = new("kira", Kira.color, RoleId.Kira, true);
+        public static RoleInfo zeus = new("zeus", Palette.ImpostorRed, RoleId.Zeus);
+        public static RoleInfo painter = new("painter", Palette.ImpostorRed, RoleId.Painter);
+        public static RoleInfo aoi = new("aoi", Palette.ImpostorRed, RoleId.Aoi);
+        public static RoleInfo itadori = new("itadori", Itadori.color, RoleId.Itadori, true);
         public static RoleInfo lighter = new("lighter", Lighter.color, RoleId.Lighter);
         public static RoleInfo godfather = new("godfather", Godfather.color, RoleId.Godfather);
         public static RoleInfo mafioso = new("mafioso", Mafioso.color, RoleId.Mafioso);
@@ -188,7 +193,12 @@ namespace TheOtherRoles
             serialKiller,
             pelican,
             playerRole,
-            sukuna
+            sukuna,
+            kira,
+            zeus,
+            painter,
+            aoi,
+            itadori
         ];
 
         public static List<RoleInfo> Trick =
@@ -440,6 +450,11 @@ namespace TheOtherRoles
             auxiliary,
             gojo,
             sukuna,
+            kira,
+            zeus,
+            painter,
+            aoi,
+            itadori,
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
@@ -490,6 +505,11 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Gojo)) infos.Add(gojo);
             if (p.isRole(RoleId.Sukuna)) infos.Add(sukuna);
             if (p.isRole(RoleId.Martyr)) infos.Add(martyr);
+            if (p.isRole(RoleId.Kira)) infos.Add(kira);
+            if (p.isRole(RoleId.Zeus)) infos.Add(zeus);
+            if (p.isRole(RoleId.Painter)) infos.Add(painter);
+            if (p.isRole(RoleId.Aoi)) infos.Add(aoi);
+            if (p.isRole(RoleId.Itadori)) infos.Add(itadori);
             if (p.isRole(RoleId.Lighter)) infos.Add(lighter);
             if (p.isRole(RoleId.Godfather)) infos.Add(godfather);
             if (p.isRole(RoleId.Mafioso)) infos.Add(mafioso);
@@ -774,7 +794,9 @@ namespace TheOtherRoles
                     //deathReasonString = $" - {Helpers.cs(Lawyer.color, "bad Lawyer")}";
                     //break;
                     case DeadPlayer.CustomDeathReason.Bomb:
-                        deathReasonString = string.Format(ModTranslation.getString("roleSummaryBombed"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName));
+                        deathReasonString = deadPlayer.killerIfExisting != null
+                            ? string.Format(ModTranslation.getString("roleSummaryBombed"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName))
+                            : ModTranslation.getString("roleSummarySuicide");
                         break;
                     case DeadPlayer.CustomDeathReason.Divined:
                         deathReasonString = string.Format(ModTranslation.getString("roleSummaryDivined"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName));
@@ -784,6 +806,9 @@ namespace TheOtherRoles
                         break;
                     case DeadPlayer.CustomDeathReason.Arson:
                         deathReasonString = string.Format(ModTranslation.getString("roleSummaryTorched"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName));
+                        break;
+                    case DeadPlayer.CustomDeathReason.ZeusStrike:
+                        deathReasonString = string.Format(ModTranslation.getString("roleSummaryZeusStruck"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName));
                         break;
                 }
             }

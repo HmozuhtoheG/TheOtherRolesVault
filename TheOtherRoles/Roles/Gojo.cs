@@ -154,7 +154,7 @@ namespace TheOtherRoles.Roles
 
         private void ShowIndicator()
         {
-            if (player == null) return;
+            if (player == null || player != PlayerControl.LocalPlayer) return;
 
             if (indicatorObject == null)
             {
@@ -323,11 +323,29 @@ namespace TheOtherRoles.Roles
                     if (distance >= infinityRadius) continue;
 
                     Vector2 direction = distance > 0.001f ? delta / distance : Vector2.right;
-                    Vector2 safePosition = gojoPos + direction * infinityRadius;
 
                     __instance.body.velocity = Vector2.zero;
-                    __instance.body.position = safePosition;
-                    __instance.transform.position = safePosition;
+
+                    if (!PhysicsHelpers.AnyNonTriggersBetween(gojoPos, direction, infinityRadius, Constants.ShipAndObjectsMask))
+                    {
+                        Vector2 safePosition = gojoPos + direction * infinityRadius;
+                        __instance.body.position = safePosition;
+                        __instance.transform.position = safePosition;
+                        continue;
+                    }
+
+                    float slide = Mathf.Min(0.5f, infinityRadius - distance);
+                    Vector2 tangent = new Vector2(-direction.y, direction.x);
+                    for (int i = 0; i < 2; i++)
+                    {
+                        Vector2 slideDirection = i == 0 ? tangent : -tangent;
+                        if (PhysicsHelpers.AnyNonTriggersBetween(selfPos, slideDirection, slide, Constants.ShipAndObjectsMask)) continue;
+
+                        Vector2 slidePosition = selfPos + slideDirection * slide;
+                        __instance.body.position = slidePosition;
+                        __instance.transform.position = slidePosition;
+                        break;
+                    }
                 }
             }
         }
