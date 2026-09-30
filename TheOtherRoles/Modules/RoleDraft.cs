@@ -21,9 +21,6 @@ namespace TheOtherRoles.Modules
         public static List<byte> pickOrder = new();
         public static bool picked = false;
         public static float timer = 0f;
-        private static List<ActionButton> buttons = new();
-        private static TMPro.TextMeshPro feedText;
-        private static Scroller scroller;
         public static List<(byte, bool)> alreadyPicked = new();
         public static IEnumerator CoSelectRoles(IntroCutscene __instance)
         {
@@ -31,34 +28,14 @@ namespace TheOtherRoles.Modules
 
             isRunning = true;
             SoundEffectsManager.play("TORVTheme", volume: 1f, true, true);
+            RoleDraftWheel.Close(false);
+            RoleDraftStatus.Hide();
             alreadyPicked.Clear();
             bool playedAlert = false;
-            feedText = UnityEngine.Object.Instantiate(__instance.TeamTitle, __instance.transform);
-            var aspectPosition = feedText.gameObject.AddComponent<AspectPosition>();
-            aspectPosition.Alignment = AspectPosition.EdgeAlignments.LeftTop;
-            aspectPosition.DistanceFromEdge = new Vector2(1.62f, 1.2f);
-            aspectPosition.AdjustPosition();
-            feedText.transform.localScale = new Vector3(0.6f, 0.6f, 1);
-            feedText.text = $"<size=200%>{ModTranslation.getString("roleDraftPicks")}</size>\n\n";
-            feedText.alignment = TMPro.TextAlignmentOptions.TopLeft;
-            feedText.autoSizeTextContainer = true;
-            feedText.fontSize = 3f;
-            feedText.enableAutoSizing = false;
-            scroller = feedText.gameObject.AddComponent<Scroller>();
-            scroller.Inner = feedText.transform;
-            scroller.allowY = true;
-            scroller.gameObject.SetActive(true);
-            scroller.enabled = true;
-            scroller.ContentYBounds = new FloatRange(2f, 2f);
-            scroller.ScrollToTop();
-            __instance.TeamTitle.transform.localPosition = __instance.TeamTitle.transform.localPosition + new Vector3(1f, 0f);
-            __instance.TeamTitle.text = ModTranslation.getString("roleDraftCurrent");
             __instance.BackgroundBar.enabled = false;
-            __instance.TeamTitle.transform.localScale = new Vector3(0.25f, 0.25f, 1f);
-            __instance.TeamTitle.autoSizeTextContainer = true;
-            __instance.TeamTitle.enableAutoSizing = false;
-            __instance.TeamTitle.fontSize = 5;
-            __instance.TeamTitle.alignment = TMPro.TextAlignmentOptions.Top;
+            __instance.TeamTitle.gameObject.SetActive(true);
+            __instance.TeamTitle.color = Color.white;
+            __instance.TeamTitle.text = ModTranslation.getString("roleDraftWelcome");
             __instance.ImpostorText.gameObject.SetActive(false);
             GameObject.Find("BackgroundLayer")?.SetActive(false);
             foreach (var player in UnityEngine.Object.FindObjectsOfType<PoolablePlayer>())
@@ -69,6 +46,7 @@ namespace TheOtherRoles.Modules
                 }
             }
             __instance.FrontMost.gameObject.SetActive(false);
+            RoleDraftStatus.Show();
 
             if (AmongUsClient.Instance.AmHost)
             {
@@ -141,7 +119,6 @@ namespace TheOtherRoles.Modules
                 picked = false;
                 timer = 0;
                 float maxTimer = CustomOptionHolder.draftModeTimeToChoose.getFloat();
-                string playerText = "";
                 while (timer < maxTimer || !picked) {
                     if (pickOrder.Count == 0)
                         break;
@@ -173,8 +150,6 @@ namespace TheOtherRoles.Modules
                         GameObject.Find("BackgroundLayer")?.SetActive(false);
 
                         // enable pick, wait for pick
-                        Color youColor = timer - (int)timer > 0.5 ? Color.red : Color.yellow;
-                        playerText = Helpers.cs(youColor, ModTranslation.getString("roleDraftYou") + "!");
                         // Available Roles:
                         List<RoleInfo> availableRoles = new();
                         foreach (RoleInfo roleInfo in RoleInfo.allRoleInfos) {
@@ -343,105 +318,41 @@ namespace TheOtherRoles.Modules
                         }
 
 
-                        if (GameObject.Find("RoleButton") == null) {
-                            SoundEffectsManager.play("timemasterShield");
-                            int i = 0;
-                            int buttonsPerRow = 4;
-                            int count = fixedRoleList.Count == 0 && availableRoles.Count > 1 ? availableRoles.Count + 1 : availableRoles.Count;
-                            int lastRow = count / buttonsPerRow;
-                            int buttonsInLastRow = count % buttonsPerRow;
-
-                            ActionButton createButton(string textToDisplay, Color color, float row, float col)
-                            {
-                                if (buttonsInLastRow != 0 && row == lastRow) {
-                                    col += (buttonsPerRow - buttonsInLastRow) / 2f;
-                                }
-                                // planned rows: maximum of 4, hence the following calculation for rows as well:
-                                row += (4 - lastRow - 1) / 2f;
-
-                                ActionButton actionButton = UnityEngine.Object.Instantiate(HudManager.Instance.KillButton, __instance.TeamTitle.transform);
-                                actionButton.gameObject.SetActive(true);
-                                actionButton.gameObject.name = "RoleButton";
-                                actionButton.transform.localPosition = new Vector3(-14.4f + col * 8f, -9f - row * 3f);
-                                actionButton.transform.localScale = new Vector3(2f, 2f);
-                                actionButton.SetCoolDown(0, 0);
-                                GameObject textHolder = new("textHolder");
-                                var text = textHolder.AddComponent<TMPro.TextMeshPro>();
-                                text.text = textToDisplay.Replace(" ", "\n");
-                                text.horizontalAlignment = TMPro.HorizontalAlignmentOptions.Center;
-                                text.fontSize = 5;
-                                textHolder.layer = actionButton.gameObject.layer;
-                                text.color = color;
-                                textHolder.transform.SetParent(actionButton.transform, false);
-                                textHolder.transform.localPosition = new Vector3(0, text.text.Contains("\n") ? -1.975f : -2.2f, -1);
-
-                                HudManager.Instance.StartCoroutine(Effects.Lerp(0.5f, new Action<float>((p) => {
-                                    actionButton.OverrideText("");
-                                })));
-                                buttons.Add(actionButton);
-
-                                return actionButton;
-                            }
-
-                            foreach (RoleInfo roleInfo in availableRoles) {
-                                float row = i / buttonsPerRow;
-                                float col = i % buttonsPerRow;
-
-                                var actionButton = createButton(roleInfo.name.Replace(" ", "\n"), roleInfo.color, row, col);
-
-                                PassiveButton button = actionButton.GetComponent<PassiveButton>();
-                                button.OnClick = new Button.ButtonClickedEvent();
-                                button.OnClick.AddListener((Action)(() => {
-                                    if (roleInfo.roleId == RoleId.Shifter)
-                                    {
+                        if (!RoleDraftWheel.IsOpen && !picked) {
+                            RoleDraftWheel.Build(availableRoles,
+                                fixedRoleList.Count == 0 && availableRoles.Count > 1 ? originalAvailable : null,
+                                maxTimer,
+                                roleInfo => {
+                                    if (roleInfo.roleId == RoleId.Shifter) {
                                         bool shifterIsNeutral = roleInfo == RoleInfo.chainshifter;
                                         Shifter.SetType.Invoke(shifterIsNeutral);
                                     }
                                     sendPick((byte)roleInfo.roleId, isSpecialRole: roleInfo == RoleInfo.niceshifter || roleInfo == RoleInfo.niceSwapper);
-                                }));
-                                i++;
-                            }
-
-                            // Create Random button
-                            if (fixedRoleList.Count == 0 && availableRoles.Count > 1)
-                            {
-                                float row = i / buttonsPerRow;
-                                float col = i % buttonsPerRow;
-
-                                var actionButton = createButton(ModTranslation.getString("roleDraftRandom"), Color.green, row, col);
-                                PassiveButton button = actionButton.GetComponent<PassiveButton>();
-                                button.OnClick = new Button.ButtonClickedEvent();
-                                button.OnClick.AddListener((Action)(() => {
+                                },
+                                () => {
                                     var randomRole = originalAvailable.OrderBy(_ => Guid.NewGuid()).First();
-                                    if (randomRole.roleId == RoleId.Shifter)
-                                    {
+                                    if (randomRole.roleId == RoleId.Shifter) {
                                         bool shifterIsNeutral = randomRole == RoleInfo.chainshifter;
                                         Shifter.SetType.Invoke(shifterIsNeutral);
                                     }
                                     sendPick((byte)randomRole.roleId, true, randomRole == RoleInfo.niceshifter || randomRole == RoleInfo.niceSwapper);
-                                }));
-                            }
+                                });
                         }
+                        RoleDraftWheel.Tick();
 
                     } else {
-                        int currentPick = alreadyPicked.Count + 1;
-                        playerText = string.Format(ModTranslation.getString("roleDraftAnonymousPlayer"), currentPick);
                         HudManager.Instance.FullScreen.color = Color.black;
                     }
-                    __instance.TeamTitle.text = $"{Helpers.cs(Color.white, $"<size=280%>{ModTranslation.getString("roleDraftWelcome")}</size>")}\n\n\n<size=200%> {ModTranslation.getString("roleDraftCurrent")}</size>\n\n\n<size=250%>{playerText}</size>";
-                    int waitMore = pickOrder.IndexOf(PlayerControl.LocalPlayer.PlayerId);
-                    string waitMoreText = "";
-                    if (waitMore > 0) {
-                        waitMoreText = $" ({string.Format(ModTranslation.getString("roleDraftTurns"), waitMore)})";
-                    }
-                   // __instance.TeamTitle.text += $"\n\n{waitMoreText}\n{string.Format(ModTranslation.getString("roleDraftRandomSelection"), (int)(maxTimer + 1 - timer))}\n {(SoundManager.MusicVolume > -80 ? ModTranslation.getString("roleDraftMusic") : "")}";
+                    RoleDraftStatus.SetAhead(pickOrder.IndexOf(PlayerControl.LocalPlayer.PlayerId));
                     yield return null;
                 }
             }
             HudManager.Instance.FullScreen.color = Color.black;
             __instance.FrontMost.gameObject.SetActive(true);
             GameObject.Find("BackgroundLayer")?.SetActive(true);
-            scroller.enabled = false;
+            __instance.TeamTitle.gameObject.SetActive(false);
+            RoleDraftWheel.Close(false);
+            RoleDraftStatus.Hide();
             if (AmongUsClient.Instance.AmHost)
             {
                 RoleManagerSelectRolesPatch.assignRoleTargets(null); // Assign targets for Lawyer & Prosecutor
@@ -483,32 +394,24 @@ namespace TheOtherRoles.Modules
                     if ((RoleId)roleId == RoleId.Swapper) roleInfo = RoleInfo.niceSwapper;
                     else if ((RoleId)roleId == RoleId.Shifter) roleInfo = RoleInfo.niceshifter;
                 }
-                string roleString = Helpers.cs(roleInfo.color, roleInfo.name);
-                int roleLength = roleInfo.name.Length;  // Not used for now, but stores the amount of charactes of the roleString.
+
                 bool localIsPlayer = playerId == PlayerControl.LocalPlayer.PlayerId;
+                string roleString = Helpers.cs(roleInfo.color, roleInfo.name);
                 string suffix = localIsPlayer ? $" ({Helpers.cs(roleInfo.color, roleInfo.name)})" : "";
-                if (!CustomOptionHolder.draftModeShowRoles.getBool()) {
+                if (!CustomOptionHolder.draftModeShowRoles.getBool())
                     roleString = ModTranslation.getString("roleDraftUnknown");
-                    roleLength = roleString.Length;
-                }                   
-                else if (CustomOptionHolder.draftModeHideImpRoles.getBool() && roleInfo.isImpostor) {
+                else if (CustomOptionHolder.draftModeHideImpRoles.getBool() && roleInfo.isImpostor)
                     roleString = Helpers.cs(Palette.ImpostorRed, ModTranslation.getString("roleDraftImpostor")) + suffix;
-                    roleLength = "Impostor Role".Length;
-                }                    
-                else if (CustomOptionHolder.draftModeHideNeutralRoles.getBool() && roleInfo.isNeutral) {
+                else if (CustomOptionHolder.draftModeHideNeutralRoles.getBool() && roleInfo.isNeutral)
                     roleString = Helpers.cs(Palette.Blue, ModTranslation.getString("roleDraftNeutral")) + suffix;
-                    roleLength = "Neutral Role".Length;
-                }
-                else if (CustomOptionHolder.draftModeHideCrewRoles.getBool() && !roleInfo.isImpostor && !roleInfo.isNeutral) {
+                else if (CustomOptionHolder.draftModeHideCrewRoles.getBool() && !roleInfo.isImpostor && !roleInfo.isNeutral)
                     roleString = Helpers.cs(Color.white, ModTranslation.getString("roleDraftCrewmate")) + suffix;
-                    roleLength = "Crewmate Role".Length;
-                }
-                roleString = isRandom ? Helpers.cs(Color.green, ModTranslation.getString("roleDraftRandom")) + suffix : roleString;
-                string line = $"{(localIsPlayer ? ModTranslation.getString("roleDraftYou") : alreadyPicked.Count)}:";
-                int spaceCount = Math.Max(0, 6 - line.Length);
-                line += string.Concat(Enumerable.Repeat(" ", spaceCount)) + roleString;
-                feedText.text += line + "\n";
-                scroller.ContentYBounds = new FloatRange(2f, 2f + feedText.text.Count(c => c == '\n') * 0.06f);
+                if (isRandom)
+                    roleString = Helpers.cs(Color.green, ModTranslation.getString("roleDraftRandom")) + suffix;
+
+                string who = localIsPlayer ? ModTranslation.getString("roleDraftYou") : alreadyPicked.Count.ToString();
+                SystemChat.Post($"{who}: {roleString}");
+
                 SoundEffectsManager.play("select");
             }
             catch (Exception e) { TheOtherRolesPlugin.Logger.LogError(e); }
@@ -526,12 +429,7 @@ namespace TheOtherRoles.Modules
             receivePick(PlayerControl.LocalPlayer.PlayerId, RoleId, isRandom, isSpecialRole);
 
             // destroy all the buttons:
-            foreach (var button in buttons)
-            {
-                if (button != null && button.gameObject != null)
-                    button?.gameObject?.Destroy();
-            }
-            buttons.Clear();
+            RoleDraftWheel.Close(true);
         }
 
 

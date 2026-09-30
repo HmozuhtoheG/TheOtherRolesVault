@@ -180,8 +180,17 @@ namespace TheOtherRoles.Patches
                     if (forceTargetPlayerId != byte.MaxValue)
                         exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => v.PlayerId == forceTargetPlayerId && !v.IsDead);
 
+                    Justice.HandleTie(__instance, ref exiled, ref tie, potentialExiled, out var justiceExtra);
+
                     // RPCVotingComplete
                     __instance.RpcVotingComplete(array, exiled, tie, false, 0);
+
+                    if (justiceExtra != null && AmongUsClient.Instance != null && AmongUsClient.Instance.AmHost) {
+                        MessageWriter justiceWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedExilePlayer, Hazel.SendOption.Reliable, -1);
+                        justiceWriter.Write(justiceExtra.PlayerId);
+                        AmongUsClient.Instance.FinishRpcImmediately(justiceWriter);
+                        RPCProcedure.uncheckedExilePlayer(justiceExtra.PlayerId);
+                    }
                 }
             }
 
@@ -1179,6 +1188,11 @@ namespace TheOtherRoles.Patches
             Kira.OnMeetingBegin();
             Kira.CreateMeetingButtons(__instance, addButtonGuide);
 
+            Justice.ClearButtons();
+            Justice.CreateMeetingButtons(__instance);
+            HiromiHiguruma.ClearButtons();
+            HiromiHiguruma.CreateMeetingButtons(__instance);
+
             // Add Godfather Reckoning Buttons
             Gambler.OnMeetingBegin();
             Godfather.ClearButtons();
@@ -1533,6 +1547,12 @@ namespace TheOtherRoles.Patches
                     Kira.UpdateButtons(__instance);
                     Kira.MaskMeetingNames(__instance);
                 }
+                if (PlayerControl.LocalPlayer.isRole(RoleId.Justice))
+                {
+                    Justice.UpdateButtons(__instance);
+                }
+                Justice.UpdateTimer(__instance);
+                HiromiHiguruma.Update();
             }
         }
 

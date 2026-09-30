@@ -146,9 +146,11 @@ namespace TheOtherRoles.Modules.Music
 
             lastResults = results;
             Notify(string.Format(ModTranslation.getString("musicSearchResult"), keyword));
+            string vipTag = "<color=#FF4D4D>" + ModTranslation.getString("musicVipRequired") + "</color>";
             for (int i = 0; i < results.Count; i++)
             {
-                Notify($"<color=#FFC864>[{i + 1}]</color> {results[i].Display}");
+                var song = results[i];
+                Notify($"<color=#FFC864>[{i + 1}]</color> {song.Display}{(song.RequiresVip ? " " + vipTag : "")}");
             }
             Notify(ModTranslation.getString("musicPickHint"));
         }

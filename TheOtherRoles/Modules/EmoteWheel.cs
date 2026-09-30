@@ -121,11 +121,11 @@ namespace TheOtherRoles.Modules
         {
             if (discSprite != null) return;
             float innerRatio = DeadZoneRadius / OuterRadius;
-            discSprite = ToSprite(GenerateRadialTexture(128, 0f, null));
-            ringSprite = ToSprite(GenerateRadialTexture(512, innerRatio, null));
-            wedgeSprite = ToSprite(GenerateRadialTexture(512, innerRatio, SliceAngle));
-            triangleRightSprite = ToSprite(GenerateTriangleTexture(64, true));
-            triangleLeftSprite = ToSprite(GenerateTriangleTexture(64, false));
+            discSprite = Helpers.ToSprite(Helpers.GenerateRadialTexture(128, 0f, null));
+            ringSprite = Helpers.ToSprite(Helpers.GenerateRadialTexture(512, innerRatio, null));
+            wedgeSprite = Helpers.ToSprite(Helpers.GenerateRadialTexture(512, innerRatio, SliceAngle));
+            triangleRightSprite = Helpers.ToSprite(GenerateTriangleTexture(64, true));
+            triangleLeftSprite = Helpers.ToSprite(GenerateTriangleTexture(64, false));
         }
 
         internal static void Open()
@@ -323,19 +323,9 @@ namespace TheOtherRoles.Modules
             }
         }
 
-        private static Sprite ToSprite(Texture2D tex) => Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
-
-        private static Texture2D NewTexture(int size)
-        {
-            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
-            tex.wrapMode = TextureWrapMode.Clamp;
-            tex.filterMode = FilterMode.Bilinear;
-            return tex;
-        }
-
         private static Texture2D GenerateTriangleTexture(int size, bool pointRight)
         {
-            var tex = NewTexture(size);
+            var tex = Helpers.NewTexture(size);
             var pixels = new Color32[size * size];
             for (int y = 0; y < size; y++)
             {
@@ -346,44 +336,6 @@ namespace TheOtherRoles.Modules
                     float halfWidth = 0.5f * (pointRight ? nx : 1f - nx);
                     float distance = halfWidth - Mathf.Abs(ny - 0.5f);
                     float a = Mathf.Clamp01(distance * size * 0.35f) * Mathf.Clamp01(0.92f - ny * 0.04f);
-                    pixels[y * size + x] = new Color(1f, 1f, 1f, a);
-                }
-            }
-            tex.SetPixels32(pixels);
-            tex.Apply();
-            return tex;
-        }
-
-        private static Texture2D GenerateRadialTexture(int size, float innerRatio, float? sliceAngleDeg)
-        {
-            var tex = NewTexture(size);
-            float r = size / 2f;
-            float innerR = r * innerRatio;
-            float half = sliceAngleDeg.HasValue ? sliceAngleDeg.Value * 0.5f : 0f;
-            const float feather = 2.5f;
-            var pixels = new Color32[size * size];
-            for (int y = 0; y < size; y++)
-            {
-                for (int x = 0; x < size; x++)
-                {
-                    float dx = x + 0.5f - r;
-                    float dy = y + 0.5f - r;
-                    float d = Mathf.Sqrt(dx * dx + dy * dy);
-
-                    bool inSlice = true;
-                    if (sliceAngleDeg.HasValue)
-                    {
-                        float angle = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg;
-                        inSlice = Mathf.Abs(Mathf.DeltaAngle(0f, angle)) <= half;
-                    }
-
-                    float a = 0f;
-                    if (d <= r && inSlice)
-                    {
-                        a = 1f;
-                        if (d > r - feather) a *= Mathf.Clamp01((r - d) / feather);
-                        if (innerRatio > 0f && d < innerR + feather) a *= Mathf.Clamp01((d - innerR) / feather);
-                    }
                     pixels[y * size + x] = new Color(1f, 1f, 1f, a);
                 }
             }

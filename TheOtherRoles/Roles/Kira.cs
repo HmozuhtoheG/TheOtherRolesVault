@@ -31,6 +31,11 @@ namespace TheOtherRoles.Roles
         public bool lockedThisMeeting;
         public PlayerControl selectedTarget;
 
+        public AchievementToken<int> acTokenObsession;
+
+        private static readonly Dictionary<string, IntegerDataEntry> obsessionEntries = [];
+        private static IntegerDataEntry obsessionBest;
+
         private static Sprite buttonSprite;
         private static Sprite writeSprite;
 
@@ -46,6 +51,37 @@ namespace TheOtherRoles.Roles
             writesLeft = 0;
             lockedThisMeeting = false;
             selectedTarget = null;
+            acTokenObsession = null;
+        }
+
+        public override void PostInit()
+        {
+            if (PlayerControl.LocalPlayer != player) return;
+            acTokenObsession ??= new("kira.obsession", 0, (val, _) => val);
+        }
+
+        public static void recordObsessionKill(PlayerControl victim)
+        {
+            if (victim == null || victim.Data == null) return;
+
+            string identity = !string.IsNullOrEmpty(victim.FriendCode) ? victim.FriendCode : victim.Data.PlayerName;
+            if (string.IsNullOrEmpty(identity)) return;
+
+            string key = identity.ComputeConstantHashAsString();
+            if (!obsessionEntries.TryGetValue(key, out var entry))
+            {
+                entry = new IntegerDataEntry("k." + key, TORAchievementManager.AchievementDataSaver, 0);
+                obsessionEntries[key] = entry;
+            }
+
+            entry.Value += 1;
+
+            obsessionBest ??= new IntegerDataEntry("k.best", TORAchievementManager.AchievementDataSaver, 0);
+            if (entry.Value <= obsessionBest.Value) return;
+
+            var kira = local;
+            if (kira != null && kira.acTokenObsession != null) kira.acTokenObsession.Value += entry.Value - obsessionBest.Value;
+            obsessionBest.Value = entry.Value;
         }
 
         public static Sprite getButtonSprite()
@@ -71,7 +107,7 @@ namespace TheOtherRoles.Roles
             && local != null
             && local.player == PlayerControl.LocalPlayer;
 
-        public static RemoteProcess<(byte kiraId, byte targetId, byte announcerId)> KillByNote = new("KiraKillByNote", (message, _) =>
+        public static RemoteProcess<(byte kiraId, byte targetId, byte announcerId)> KillByNote = new("KiraKillByNote", (message, __) =>
         {
             var kira = getRole(Helpers.playerById(message.kiraId));
             var target = Helpers.playerById(message.targetId);
@@ -93,7 +129,11 @@ namespace TheOtherRoles.Roles
             }
 
             if (PlayerControl.LocalPlayer == kira.player)
+            {
+                recordObsessionKill(target);
                 new CustomMessage(string.Format(ModTranslation.getString("kiraKillCount"), kira.kills, killsToWin), 3f);
+                if (hasWon) _ = new StaticAchievementToken("kira.challenge");
+            }
 
             if (AmongUsClient.Instance != null && AmongUsClient.Instance.AmHost && hasWon)
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.KiraWin, false);
@@ -258,11 +298,14 @@ namespace TheOtherRoles.Roles
 
             if (correct)
             {
+                _ = new StaticAchievementToken("kira.common1");
+
                 var announcer = randomAnnouncer(kira.player, target);
                 KillByNote.Invoke((kira.player.PlayerId, target.PlayerId, announcer != null ? announcer.PlayerId : byte.MaxValue));
             }
             else
             {
+                _ = new StaticAchievementToken("kira.another1");
                 if (!canContinueAfterFail) kira.lockedThisMeeting = true;
                 Helpers.showFlash(new Color(0.5f, 0.5f, 0.5f, 1f), 0.5f);
                 new CustomMessage(ModTranslation.getString("kiraWriteFail"), 3f);

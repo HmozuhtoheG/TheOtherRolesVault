@@ -129,7 +129,7 @@ namespace TheOtherRoles.Roles
             return lightningSprite;
         }
 
-        public static RemoteProcess<(byte zeusId, Vector2 position)> StrikeLightning = new("ZeusStrike", (message, _) =>
+        public static RemoteProcess<(byte zeusId, Vector2 position)> StrikeLightning = new("ZeusStrike", (message, __) =>
         {
             SpawnLightning(message.position);
 
@@ -145,6 +145,10 @@ namespace TheOtherRoles.Roles
                 if (Vector2.Distance(target.transform.position, message.position) > killRadius) continue;
                 victims.Add(target);
             }
+
+            _ = new StaticAchievementToken("zeus.common1");
+            if (victims.Count >= 2) _ = new StaticAchievementToken("zeus.another1");
+            if (victims.Count >= 3) _ = new StaticAchievementToken("zeus.challenge");
 
             foreach (var victim in victims)
             {

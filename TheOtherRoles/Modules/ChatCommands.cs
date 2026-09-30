@@ -249,7 +249,7 @@ namespace TheOtherRoles.Modules {
         [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
         public static class EnableChat {
             public static void Postfix(HudManager __instance) {
-                if (!__instance.Chat.isActiveAndEnabled && (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay || (Lovers.enableChat && PlayerControl.LocalPlayer.isLovers())))
+                if (!__instance.Chat.isActiveAndEnabled && (AmongUsClient.Instance.NetworkMode == NetworkModes.FreePlay || (Lovers.enableChat && PlayerControl.LocalPlayer.isLovers()) || RoleDraft.isRunning))
                     __instance.Chat.SetVisible(true);
             }
         }

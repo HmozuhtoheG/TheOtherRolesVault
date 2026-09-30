@@ -340,6 +340,13 @@ namespace TheOtherRoles.Patches {
                 var holder = Helpers.playerById(HotPotato.holderId);
                 if (holder != null && holder.Data != null && !holder.Data.IsDead) setPlayerNameColor(holder, HotPotato.color);
             }
+            if (HiromiHiguruma.executionTarget != byte.MaxValue)
+            {
+                var inmate = Helpers.playerById(HiromiHiguruma.executionTarget);
+                if (inmate != null && inmate.Data != null && !inmate.Data.IsDead)
+                    setPlayerNameColor(inmate, Color.yellow);
+            }
+
             // Crewmate roles with no changes: Mini
             // Impostor roles with no changes: Morphling, Camouflager, Vampire, Godfather, Eraser, Janitor, Cleaner, Warlock, BountyHunter,  Witch and Mafioso
         }
@@ -576,6 +583,8 @@ namespace TheOtherRoles.Patches {
                 enabled = false;
             else if (PlayerControl.LocalPlayer.isRole(RoleId.Workaholic))
                 enabled = false;
+            else if (PlayerControl.LocalPlayer.isRole(RoleId.Sniper))
+                enabled = Sniper.showKillButton;
 
             if (enabled) __instance.KillButton.Show();
             else __instance.KillButton.Hide();

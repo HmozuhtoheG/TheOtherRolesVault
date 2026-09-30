@@ -28,6 +28,7 @@ namespace TheOtherRoles.Roles
         public static readonly HashSet<int> painted = new();
         public static readonly Dictionary<byte, float> illusion = new();
         private static readonly Dictionary<byte, bool> hiddenByIllusion = new();
+        public static int painterVictims;
         private static GameObject illusionOverlay;
 
         public Painter()
@@ -53,7 +54,7 @@ namespace TheOtherRoles.Roles
             painted.Add(message.consoleIndex);
         });
 
-        public static RemoteProcess<(byte playerId, bool on)> SetIllusion = new("PainterIllusion", (message, _) =>
+        public static RemoteProcess<(byte playerId, bool on)> SetIllusion = new("PainterIllusion", (message, __) =>
         {
             var player = Helpers.playerById(message.playerId);
             if (player == null) return;
@@ -61,6 +62,13 @@ namespace TheOtherRoles.Roles
             if (message.on)
             {
                 illusion[player.PlayerId] = illusionDuration;
+
+                if (Painter.local != null && Painter.local.player == PlayerControl.LocalPlayer)
+                {
+                    _ = new StaticAchievementToken("painter.another1");
+                    painterVictims++;
+                    if (painterVictims >= 2) _ = new StaticAchievementToken("painter.challenge");
+                }
 
                 if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.PlayerId == player.PlayerId)
                 {
@@ -96,8 +104,12 @@ namespace TheOtherRoles.Roles
 
         private static string ConsoleLabel(Console console)
         {
-            string tasks = console.TaskTypes == null ? "" : string.Join(",", console.TaskTypes);
-            return $"{console.Room}  {tasks}";
+            var translator = TranslationController.Instance;
+            var tasks = new List<string>();
+            if (console.TaskTypes != null)
+                foreach (var taskType in console.TaskTypes) tasks.Add(translator.GetString(taskType));
+
+            return translator.GetString(console.Room) + "  " + string.Join(",", tasks);
         }
 
         public static void OpenTaskScreen()
@@ -136,6 +148,8 @@ namespace TheOtherRoles.Roles
             if (painter.usesLeft <= 0) return;
 
             painter.usesLeft--;
+
+            _ = new StaticAchievementToken("painter.common1");
             PaintTask.Invoke(((byte)consoleIndex, painter.player.PlayerId));
             CloseTaskScreen();
 
@@ -179,6 +193,7 @@ namespace TheOtherRoles.Roles
             CloseTaskScreen();
             RestoreVision();
             destroyUi();
+            painterVictims = 0;
         }
 
         private static void destroyUi()

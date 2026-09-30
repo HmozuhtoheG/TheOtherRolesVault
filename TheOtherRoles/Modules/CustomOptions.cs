@@ -1004,36 +1004,20 @@ namespace TheOtherRoles {
         public static bool Prefix(CreateOptionsPicker __instance)
         {
             // Set MaxImpostors values
-            int[] maxImpostors = Helpers.MaxImpostors;
-            LegacyGameOptions.MaxImpostors = maxImpostors;
-            NormalGameOptionsV10.MaxImpostors = maxImpostors;
-            NormalGameOptionsV09.MaxImpostors = maxImpostors;
-            NormalGameOptionsV08.MaxImpostors = maxImpostors;
-            NormalGameOptionsV07.MaxImpostors = maxImpostors;
+            LegacyGameOptions.MaxImpostors = Helpers.MaxImpostors;
+            SetNormalGameOptionsArray("MaxImpostors", Helpers.MaxImpostors);
 
             // Set RecommendedImpostors values
-            int[] recommendedImpostors = Helpers.RecommendedImpostors;
-            LegacyGameOptions.RecommendedImpostors = recommendedImpostors;
-            NormalGameOptionsV10.RecommendedImpostors = recommendedImpostors;
-            NormalGameOptionsV09.RecommendedImpostors = recommendedImpostors;
-            NormalGameOptionsV08.RecommendedImpostors = recommendedImpostors;
-            NormalGameOptionsV07.RecommendedImpostors = recommendedImpostors;
+            LegacyGameOptions.RecommendedImpostors = Helpers.RecommendedImpostors;
+            SetNormalGameOptionsArray("RecommendedImpostors", Helpers.RecommendedImpostors);
 
             // Set RecommendedKillCooldown values
-            int[] recommendedKillCooldown = Helpers.RecommendedKillCooldown;
-            LegacyGameOptions.RecommendedKillCooldown = recommendedKillCooldown;
-            NormalGameOptionsV10.RecommendedKillCooldown = recommendedKillCooldown;
-            NormalGameOptionsV09.RecommendedKillCooldown = recommendedKillCooldown;
-            NormalGameOptionsV08.RecommendedKillCooldown = recommendedKillCooldown;
-            NormalGameOptionsV07.RecommendedKillCooldown = recommendedKillCooldown;
+            LegacyGameOptions.RecommendedKillCooldown = Helpers.RecommendedKillCooldown;
+            SetNormalGameOptionsArray("RecommendedKillCooldown", Helpers.RecommendedKillCooldown);
 
             // Set MinPlayers values
-            int[] minPlayers = Helpers.MinPlayers;
-            LegacyGameOptions.MinPlayers = minPlayers;
-            NormalGameOptionsV10.MinPlayers = minPlayers;
-            NormalGameOptionsV09.MinPlayers = minPlayers;
-            NormalGameOptionsV08.MinPlayers = minPlayers;
-            NormalGameOptionsV07.MinPlayers = minPlayers;
+            LegacyGameOptions.MinPlayers = Helpers.MinPlayers;
+            SetNormalGameOptionsArray("MinPlayers", Helpers.MinPlayers);
 
             DataManager.Settings.Multiplayer.LastPlayedGameMode = AmongUs.GameOptions.GameModes.Normal;
             DataManager.Settings.Save();
@@ -1042,6 +1026,16 @@ namespace TheOtherRoles {
             __instance.gameObject.AddComponent<CreateGameOptionsTORBehaviour>();
 
             return false;
+        }
+
+        private static void SetNormalGameOptionsArray(string fieldName, int[] value)
+        {
+            foreach (string version in Helpers.OptionSchemaVersions)
+            {
+                var type = AccessTools.TypeByName("AmongUs.GameOptions.NormalGameOptions" + version);
+                if (type == null) continue;
+                AccessTools.Field(type, fieldName)?.SetValue(null, value);
+            }
         }
     }
 

@@ -77,7 +77,10 @@ public class Sheriff : RoleBase<Sheriff>
                 if (protector != null && protector.player != null && protector.player.PlayerId != killer.PlayerId)
                 {
                     if (PlayerControl.LocalPlayer == protector.player)
+                    {
+                        _ = new StaticAchievementToken("auxiliary.another1");
                         new CustomMessage(string.Format(ModTranslation.getString("auxiliarySacrifice"), target.Data.PlayerName), 4f);
+                    }
                     if (PlayerControl.LocalPlayer == killer)
                         new CustomMessage(ModTranslation.getString("auxiliarySacrificeSheriff"), 4f);
 

@@ -245,7 +245,7 @@ public static class HelpMenu
         inner = scrollView.Artifact;
         Reference<MetaContextOld.ScrollView.InnerScreen> innerRef = new();
 
-        screen.SetContext(scrollView, RoleHelpers.GetIllustration(roleInfo.roleId), out _);
+        screen.SetContext(scrollView, RoleHelpers.GetIllustration(roleInfo), out _);
         return screen;
     }
 
@@ -332,7 +332,7 @@ public static class HelpMenu
                 {
                     screen.SetContext(GetRoleContext(role), out _);
                     outsideScreen.ClearBackImage();
-                    outsideScreen.SetBackImage(RoleHelpers.GetIllustration(role.roleId), 0.2f);
+                    outsideScreen.SetBackImage(RoleHelpers.GetIllustration(role), 0.2f);
                 });
             }, RoleTitleAttrUnmasked)
             {
@@ -349,7 +349,7 @@ public static class HelpMenu
 
         widget.Append(new MetaContextOld.WrappedContext(scrollView));
 
-        backImage = RoleHelpers.GetIllustration(assignable.roleId);
+        backImage = RoleHelpers.GetIllustration(assignable);
 
         return widget;
     }
@@ -596,7 +596,7 @@ public static class HelpMenu
         context.Add(new TORGUIText(GUIAlignment.Left, gui.GetAttribute(AttributeAsset.OverlayTitle), new RawTextComponent(Helpers.cs(assignable.orgColor, assignable.name))));
         context.Add(new TORGUIText(GUIAlignment.Left, gui.GetAttribute(AttributeAsset.OverlayContent), new RawTextComponent(assignable.blurb)));
 
-        return new VerticalContextsHolder(GUIAlignment.Left, context) { BackImage = RoleHelpers.GetIllustration(assignable.roleId) };
+        return new VerticalContextsHolder(GUIAlignment.Left, context) { BackImage = RoleHelpers.GetIllustration(assignable) };
     }
 
     static public GUIContext GetAchievementContext(RoleInfo assignable)
@@ -742,7 +742,11 @@ public static class HelpMenu
                 { RoleId.EvilVoteEater, CustomOptionHolder.voteEaterSpawnRate },
                 { RoleId.PoliceCommissioner, CustomOptionHolder.policeCommissionerSpawnRate },
                 { RoleId.Gojo, CustomOptionHolder.gojoSpawnRate },
+                { RoleId.YutaOkkotsu, CustomOptionHolder.yutaSpawnRate },
+                { RoleId.KashimoHajime, CustomOptionHolder.kashimoSpawnRate },
+                { RoleId.Ambusher, CustomOptionHolder.ambusherSpawnRate },
                 { RoleId.Sukuna, CustomOptionHolder.sukunaSpawnRate },
+                { RoleId.ZeninNaoya, CustomOptionHolder.zeninNaoyaSpawnRate },
                 { RoleId.Martyr, CustomOptionHolder.martyrSpawnRate },
                 { RoleId.Kira, CustomOptionHolder.kiraSpawnRate },
                 { RoleId.Illusionist, CustomOptionHolder.illusionistSpawnRate },
@@ -750,6 +754,10 @@ public static class HelpMenu
                 { RoleId.Painter, CustomOptionHolder.painterSpawnRate },
                 { RoleId.Aoi, CustomOptionHolder.aoiSpawnRate },
                 { RoleId.Itadori, CustomOptionHolder.itadoriSpawnRate },
+                { RoleId.Justice, CustomOptionHolder.justiceSpawnRate },
+                { RoleId.HiromiHiguruma, CustomOptionHolder.hiromiSpawnRate },
+                { RoleId.Sniper, CustomOptionHolder.sniperSpawnRate },
+                { RoleId.Archwitch, CustomOptionHolder.archwitchSpawnRate },
                 { RoleId.Agnosia, CustomOptionHolder.agnosiaSpawnRate },
                 { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate },
                 { RoleId.Sprinter, CustomOptionHolder.sprinterSpawnRate },
@@ -808,7 +816,8 @@ public static class HelpMenu
             ("foxWin", Fox.color, ["foxWinCondHint"], CustomOptionHolder.foxSpawnRate),
             ("gremlinWin", Gremlin.color, ["gremlinWinCondHint"], CustomOptionHolder.gremlinSpawnRate),
             ("playerRoleWin", PlayerRole.color, ["playerRoleWinCondHint"], CustomOptionHolder.playerRoleSpawnRate),
-            ("kiraWin", Kira.color, ["kiraWinCondHint"], CustomOptionHolder.kiraSpawnRate)
+            ("kiraWin", Kira.color, ["kiraWinCondHint"], CustomOptionHolder.kiraSpawnRate),
+            ("kashimoWin", KashimoHajime.color, ["kashimoWinCondHint"], CustomOptionHolder.kashimoSpawnRate)
         ];
     }
 

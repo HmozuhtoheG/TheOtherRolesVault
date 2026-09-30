@@ -162,6 +162,16 @@ namespace TheOtherRoles
         Painter,
         Aoi,
         Itadori,
+        Justice,
+        HiromiHiguruma,
+        Sniper,
+        Archwitch,
+        ZeninNaoya,
+        YutaOkkotsu,
+        KashimoHajime,
+        Ambusher,
+
+        HeavenlyRestriction,
     }
 
     enum CustomRPC
@@ -759,6 +769,8 @@ namespace TheOtherRoles
             SurveillanceMinigamePatch.nightVisionOverlays = null;
             EventUtility.clearAndReload();
             RoleDraft.isRunning = false;
+            RoleDraftWheel.Close(false);
+            RoleDraftStatus.Hide();
         }
 
     public static void HandleShareOptions(byte numberOfOptions, MessageReader reader) {
@@ -863,6 +875,9 @@ namespace TheOtherRoles
                     break;
                 case RoleId.Armored:
                     Armored.armored = player;
+                    break;
+                case RoleId.HeavenlyRestriction:
+                    HeavenlyRestriction.players.Add(player);
                     break;
                 case RoleId.Multitasker:
                     Multitasker.multitasker.Add(player);

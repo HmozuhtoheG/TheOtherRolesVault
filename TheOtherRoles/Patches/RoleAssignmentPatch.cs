@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
+using System.Reflection;
 using AmongUs.GameOptions;
 using TheOtherRoles.Utilities;
 using static TheOtherRoles.TheOtherRoles;
@@ -12,8 +13,16 @@ using TheOtherRoles.Modules;
 using TheOtherRoles.Roles;
 
 namespace TheOtherRoles.Patches {
-    [HarmonyPatch(typeof(RoleOptionsCollectionV10), nameof(RoleOptionsCollectionV10.GetNumPerGame))]
+    [HarmonyPatch]
     class RoleOptionsDataGetNumPerGamePatch{
+        static IEnumerable<MethodBase> TargetMethods() {
+            foreach (string version in Helpers.OptionSchemaVersions) {
+                var type = AccessTools.TypeByName("AmongUs.GameOptions.RoleOptionsCollection" + version);
+                if (type == null) continue;
+                var method = AccessTools.Method(type, "GetNumPerGame");
+                if (method != null) yield return method;
+            }
+        }
         public static void Postfix(ref int __result) {
             if (GameOptionsManager.Instance.CurrentGameOptions.GameMode == GameModes.Normal) __result = 0; // Deactivate Vanilla Roles if the mod roles are active
         }
@@ -202,6 +211,9 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.Agnosia, CustomOptionHolder.agnosiaSpawnRate.data);
             impSettings.Add((byte)RoleId.VoidEater, CustomOptionHolder.voidEaterSpawnRate.data);
             impSettings.Add((byte)RoleId.Sukuna, CustomOptionHolder.sukunaSpawnRate.data);
+            impSettings.Add((byte)RoleId.ZeninNaoya, CustomOptionHolder.zeninNaoyaSpawnRate.data);
+            impSettings.Add((byte)RoleId.Ambusher, CustomOptionHolder.ambusherSpawnRate.data);
+            impSettings.Add((byte)RoleId.Sniper, CustomOptionHolder.sniperSpawnRate.data);
 
             neutralSettings.Add((byte)RoleId.Kira, CustomOptionHolder.kiraSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Itadori, CustomOptionHolder.itadoriSpawnRate.data);
@@ -229,6 +241,9 @@ namespace TheOtherRoles.Patches {
             neutralSettings.Add((byte)RoleId.PlayerRole, CustomOptionHolder.playerRoleSpawnRate.data);
 
             crewSettings.Add((byte)RoleId.PoliceCommissioner, CustomOptionHolder.policeCommissionerSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Justice, CustomOptionHolder.justiceSpawnRate.data);
+            crewSettings.Add((byte)RoleId.HiromiHiguruma, CustomOptionHolder.hiromiSpawnRate.data);
+            crewSettings.Add((byte)RoleId.Archwitch, CustomOptionHolder.archwitchSpawnRate.data);
             crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.data);
             crewSettings.Add((byte)RoleId.Portalmaker, CustomOptionHolder.portalmakerSpawnRate.data);
             crewSettings.Add((byte)RoleId.Engineer, CustomOptionHolder.engineerSpawnRate.data);
@@ -260,6 +275,8 @@ namespace TheOtherRoles.Patches {
             crewSettings.Add((byte)RoleId.SecurityGuard, CustomOptionHolder.securityGuardSpawnRate.data);
             crewSettings.Add((byte)RoleId.Energyamplifier, CustomOptionHolder.energyAmplifierSpawnRate.data);
             crewSettings.Add((byte)RoleId.Gojo, CustomOptionHolder.gojoSpawnRate.data);
+            crewSettings.Add((byte)RoleId.YutaOkkotsu, CustomOptionHolder.yutaSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.KashimoHajime, CustomOptionHolder.kashimoSpawnRate.data);
             crewSettings.Add((byte)RoleId.Martyr, CustomOptionHolder.martyrSpawnRate.data);
 
             return new RoleAssignmentData {
@@ -1079,6 +1096,9 @@ namespace TheOtherRoles.Patches {
                     break;
                 case RoleId.Armored:
                     selection = CustomOptionHolder.modifierArmored.getSelection();
+                    break;
+                case RoleId.HeavenlyRestriction:
+                    selection = CustomOptionHolder.modifierHeavenlyRestriction.getSelection();
                     break;
                 case RoleId.Racer:
                     selection = CustomOptionHolder.modifierRacer.getSelection();

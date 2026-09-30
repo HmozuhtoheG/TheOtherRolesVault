@@ -4832,7 +4832,8 @@
         "0": "Host set API to {0}",
         "13": "\u623f\u4e3b\u5df2\u8bbe\u7f6e\u63a5\u53e3\u5730\u5740\uff1a{0}",
         "14": "\u623f\u4e3b\u5df2\u8a2d\u5b9a\u4ecb\u9762\u4f4d\u5740\uff1a{0}"
-    },    "enableSoundEffects": {
+    },
+    "enableSoundEffects": {
         "0": "Enable Sound Effects",
         "11": "\u7279\u6b8a\u30b5\u30a6\u30f3\u30c9\u3092\u6709\u52b9\u5316",
         "13": "\u4f7f\u7528\u7279\u6b8a\u58f0\u6548",
@@ -13431,8 +13432,8 @@
     },
     "emoteImportButton": {
         "0": "Import Emote Files",
-        "13": "导入表情包",
-        "14": "匯入表情包"
+        "13": "\u5bfc\u5165\u8868\u60c5\u5305",
+        "14": "\u532f\u5165\u8868\u60c5\u5305"
     },
     "hintHelpInGameDetail": {
         "0": "You can press key H to view the descriptions of your role in the game.\nYou may also use your scroller if your description is too long.",
@@ -15614,77 +15615,66 @@
         "13": "\u70eb\u624b\u5c71\u828b\u7ed3\u675f",
         "14": "\u71d9\u624b\u5c71\u828b\u7d50\u675f"
     },
-
     "zeus": {
         "0": "Zeus",
         "11": "\u30bc\u30a6\u30b9",
         "13": "\u5b99\u65af",
         "14": "\u5b99\u65af"
     },
-
     "zeusIntroDesc": {
         "0": "The sky answers to me.",
         "11": "\u7a7a\u306e\u96f7\u306f\u3001\u79c1\u304c\u843d\u3068\u3057\u3066\u3044\u308b\u3002",
         "13": "\u5929\u4e0a\u90a3\u9053\u96f7\uff0c\u662f\u6211\u8ba9\u5b83\u843d\u7684\u3002",
         "14": "\u5929\u4e0a\u90a3\u9053\u96f7\uff0c\u662f\u6211\u8b93\u5b83\u843d\u7684\u3002"
     },
-
     "zeusShortDesc": {
         "0": "Open the admin map from anywhere and call lightning down on anyone.",
         "11": "\u3069\u3053\u304b\u3089\u3067\u3082\u30a2\u30c9\u30df\u30f3\u30de\u30c3\u30d7\u3092\u958b\u304d\u3001\u597d\u304d\u306a\u5834\u6240\u306b\u96f7\u3092\u843d\u3068\u3059\u3002",
         "13": "\u53ef\u8fdc\u7a0b\u6253\u5f00\u7ba1\u7406\u53f0\uff0c\u5728\u5730\u56fe\u4e0a\u70b9\u54ea\u91cc\u5c31\u5f80\u54ea\u91cc\u843d\u96f7\u3002",
         "14": "\u53ef\u9060\u7aef\u6253\u958b\u7ba1\u7406\u53f0\uff0c\u5728\u5730\u5716\u4e0a\u9ede\u54ea\u88e1\u5c31\u5f80\u54ea\u88e1\u843d\u96f7\u3002"
     },
-
     "zeusFullDesc": {
         "0": "<title>Faction</title>Impostor.\n<title>Ability</title>Press <var>F</var> to open the admin map from anywhere. Click a spot on it and lightning comes down right there - whoever is hit dies instantly, your own teammates included.\n<title>Cooldown</title>Close the map without striking: <var>%CCD%s</var>. Strike: <var>%CD%s</var>. Strike radius <var>%RADIUS%</var>.\n<title>Notes</title>Lightning ignores every shield. You cannot use the map during a meeting.",
         "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u80fd\u529b</title><var>F</var> \u3067\u3069\u3053\u304b\u3089\u3067\u3082\u30a2\u30c9\u30df\u30f3\u30de\u30c3\u30d7\u3092\u958b\u3051\u307e\u3059\u3002\u30de\u30c3\u30d7\u4e0a\u306e\u597d\u304d\u306a\u5834\u6240\u3092\u30af\u30ea\u30c3\u30af\u3059\u308b\u3068\u3001\u305d\u3053\u306b\u96f7\u304c\u843d\u3061\u3001\u5f53\u305f\u3063\u305f\u4eba\u306f\u5373\u6b7b\u3057\u307e\u3059\u2014\u2014\u5473\u65b9\u306e\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3082\u542b\u307f\u307e\u3059\u3002\n<title>\u30af\u30fc\u30eb\u30c0\u30a6\u30f3</title>\u843d\u3068\u3055\u305a\u306b\u9589\u3058\u305f\u5834\u5408\uff1a<var>%CCD%s</var>\u3002\u843d\u96f7\uff1a<var>%CD%s</var>\u3002\u843d\u96f7\u534a\u5f84 <var>%RADIUS%</var>\u3002\n<title>\u6ce8\u610f</title>\u96f7\u306f\u3042\u3089\u3086\u308b\u30b7\u30fc\u30eb\u30c9\u3092\u7121\u8996\u3057\u307e\u3059\u3002\u4f1a\u8b70\u4e2d\u306f\u4f7f\u3048\u307e\u305b\u3093\u3002",
         "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var> \u53ef\u4ee5\u8fdc\u7a0b\u6253\u5f00\u7ba1\u7406\u53f0\u5730\u56fe\u3002\u5728\u5730\u56fe\u4e0a\u70b9\u4e00\u5904\uff0c\u90a3\u4e2a\u4f4d\u7f6e\u5c31\u4f1a\u964d\u4e0b\u95ea\u7535\uff1b\u88ab\u5288\u5230\u7684\u4eba\u7acb\u5373\u6b7b\u4ea1\uff0c\u5305\u62ec\u4f60\u81ea\u5df1\u7684\u961f\u53cb\u3002\n<title>\u51b7\u5374</title>\u5173\u6389\u5730\u56fe\u4e0d\u843d\u96f7\uff1a<var>%CCD%s</var>\uff1b\u843d\u4e0b\u95ea\u7535\uff1a<var>%CD%s</var>\u3002\u843d\u96f7\u534a\u5f84 <var>%RADIUS%</var>\u3002\n<title>\u6ce8\u610f</title>\u95ea\u7535\u65e0\u89c6\u4e00\u5207\u62a4\u76fe\u3002\u4f1a\u8bae\u4e2d\u65e0\u6cd5\u4f7f\u7528\u3002",
         "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6280\u80fd</title>\u6309 <var>F</var> \u53ef\u4ee5\u9060\u7aef\u6253\u958b\u7ba1\u7406\u53f0\u5730\u5716\u3002\u5728\u5730\u5716\u4e0a\u9ede\u4e00\u8655\uff0c\u90a3\u500b\u4f4d\u7f6e\u5c31\u6703\u964d\u4e0b\u9583\u96fb\uff1b\u88ab\u5288\u5230\u7684\u4eba\u7acb\u5373\u6b7b\u4ea1\uff0c\u5305\u62ec\u4f60\u81ea\u5df1\u7684\u968a\u53cb\u3002\n<title>\u51b7\u537b</title>\u95dc\u6389\u5730\u5716\u4e0d\u843d\u96f7\uff1a<var>%CCD%s</var>\uff1b\u843d\u4e0b\u9583\u96fb\uff1a<var>%CD%s</var>\u3002\u843d\u96f7\u534a\u5f91 <var>%RADIUS%</var>\u3002\n<title>\u6ce8\u610f</title>\u9583\u96fb\u7121\u8996\u4e00\u5207\u8b77\u76fe\u3002\u6703\u8b70\u4e2d\u7121\u6cd5\u4f7f\u7528\u3002"
     },
-
     "zeusBlurb": {
         "0": "Borrowed from a certain god. He wants it back.",
         "11": "\u3068\u3042\u308b\u795e\u304b\u3089\u501f\u308a\u305f\u96f7\u3002\u8fd4\u3057\u3066\u307b\u3057\u305d\u3046\u306b\u3057\u3066\u3044\u308b\u3002",
         "13": "\u4ece\u67d0\u4f4d\u795e\u90a3\u513f\u501f\u6765\u7684\u3002\u4ed6\u8fd8\u60f3\u8981\u56de\u53bb\u3002",
         "14": "\u5f9e\u67d0\u4f4d\u795e\u90a3\u5152\u501f\u4f86\u7684\u3002\u4ed6\u9084\u60f3\u8981\u56de\u53bb\u3002"
     },
-
     "zeusStrike": {
         "0": "Lightning",
         "11": "\u843d\u96f7",
         "13": "\u843d\u96f7",
         "14": "\u843d\u96f7"
     },
-
     "zeusStrikeHint": {
         "0": "Press F to open the map, then click a spot to strike it.",
         "11": "F \u3067\u30de\u30c3\u30d7\u3092\u958b\u304d\u3001\u30af\u30ea\u30c3\u30af\u3057\u305f\u5834\u6240\u306b\u96f7\u3092\u843d\u3068\u3057\u307e\u3059\u3002",
         "13": "\u6309 F \u6253\u5f00\u5730\u56fe\uff0c\u70b9\u54ea\u91cc\u5c31\u5f80\u54ea\u91cc\u843d\u96f7\u3002",
         "14": "\u6309 F \u6253\u958b\u5730\u5716\uff0c\u9ede\u54ea\u88e1\u5c31\u5f80\u54ea\u88e1\u843d\u96f7\u3002"
     },
-
     "zeusStrikeCooldown": {
         "0": "Strike cooldown",
         "11": "\u843d\u96f7\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
         "13": "\u843d\u96f7\u51b7\u5374",
         "14": "\u843d\u96f7\u51b7\u537b"
     },
-
     "zeusCancelCooldown": {
         "0": "Cancel cooldown",
         "11": "\u30ad\u30e3\u30f3\u30bb\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
         "13": "\u53d6\u6d88\u51b7\u5374",
         "14": "\u53d6\u6d88\u51b7\u537b"
     },
-
     "zeusKillRadius": {
         "0": "Strike radius",
         "11": "\u843d\u96f7\u534a\u5f84",
         "13": "\u843d\u96f7\u534a\u5f84",
         "14": "\u843d\u96f7\u534a\u5f91"
     },
-
     "roleSummaryZeusStruck": {
         "0": " - struck by lightning from {0}",
         "11": " - {0} \u306e\u96f7\u306b\u6483\u305f\u308c\u305f",
@@ -15912,5 +15902,1757 @@
         "11": "\u6355\u98df\u8ddd\u96e2",
         "13": "\u5403\u624b\u6307\u8ddd\u79bb",
         "14": "\u5403\u624b\u6307\u8ddd\u96e2"
+    },
+    "justice": {
+        "0": "Justice",
+        "11": "\u5927\u795e\u5b98",
+        "13": "\u5927\u795e\u5b98",
+        "14": "\u5927\u795e\u5b98"
+    },
+    "justiceIntroDesc": {
+        "0": "The scales weigh. They do not judge.",
+        "11": "\u5929\u79e4\u306f\u91cd\u3055\u3092\u91cf\u308b\u3060\u3051\u3060\u3002\u5584\u60aa\u306f\u91cf\u308c\u306a\u3044\u3002",
+        "13": "\u5929\u5e73\u53ea\u8ba4\u91cd\u91cf\uff0c\u4e0d\u8ba4\u5bf9\u9519\u3002",
+        "14": "\u5929\u5e73\u53ea\u8a8d\u91cd\u91cf\uff0c\u4e0d\u8a8d\u5c0d\u932f\u3002"
+    },
+    "justiceShortDesc": {
+        "0": "Open a judgement: everyone may only vote between two players, and a tie exiles both.",
+        "11": "\u5be9\u5224\u4f1a\u8b70\u3092\u958b\u304d\u3001\u4e8c\u4eba\u306b\u3057\u304b\u6295\u7968\u3067\u304d\u306a\u304f\u3059\u308b\u3002\u540c\u7968\u306a\u3089\u4e8c\u4eba\u3068\u3082\u8ffd\u653e\u3002",
+        "13": "\u5f00\u542f\u5ba1\u5224\u4f1a\u8bae\uff0c\u53ea\u80fd\u7ed9\u4e24\u540d\u73a9\u5bb6\u6295\u7968\uff0c\u5e73\u7968\u5219\u4e00\u8d77\u653e\u9010\u3002",
+        "14": "\u958b\u555f\u5be9\u5224\u6703\u8b70\uff0c\u53ea\u80fd\u7d66\u5169\u540d\u73a9\u5bb6\u6295\u7968\uff0c\u5e73\u7968\u5247\u4e00\u8d77\u653e\u9010\u3002"
+    },
+    "justiceFullDesc": {
+        "0": "<title>Faction</title>Crewmate.\n<title>Judgement</title>In a meeting every player gets an extra button. Click two of them to open a judgement: everyone can then only vote between those two.\n<title>Verdict</title>If the two end up tied, both are exiled together.\n<title>Confrontation</title>With confrontation mode on, one click is enough - that player faces you.\n<title>Limit</title>Once per game. A judgement lasts <var>%TIME%s</var>.",
+        "11": "<title>\u9663\u55b6</title>\u30af\u30eb\u30fc\u3002\n<title>\u5be9\u5224</title>\u4f1a\u8b70\u4e2d\u3001\u5404\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u8ffd\u52a0\u30dc\u30bf\u30f3\u304c\u4ed8\u304f\u3002\u4e8c\u4eba\u3092\u30af\u30ea\u30c3\u30af\u3059\u308b\u3068\u5be9\u5224\u4f1a\u8b70\u304c\u59cb\u307e\u308a\u3001\u5168\u54e1\u305d\u306e\u4e8c\u4eba\u306b\u3057\u304b\u6295\u7968\u3067\u304d\u306a\u3044\u3002\n<title>\u88c1\u5b9a</title>\u4e8c\u4eba\u306e\u7968\u304c\u4e26\u3093\u3060\u5834\u5408\u3001\u4e8c\u4eba\u3068\u3082\u8ffd\u653e\u3055\u308c\u308b\u3002\n<title>\u5bfe\u6c7a</title>\u5bfe\u6c7a\u30e2\u30fc\u30c9\u304c\u6709\u52b9\u306a\u3089\u3001\u4e00\u4eba\u30af\u30ea\u30c3\u30af\u3059\u308b\u3060\u3051\u3067\u305d\u306e\u76f8\u624b\u3068\u81ea\u5206\u306e\u5bfe\u6c7a\u306b\u306a\u308b\u3002\n<title>\u5236\u9650</title>1\u8a66\u5408\u306b1\u56de\u306e\u307f\u3002\u5be9\u5224\u4f1a\u8b70\u306f <var>%TIME%s</var> \u7d9a\u304f\u3002",
+        "13": "<title>\u9635\u8425</title>\u8239\u5458\u3002\n<title>\u5ba1\u5224</title>\u4f1a\u8bae\u4e2d\u6bcf\u540d\u73a9\u5bb6\u65c1\u4f1a\u591a\u51fa\u4e00\u4e2a\u6309\u94ae\uff0c\u70b9\u4e24\u540d\u73a9\u5bb6\u5373\u53ef\u5f00\u542f\u5ba1\u5224\u4f1a\u8bae\uff1a\u5168\u573a\u53ea\u80fd\u5728\u4e24\u4eba\u4e4b\u95f4\u6295\u7968\u3002\n<title>\u88c1\u5b9a</title>\u5982\u679c\u4e24\u4eba\u7968\u6570\u76f8\u540c\uff0c\u4ed6\u4eec\u4f1a\u88ab\u4e00\u8d77\u653e\u9010\u3002\n<title>\u5bf9\u5cd9</title>\u623f\u4e3b\u5f00\u542f\u5bf9\u5cd9\u6a21\u5f0f\u540e\u53ea\u9700\u70b9\u4e00\u540d\u73a9\u5bb6\uff0c\u5c31\u662f\u4ed6\u4e0e\u4f60\u7684\u5bf9\u51b3\u3002\n<title>\u9650\u5236</title>\u6bcf\u573a\u6e38\u620f\u53ea\u80fd\u7528\u4e00\u6b21\uff1b\u5ba1\u5224\u4f1a\u8bae\u9650\u65f6 <var>%TIME%s</var>\u3002",
+        "14": "<title>\u9663\u71df</title>\u8239\u54e1\u3002\n<title>\u5be9\u5224</title>\u6703\u8b70\u4e2d\u6bcf\u540d\u73a9\u5bb6\u65c1\u6703\u591a\u51fa\u4e00\u500b\u6309\u9215\uff0c\u9ede\u5169\u540d\u73a9\u5bb6\u5373\u53ef\u958b\u555f\u5be9\u5224\u6703\u8b70\uff1a\u5168\u5834\u53ea\u80fd\u5728\u5169\u4eba\u4e4b\u9593\u6295\u7968\u3002\n<title>\u88c1\u5b9a</title>\u5982\u679c\u5169\u4eba\u7968\u6578\u76f8\u540c\uff0c\u4ed6\u5011\u6703\u88ab\u4e00\u8d77\u653e\u9010\u3002\n<title>\u5c0d\u5cd9</title>\u623f\u4e3b\u958b\u555f\u5c0d\u5cd9\u6a21\u5f0f\u5f8c\u53ea\u9700\u9ede\u4e00\u540d\u73a9\u5bb6\uff0c\u5c31\u662f\u4ed6\u8207\u4f60\u7684\u5c0d\u6c7a\u3002\n<title>\u9650\u5236</title>\u6bcf\u5834\u904a\u6232\u53ea\u80fd\u7528\u4e00\u6b21\uff1b\u5be9\u5224\u6703\u8b70\u9650\u6642 <var>%TIME%s</var>\u3002"
+    },
+    "justiceBlurb": {
+        "0": "He says he is not judging anyone. He is just reading the scales.",
+        "11": "\u5f7c\u306f\u88c1\u3044\u3066\u3044\u308b\u306e\u3067\u306f\u306a\u3044\u3002\u5929\u79e4\u3092\u8aad\u3093\u3067\u3044\u308b\u3060\u3051\u3060\u3002",
+        "13": "\u4ed6\u8bf4\u4ed6\u4e0d\u662f\u5728\u88c1\u51b3\uff0c\u53ea\u662f\u5728\u8bfb\u5929\u5e73\u3002",
+        "14": "\u4ed6\u8aaa\u4ed6\u4e0d\u662f\u5728\u88c1\u6c7a\uff0c\u53ea\u662f\u5728\u8b80\u5929\u5e73\u3002"
+    },
+    "justicePutOnBalance": {
+        "0": "Confrontation mode",
+        "11": "\u5bfe\u6c7a\u30e2\u30fc\u30c9",
+        "13": "\u5bf9\u5cd9\u6a21\u5f0f",
+        "14": "\u5c0d\u5cd9\u6a21\u5f0f"
+    },
+    "justiceMeetingTime": {
+        "0": "Judgement duration",
+        "11": "\u5be9\u5224\u306e\u9577\u3055",
+        "13": "\u5ba1\u5224\u65f6\u957f",
+        "14": "\u5be9\u5224\u6642\u9577"
+    },
+    "justiceMeetingTitle": {
+        "0": "Which Will Be Exiled?",
+        "11": "\u4eca\u3001\u5fc3\u3092\u6c7a\u3081\u3088\uff01",
+        "13": "\u8bf7\u9009\u62e9\u4f60\u5fc3\u4e2d\u7684\u76ee\u6807\uff01",
+        "14": "\u8acb\u9078\u64c7\u4f60\u5fc3\u4e2d\u7684\u76ee\u6a19\uff01"
+    },
+    "hiromiHiguruma": {
+        "0": "Hiromi Higuruma",
+        "11": "\u65e5\u8eca\u5bdb\u898b",
+        "13": "\u65e5\u8f66\u5bbd\u89c1",
+        "14": "\u65e5\u8eca\u5bec\u898b"
+    },
+    "hiromiHigurumaIntroDesc": {
+        "0": "The guilty must be judged. That is all.",
+        "11": "\u6709\u7f6a\u306f\u88c1\u304b\u306d\u3070\u306a\u3089\u306a\u3044\u3002\u305d\u308c\u3060\u3051\u3060\u3002",
+        "13": "\u6709\u7f6a\u8005\u5fc5\u987b\u88ab\u5ba1\u5224\uff0c\u4ec5\u6b64\u800c\u5df2\u3002",
+        "14": "\u6709\u7f6a\u8005\u5fc5\u9808\u88ab\u5be9\u5224\uff0c\u50c5\u6b64\u800c\u5df2\u3002"
+    },
+    "hiromiHigurumaShortDesc": {
+        "0": "Open a trial in a meeting: judge one player and sentence them.",
+        "11": "\u4f1a\u8b70\u3067\u88c1\u5224\u3092\u958b\u304d\u3001\u4e00\u4eba\u3092\u88c1\u3044\u3066\u5224\u6c7a\u3092\u4e0b\u3059\u3002",
+        "13": "\u5728\u4f1a\u8bae\u4e0a\u5f00\u5ead\uff0c\u5ba1\u5224\u4e00\u540d\u73a9\u5bb6\u5e76\u5ba3\u5224\u3002",
+        "14": "\u5728\u6703\u8b70\u4e0a\u958b\u5ead\uff0c\u5be9\u5224\u4e00\u540d\u73a9\u5bb6\u4e26\u5ba3\u5224\u3002"
+    },
+    "hiromiHigurumaFullDesc": {
+        "0": "<title>Faction</title>Crewmate.\n<title>Trial</title>In a meeting every player gets a trial button. Confirm twice to drag them into the domain <b>Ryomen: Capital Punishment</b>. While the trial lasts, all voting and all abilities aimed at the defendant are void.\n<title>Charges</title>The court reads out the defendant's real deeds this game - murders, sabotages, vents, ability uses, tasks. A defendant with a clean record is handed three fabricated charges instead.\n<title>Verdict</title>The sentence follows those real deeds. The defendant has <var>%TIME%s</var> to <b>confess</b>, <b>deny</b> or <b>stay silent</b>; silence on timeout. Confessing aggravates the sentence by one tier.\n<title>Sentence</title>Guilty / Death, Guilty / Forfeit, or Not guilty. The meeting's votes are voided either way.\n<title>Uses</title><var>%USES%</var> per game.",
+        "11": "<title>\u9663\u55b6</title>\u30af\u30eb\u30fc\u30e1\u30a4\u30c8\u3002\n<title>\u88c1\u5224</title>\u4f1a\u8b70\u4e2d\u3001\u5404\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u88c1\u5224\u30dc\u30bf\u30f3\u304c\u51fa\u73fe\u3059\u308b\u3002\u4e8c\u5ea6\u62bc\u3057\u3067\u78ba\u5b9a\u3057\u3001\u76f8\u624b\u3092\u9818\u57df<b>\u8a85\u4f0f\u8cdc\u6b7b</b>\u3078\u5f15\u304d\u305a\u308a\u8fbc\u3080\u3002\u88c1\u5224\u306e\u9593\u3001\u6295\u7968\u3068\u88ab\u544a\u3078\u306e\u80fd\u529b\u306f\u3059\u3079\u3066\u7121\u52b9\u3002\n<title>\u7f6a\u72b6</title>\u6cd5\u5ef7\u306f\u88ab\u544a\u306e\u3053\u306e\u8a66\u5408\u306e\u5b9f\u969b\u306e\u7f6a\u72b6\uff08\u6bba\u4eba\u30fb\u59a8\u5bb3\u30fb\u901a\u6c17\u53e3\u30fb\u80fd\u529b\u4f7f\u7528\u30fb\u30bf\u30b9\u30af\uff09\u3092\u8aad\u307f\u4e0a\u3052\u308b\u3002\u7f6a\u72b6\u304c\u4e00\u3064\u3082\u7121\u3044\u88ab\u544a\u306b\u306f\u3001\u4ee3\u308f\u308a\u306b\u4e09\u3064\u306e\u3067\u3063\u3061\u4e0a\u3052\u306e\u7f6a\u72b6\u304c\u8a00\u3044\u6e21\u3055\u308c\u308b\u3002\n<title>\u5224\u6c7a</title>\u5224\u6c7a\u306f\u305d\u306e\u5b9f\u969b\u306e\u7f6a\u72b6\u306b\u5f93\u3046\u3002\u88ab\u544a\u306f <var>%TIME%s</var> \u306e\u9593\u306b<b>\u81ea\u767d</b>\u30fb<b>\u5426\u8a8d</b>\u30fb<b>\u9ed9\u79d8</b>\u3092\u9078\u3076\u3002\u6642\u9593\u5207\u308c\u306f\u9ed9\u79d8\u3002\u81ea\u767d\u306f\u5211\u3092\u4e00\u6bb5\u968e\u91cd\u304f\u3059\u308b\u3002\n<title>\u8a00\u3044\u6e21\u3057</title>\u6709\u7f6a\u30fb\u6b7b\u5211\uff0f\u6709\u7f6a\u30fb\u6ca1\u53ce\uff0f\u7121\u7f6a\u3002\u3044\u305a\u308c\u306e\u5834\u5408\u3082\u4eca\u56de\u306e\u6295\u7968\u306f\u7121\u52b9\u3068\u306a\u308b\u3002\n<title>\u56de\u6570</title>1\u8a66\u5408\u306b\u3064\u304d <var>%USES%</var> \u56de\u3002",
+        "13": "<title>\u9635\u8425</title>\u8239\u5458\u3002\n<title>\u5ba1\u5224</title>\u4f1a\u8bae\u4e2d\u6bcf\u540d\u73a9\u5bb6\u65c1\u51fa\u73b0\u5ba1\u5224\u6309\u94ae\uff0c\u4e24\u6b21\u70b9\u51fb\u786e\u8ba4\u540e\u5c06\u5bf9\u65b9\u62d6\u5165\u9886\u57df<b>\u8bdb\u4f0f\u8d50\u6b7b</b>\u3002\u5ba1\u5224\u671f\u95f4\u5168\u573a\u6295\u7968\u4e0e\u9488\u5bf9\u88ab\u544a\u7684\u6280\u80fd\u4e00\u5f8b\u65e0\u6548\u3002\n<title>\u7f6a\u72b6</title>\u6cd5\u5ead\u5ba3\u8bfb\u88ab\u544a\u672c\u5c40\u7684\u5b9e\u9645\u7f6a\u884c\u2014\u2014\u51fb\u6740\u3001\u7834\u574f\u3001\u8df3\u7ba1\u9053\u3001\u4f7f\u7528\u6280\u80fd\u3001\u5b8c\u6210\u4efb\u52a1\u3002\u672c\u5c40\u6ca1\u6709\u4efb\u4f55\u7f6a\u884c\u7684\u88ab\u544a\uff0c\u4f1a\u88ab\u7f57\u7ec7\u4e09\u9879\u83ab\u987b\u6709\u7684\u7f6a\u540d\u3002\n<title>\u5224\u51b3</title>\u5224\u51b3\u4f9d\u636e\u8fd9\u4e9b\u5b9e\u9645\u7f6a\u884c\u3002\u88ab\u544a\u53ef\u5728 <var>%TIME%s</var> \u5185<b>\u8ba4\u7f6a</b>\u3001<b>\u5426\u5b9a</b>\u6216<b>\u6c89\u9ed8</b>\uff1b\u8d85\u65f6\u89c6\u4e3a\u6c89\u9ed8\u3002\u8ba4\u7f6a\u4f1a\u52a0\u91cd\u4e00\u6863\u3002\n<title>\u5ba3\u5224</title>\u6709\u7f6a\u3001\u6b7b\u5211 / \u6709\u7f6a\u3001\u6ca1\u6536 / \u65e0\u7f6a\u3002\u672c\u8f6e\u4f1a\u8bae\u6295\u7968\u4e00\u5f8b\u4f5c\u5e9f\u3002\n<title>\u6b21\u6570</title>\u6bcf\u5c40 <var>%USES%</var> \u6b21\u3002",
+        "14": "<title>\u9663\u71df</title>\u8239\u54e1\u3002\n<title>\u5be9\u5224</title>\u6703\u8b70\u4e2d\u6bcf\u540d\u73a9\u5bb6\u65c1\u51fa\u73fe\u5be9\u5224\u6309\u9215\uff0c\u5169\u6b21\u9ede\u64ca\u78ba\u8a8d\u5f8c\u5c07\u5c0d\u65b9\u62d6\u5165\u9818\u57df<b>\u8a85\u4f0f\u8cdc\u6b7b</b>\u3002\u5be9\u5224\u671f\u9593\u5168\u5834\u6295\u7968\u8207\u91dd\u5c0d\u88ab\u544a\u7684\u6280\u80fd\u4e00\u5f8b\u7121\u6548\u3002\n<title>\u7f6a\u72c0</title>\u6cd5\u5ead\u5ba3\u8b80\u88ab\u544a\u672c\u5c40\u7684\u5be6\u969b\u7f6a\u884c\u2014\u2014\u64ca\u6bba\u3001\u7834\u58de\u3001\u8df3\u7ba1\u9053\u3001\u4f7f\u7528\u6280\u80fd\u3001\u5b8c\u6210\u4efb\u52d9\u3002\u672c\u5c40\u6c92\u6709\u4efb\u4f55\u7f6a\u884c\u7684\u88ab\u544a\uff0c\u6703\u88ab\u7f85\u7e54\u4e09\u9805\u83ab\u9808\u6709\u7684\u7f6a\u540d\u3002\n<title>\u5224\u6c7a</title>\u5224\u6c7a\u4f9d\u64da\u9019\u4e9b\u5be6\u969b\u7f6a\u884c\u3002\u88ab\u544a\u53ef\u5728 <var>%TIME%s</var> \u5167<b>\u8a8d\u7f6a</b>\u3001<b>\u5426\u5b9a</b>\u6216<b>\u6c89\u9ed8</b>\uff1b\u8d85\u6642\u8996\u70ba\u6c89\u9ed8\u3002\u8a8d\u7f6a\u6703\u52a0\u91cd\u4e00\u6a94\u3002\n<title>\u5ba3\u5224</title>\u6709\u7f6a\u3001\u6b7b\u5211 / \u6709\u7f6a\u3001\u6c92\u6536 / \u7121\u7f6a\u3002\u672c\u8f2a\u6703\u8b70\u6295\u7968\u4e00\u5f8b\u4f5c\u5ee2\u3002\n<title>\u6b21\u6578</title>\u6bcf\u5c40 <var>%USES%</var> \u6b21\u3002"
+    },
+    "hiromiHigurumaBlurb": {
+        "0": "He is not judging you. He is only reading the law.",
+        "11": "\u5f7c\u306f\u88c1\u3044\u3066\u3044\u308b\u306e\u3067\u306f\u306a\u3044\u3002\u6cd5\u3092\u8aad\u3093\u3067\u3044\u308b\u3060\u3051\u3060\u3002",
+        "13": "\u4ed6\u4e0d\u662f\u5728\u5ba1\u5224\u4f60\uff0c\u53ea\u662f\u5728\u5ff5\u6cd5\u6761\u3002",
+        "14": "\u4ed6\u4e0d\u662f\u5728\u5be9\u5224\u4f60\uff0c\u53ea\u662f\u5728\u5ff5\u6cd5\u689d\u3002"
+    },
+    "hiromiUses": {
+        "0": "Uses Per Game",
+        "11": "1\u8a66\u5408\u306e\u56de\u6570",
+        "13": "\u6bcf\u5c40\u4f7f\u7528\u6b21\u6570",
+        "14": "\u6bcf\u5c40\u4f7f\u7528\u6b21\u6578"
+    },
+    "hiromiTrialTime": {
+        "0": "Trial Time",
+        "11": "\u88c1\u5224\u306e\u5236\u9650\u6642\u9593",
+        "13": "\u5ba1\u5224\u9650\u65f6",
+        "14": "\u5be9\u5224\u9650\u6642"
+    },
+    "hiromiDeathThreshold": {
+        "0": "Death Penalty Threshold",
+        "11": "\u6b7b\u5211\u306e\u3057\u304d\u3044\u5024",
+        "13": "\u6b7b\u5211\u9608\u503c",
+        "14": "\u6b7b\u5211\u95be\u503c"
+    },
+    "hiromiForfeitThreshold": {
+        "0": "Forfeit Threshold",
+        "11": "\u6ca1\u53ce\u306e\u3057\u304d\u3044\u5024",
+        "13": "\u6ca1\u6536\u9608\u503c",
+        "14": "\u6c92\u6536\u95be\u503c"
+    },
+    "hiromiForfeitRounds": {
+        "0": "Forfeit Duration",
+        "11": "\u6ca1\u53ce\u306e\u4f1a\u8b70\u6570",
+        "13": "\u6ca1\u6536\u56de\u5408\u6570",
+        "14": "\u6c92\u6536\u56de\u5408\u6578"
+    },
+    "hiromiTrialConfirm": {
+        "0": "Send {0} to the courtroom?",
+        "11": "{0}\u3092\u6cd5\u5ef7\u3078\u9001\u308a\u307e\u3059\u304b\uff1f",
+        "13": "\u5c06{0}\u9001\u4e0a\u6cd5\u5ead\uff1f",
+        "14": "\u5c07{0}\u9001\u4e0a\u6cd5\u5ead\uff1f"
+    },
+    "hiromiTrialYes": {
+        "0": "Yes",
+        "11": "\u306f\u3044",
+        "13": "\u662f",
+        "14": "\u662f"
+    },
+    "hiromiTrialNo": {
+        "0": "No",
+        "11": "\u3044\u3044\u3048",
+        "13": "\u5426",
+        "14": "\u5426"
+    },
+    "hiromiCrimeHeader": {
+        "0": "Defendant: {0}",
+        "11": "\u88ab\u544a: {0}",
+        "13": "\u88ab\u544a\uff1a{0}",
+        "14": "\u88ab\u544a\uff1a{0}"
+    },
+    "hiromiCrimeNone": {
+        "0": "No crimes recorded.",
+        "11": "\u8a18\u9332\u3055\u308c\u305f\u7f6a\u72b6\u306f\u306a\u3044\u3002",
+        "13": "\u6ca1\u6709\u8bb0\u5f55\u5230\u4efb\u4f55\u7f6a\u884c\u3002",
+        "14": "\u6c92\u6709\u8a18\u9304\u5230\u4efb\u4f55\u7f6a\u884c\u3002"
+    },
+    "hiromiCrimeScore": {
+        "0": "Crime score: {0}",
+        "11": "\u7f6a\u72b6\u30dd\u30a4\u30f3\u30c8: {0}",
+        "13": "\u7f6a\u884c\u5206\uff1a{0}",
+        "14": "\u7f6a\u884c\u5206\uff1a{0}"
+    },
+    "hiromiCrimeKill": {
+        "0": "Murder x{0}",
+        "11": "\u6bba\u4eba x{0}",
+        "13": "\u51fb\u6740 x{0}",
+        "14": "\u64ca\u6bba x{0}"
+    },
+    "hiromiCrimeSabotage": {
+        "0": "Sabotage x{0}",
+        "11": "\u59a8\u5bb3 x{0}",
+        "13": "\u7834\u574f x{0}",
+        "14": "\u7834\u58de x{0}"
+    },
+    "hiromiCrimeVent": {
+        "0": "Venting x{0}",
+        "11": "\u901a\u6c17\u53e3 x{0}",
+        "13": "\u8df3\u7ba1\u9053 x{0}",
+        "14": "\u8df3\u7ba1\u9053 x{0}"
+    },
+    "hiromiCrimeAbility": {
+        "0": "Ability use x{0}",
+        "11": "\u80fd\u529b\u4f7f\u7528 x{0}",
+        "13": "\u4f7f\u7528\u6280\u80fd x{0}",
+        "14": "\u4f7f\u7528\u6280\u80fd x{0}"
+    },
+    "hiromiCrimeTask": {
+        "0": "Tasks x{0}",
+        "11": "\u30bf\u30b9\u30af x{0}",
+        "13": "\u5b8c\u6210\u4efb\u52a1 x{0}",
+        "14": "\u5b8c\u6210\u4efb\u52d9 x{0}"
+    },
+    "hiromiTrialTimeLeft": {
+        "0": "Time left: {0}",
+        "11": "\u6b8b\u308a\u6642\u9593: {0}",
+        "13": "\u5269\u4f59\u65f6\u95f4\uff1a{0}",
+        "14": "\u5269\u9918\u6642\u9593\uff1a{0}"
+    },
+    "hiromiWaitingChoice": {
+        "0": "Awaiting the defendant's answer...",
+        "11": "\u88ab\u544a\u306e\u56de\u7b54\u3092\u5f85\u3063\u3066\u3044\u308b\u2026\u2026",
+        "13": "\u7b49\u5f85\u88ab\u544a\u56de\u7b54\u2026\u2026",
+        "14": "\u7b49\u5f85\u88ab\u544a\u56de\u7b54\u2026\u2026"
+    },
+    "hiromiChoiceConfess": {
+        "0": "Confess",
+        "11": "\u81ea\u767d",
+        "13": "\u8ba4\u7f6a",
+        "14": "\u8a8d\u7f6a"
+    },
+    "hiromiChoiceDeny": {
+        "0": "Deny",
+        "11": "\u5426\u8a8d",
+        "13": "\u5426\u5b9a",
+        "14": "\u5426\u5b9a"
+    },
+    "hiromiChoiceSilence": {
+        "0": "Silence",
+        "11": "\u9ed9\u79d8",
+        "13": "\u6c89\u9ed8",
+        "14": "\u6c89\u9ed8"
+    },
+    "hiromiAnnounceConfess": {
+        "0": "{0} confessed.",
+        "11": "{0}\u306f\u81ea\u767d\u3057\u305f\u3002",
+        "13": "{0} \u8ba4\u7f6a\u3002",
+        "14": "{0} \u8a8d\u7f6a\u3002"
+    },
+    "hiromiAnnounceDeny": {
+        "0": "{0} denied the charges.",
+        "11": "{0}\u306f\u5426\u8a8d\u3057\u305f\u3002",
+        "13": "{0} \u5426\u5b9a\u3002",
+        "14": "{0} \u5426\u5b9a\u3002"
+    },
+    "hiromiAnnounceSilence": {
+        "0": "{0} remained silent.",
+        "11": "{0}\u306f\u9ed9\u79d8\u3057\u305f\u3002",
+        "13": "{0} \u4fdd\u6301\u6c89\u9ed8\u3002",
+        "14": "{0} \u4fdd\u6301\u6c89\u9ed8\u3002"
+    },
+    "hiromiVerdictIntro": {
+        "0": "The final verdict is -",
+        "11": "\u6700\u7d42\u5224\u6c7a\u306f\u2014\u2014",
+        "13": "\u6700\u7ec8\u5224\u51b3\u4e3a\u2014\u2014",
+        "14": "\u6700\u7d42\u5224\u6c7a\u70ba\u2014\u2014"
+    },
+    "hiromiVerdictDeath": {
+        "0": "Guilty. Death.",
+        "11": "\u6709\u7f6a\u3001\u6b7b\u5211\u3002",
+        "13": "\u6709\u7f6a\u3001\u6b7b\u5211\u3002",
+        "14": "\u6709\u7f6a\u3001\u6b7b\u5211\u3002"
+    },
+    "hiromiVerdictForfeit": {
+        "0": "Guilty. Forfeit.",
+        "11": "\u6709\u7f6a\u3001\u6ca1\u53ce\u3002",
+        "13": "\u6709\u7f6a\u3001\u6ca1\u6536\u3002",
+        "14": "\u6709\u7f6a\u3001\u6c92\u6536\u3002"
+    },
+    "hiromiVerdictInnocent": {
+        "0": "Not guilty.",
+        "11": "\u7121\u7f6a\u3002",
+        "13": "\u65e0\u7f6a\u3002",
+        "14": "\u7121\u7f6a\u3002"
+    },
+    "hiromiForfeitNotice": {
+        "0": "Your abilities were forfeited for {0} meeting(s).",
+        "11": "\u80fd\u529b\u3092{0}\u4f1a\u8b70\u5206\u6ca1\u53ce\u3055\u308c\u305f\u3002",
+        "13": "\u4f60\u7684\u6280\u80fd\u88ab\u6ca1\u6536 {0} \u4e2a\u56de\u5408\u3002",
+        "14": "\u4f60\u7684\u6280\u80fd\u88ab\u6c92\u6536 {0} \u500b\u56de\u5408\u3002"
+    },
+    "hiromiSwordText": {
+        "0": "Executioner's Sword",
+        "11": "\u51e6\u5211\u4eba\u306e\u5263",
+        "13": "\u5904\u5211\u4eba\u4e4b\u5251",
+        "14": "\u8655\u5211\u4eba\u4e4b\u528d"
+    },
+    "hiromiCharge1": {
+        "0": "Contempt of court",
+        "11": "\u4e0d\u656c",
+        "13": "\u4e0d\u656c",
+        "14": "\u4e0d\u656c"
+    },
+    "hiromiCharge2": {
+        "0": "Abuse of authority",
+        "11": "\u8d8a\u6a29",
+        "13": "\u8d8a\u6743",
+        "14": "\u8d8a\u6b0a"
+    },
+    "hiromiCharge3": {
+        "0": "Collusion",
+        "11": "\u5bc6\u901a",
+        "13": "\u79c1\u901a",
+        "14": "\u79c1\u901a"
+    },
+    "hiromiCharge4": {
+        "0": "Dereliction of duty",
+        "11": "\u61c8\u6020",
+        "13": "\u61c8\u6020",
+        "14": "\u61c8\u6020"
+    },
+    "hiromiCharge5": {
+        "0": "Presumption",
+        "11": "\u50ed\u8d8a",
+        "13": "\u50ed\u8d8a",
+        "14": "\u50ed\u8d8a"
+    },
+    "hiromiCharge6": {
+        "0": "Perjury",
+        "11": "\u507d\u8a3c",
+        "13": "\u4f2a\u8bc1",
+        "14": "\u507d\u8b49"
+    },
+    "hiromiCharge7": {
+        "0": "Falsehood",
+        "11": "\u4e0d\u5b9f",
+        "13": "\u4e0d\u5b9e",
+        "14": "\u4e0d\u5be6"
+    },
+    "hiromiCharge8": {
+        "0": "Concealment",
+        "11": "\u96a0\u533f",
+        "13": "\u9690\u533f",
+        "14": "\u96b1\u533f"
+    },
+    "sniper": {
+        "0": "Sniper",
+        "11": "\u72d9\u6483\u624b",
+        "13": "\u72d9\u51fb\u624b",
+        "14": "\u72d9\u64ca\u624b"
+    },
+    "sniperIntroDesc": {
+        "0": "One shot. You only get one chance to make it count.",
+        "11": "\u4e00\u767a\u3002\u5916\u3057\u305f\u3089\u7d42\u308f\u308a\u3060\u3002",
+        "13": "\u4e00\u67aa\u3002\u6253\u4e0d\u4e2d\u5c31\u6ca1\u4e0b\u6b21\u4e86\u3002",
+        "14": "\u4e00\u69cd\u3002\u6253\u4e0d\u4e2d\u5c31\u6c92\u4e0b\u6b21\u4e86\u3002"
+    },
+    "sniperShortDesc": {
+        "0": "Equip a rifle and snipe through walls along the aim line.",
+        "11": "\u30e9\u30a4\u30d5\u30eb\u3092\u69cb\u3048\u3001\u7167\u6e96\u7dda\u4e0a\u306e\u6575\u3092\u58c1\u3092\u8cab\u3044\u3066\u72d9\u6483\u3059\u308b\u3002",
+        "13": "\u638f\u51fa\u72d9\u51fb\u67aa\uff0c\u6cbf\u7784\u51c6\u7ebf\u9694\u5899\u72d9\u6740\u3002",
+        "14": "\u638f\u51fa\u72d9\u64ca\u69cd\uff0c\u6cbf\u77c4\u6e96\u7dda\u9694\u7246\u72d9\u6bba\u3002"
+    },
+    "sniperFullDesc": {
+        "0": "<title>Faction</title>Impostor.\n<title>Equip</title>Press <var>F</var> to draw or stow the rifle. Others can see it while it is out.\n<title>Snipe</title>With the rifle out the <b>kill button</b> becomes the trigger - the shot follows your cursor and sweeps a corridor <var>%RANGE%</var> long and <var>%SIZE%</var> wide, <b>ignoring walls</b>.\n<title>Report</title>Players within <var>%SOUND%</var> of the shot see an arrow pointing at you.\n<title>Cooldown</title><var>%CD%s</var> after every shot.",
+        "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u6b66\u88c5</title><var>F</var>\u3067\u30e9\u30a4\u30d5\u30eb\u3092\u51fa\u3059\u30fb\u76f4\u3059\u3002\u51fa\u3057\u3066\u3044\u308b\u9593\u306f\u4ed6\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u304b\u3089\u3082\u898b\u3048\u308b\u3002\n<title>\u72d9\u6483</title>\u30e9\u30a4\u30d5\u30eb\u3092\u51fa\u3059\u3068<b>\u30ad\u30eb\u30dc\u30bf\u30f3</b>\u304c\u767a\u70ae\u30dc\u30bf\u30f3\u306b\u306a\u308b\u3002\u767a\u70ae\u65b9\u5411\u306f\u30de\u30a6\u30b9\u306e\u5148\u3002\u5c04\u7a0b <var>%RANGE%</var>\u3001\u5e45 <var>%SIZE%</var> \u306e\u5e2f\u3092\u8d70\u308a\u3001<b>\u58c1\u3092\u8cab\u304f</b>\u3002\n<title>\u9283\u58f0</title>\u767a\u70ae\u6642\u3001<var>%SOUND%</var> \u4ee5\u5185\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u306b\u81ea\u5206\u3092\u6307\u3059\u77e2\u5370\u304c\u51fa\u308b\u3002\n<title>\u30af\u30fc\u30eb\u30c0\u30a6\u30f3</title>1\u767a\u3054\u3068\u306b <var>%CD%s</var>\u3002",
+        "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6b66\u88c5</title>\u6309 <var>F</var> \u638f\u51fa\u6216\u85cf\u533f\u72d9\u51fb\u67aa\uff0c\u638f\u51fa\u65f6\u5176\u4ed6\u73a9\u5bb6\u80fd\u770b\u5230\u4f60\u7684\u67aa\u3002\n<title>\u72d9\u51fb</title>\u638f\u51fa\u67aa\u540e<b>\u51fb\u6740\u952e</b>\u53d8\u4e3a\u5f00\u67aa\uff0c\u65b9\u5411\u4e3a\u9f20\u6807\u671d\u5411\u3002\u5b50\u5f39\u6cbf\u67aa\u53e3\u626b\u4e00\u6761\u957f <var>%RANGE%</var>\u3001\u5bbd <var>%SIZE%</var> \u7684\u8d70\u5eca\uff0c<b>\u65e0\u89c6\u5899\u58c1</b>\u3002\n<title>\u67aa\u58f0</title>\u5f00\u67aa\u65f6 <var>%SOUND%</var> \u8303\u56f4\u5185\u7684\u73a9\u5bb6\u4f1a\u770b\u5230\u6307\u5411\u4f60\u7684\u7bad\u5934\u3002\n<title>\u51b7\u5374</title>\u6bcf\u6b21\u5c04\u51fb\u540e <var>%CD%s</var>\u3002",
+        "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6b66\u88dd</title>\u6309 <var>F</var> \u638f\u51fa\u6216\u85cf\u533f\u72d9\u64ca\u69cd\uff0c\u638f\u51fa\u6642\u5176\u4ed6\u73a9\u5bb6\u80fd\u770b\u5230\u4f60\u7684\u69cd\u3002\n<title>\u72d9\u64ca</title>\u638f\u51fa\u69cd\u5f8c<b>\u64ca\u6bba\u9375</b>\u8b8a\u70ba\u958b\u69cd\uff0c\u65b9\u5411\u70ba\u9f20\u6a19\u671d\u5411\u3002\u5b50\u5f48\u6cbf\u69cd\u53e3\u6383\u4e00\u689d\u9577 <var>%RANGE%</var>\u3001\u5bec <var>%SIZE%</var> \u7684\u8d70\u5eca\uff0c<b>\u7121\u8996\u7246\u58c1</b>\u3002\n<title>\u69cd\u8072</title>\u958b\u69cd\u6642 <var>%SOUND%</var> \u7bc4\u570d\u5167\u7684\u73a9\u5bb6\u6703\u770b\u5230\u6307\u5411\u4f60\u7684\u7bad\u982d\u3002\n<title>\u51b7\u537b</title>\u6bcf\u6b21\u5c04\u64ca\u5f8c <var>%CD%s</var>\u3002"
+    },
+    "sniperBlurb": {
+        "0": "One bullet, one verdict.",
+        "11": "\u4e00\u767a\u3067\u6c7a\u3081\u308b\u3002",
+        "13": "\u4e00\u9897\u5b50\u5f39\uff0c\u4e00\u4e2a\u5b9a\u8bba\u3002",
+        "14": "\u4e00\u9846\u5b50\u5f48\uff0c\u4e00\u500b\u5b9a\u8ad6\u3002"
+    },
+    "sniperCooldown": {
+        "0": "Snipe Cooldown",
+        "11": "\u72d9\u6483\u306e\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u72d9\u51fb\u51b7\u5374\u65f6\u95f4",
+        "14": "\u72d9\u64ca\u51b7\u537b\u6642\u9593"
+    },
+    "sniperShotSize": {
+        "0": "Bullet Width",
+        "11": "\u5f3e\u4e38\u306e\u5e45",
+        "13": "\u5b50\u5f39\u5bbd\u5ea6",
+        "14": "\u5b50\u5f48\u5bec\u5ea6"
+    },
+    "sniperRange": {
+        "0": "Effective Range",
+        "11": "\u6709\u52b9\u5c04\u7a0b",
+        "13": "\u6709\u6548\u5c04\u7a0b",
+        "14": "\u6709\u6548\u5c04\u7a0b"
+    },
+    "sniperNoticeRange": {
+        "0": "Gunshot Hearing Range",
+        "11": "\u9283\u58f0\u306e\u805e\u3053\u3048\u308b\u7bc4\u56f2",
+        "13": "\u67aa\u58f0\u53ef\u542c\u8303\u56f4",
+        "14": "\u69cd\u8072\u53ef\u807d\u7bc4\u570d"
+    },
+    "sniperStoreOnFire": {
+        "0": "Stow Rifle After Firing",
+        "11": "\u767a\u70ae\u5f8c\u306b\u30e9\u30a4\u30d5\u30eb\u3092\u76f4\u3059",
+        "13": "\u5c04\u51fb\u540e\u81ea\u52a8\u6536\u67aa",
+        "14": "\u5c04\u64ca\u5f8c\u81ea\u52d5\u6536\u69cd"
+    },
+    "sniperCanKillImpostor": {
+        "0": "Can Kill Impostors",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u72d9\u3048\u308b",
+        "13": "\u53ef\u4ee5\u51fb\u6740\u5185\u9b3c",
+        "14": "\u53ef\u4ee5\u64ca\u6bba\u5167\u9b3c"
+    },
+    "sniperCanKillHiding": {
+        "0": "Can Shoot Players In Vents",
+        "11": "\u30d9\u30f3\u30c8\u5185\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u72d9\u3048\u308b",
+        "13": "\u53ef\u4ee5\u5c04\u6740\u901a\u98ce\u53e3\u5185\u73a9\u5bb6",
+        "14": "\u53ef\u4ee5\u5c04\u6bba\u901a\u98a8\u53e3\u5167\u73a9\u5bb6"
+    },
+    "sniperAimAssist": {
+        "0": "Aim Assist Line",
+        "11": "\u30a8\u30a4\u30e0\u88dc\u52a9\u7dda",
+        "13": "\u77c4\u51c6\u8f85\u52a9\u7ebf",
+        "14": "\u77c4\u6e96\u8f14\u52a9\u7dda"
+    },
+    "sniperAimAssistDelay": {
+        "0": "Aim Assist Delay",
+        "11": "\u30a8\u30a4\u30e0\u88dc\u52a9\u306e\u51fa\u73fe\u6642\u9593",
+        "13": "\u77c4\u51c6\u8f85\u52a9\u6fc0\u6d3b\u65f6\u95f4",
+        "14": "\u77c4\u6e96\u8f14\u52a9\u6fc0\u6d3b\u6642\u9593"
+    },
+    "sniperEquipText": {
+        "0": "Draw / Stow Rifle",
+        "11": "\u30e9\u30a4\u30d5\u30eb\u3092\u51fa\u3059",
+        "13": "\u638f\u51fa / \u6536\u8d77\u72d9\u51fb\u67aa",
+        "14": "\u638f\u51fa / \u6536\u8d77\u72d9\u64ca\u69cd"
+    },
+    "sniperSnipeText": {
+        "0": "Snipe",
+        "11": "\u72d9\u6483",
+        "13": "\u72d9\u51fb",
+        "14": "\u72d9\u64ca"
+    },
+    "sniperCanNormalKill": {
+        "0": "Can Kill Normally",
+        "11": "\u901a\u5e38\u30ad\u30eb\u53ef\u80fd",
+        "13": "\u53ef\u4ee5\u6b63\u5e38\u51fb\u6740",
+        "14": "\u53ef\u4ee5\u6b63\u5e38\u64ca\u6bba"
+    },
+    "archwitch": {
+        "0": "Archwitch",
+        "11": "\u5927\u9b54\u5973",
+        "13": "\u5927\u9b54\u5973",
+        "14": "\u5927\u9b54\u5973"
+    },
+    "archwitchIntroDesc": {
+        "0": "Something inside you is waking up.",
+        "11": "\u3042\u306a\u305f\u306e\u4e2d\u3067\u3001\u4f55\u304b\u304c\u76ee\u3092\u899a\u307e\u3059\u3002",
+        "13": "\u4f60\u8eab\u4f53\u91cc\u6709\u4ec0\u4e48\u4e1c\u897f\u6b63\u5728\u9192\u6765\u3002",
+        "14": "\u4f60\u8eab\u9ad4\u88e1\u6709\u4ec0\u9ebc\u6771\u897f\u6b63\u5728\u9192\u4f86\u3002"
+    },
+    "archwitchShortDesc": {
+        "0": "Hold back the witch inside you - or let it out and kill everyone.",
+        "11": "\u5185\u306b\u3044\u308b\u9b54\u5973\u3092\u62bc\u3055\u3048\u308b\u304b\u3001\u89e3\u304d\u653e\u3063\u3066\u5168\u54e1\u3092\u6bba\u3059\u304b\u3002",
+        "13": "\u538b\u4f4f\u4f53\u5185\u7684\u9b54\u5973\uff0c\u6216\u8005\u653e\u51fa\u6765\u628a\u6240\u6709\u4eba\u6740\u5149\u3002",
+        "14": "\u58d3\u4f4f\u9ad4\u5167\u7684\u9b54\u5973\uff0c\u6216\u8005\u653e\u51fa\u4f86\u628a\u6240\u6709\u4eba\u6bba\u5149\u3002"
+    },
+    "archwitchFullDesc": {
+        "0": "<title>Faction</title>Counted as a crewmate at first - you can win together with the crew.\n<title>Corruption</title>Witnessing a death, being hit by a sabotage, being targeted by someone's ability, or dying yourself all add corruption. Completing a task reduces it.\n<title>Full Witch</title>At <var>%POINT%</var> corruption you turn completely: <b>you can no longer be killed</b>, your vision shrinks to <var>%VISION%</var>x, and you unlock a kill.\n<title>Victory</title>Once turned you no longer side with the crew - you must wipe out everyone else.",
+        "11": "<title>\u9663\u55b6</title>\u5e8f\u76e4\u306f\u30af\u30eb\u30fc\u3068\u3057\u3066\u6570\u3048\u3089\u308c\u3001\u30af\u30eb\u30fc\u3068\u4e00\u7dd2\u306b\u52dd\u3066\u308b\u3002\n<title>\u9b54\u5973\u5316</title>\u4ed6\u4eba\u306e\u6b7b\u3092\u76ee\u6483\u3059\u308b\u3001\u9632\u5bb3\u306e\u5f71\u97ff\u3092\u53d7\u3051\u308b\u3001\u4ed6\u4eba\u306e\u80fd\u529b\u306e\u5bfe\u8c61\u306b\u306a\u308b\u3001\u81ea\u5206\u304c\u6bba\u3055\u308c\u308b\u3067\u9b54\u5973\u5316\u304c\u9032\u3080\u3002\u30bf\u30b9\u30af\u30921\u3064\u5b8c\u4e86\u3059\u308b\u3068\u6e1b\u308b\u3002\n<title>\u5b8c\u5168\u9b54\u5973\u5316</title>\u30dd\u30a4\u30f3\u30c8\u304c <var>%POINT%</var> \u306b\u9054\u3059\u308b\u3068\u5b8c\u5168\u306b\u9b54\u5973\u5316\u3059\u308b\u3002<b>\u6bba\u3055\u308c\u306a\u304f\u306a\u308a</b>\u3001\u8996\u754c\u304c <var>%VISION%</var> \u500d\u306b\u7e2e\u307f\u3001\u30ad\u30eb\u304c\u89e3\u653e\u3055\u308c\u308b\u3002\n<title>\u52dd\u5229</title>\u9b54\u5973\u5316\u5f8c\u306f\u30af\u30eb\u30fc\u3068\u306f\u5225\u3060\u3002\u4ed6\u306e\u5168\u54e1\u3092\u6bb2\u3055\u306a\u3051\u308c\u3070\u52dd\u3066\u306a\u3044\u3002",
+        "13": "<title>\u9635\u8425</title>\u5f00\u5c40\u7b97\u4f5c\u8239\u5458\uff0c\u53ef\u4ee5\u8ddf\u968f\u8239\u5458\u83b7\u80dc\u3002\n<title>\u9b54\u5973\u5316</title>\u76ee\u7779\u4ed6\u4eba\u6b7b\u4ea1\u3001\u53d7\u5230\u7834\u574f\u5f71\u54cd\u3001\u88ab\u4ed6\u4eba\u6280\u80fd\u5f71\u54cd\u3001\u6216\u81ea\u5df1\u88ab\u6740\uff0c\u90fd\u4f1a\u7d2f\u79ef\u9b54\u5973\u5316\u70b9\u6570\uff1b\u5b8c\u6210\u4e00\u4e2a\u4efb\u52a1\u964d\u4f4e\u70b9\u6570\u3002\n<title>\u5f7b\u5e95\u9b54\u5973\u5316</title>\u70b9\u6570\u5230\u8fbe <var>%POINT%</var> \u540e\u5f7b\u5e95\u9b54\u5316\uff1a<b>\u65e0\u6cd5\u88ab\u51fb\u6740</b>\u3001\u89c6\u91ce\u7f29\u5c0f\u5230 <var>%VISION%</var> \u500d\u3001\u5e76\u4e14\u89e3\u9501\u51fb\u6740\u3002\n<title>\u80dc\u5229</title>\u9b54\u5316\u540e\u4e0d\u518d\u8ddf\u968f\u8239\u5458\uff0c\u5fc5\u987b\u5168\u6b7c\u5176\u4ed6\u6240\u6709\u4eba\u624d\u80fd\u83b7\u80dc\u3002",
+        "14": "<title>\u9663\u71df</title>\u958b\u5c40\u7b97\u4f5c\u8239\u54e1\uff0c\u53ef\u4ee5\u8ddf\u96a8\u8239\u54e1\u7372\u52dd\u3002\n<title>\u9b54\u5973\u5316</title>\u76ee\u77b9\u4ed6\u4eba\u6b7b\u4ea1\u3001\u53d7\u5230\u7834\u58de\u5f71\u97ff\u3001\u88ab\u4ed6\u4eba\u6280\u80fd\u5f71\u97ff\u3001\u6216\u81ea\u5df1\u88ab\u6bba\uff0c\u90fd\u6703\u7d2f\u7a4d\u9b54\u5973\u5316\u9ede\u6578\uff1b\u5b8c\u6210\u4e00\u500b\u4efb\u52d9\u964d\u4f4e\u9ede\u6578\u3002\n<title>\u5fb9\u5e95\u9b54\u5973\u5316</title>\u9ede\u6578\u5230\u9054 <var>%POINT%</var> \u5f8c\u5fb9\u5e95\u9b54\u5316\uff1a<b>\u7121\u6cd5\u88ab\u64ca\u6bba</b>\u3001\u8996\u91ce\u7e2e\u5c0f\u5230 <var>%VISION%</var> \u500d\u3001\u4e26\u4e14\u89e3\u9501\u64ca\u6bba\u3002\n<title>\u52dd\u5229</title>\u9b54\u5316\u5f8c\u4e0d\u518d\u8ddf\u96a8\u8239\u54e1\uff0c\u5fc5\u9808\u5168\u6bb2\u5176\u4ed6\u6240\u6709\u4eba\u624d\u80fd\u7372\u52dd\u3002"
+    },
+    "archwitchBlurb": {
+        "0": "She is still deciding which side of the mirror she is on.",
+        "11": "\u5f7c\u5973\u306f\u307e\u3060\u3001\u93e1\u306e\u3069\u3061\u3089\u5074\u306b\u3044\u308b\u304b\u6c7a\u3081\u304b\u306d\u3066\u3044\u308b\u3002",
+        "13": "\u5979\u8fd8\u6ca1\u51b3\u5b9a\u81ea\u5df1\u5728\u955c\u5b50\u7684\u54ea\u4e00\u8fb9\u3002",
+        "14": "\u5979\u9084\u6c92\u6c7a\u5b9a\u81ea\u5df1\u5728\u93e1\u5b50\u7684\u54ea\u4e00\u908a\u3002"
+    },
+    "archwitchKillCooldown": {
+        "0": "Kill Cooldown",
+        "11": "\u30ad\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u51fb\u6740\u51b7\u5374",
+        "14": "\u64ca\u6bba\u51b7\u537b"
+    },
+    "archwitchRequiredPoints": {
+        "0": "Corruption Needed",
+        "11": "\u5fc5\u8981\u9b54\u5973\u5316\u30dd\u30a4\u30f3\u30c8",
+        "13": "\u9b54\u5973\u5316\u6240\u9700\u70b9\u6570",
+        "14": "\u9b54\u5973\u5316\u6240\u9700\u9ede\u6578"
+    },
+    "archwitchWitnessPoints": {
+        "0": "Witnessing A Death",
+        "11": "\u6b7b\u306e\u76ee\u6483",
+        "13": "\u76ee\u7779\u6b7b\u4ea1\u589e\u52a0\u70b9\u6570",
+        "14": "\u76ee\u77b9\u6b7b\u4ea1\u589e\u52a0\u9ede\u6578"
+    },
+    "archwitchSabotagePoints": {
+        "0": "Hit By Sabotage",
+        "11": "\u9632\u5bb3\u306e\u5f71\u97ff",
+        "13": "\u53d7\u5230\u7834\u574f\u589e\u52a0\u70b9\u6570",
+        "14": "\u53d7\u5230\u7834\u58de\u589e\u52a0\u9ede\u6578"
+    },
+    "archwitchAbilityPoints": {
+        "0": "Targeted By An Ability",
+        "11": "\u80fd\u529b\u306e\u5bfe\u8c61",
+        "13": "\u88ab\u6280\u80fd\u5f71\u54cd\u589e\u52a0\u70b9\u6570",
+        "14": "\u88ab\u6280\u80fd\u5f71\u97ff\u589e\u52a0\u9ede\u6578"
+    },
+    "archwitchDeathPoints": {
+        "0": "Being Killed",
+        "11": "\u81ea\u5206\u304c\u6bba\u3055\u308c\u308b",
+        "13": "\u6b7b\u4ea1\u589e\u52a0\u70b9\u6570",
+        "14": "\u6b7b\u4ea1\u589e\u52a0\u9ede\u6578"
+    },
+    "archwitchTaskReduce": {
+        "0": "Task Reduces",
+        "11": "\u30bf\u30b9\u30af1\u3064\u3067\u6e1b\u308b\u91cf",
+        "13": "\u6bcf\u5b8c\u6210\u4e00\u4e2a\u4efb\u52a1\u964d\u4f4e\u70b9\u6570",
+        "14": "\u6bcf\u5b8c\u6210\u4e00\u500b\u4efb\u52d9\u964d\u4f4e\u9ede\u6578"
+    },
+    "archwitchVisionMultiplier": {
+        "0": "Vision Multiplier",
+        "11": "\u8996\u754c\u306e\u500d\u7387",
+        "13": "\u89c6\u91ce\u7f29\u5c0f\u500d\u7387",
+        "14": "\u8996\u91ce\u7e2e\u5c0f\u500d\u7387"
+    },
+    "archwitchTransformed": {
+        "0": "You have become a witch. Everyone must die.",
+        "11": "\u9b54\u5973\u306b\u306a\u3063\u305f\u3002\u5168\u54e1\u6b7b\u306c\u3079\u304d\u3060\u3002",
+        "13": "\u4f60\u5f7b\u5e95\u9b54\u5973\u5316\u4e86\u3002\u6240\u6709\u4eba\u90fd\u8be5\u6b7b\u3002",
+        "14": "\u4f60\u5fb9\u5e95\u9b54\u5973\u5316\u4e86\u3002\u6240\u6709\u4eba\u90fd\u8a72\u6b7b\u3002"
+    },
+    "archwitchKillText": {
+        "0": "Archwitch Kill",
+        "11": "\u9b54\u5973\u306e\u6bba\u610f",
+        "13": "\u9b54\u5973\u51fb\u6740",
+        "14": "\u9b54\u5973\u64ca\u6bba"
+    },
+    "archwitchWin": {
+        "0": "The Archwitch wiped everyone out",
+        "11": "\u5927\u9b54\u5973\u306f\u5168\u54e1\u3092\u6bb2\u3057\u305f",
+        "13": "\u5927\u9b54\u5973\u5c06\u6240\u6709\u4eba\u5c3d\u6570\u6b7c\u706d",
+        "14": "\u5927\u9b54\u5973\u5c07\u6240\u6709\u4eba\u76e1\u6578\u6bb2\u6ec5"
+    },
+    "archwitchanother1AchievementTitle": {
+        "0": "A Girl's Redemption",
+        "11": "\u5c11\u5973\u306e\u6551\u8d04",
+        "13": "\u5c11\u5973\u7684\u6551\u8d4e",
+        "14": "\u5c11\u5973\u7684\u6551\u8d16"
+    },
+    "archwitchanother1AchievementGoal": {
+        "0": "Reduce your corruption with tasks and win together with the crew.",
+        "11": "\u30bf\u30b9\u30af\u3067\u9b54\u5973\u5316\u3092\u4e0b\u3052\u3001\u30af\u30eb\u30fc\u3068\u4e00\u7dd2\u306b\u52dd\u5229\u3059\u308b\u3002",
+        "13": "\u901a\u8fc7\u5b8c\u6210\u4efb\u52a1\u964d\u4f4e\u9b54\u5973\u5316\uff0c\u5e76\u8ddf\u968f\u8239\u5458\u83b7\u80dc\u3002",
+        "14": "\u901a\u904e\u5b8c\u6210\u4efb\u52d9\u964d\u4f4e\u9b54\u5973\u5316\uff0c\u4e26\u8ddf\u96a8\u8239\u54e1\u7372\u52dd\u3002"
+    },
+    "archwitchanother1AchievementFlavor": {
+        "0": "\"I am still myself. I think.\"",
+        "11": "\u300c\u79c1\u306f\u307e\u3060\u79c1\u306e\u306f\u305a\u3060\u300d",
+        "13": "\u300c\u6211\u8fd8\u662f\u6211\u81ea\u5df1\u2014\u2014\u5927\u6982\u5427\u3002\u300d",
+        "14": "\u300c\u6211\u9084\u662f\u6211\u81ea\u5df1\u2014\u2014\u5927\u6982\u5427\u300d"
+    },
+    "archwitchchallengeAchievementTitle": {
+        "0": "Let Everyone Just Die",
+        "11": "\u307f\u3093\u306a\u6b7b\u3093\u3067\u3057\u307e\u3048\u3070\u3044\u3044",
+        "13": "\u53ea\u8981\u5927\u5bb6\u90fd\u53bb\u6b7b\u5c31\u597d\u5566",
+        "14": "\u53ea\u8981\u5927\u5bb6\u90fd\u53bb\u6b7b\u5c31\u597d\u5566"
+    },
+    "archwitchchallengeAchievementGoal": {
+        "0": "After turning into a witch, wipe out everyone alive.",
+        "11": "\u9b54\u5973\u5316\u5f8c\u3001\u5b58\u751f\u8005\u3092\u5168\u54e1\u6bb2\u3059\u3002",
+        "13": "\u9b54\u5973\u5316\u540e\u5c06\u5b58\u6d3b\u7684\u4eba\u5168\u90e8\u6b7c\u706d\u3002",
+        "14": "\u9b54\u5973\u5316\u5f8c\u5c07\u5b58\u6d3b\u7684\u4eba\u5168\u90e8\u6bb2\u6ec5\u3002"
+    },
+    "archwitchchallengeAchievementFlavor": {
+        "0": "\"...That was easy.\"",
+        "11": "\u300c\u2026\u2026\u7c21\u5358\u3060\u3063\u305f\u300d",
+        "13": "\u300c\u2026\u2026\u771f\u7b80\u5355\u3002\u300d",
+        "14": "\u300c\u2026\u2026\u771f\u7c21\u55ae\u300d"
+    },
+    "energyamplifiercommon1AchievementTitle": {
+        "0": "Field Deployed",
+        "11": "\u5c55\u958b\u306e\u4e00\u6b69",
+        "13": "\u5c55\u5f00\u529b\u573a",
+        "14": "\u5c55\u958b\u529b\u5834"
+    },
+    "energyamplifiercommon1AchievementGoal": {
+        "0": "Field deployed.",
+        "11": "\u521d\u3081\u3066\u30a8\u30cd\u30eb\u30ae\u30fc\u30d5\u30a3\u30fc\u30eb\u30c9\u3092\u5c55\u958b\u3059\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u5c55\u5f00\u80fd\u91cf\u573a\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u5c55\u958b\u80fd\u91cf\u5834\u3002"
+    },
+    "energyamplifieranother1AchievementTitle": {
+        "0": "Shielded",
+        "11": "\u4ee3\u308f\u308a\u306b\u53d7\u3051\u6b62\u3081\u308b",
+        "13": "\u62a4\u76fe\u4ee3\u6321",
+        "14": "\u8b77\u76fe\u4ee3\u64cb"
+    },
+    "energyamplifieranother1AchievementGoal": {
+        "0": "Block a kill with your field shield.",
+        "11": "\u30d5\u30a3\u30fc\u30eb\u30c9\u306e\u30b7\u30fc\u30eb\u30c9\u3067\u4ed6\u306e\u4eba\u306e\u30ad\u30eb\u30921\u56de\u9632\u3050\u3002",
+        "13": "\u7528\u80fd\u91cf\u573a\u7684\u62a4\u76fe\u66ff\u961f\u53cb\u6321\u4e0b\u4e00\u6b21\u51fb\u6740\u3002",
+        "14": "\u7528\u80fd\u91cf\u5834\u7684\u8b77\u76fe\u66ff\u968a\u53cb\u64cb\u4e0b\u4e00\u6b21\u64ca\u6bba\u3002"
+    },
+    "energyamplifierchallengeAchievementTitle": {
+        "0": "Triple Insurance",
+        "11": "\u4e09\u91cd\u4fdd\u967a",
+        "13": "\u4e09\u91cd\u4fdd\u9669",
+        "14": "\u4e09\u91cd\u4fdd\u96aa"
+    },
+    "energyamplifierchallengeAchievementGoal": {
+        "0": "Have your shields block 3 kills in one game.",
+        "11": "1\u8a66\u5408\u3067\u30b7\u30fc\u30eb\u30c9\u3067\u30ad\u30eb\u3092\u7d2f\u8a083\u56de\u9632\u3050\u3002",
+        "13": "\u4e00\u5c40\u5185\u8ba9\u529b\u573a\u62a4\u76fe\u7d2f\u8ba1\u6321\u4e0b 3 \u6b21\u51fb\u6740\u3002",
+        "14": "\u4e00\u5c40\u5167\u8b93\u529b\u5834\u8b77\u76fe\u7d2f\u8a08\u64cb\u4e0b 3 \u6b21\u64ca\u6bba\u3002"
+    },
+    "agnosiacommon1AchievementTitle": {
+        "0": "Nobody Recognises Anybody",
+        "11": "\u8ab0\u3082\u8ab0\u304b\u5206\u304b\u3089\u306a\u3044",
+        "13": "\u8c01\u4e5f\u8ba4\u4e0d\u51fa",
+        "14": "\u8ab0\u4e5f\u8a8d\u4e0d\u51fa"
+    },
+    "agnosiacommon1AchievementGoal": {
+        "0": "Activate agnosia for the first time.",
+        "11": "\u521d\u3081\u3066\u8a8d\u77e5\u969c\u5bb3\u3092\u767a\u52d5\u3059\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u53d1\u52a8\u5931\u8ba4\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u767c\u52d5\u5931\u8a8d\u3002"
+    },
+    "agnosiaanother1AchievementTitle": {
+        "0": "In The Confusion",
+        "11": "\u6df7\u4e71\u306b\u4e57\u3058\u308b",
+        "13": "\u8d81\u4e71\u4e0b\u624b",
+        "14": "\u8d81\u4e82\u4e0b\u624b"
+    },
+    "agnosiaanother1AchievementGoal": {
+        "0": "Get a kill while agnosia is active.",
+        "11": "\u8a8d\u77e5\u969c\u5bb3\u306e\u52b9\u679c\u4e2d\u306b1\u4eba\u3092\u6bba\u3059\u3002",
+        "13": "\u5728\u5931\u8ba4\u751f\u6548\u671f\u95f4\u5b8c\u6210\u4e00\u6b21\u51fb\u6740\u3002",
+        "14": "\u5728\u5931\u8a8d\u751f\u6548\u671f\u9593\u5b8c\u6210\u4e00\u6b21\u64ca\u6bba\u3002"
+    },
+    "agnosiachallengeAchievementTitle": {
+        "0": "Mad Hunt",
+        "11": "\u72c2\u6c17\u306e\u731f\u731f",
+        "13": "\u75af\u72c2\u730e\u6740",
+        "14": "\u760b\u72c2\u7375\u6bba"
+    },
+    "agnosiachallengeAchievementGoal": {
+        "0": "Kill an impostor while in madness.",
+        "11": "\u767a\u72c2\u72b6\u614b\u3067\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u4e00\u4eba\u6bba\u3059\u3002",
+        "13": "\u5728\u75af\u72c2\u72b6\u6001\u4e0b\u6740\u6389\u4e00\u540d\u5185\u9b3c\u3002",
+        "14": "\u5728\u760b\u72c2\u72c0\u614b\u4e0b\u6bba\u6389\u4e00\u540d\u5167\u9b3c\u3002"
+    },
+    "playerRolecommon1AchievementTitle": {
+        "0": "Levelling Begins",
+        "11": "\u6210\u9577\u306e\u59cb\u307e\u308a",
+        "13": "\u7ec3\u7ea7\u5f00\u59cb",
+        "14": "\u7df4\u7d1a\u958b\u59cb"
+    },
+    "playerRolecommon1AchievementGoal": {
+        "0": "Gain experience for the first time.",
+        "11": "\u521d\u3081\u3066\u7d4c\u9a13\u5024\u3092\u5f97\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u83b7\u5f97\u7ecf\u9a8c\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u7372\u5f97\u7d93\u9a57\u3002"
+    },
+    "playerRoleanother1AchievementTitle": {
+        "0": "Level 3",
+        "11": "\u30ec\u30d9\u30eb3",
+        "13": "\u4e09\u7ea7\u73a9\u5bb6",
+        "14": "\u4e09\u7d1a\u73a9\u5bb6"
+    },
+    "playerRoleanother1AchievementGoal": {
+        "0": "Reach level 3.",
+        "11": "\u30ec\u30d9\u30eb3\u306b\u9054\u3059\u308b\u3002",
+        "13": "\u5347\u5230 Lv.3\u3002",
+        "14": "\u5347\u5230 Lv.3\u3002"
+    },
+    "playerRolechallengeAchievementTitle": {
+        "0": "Max Level",
+        "11": "\u30ab\u30f3\u30b9\u30c8",
+        "13": "\u6ee1\u7ea7",
+        "14": "\u6eff\u7d1a"
+    },
+    "playerRolechallengeAchievementGoal": {
+        "0": "Reach level 7 and bottom out your kill cooldown.",
+        "11": "\u30ec\u30d9\u30eb7\u306b\u9054\u3057\u3001\u30ad\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3\u3092\u6700\u4e0b\u9650\u307e\u3067\u4e0b\u3052\u308b\u3002",
+        "13": "\u5347\u5230 Lv.7\uff0c\u51fb\u6740\u51b7\u5374\u89e6\u5e95\u3002",
+        "14": "\u5347\u5230 Lv.7\uff0c\u64ca\u6bba\u51b7\u537b\u89f8\u5e95\u3002"
+    },
+    "niceVoteEatercommon1AchievementTitle": {
+        "0": "Vote Swallowed",
+        "11": "\u7968\u3092\u98df\u3079\u308b",
+        "13": "\u541e\u7968",
+        "14": "\u541e\u7968"
+    },
+    "niceVoteEatercommon1AchievementGoal": {
+        "0": "Eat a vote for the first time.",
+        "11": "\u521d\u3081\u3066\u6295\u7968\u30921\u3064\u98df\u3079\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u5403\u6389\u4e00\u7968\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u5403\u6389\u4e00\u7968\u3002"
+    },
+    "niceVoteEateranother1AchievementTitle": {
+        "0": "Vote Returned",
+        "11": "\u7968\u306e\u623b\u7d0b",
+        "13": "\u7968\u5f52\u539f\u4e3b",
+        "14": "\u7968\u6b78\u539f\u4e3b"
+    },
+    "niceVoteEateranother1AchievementGoal": {
+        "0": "The player whose vote you ate died, refunding the use.",
+        "11": "\u98df\u3079\u305f\u76f8\u624b\u304c\u6b7b\u306b\u3001\u56de\u6570\u304c\u623b\u3063\u3066\u304f\u308b\u3002",
+        "13": "\u88ab\u5403\u7968\u7684\u73a9\u5bb6\u4e4b\u540e\u6b7b\u4ea1\uff0c\u6b21\u6570\u8fd4\u8fd8\u3002",
+        "14": "\u88ab\u5403\u7968\u7684\u73a9\u5bb6\u4e4b\u5f8c\u6b7b\u4ea1\uff0c\u6b21\u6578\u8fd4\u9084\u3002"
+    },
+    "niceVoteEaterchallengeAchievementTitle": {
+        "0": "Not A Crumb Left",
+        "11": "\u4e00\u7c92\u3082\u6b8b\u3055\u306a\u3044",
+        "13": "\u4e00\u53e3\u4e0d\u5269",
+        "14": "\u4e00\u53e3\u4e0d\u5269"
+    },
+    "niceVoteEaterchallengeAchievementGoal": {
+        "0": "Use up every vote-eating charge in one game.",
+        "11": "1\u8a66\u5408\u3067\u98df\u3079\u308b\u56de\u6570\u3092\u3059\u3079\u3066\u4f7f\u3044\u5207\u308b\u3002",
+        "13": "\u4e00\u5c40\u5185\u7528\u5149\u5168\u90e8\u5403\u7968\u6b21\u6570\u3002",
+        "14": "\u4e00\u5c40\u5167\u7528\u5149\u5168\u90e8\u5403\u7968\u6b21\u6578\u3002"
+    },
+    "evilVoteEatercommon1AchievementTitle": {
+        "0": "Vote Swallowed",
+        "11": "\u7968\u3092\u98df\u3079\u308b",
+        "13": "\u541e\u7968",
+        "14": "\u541e\u7968"
+    },
+    "evilVoteEatercommon1AchievementGoal": {
+        "0": "Eat a vote for the first time.",
+        "11": "\u521d\u3081\u3066\u6295\u7968\u30921\u3064\u98df\u3079\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u5403\u6389\u4e00\u7968\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u5403\u6389\u4e00\u7968\u3002"
+    },
+    "evilVoteEateranother1AchievementTitle": {
+        "0": "Left Speechless",
+        "11": "\u53e3\u3092\u7e1b\u3089\u308c\u308b",
+        "13": "\u54d1\u53e3\u65e0\u8a00",
+        "14": "\u555e\u53e3\u7121\u8a00"
+    },
+    "evilVoteEateranother1AchievementGoal": {
+        "0": "The player whose vote you ate was exiled.",
+        "11": "\u98df\u3079\u305f\u76f8\u624b\u304c\u8ffd\u653e\u3055\u308c\u308b\u3002",
+        "13": "\u541e\u7968\u540e\u90a3\u540d\u73a9\u5bb6\u88ab\u653e\u9010\u3002",
+        "14": "\u541e\u7968\u5f8c\u90a3\u540d\u73a9\u5bb6\u88ab\u653e\u9010\u3002"
+    },
+    "evilVoteEaterchallengeAchievementTitle": {
+        "0": "Double Swallow",
+        "11": "\u4e8c\u9023\u98df\u3044",
+        "13": "\u8fde\u73af\u541e\u7968",
+        "14": "\u9023\u74b0\u541e\u7968"
+    },
+    "evilVoteEaterchallengeAchievementGoal": {
+        "0": "Eat 2 votes in the same meeting.",
+        "11": "\u540c\u3058\u4f1a\u8b70\u3067\u6295\u7968\u30922\u3064\u98df\u3079\u308b\u3002",
+        "13": "\u5728\u540c\u4e00\u573a\u4f1a\u8bae\u5185\u5403\u6389 2 \u7968\u3002",
+        "14": "\u5728\u540c\u4e00\u5834\u6703\u8b70\u5167\u5403\u6389 2 \u7968\u3002"
+    },
+    "policeCommissionercommon1AchievementTitle": {
+        "0": "Deputised",
+        "11": "\u5f81\u52df",
+        "13": "\u62db\u52df",
+        "14": "\u5f75\u52df"
+    },
+    "policeCommissionercommon1AchievementGoal": {
+        "0": "Recruit someone for the first time.",
+        "11": "\u521d\u3081\u3066\u8ab0\u304b\u3092\u5f81\u52df\u3059\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u4f7f\u7528\u62db\u52df\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u4f7f\u7528\u5f75\u52df\u3002"
+    },
+    "policeCommissioneranother1AchievementTitle": {
+        "0": "Recruited An Impostor",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u5f81\u52df",
+        "13": "\u62db\u52df\u5230\u5185\u9b3c",
+        "14": "\u5f75\u52df\u5230\u5167\u9b3c"
+    },
+    "policeCommissioneranother1AchievementGoal": {
+        "0": "Recruit an impostor.",
+        "11": "\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u5f81\u52df\u3059\u308b\u3002",
+        "13": "\u62db\u52df\u5230\u4e00\u540d\u5185\u9b3c\u3002",
+        "14": "\u5f75\u52df\u5230\u4e00\u540d\u5167\u9b3c\u3002"
+    },
+    "policeCommissionerchallengeAchievementTitle": {
+        "0": "Summary Execution",
+        "11": "\u5373\u6c7a\u51e6\u5206",
+        "13": "\u5f53\u573a\u5904\u51b3",
+        "14": "\u7576\u5834\u8655\u6c7a"
+    },
+    "policeCommissionerchallengeAchievementGoal": {
+        "0": "Execute an impostor by recruiting them.",
+        "11": "\u5f81\u52df\u3057\u305f\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u305d\u306e\u5834\u3067\u51e6\u5206\u3059\u308b\u3002",
+        "13": "\u7528\u62db\u52df\u628a\u4e00\u540d\u5185\u9b3c\u5f53\u573a\u5904\u51b3\u3002",
+        "14": "\u7528\u5f75\u52df\u628a\u4e00\u540d\u5167\u9b3c\u7576\u5834\u8655\u6c7a\u3002"
+    },
+    "auxiliarycommon1AchievementTitle": {
+        "0": "Marked",
+        "11": "\u30de\u30fc\u30af",
+        "13": "\u6807\u8bb0",
+        "14": "\u6a19\u8a18"
+    },
+    "auxiliarycommon1AchievementGoal": {
+        "0": "Mark someone for the first time.",
+        "11": "\u521d\u3081\u3066\u8ab0\u304b\u3092\u30de\u30fc\u30af\u3059\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u4f7f\u7528\u6807\u8bb0\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u4f7f\u7528\u6a19\u8a18\u3002"
+    },
+    "auxiliaryanother1AchievementTitle": {
+        "0": "Took The Blow",
+        "11": "\u8eab\u4ee3\u308f\u308a",
+        "13": "\u4ee3\u6b7b",
+        "14": "\u4ee3\u6b7b"
+    },
+    "auxiliaryanother1AchievementGoal": {
+        "0": "Die in place of the player you marked.",
+        "11": "\u30de\u30fc\u30af\u3057\u305f\u76f8\u624b\u306e\u8eab\u4ee3\u308f\u308a\u306b\u6b7b\u306c\u3002",
+        "13": "\u66ff\u4f60\u6807\u8bb0\u7684\u73a9\u5bb6\u6321\u4e0b\u4e00\u6b7b\u3002",
+        "14": "\u66ff\u4f60\u6a19\u8a18\u7684\u73a9\u5bb6\u64cb\u4e0b\u4e00\u6b7b\u3002"
+    },
+    "auxiliarychallengeAchievementTitle": {
+        "0": "Promoted",
+        "11": "\u6607\u4efb",
+        "13": "\u664b\u5347",
+        "14": "\u6649\u5347"
+    },
+    "auxiliarychallengeAchievementGoal": {
+        "0": "Be promoted to Sheriff after the Sheriff dies.",
+        "11": "Sheriff\u306e\u6b7b\u5f8c\u306bSheriff\u306b\u6607\u4efb\u3059\u308b\u3002",
+        "13": "Sheriff \u6b7b\u540e\u664b\u5347\u4e3a\u65b0\u7684 Sheriff\u3002",
+        "14": "Sheriff \u6b7b\u5f8c\u6649\u5347\u70ba\u65b0\u7684 Sheriff\u3002"
+    },
+    "gojocommon1AchievementTitle": {
+        "0": "Infinity",
+        "11": "\u7121\u4e0b\u9650",
+        "13": "\u65e0\u4e0b\u9650",
+        "14": "\u7121\u4e0b\u9650"
+    },
+    "gojocommon1AchievementGoal": {
+        "0": "Activate Infinity for the first time.",
+        "11": "\u521d\u3081\u3066\u7121\u4e0b\u9650\u3092\u5c55\u958b\u3059\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u5f00\u542f\u65e0\u4e0b\u9650\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u958b\u555f\u7121\u4e0b\u9650\u3002"
+    },
+    "gojoanother1AchievementTitle": {
+        "0": "Until The Last Drop",
+        "11": "\u5e95\u3092\u3064\u304f\u3059",
+        "13": "\u8017\u5c3d",
+        "14": "\u8017\u76e1"
+    },
+    "gojoanother1AchievementGoal": {
+        "0": "Let Infinity run until your cursed energy runs dry.",
+        "11": "\u546a\u529b\u304c\u5c3d\u304d\u308b\u307e\u3067\u7121\u4e0b\u9650\u3092\u7dad\u6301\u3059\u308b\u3002",
+        "13": "\u8ba9\u65e0\u4e0b\u9650\u4e00\u76f4\u5230\u80fd\u91cf\u8017\u5c3d\u3002",
+        "14": "\u8b93\u7121\u4e0b\u9650\u4e00\u76f4\u5230\u80fd\u91cf\u8017\u76e1\u3002"
+    },
+    "gojochallengeAchievementTitle": {
+        "0": "Repulsion",
+        "11": "\u6392\u65a5",
+        "13": "\u65a5\u529b",
+        "14": "\u65a5\u529b"
+    },
+    "gojochallengeAchievementGoal": {
+        "0": "Push other players out of Infinity 10 times in one game.",
+        "11": "1\u8a66\u5408\u3067\u7121\u4e0b\u9650\u3067\u4ed6\u306e\u30d7\u30ec\u30a4\u30e4\u30fc\u309210\u56de\u62bc\u3057\u51fa\u3059\u3002",
+        "13": "\u4e00\u5c40\u5185\u7528\u65e0\u4e0b\u9650\u628a\u5176\u4ed6\u73a9\u5bb6\u63a8\u5f00 10 \u6b21\u3002",
+        "14": "\u4e00\u5c40\u5167\u7528\u7121\u4e0b\u9650\u628a\u5176\u4ed6\u73a9\u5bb6\u63a8\u958b 10 \u6b21\u3002"
+    },
+    "sukunacommon1AchievementTitle": {
+        "0": "Dismantle",
+        "11": "\u89e3",
+        "13": "\u89e3",
+        "14": "\u89e3"
+    },
+    "sukunacommon1AchievementGoal": {
+        "0": "Finish a chant and release a slash.",
+        "11": "\u8a60\u5531\u3092\u5b8c\u4e86\u3055\u305b\u3001\u65ac\u6483\u3092\u653e\u3064\u3002",
+        "13": "\u5b8c\u6210\u4e00\u6b21\u541f\u5531\u65a9\u51fb\u3002",
+        "14": "\u5b8c\u6210\u4e00\u6b21\u541f\u5531\u65ac\u64ca\u3002"
+    },
+    "sukunaanother1AchievementTitle": {
+        "0": "Two In One Swing",
+        "11": "\u4e00\u6483\u4e24\u65ad",
+        "13": "\u4e00\u5200\u4e24\u4eba",
+        "14": "\u4e00\u5200\u5169\u4eba"
+    },
+    "sukunaanother1AchievementGoal": {
+        "0": "Cut down 2 players with a single slash.",
+        "11": "\u4e00\u3064\u306e\u65ac\u6483\u30672\u4eba\u3092\u65ac\u308b\u3002",
+        "13": "\u4e00\u6b21\u65a9\u51fb\u547d\u4e2d 2 \u4eba\u3002",
+        "14": "\u4e00\u6b21\u65ac\u64ca\u547d\u4e2d 2 \u4eba\u3002"
+    },
+    "sukunachallengeAchievementTitle": {
+        "0": "Cleave",
+        "11": "\u8086",
+        "13": "\u8086",
+        "14": "\u8086"
+    },
+    "sukunachallengeAchievementGoal": {
+        "0": "Cut down 3 players with a single slash.",
+        "11": "\u4e00\u3064\u306e\u65ac\u6483\u30673\u4eba\u3092\u65ac\u308b\u3002",
+        "13": "\u4e00\u6b21\u65a9\u51fb\u547d\u4e2d 3 \u4eba\u3002",
+        "14": "\u4e00\u6b21\u65ac\u64ca\u547d\u4e2d 3 \u4eba\u3002"
+    },
+    "kiracommon1AchievementTitle": {
+        "0": "The Name Was Written",
+        "11": "\u540d\u3092\u66f8\u304f",
+        "13": "\u5199\u4e0b\u540d\u5b57",
+        "14": "\u5beb\u4e0b\u540d\u5b57"
+    },
+    "kiracommon1AchievementGoal": {
+        "0": "Write a name correctly and kill its owner.",
+        "11": "\u540d\u524d\u3092\u6b63\u78ba\u306b\u66f8\u304d\u3001\u672c\u4eba\u3092\u6bba\u3059\u3002",
+        "13": "\u6b63\u786e\u5199\u51fa\u5bf9\u65b9\u540d\u5b57\u5e76\u6740\u6b7b\u4ed6\u3002",
+        "14": "\u6b63\u78ba\u5beb\u51fa\u5c0d\u65b9\u540d\u5b57\u4e26\u6bba\u6b7b\u4ed6\u3002"
+    },
+    "kiraanother1AchievementTitle": {
+        "0": "Wrong Name",
+        "11": "\u9593\u9055\u3044\u306e\u540d",
+        "13": "\u5199\u9519\u4e86",
+        "14": "\u5beb\u932f\u4e86"
+    },
+    "kiraanother1AchievementGoal": {
+        "0": "Write the wrong name and get locked out of the notebook.",
+        "11": "\u540d\u524d\u3092\u9593\u9055\u3048\u3066\u3001\u305d\u306e\u4f1a\u8b70\u3067\u306f\u66f8\u3051\u306a\u304f\u306a\u308b\u3002",
+        "13": "\u5199\u9519\u540d\u5b57\uff0c\u672c\u573a\u4f1a\u8bae\u88ab\u9501\u5b9a\u3002",
+        "14": "\u5beb\u932f\u540d\u5b57\uff0c\u672c\u5834\u6703\u8b70\u88ab\u9396\u5b9a\u3002"
+    },
+    "kirachallengeAchievementTitle": {
+        "0": "Justice Has Been Served",
+        "11": "\u6b63\u7fa9\u306f\u9042\u884c\u3055\u308c\u305f",
+        "13": "\u6b63\u4e49\u5f97\u4ee5\u6267\u884c",
+        "14": "\u6b63\u7fa9\u5f97\u4ee5\u57f7\u884c"
+    },
+    "kirachallengeAchievementGoal": {
+        "0": "Reach the kill quota and end the game outright.",
+        "11": "\u30ce\u30eb\u30de\u306b\u9054\u3057\u3001\u305d\u306e\u307e\u307e\u30b2\u30fc\u30e0\u3092\u7d42\u308f\u3089\u305b\u308b\u3002",
+        "13": "\u51d1\u6ee1\u6740\u4eba\u6570\uff0c\u76f4\u63a5\u7ed3\u675f\u6e38\u620f\u83b7\u80dc\u3002",
+        "14": "\u6e4a\u6eff\u6bba\u4eba\u6578\uff0c\u76f4\u63a5\u7d50\u675f\u904a\u6232\u7372\u52dd\u3002"
+    },
+    "zeuscommon1AchievementTitle": {
+        "0": "Thunderbolt",
+        "11": "\u843d\u96f7",
+        "13": "\u843d\u96f7",
+        "14": "\u843d\u96f7"
+    },
+    "zeuscommon1AchievementGoal": {
+        "0": "Call down lightning for the first time.",
+        "11": "\u521d\u3081\u3066\u96f7\u3092\u843d\u3068\u3059\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u964d\u4e0b\u96f7\u7535\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u964d\u4e0b\u96f7\u96fb\u3002"
+    },
+    "zeusanother1AchievementTitle": {
+        "0": "Chain Lightning",
+        "11": "\u9023\u9396\u96f7",
+        "13": "\u8fde\u9501\u96f7",
+        "14": "\u9023\u9396\u96f7"
+    },
+    "zeusanother1AchievementGoal": {
+        "0": "Strike 2 players with one bolt.",
+        "11": "\u4e00\u3064\u306e\u96f7\u30672\u4eba\u3092\u6253\u3064\u3002",
+        "13": "\u4e00\u96f7\u547d\u4e2d 2 \u4eba\u3002",
+        "14": "\u4e00\u96f7\u547d\u4e2d 2 \u4eba\u3002"
+    },
+    "zeuschallengeAchievementTitle": {
+        "0": "Wrath Of Olympus",
+        "11": "\u30aa\u30ea\u30f3\u30dd\u30b9\u306e\u6012\u308a",
+        "13": "\u5965\u6797\u5339\u4e9a\u4e4b\u6012",
+        "14": "\u5967\u6797\u5339\u4e9e\u4e4b\u6012"
+    },
+    "zeuschallengeAchievementGoal": {
+        "0": "Strike 3 players with one bolt.",
+        "11": "\u4e00\u3064\u306e\u96f7\u30673\u4eba\u3092\u6253\u3064\u3002",
+        "13": "\u4e00\u96f7\u547d\u4e2d 3 \u4eba\u3002",
+        "14": "\u4e00\u96f7\u547d\u4e2d 3 \u4eba\u3002"
+    },
+    "paintercommon1AchievementTitle": {
+        "0": "Splashed",
+        "11": "\u5857\u308a\u4ed8\u3051",
+        "13": "\u6d82\u9e26",
+        "14": "\u5857\u9d09"
+    },
+    "paintercommon1AchievementGoal": {
+        "0": "Paint a console for the first time.",
+        "11": "\u521d\u3081\u3066\u30b3\u30f3\u30bd\u30fc\u30eb\u3092\u5857\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u6d82\u9e26\u4e00\u4e2a\u63a7\u5236\u53f0\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u5857\u9d09\u4e00\u500b\u63a7\u5236\u53f0\u3002"
+    },
+    "painteranother1AchievementTitle": {
+        "0": "Blinded",
+        "11": "\u76ee\u3092\u5f25\u304b\u305b\u308b",
+        "13": "\u81f4\u76f2",
+        "14": "\u81f4\u76f2"
+    },
+    "painteranother1AchievementGoal": {
+        "0": "Have someone set foot on a painted console and fall into the illusion.",
+        "11": "\u5857\u3063\u305f\u30b3\u30f3\u30bd\u30fc\u30eb\u3092\u8e0f\u307e\u305b\u3001\u5e7b\u60f3\u306b\u9665\u3089\u305b\u308b\u3002",
+        "13": "\u8ba9\u4e00\u540d\u73a9\u5bb6\u8e29\u4e2d\u6d82\u9e26\u7684\u63a7\u5236\u53f0\u3001\u9677\u5165\u5e7b\u8c61\u3002",
+        "14": "\u8b93\u4e00\u540d\u73a9\u5bb6\u8e29\u4e2d\u5857\u9d09\u7684\u63a7\u5236\u53f0\u3001\u9677\u5165\u5e7b\u8c61\u3002"
+    },
+    "painterchallengeAchievementTitle": {
+        "0": "Both Blinded",
+        "11": "\u4e21\u65b9\u76f2\u76ee",
+        "13": "\u53cc\u76f2",
+        "14": "\u96d9\u76f2"
+    },
+    "painterchallengeAchievementGoal": {
+        "0": "Have both of your traps spring in one game.",
+        "11": "1\u8a66\u5408\u3067\u7f60\u30922\u3064\u3068\u3082\u4f5c\u52d5\u3055\u305b\u308b\u3002",
+        "13": "\u4e00\u5c40\u5185\u4e24\u4e2a\u9677\u9631\u90fd\u88ab\u8e29\u4e2d\u3002",
+        "14": "\u4e00\u5c40\u5167\u5169\u500b\u9677\u9631\u90fd\u88ab\u8e29\u4e2d\u3002"
+    },
+    "aoicommon1AchievementTitle": {
+        "0": "Unfair Play",
+        "11": "\u4e0d\u6b63\u30d7\u30ec\u30a4",
+        "13": "\u4e0d\u6b63\u5f53\u6e38\u620f",
+        "14": "\u4e0d\u6b63\u7576\u904a\u6232"
+    },
+    "aoicommon1AchievementGoal": {
+        "0": "Use Unfair Game for the first time.",
+        "11": "\u521d\u3081\u3066\u4e0d\u6b63\u30d7\u30ec\u30a4\u3092\u4f7f\u3046\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u4f7f\u7528\u4e0d\u6b63\u5f53\u6e38\u620f\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u4f7f\u7528\u4e0d\u6b63\u7576\u904a\u6232\u3002"
+    },
+    "aoianother1AchievementTitle": {
+        "0": "Swapped And Slain",
+        "11": "\u5165\u308c\u66ff\u3048\u305f\u4e0a\u3067",
+        "13": "\u6362\u8fc7\u6765\u518d\u6740",
+        "14": "\u63db\u904e\u4f86\u518d\u6bba"
+    },
+    "aoianother1AchievementGoal": {
+        "0": "Kill the player you just swapped with.",
+        "11": "\u305f\u3063\u305f\u4eca\u5165\u308c\u66ff\u3048\u305f\u76f8\u624b\u3092\u6bba\u3059\u3002",
+        "13": "\u6740\u6389\u521a\u88ab\u4f60\u6362\u4f4d\u8fc7\u6765\u7684\u90a3\u540d\u73a9\u5bb6\u3002",
+        "14": "\u6bba\u6389\u525b\u88ab\u4f60\u63db\u4f4d\u904e\u4f86\u7684\u90a3\u540d\u73a9\u5bb6\u3002"
+    },
+    "aoichallengeAchievementTitle": {
+        "0": "Five Seconds",
+        "11": "5\u79d2",
+        "13": "5 \u79d2",
+        "14": "5 \u79d2"
+    },
+    "aoichallengeAchievementGoal": {
+        "0": "Kill someone within 5 seconds of swapping.",
+        "11": "\u5165\u308c\u66ff\u3048\u304b\u30895\u79d2\u4ee5\u5185\u306b\u8ab0\u304b\u3092\u6bba\u3059\u3002",
+        "13": "\u6362\u4f4d\u540e 5 \u79d2\u5185\u5b8c\u6210\u4e00\u6b21\u51fb\u6740\u3002",
+        "14": "\u63db\u4f4d\u5f8c 5 \u79d2\u5167\u5b8c\u6210\u4e00\u6b21\u64ca\u6bba\u3002"
+    },
+    "itadoricommon1AchievementTitle": {
+        "0": "First Finger",
+        "11": "\u6700\u521d\u306e\u4e00\u672c",
+        "13": "\u7b2c\u4e00\u6839\u624b\u6307",
+        "14": "\u7b2c\u4e00\u6839\u624b\u6307"
+    },
+    "itadoricommon1AchievementGoal": {
+        "0": "Eat your first Sukuna finger.",
+        "11": "\u6700\u521d\u306e\u5bbf\u513a\u306e\u6307\u3092\u98df\u3079\u308b\u3002",
+        "13": "\u5403\u6389\u7b2c\u4e00\u6839\u5bbf\u50a9\u624b\u6307\u3002",
+        "14": "\u5403\u6389\u7b2c\u4e00\u6839\u5bbf\u513a\u624b\u6307\u3002"
+    },
+    "itadorianother1AchievementTitle": {
+        "0": "Judgement",
+        "11": "\u88c1\u5224",
+        "13": "\u88c1\u5224",
+        "14": "\u88c1\u5224"
+    },
+    "itadorianother1AchievementGoal": {
+        "0": "Execute an impostor with your one-time judgement.",
+        "11": "\u4e00\u56de\u9650\u308a\u306e\u88c1\u5224\u3067\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3092\u51e6\u5211\u3059\u308b\u3002",
+        "13": "\u7528\u4e00\u6b21\u6027\u88c1\u5224\u6740\u5230\u4e00\u540d\u5185\u9b3c\u3002",
+        "14": "\u7528\u4e00\u6b21\u6027\u88c1\u5224\u6bba\u5230\u4e00\u540d\u5167\u9b3c\u3002"
+    },
+    "itadorichallengeAchievementTitle": {
+        "0": "The Vessel",
+        "11": "\u5668",
+        "13": "\u5668",
+        "14": "\u5668"
+    },
+    "itadorichallengeAchievementGoal": {
+        "0": "Eat all 20 fingers and become Sukuna.",
+        "11": "\u6307\u309220\u672c\u5168\u3066\u98df\u3079\u3001\u5bbf\u513a\u306b\u306a\u308b\u3002",
+        "13": "\u5403\u6ee1 20 \u6839\u624b\u6307\uff0c\u53d8\u8eab\u5bbf\u50a9\u3002",
+        "14": "\u5403\u6eff 20 \u6839\u624b\u6307\uff0c\u8b8a\u8eab\u5bbf\u513a\u3002"
+    },
+    "justicecommon1AchievementTitle": {
+        "0": "Court Is In Session",
+        "11": "\u958b\u5ead",
+        "13": "\u5f00\u5ead",
+        "14": "\u958b\u5ead"
+    },
+    "justicecommon1AchievementGoal": {
+        "0": "Hold a judgement for the first time.",
+        "11": "\u521d\u3081\u3066\u6cd5\u5ef7\u3092\u958b\u304f\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u53ec\u5f00\u6cd5\u5ead\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u53ec\u958b\u6cd5\u5ead\u3002"
+    },
+    "justiceanother1AchievementTitle": {
+        "0": "Guilty",
+        "11": "\u6709\u7f6a",
+        "13": "\u6709\u7f6a",
+        "14": "\u6709\u7f6a"
+    },
+    "justiceanother1AchievementGoal": {
+        "0": "Have one of your two candidates exiled by the vote.",
+        "11": "\u5019\u88dc\u8005\u306e\u3046\u3061\u4e00\u4eba\u3092\u6295\u7968\u3067\u8ffd\u653e\u3055\u305b\u308b\u3002",
+        "13": "\u4f60\u9009\u7684\u4e24\u4eba\u4e2d\u6709\u4e00\u4eba\u88ab\u6295\u7968\u653e\u9010\u3002",
+        "14": "\u4f60\u9078\u7684\u5169\u4eba\u4e2d\u6709\u4e00\u4eba\u88ab\u6295\u7968\u653e\u9010\u3002"
+    },
+    "justicechallengeAchievementTitle": {
+        "0": "Both Sides Of The Scale",
+        "11": "\u5929\u79e4\u306e\u4e21\u7aef",
+        "13": "\u5929\u5e73\u4e24\u7aef",
+        "14": "\u5929\u5e73\u5169\u7aef"
+    },
+    "justicechallengeAchievementGoal": {
+        "0": "Have your two candidates tie and be exiled together.",
+        "11": "\u4e8c\u4eba\u304c\u540c\u7968\u306b\u306a\u308a\u3001\u4e00\u7dd2\u306b\u8ffd\u653e\u3055\u308c\u308b\u3002",
+        "13": "\u8ba9\u4e24\u540d\u5019\u9009\u4eba\u5e73\u7968\u3001\u4e00\u540c\u88ab\u653e\u9010\u3002",
+        "14": "\u8b93\u5169\u540d\u5019\u9078\u4eba\u5e73\u7968\u3001\u4e00\u540c\u88ab\u653e\u9010\u3002"
+    },
+    "hiromiHigurumacommon1AchievementTitle": {
+        "0": "Court Opened",
+        "11": "\u958b\u5ef7",
+        "13": "\u5f00\u5ead",
+        "14": "\u958b\u5ead"
+    },
+    "hiromiHigurumacommon1AchievementGoal": {
+        "0": "Start a trial for the first time.",
+        "11": "\u521d\u3081\u3066\u88c1\u5224\u3092\u958b\u304f\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u53d1\u8d77\u5ba1\u5224\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u767c\u8d77\u5be9\u5224\u3002"
+    },
+    "hiromiHigurumaanother1AchievementTitle": {
+        "0": "Death Sentence",
+        "11": "\u6b7b\u5211",
+        "13": "\u6b7b\u5211",
+        "14": "\u6b7b\u5211"
+    },
+    "hiromiHigurumaanother1AchievementGoal": {
+        "0": "Hand down a death sentence.",
+        "11": "\u6b7b\u5211\u3092\u8a00\u3044\u6e21\u3059\u3002",
+        "13": "\u5ba3\u5224\u51fa\u6b7b\u5211\u3002",
+        "14": "\u5ba3\u5224\u51fa\u6b7b\u5211\u3002"
+    },
+    "hiromiHigurumaanother2AchievementTitle": {
+        "0": "Forfeiture",
+        "11": "\u6ca1\u53ce",
+        "13": "\u6ca1\u6536",
+        "14": "\u6c92\u6536"
+    },
+    "hiromiHigurumaanother2AchievementGoal": {
+        "0": "Hand down a sentence of forfeiture.",
+        "11": "\u6ca1\u53ce\u306e\u5224\u6c7a\u3092\u4e0b\u3059\u3002",
+        "13": "\u5ba3\u5224\u51fa\u6ca1\u6536\u3002",
+        "14": "\u5ba3\u5224\u51fa\u6c92\u6536\u3002"
+    },
+    "hiromiHigurumachallengeAchievementTitle": {
+        "0": "Fabricated Guilt",
+        "11": "\u3067\u3063\u3061\u4e0a\u3052\u306e\u7f6a",
+        "13": "\u83ab\u987b\u6709",
+        "14": "\u83ab\u9808\u6709"
+    },
+    "hiromiHigurumachallengeAchievementGoal": {
+        "0": "Sentence an innocent defendant to death - no evidence, confession only.",
+        "11": "\u8a3c\u62e0\u30bc\u30ed\u306e\u88ab\u544a\u3092\u81ea\u767d\u3060\u3051\u3067\u6b7b\u5211\u306b\u3059\u308b\u3002",
+        "13": "\u5bf9\u4e00\u4e2a\u6beb\u65e0\u7f6a\u8bc1\u7684\u88ab\u544a\uff0c\u9760\u4ed6\u8ba4\u7f6a\u5224\u6210\u6b7b\u5211\u3002",
+        "14": "\u5c0d\u4e00\u500b\u6beb\u7121\u7f6a\u8b49\u7684\u88ab\u544a\uff0c\u9760\u4ed6\u8a8d\u7f6a\u5224\u6210\u6b7b\u5211\u3002"
+    },
+    "snipercommon1AchievementTitle": {
+        "0": "Rifle Out",
+        "11": "\u69cb\u3048\u308b",
+        "13": "\u638f\u51fa\u72d9\u51fb\u67aa",
+        "14": "\u638f\u51fa\u72d9\u64ca\u69cd"
+    },
+    "snipercommon1AchievementGoal": {
+        "0": "Draw the rifle for the first time.",
+        "11": "\u521d\u3081\u3066\u30e9\u30a4\u30d5\u30eb\u3092\u51fa\u3059\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u638f\u51fa\u72d9\u51fb\u67aa\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u638f\u51fa\u72d9\u64ca\u69cd\u3002"
+    },
+    "snipercommon2AchievementTitle": {
+        "0": "First Shot",
+        "11": "\u521d\u767a",
+        "13": "\u7b2c\u4e00\u67aa",
+        "14": "\u7b2c\u4e00\u69cd"
+    },
+    "snipercommon2AchievementGoal": {
+        "0": "Fire the rifle for the first time.",
+        "11": "\u521d\u3081\u3066\u767a\u70ae\u3059\u308b\u3002",
+        "13": "\u7b2c\u4e00\u6b21\u5f00\u67aa\u3002",
+        "14": "\u7b2c\u4e00\u6b21\u958b\u69cd\u3002"
+    },
+    "sniperanother1AchievementTitle": {
+        "0": "Long Shot",
+        "11": "\u9060\u6483",
+        "13": "\u8fdc\u8ddd\u79bb\u72d9\u6740",
+        "14": "\u9060\u8ddd\u96e2\u72d9\u6bba"
+    },
+    "sniperanother1AchievementGoal": {
+        "0": "Snipe a target from 20 metres or further.",
+        "11": "20m\u4ee5\u4e0a\u96e2\u308c\u305f\u76f8\u624b\u3092\u72d9\u6483\u3059\u308b\u3002",
+        "13": "\u5728 20 \u7c73\u4ee5\u5916\u72d9\u6740\u4e00\u540d\u76ee\u6807\u3002",
+        "14": "\u5728 20 \u7c73\u4ee5\u5916\u72d9\u6bba\u4e00\u540d\u76ee\u6a19\u3002"
+    },
+    "sniperchallengeAchievementTitle": {
+        "0": "Through The Vent",
+        "11": "\u30d9\u30f3\u30c8\u8d8a\u3057",
+        "13": "\u9694\u7740\u901a\u98ce\u53e3",
+        "14": "\u9694\u8457\u901a\u98a8\u53e3"
+    },
+    "sniperchallengeAchievementGoal": {
+        "0": "Snipe a player hiding inside a vent.",
+        "11": "\u30d9\u30f3\u30c8\u306b\u96a0\u308c\u305f\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u72d9\u6483\u3059\u308b\u3002",
+        "13": "\u72d9\u6740\u4e00\u540d\u8eb2\u5728\u901a\u98ce\u53e3\u91cc\u7684\u73a9\u5bb6\u3002",
+        "14": "\u72d9\u6bba\u4e00\u540d\u8eb2\u5728\u901a\u98a8\u53e3\u88e1\u7684\u73a9\u5bb6\u3002"
+    },
+    "zeninNaoya": {
+        "0": "Naoya Zenin",
+        "11": "\u79aa\u9662\u76f4\u54c9",
+        "13": "\u7985\u9662\u76f4\u54c9",
+        "14": "\u79aa\u9662\u76f4\u54c9"
+    },
+    "zeninNaoyaIntroDesc": {
+        "0": "Everything in this world should move at my pace.",
+        "11": "\u3053\u306e\u4e16\u306e\u3059\u3079\u3066\u306f\u3001\u4ffa\u306e\u30c6\u30f3\u30dd\u3067\u52d5\u3051\u3070\u3044\u3044\u3002",
+        "13": "\u8fd9\u4e16\u4e0a\u7684\u4e00\u5207\uff0c\u90fd\u8be5\u6309\u6211\u7684\u8282\u594f\u8d70\u3002",
+        "14": "\u9019\u4e16\u4e0a\u7684\u4e00\u5207\uff0c\u90fd\u8a72\u6309\u6211\u7684\u7bc0\u594f\u8d70\u3002"
+    },
+    "zeninNaoyaShortDesc": {
+        "0": "Plan a path, dash along it, and freeze anyone you touch",
+        "11": "\u9032\u8def\u3092\u6c7a\u3081\u3066\u7a81\u9032\u3057\u3001\u89e6\u308c\u305f\u8005\u3092\u6b62\u3081\u308b",
+        "13": "\u89c4\u5212\u4e00\u6761\u8def\u5f84\u51b2\u523a\uff0c\u649e\u5230\u7684\u4eba\u88ab\u5b9a\u683c",
+        "14": "\u898f\u5283\u4e00\u689d\u8def\u5f91\u885d\u523a\uff0c\u649e\u5230\u7684\u4eba\u88ab\u5b9a\u683c"
+    },
+    "zeninNaoyaFullDesc": {
+        "0": "<title>Team</title>Impostor.\n<title>Projection Sorcery</title>Hold <var>F</var> to aim, drag the mouse to set a path, release to dash along it. Max length <var>%LEN%</var> m, cut short by walls.\n<title>Freeze</title>Anyone you touch mid-dash is frozen for <var>%FREEZE%</var> s and cannot move.\n<title>Arrogance</title>Killing a frozen target finishes your kill cooldown instantly.\n<title>Limits</title>No steering, no cancelling, no killing while dashing. Cooldown <var>%CD%</var> s.",
+        "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u6295\u5c04\u546a\u6cd5</title><var>F</var> \u3092\u62bc\u3057\u3066\u76ee\u6e96\u3092\u5408\u308f\u305b\u3001\u30de\u30a6\u30b9\u3067\u9032\u8def\u3092\u5f15\u304d\u3001\u96e2\u3057\u3066\u7a81\u9032\u3002\u6700\u5927 <var>%LEN%</var> m\u3001\u58c1\u3067\u5bf8\u65ad\u3002\n<title>\u505c\u6b62</title>\u7a81\u9032\u4e2d\u306b\u89e6\u308c\u305f\u8005\u306f <var>%FREEZE%</var> \u79d2\u9593\u505c\u6b62\u3057\u3001\u52d5\u3051\u306a\u3044\u3002\n<title>\u50b2\u6162</title>\u505c\u6b62\u4e2d\u306e\u76ee\u6a19\u3092\u5f37\u6bba\u3059\u308b\u3068\u3001\u30ad\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3\u304c\u5373\u5b8c\u4e86\u3059\u308b\u3002\n<title>\u5236\u9650</title>\u7a81\u9032\u4e2d\u306f\u65b9\u5411\u8ee2\u63db\u3082\u4e2d\u65ad\u3082\u6bba\u5bb3\u3082\u3067\u304d\u306a\u3044\u3002\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%CD%</var> \u79d2\u3002",
+        "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6295\u5c04\u5492\u6cd5</title>\u6309\u4f4f <var>F</var> \u8fdb\u5165\u7791\u51c6\uff0c\u62d6\u52a8\u9f20\u6807\u5212\u51fa\u8def\u5f84\uff0c\u677e\u5f00\u540e\u6cbf\u8def\u5f84\u51b2\u523a\u3002\u6700\u957f <var>%LEN%</var> \u7c73\uff0c\u649e\u5899\u5219\u622a\u65ad\u3002\n<title>\u5b9a\u683c</title>\u51b2\u523a\u9014\u4e2d\u649e\u5230\u7684\u4eba\u4f1a\u88ab\u5b9a\u683c <var>%FREEZE%</var> \u79d2\uff0c\u65e0\u6cd5\u79fb\u52a8\u3002\n<title>\u50b2\u6162</title>\u51fb\u6740\u6b63\u5904\u4e8e\u5b9a\u683c\u72b6\u6001\u7684\u76ee\u6807\uff0c\u51fb\u6740\u51b7\u5374\u7acb\u5373\u5b8c\u6210\u3002\n<title>\u9650\u5236</title>\u51b2\u523a\u671f\u95f4\u65e0\u6cd5\u8f6c\u5411\u3001\u65e0\u6cd5\u53d6\u6d88\u3001\u4e5f\u4e0d\u80fd\u51fa\u5200\u3002\u51b7\u5374 <var>%CD%</var> \u79d2\u3002",
+        "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6295\u5c04\u5492\u6cd5</title>\u6309\u4f4f <var>F</var> \u9032\u5165\u77b3\u6e96\uff0c\u62d6\u52d5\u6ed1\u9f20\u5283\u51fa\u8def\u5f91\uff0c\u653e\u958b\u5f8c\u6cbf\u8def\u5f91\u885d\u523a\u3002\u6700\u9577 <var>%LEN%</var> \u7c73\uff0c\u649e\u7246\u5247\u622a\u65b7\u3002\n<title>\u5b9a\u683c</title>\u885d\u523a\u9014\u4e2d\u649e\u5230\u7684\u4eba\u6703\u88ab\u5b9a\u683c <var>%FREEZE%</var> \u79d2\uff0c\u7121\u6cd5\u79fb\u52d5\u3002\n<title>\u50b2\u6162</title>\u64ca\u6bba\u6b63\u8655\u65bc\u5b9a\u683c\u72c0\u614b\u7684\u76ee\u6a19\uff0c\u64ca\u6bba\u51b7\u537b\u7acb\u5373\u5b8c\u6210\u3002\n<title>\u9650\u5236</title>\u885d\u523a\u671f\u9593\u7121\u6cd5\u8f49\u5411\u3001\u7121\u6cd5\u53d6\u6d88\u3001\u4e5f\u4e0d\u80fd\u51fa\u5200\u3002\u51b7\u537b <var>%CD%</var> \u79d2\u3002"
+    },
+    "zeninNaoyaBlurb": {
+        "0": "Fastest in the clan, still can't outrun his own ego.",
+        "11": "\u79aa\u9662\u5bb6\u6700\u901f\u3001\u305f\u3060\u81ea\u5c0a\u5fc3\u306b\u306f\u8ffd\u3044\u3064\u3051\u306a\u3044\u3002",
+        "13": "\u7985\u9662\u5bb6\u6700\u5feb\uff0c\u53ef\u60dc\u8dd1\u4e0d\u8fc7\u81ea\u5df1\u7684\u81ea\u5c0a\u5fc3\u3002",
+        "14": "\u79aa\u9662\u5bb6\u6700\u5feb\uff0c\u53ef\u60dc\u8dd1\u4e0d\u904e\u81ea\u5df1\u7684\u81ea\u5c0a\u5fc3\u3002"
+    },
+    "zeninNaoyaDashText": {
+        "0": "Projection Sorcery",
+        "11": "\u6295\u5c04\u546a\u6cd5",
+        "13": "\u6295\u5c04\u5492\u6cd5",
+        "14": "\u6295\u5c04\u5492\u6cd5"
+    },
+    "zeninNaoyaCooldown": {
+        "0": "Projection Sorcery Cooldown",
+        "11": "\u6295\u5c04\u546a\u6cd5\u306e\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u6295\u5c04\u5492\u6cd5\u51b7\u5374",
+        "14": "\u6295\u5c04\u5492\u6cd5\u51b7\u537b"
+    },
+    "zeninNaoyaPathLength": {
+        "0": "Max Path Length",
+        "11": "\u6700\u5927\u9032\u8def\u9577",
+        "13": "\u6700\u5927\u8def\u5f84\u957f\u5ea6",
+        "14": "\u6700\u5927\u8def\u5f91\u9577\u5ea6"
+    },
+    "zeninNaoyaDashSpeed": {
+        "0": "Dash Speed",
+        "11": "\u7a81\u9032\u901f\u5ea6",
+        "13": "\u51b2\u523a\u901f\u5ea6",
+        "14": "\u885d\u523a\u901f\u5ea6"
+    },
+    "zeninNaoyaTouchRadius": {
+        "0": "Freeze Radius",
+        "11": "\u505c\u6b62\u5224\u5b9a\u534a\u5f84",
+        "13": "\u5b9a\u683c\u5224\u5b9a\u534a\u5f84",
+        "14": "\u5b9a\u683c\u5224\u5b9a\u534a\u5f91"
+    },
+    "zeninNaoyaFreezeDuration": {
+        "0": "Freeze Duration",
+        "11": "\u505c\u6b62\u6642\u9593",
+        "13": "\u5b9a\u683c\u65f6\u957f",
+        "14": "\u5b9a\u683c\u6642\u9577"
+    },
+    "zeninNaoyaArrogance": {
+        "0": "Arrogance (killing a frozen target clears the kill cooldown)",
+        "11": "\u50b2\u6162\uff08\u505c\u6b62\u4e2d\u306e\u76ee\u6a19\u3092\u5f37\u6bba\u3059\u308b\u3068\u30ad\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3\u304c\u5373\u5b8c\u4e86\uff09",
+        "13": "\u50b2\u6162\uff08\u51fb\u6740\u5b9a\u683c\u4e2d\u7684\u76ee\u6807\u4f1a\u7acb\u5373\u5b8c\u6210\u51fb\u6740\u51b7\u5374\uff09",
+        "14": "\u50b2\u6162\uff08\u64ca\u6bba\u5b9a\u683c\u4e2d\u7684\u76ee\u6a19\u6703\u7acb\u5373\u5b8c\u6210\u64ca\u6bba\u51b7\u537b\uff09"
+    },
+    "zeninNaoyacommon1AchievementTitle": {
+        "0": "Projection Sorcery",
+        "11": "\u6295\u5c04\u546a\u6cd5",
+        "13": "\u6295\u5c04\u5492\u6cd5",
+        "14": "\u6295\u5c04\u5492\u6cd5"
+    },
+    "zeninNaoyacommon1AchievementGoal": {
+        "0": "Freeze someone with a single dash.",
+        "11": "\u4e00\u5ea6\u306e\u7a81\u9032\u3067\u8ab0\u304b\u3092\u505c\u6b62\u3055\u305b\u308b\u3002",
+        "13": "\u7528\u4e00\u6b21\u51b2\u523a\u5b9a\u683c\u4efb\u610f\u4e00\u540d\u73a9\u5bb6\u3002",
+        "14": "\u7528\u4e00\u6b21\u885d\u523a\u5b9a\u683c\u4efb\u610f\u4e00\u540d\u73a9\u5bb6\u3002"
+    },
+    "zeninNaoyaanother1AchievementTitle": {
+        "0": "Frame Trap",
+        "11": "\u4e00\u30b3\u30de",
+        "13": "\u4e00\u5e27",
+        "14": "\u4e00\u5e40"
+    },
+    "zeninNaoyaanother1AchievementGoal": {
+        "0": "Freeze 2 players with a single dash.",
+        "11": "\u4e00\u5ea6\u306e\u7a81\u9032\u3067 2 \u4eba\u3092\u505c\u6b62\u3055\u305b\u308b\u3002",
+        "13": "\u7528\u4e00\u6b21\u51b2\u523a\u540c\u65f6\u5b9a\u683c 2 \u540d\u73a9\u5bb6\u3002",
+        "14": "\u7528\u4e00\u6b21\u885d\u523a\u540c\u6642\u5b9a\u683c 2 \u540d\u73a9\u5bb6\u3002"
+    },
+    "zeninNaoyachallengeAchievementTitle": {
+        "0": "24 Frames",
+        "11": "24\u30d5\u30ec\u30fc\u30e0",
+        "13": "24 \u5e27",
+        "14": "24 \u5e40"
+    },
+    "zeninNaoyachallengeAchievementGoal": {
+        "0": "Freeze 3 players with a single dash.",
+        "11": "\u4e00\u5ea6\u306e\u7a81\u9032\u3067 3 \u4eba\u3092\u505c\u6b62\u3055\u305b\u308b\u3002",
+        "13": "\u7528\u4e00\u6b21\u51b2\u523a\u540c\u65f6\u5b9a\u683c 3 \u540d\u73a9\u5bb6\u3002",
+        "14": "\u7528\u4e00\u6b21\u885d\u523a\u540c\u6642\u5b9a\u683c 3 \u540d\u73a9\u5bb6\u3002"
+    },
+    "zeninNaoyaheavenlyRestrictionAchievementTitle": {
+        "0": "Heavenly Restriction",
+        "11": "\u5929\u4e0e\u546a\u7e1b",
+        "13": "\u5929\u4e0e\u5492\u7f1a",
+        "14": "\u5929\u8207\u5492\u7e1b"
+    },
+    "zeninNaoyaheavenlyRestrictionAchievementGoal": {
+        "0": "Kill a player who bears the Heavenly Restriction.",
+        "11": "\u300c\u5929\u4e0e\u546a\u7e1b\u300d\u3092\u6301\u3064\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u6bba\u5bb3\u3059\u308b\u3002",
+        "13": "\u51fb\u6740\u4e00\u540d\u62e5\u6709\u300c\u5929\u4e0e\u5492\u7f1a\u300d\u7684\u73a9\u5bb6\u3002",
+        "14": "\u64ca\u6bba\u4e00\u540d\u64c1\u6709\u300c\u5929\u8207\u5492\u7e1b\u300d\u7684\u73a9\u5bb6\u3002"
+    },
+    "zeninNaoyaheavenlyRestrictionAchievementFlavor": {
+        "0": "Cursed energy means nothing against a body like that.",
+        "11": "\u305d\u3093\u306a\u4f53\u306b\u546a\u529b\u306a\u3093\u3066\u610f\u5473\u304c\u306a\u3044\u3002",
+        "13": "\u9762\u5bf9\u90a3\u6837\u7684\u8eab\u4f53\uff0c\u5492\u529b\u6beb\u65e0\u610f\u4e49\u3002",
+        "14": "\u9762\u5c0d\u90a3\u6a23\u7684\u8eab\u9ad4\uff0c\u5492\u529b\u6beb\u7121\u610f\u7fa9\u3002"
+    },
+    "kiraobsessionAchievementTitle": {
+        "0": "Are You Obsessed With Me?",
+        "11": "\u4ffa\u306e\u3053\u3068\u597d\u304d\u306a\u306e\u304b\uff1f",
+        "13": "\u662f\u4e0d\u662f\u6697\u604b\u6211",
+        "14": "\u662f\u4e0d\u662f\u6697\u6200\u6211"
+    },
+    "kiraobsessionAchievementGoal": {
+        "0": "Kill the same player 10 times in total with the notebook.",
+        "11": "\u30ce\u30fc\u30c8\u3067\u540c\u3058\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u7d2f\u8a08 10 \u56de\u6bba\u5bb3\u3059\u308b\u3002",
+        "13": "\u7528\u7b14\u8bb0\u672c\u7d2f\u8ba1\u6740\u6b7b\u540c\u4e00\u540d\u73a9\u5bb6 10 \u6b21\u3002",
+        "14": "\u7528\u7b46\u8a18\u672c\u7d2f\u8a08\u6bba\u6b7b\u540c\u4e00\u540d\u73a9\u5bb6 10 \u6b21\u3002"
+    },
+    "kiraobsessionAchievementFlavor": {
+        "0": "Why is my name all over your notebook? Are you in love with me?",
+        "11": "\u304a\u524d\u306e\u30ce\u30fc\u30c8\u3001\u4ffa\u306e\u540d\u524d\u3070\u3063\u304b\u308a\u3058\u3083\u306a\u3044\u304b\u3002\u307e\u3055\u304b\u604b\u3057\u3066\u308b\u306e\u304b\uff1f",
+        "13": "\u4f60\u7684\u7b14\u8bb0\u672c\u4e0a\u600e\u4e48\u5168\u662f\u6211\u7684\u540d\u5b57\uff0c\u662f\u4e0d\u662f\u6697\u604b\u6211\u3002",
+        "14": "\u4f60\u7684\u7b46\u8a18\u672c\u4e0a\u600e\u9ebc\u5168\u662f\u6211\u7684\u540d\u5b57\uff0c\u662f\u4e0d\u662f\u6697\u6200\u6211\u3002"
+    },
+    "sukunaancientStrongestAchievementTitle": {
+        "0": "Strongest of the Heian Era",
+        "11": "\u53e4\u4ee3\u6700\u5f37",
+        "13": "\u53e4\u4ee3\u6700\u5f3a",
+        "14": "\u53e4\u4ee3\u6700\u5f37"
+    },
+    "sukunaancientStrongestAchievementGoal": {
+        "0": "Personally kill Gojo once.",
+        "11": "\u4e94\u6761\u609f\u3092\u81ea\u3089\u306e\u624b\u3067 1 \u56de\u6bba\u5bb3\u3059\u308b\u3002",
+        "13": "\u4eb2\u624b\u51fb\u6740\u4e94\u6761\u609f\u4e00\u6b21\u3002",
+        "14": "\u89aa\u624b\u64ca\u6bba\u4e94\u689d\u609f\u4e00\u6b21\u3002"
+    },
+    "sukunaancientStrongestAchievementFlavor": {
+        "0": "Ordinary man. Your era is over.",
+        "11": "\u51e1\u592b\u3001\u304a\u524d\u306e\u6642\u4ee3\u306f\u7d42\u308f\u3063\u305f\u3002",
+        "13": "\u51e1\u592b\uff0c\u4f60\u7684\u65f6\u4ee3\u7ed3\u675f\u4e86\u3002",
+        "14": "\u51e1\u592b\uff0c\u4f60\u7684\u6642\u4ee3\u7d50\u675f\u4e86\u3002"
+    },
+    "gojochallengerAchievementTitle": {
+        "0": "You're the Challenger",
+        "11": "\u6311\u6226\u8005\u306f\u304a\u524d\u3060",
+        "13": "\u4f60\u624d\u662f\u6311\u6218\u8005",
+        "14": "\u4f60\u624d\u662f\u6311\u6230\u8005"
+    },
+    "gojochallengerAchievementGoal": {
+        "0": "With Sukuna in the game, personally vote him out and win without dying.",
+        "11": "\u5bbf\u5119\u304c\u3044\u308b\u8a66\u5408\u3067\u81ea\u3089\u6295\u7968\u3057\u3066\u8ffd\u653e\u3057\u3001\u4e00\u5ea6\u3082\u6b7b\u306a\u305a\u306b\u52dd\u5229\u3059\u308b\u3002",
+        "13": "\u5bbf\u50ac\u5728\u573a\u65f6\u4eb2\u624b\u6295\u7968\u5c06\u5176\u653e\u9010\uff0c\u5e76\u4e14\u5168\u7a0b\u672a\u6b7b\u4ea1\u800c\u83b7\u80dc\u3002",
+        "14": "\u5bbf\u5119\u5728\u5834\u6642\u89aa\u624b\u6295\u7968\u5c07\u5176\u653e\u9010\uff0c\u4e26\u4e14\u5168\u7a0b\u672a\u6b7b\u4ea1\u800c\u7372\u52dd\u3002"
+    },
+    "gojochallengerAchievementFlavor": {
+        "0": "Throughout heaven and earth, I alone am the honored one.",
+        "11": "\u5929\u4e0a\u5929\u4e0b\u3001\u552f\u6211\u72ec\u5c0a\u3002",
+        "13": "\u5929\u4e0a\u5929\u4e0b\uff0c\u552f\u6211\u72ec\u5c0a\u3002",
+        "14": "\u5929\u4e0a\u5929\u4e0b\uff0c\u552f\u6211\u7368\u5c0a\u3002"
+    },
+    "heavenlyRestriction": {
+        "0": "Heavenly Restriction",
+        "11": "\u5929\u4e0e\u546a\u7e1b",
+        "13": "\u5929\u4e0e\u5492\u7f1a",
+        "14": "\u5929\u8207\u5492\u7e1b"
+    },
+    "heavenlyRestrictionIntroDesc": {
+        "0": "You were born with nothing but your body. That was enough.",
+        "11": "\u304a\u524d\u306f\u4f53\u3060\u3051\u3092\u6301\u3063\u3066\u751f\u307e\u308c\u305f\u3002\u305d\u308c\u3067\u5341\u5206\u3060\u3002",
+        "13": "\u4f60\u751f\u6765\u53ea\u6709\u8fd9\u5177\u8eab\u4f53\u3002\u8fd9\u5c31\u591f\u4e86\u3002",
+        "14": "\u4f60\u751f\u4f86\u53ea\u6709\u9019\u5177\u8eab\u9ad4\u3002\u9019\u5c31\u5920\u4e86\u3002"
+    },
+    "heavenlyRestrictionShortDesc": {
+        "0": "No cursed technique, but a body far beyond human",
+        "11": "\u8853\u5f0f\u306f\u7121\u3044\u304c\u3001\u4eba\u9593\u96e2\u308c\u3057\u305f\u4f53\u3092\u6301\u3064",
+        "13": "\u6ca1\u6709\u4efb\u4f55\u672f\u5f0f\uff0c\u4f46\u62e5\u6709\u8d85\u4eba\u7684\u8eab\u4f53",
+        "14": "\u6c92\u6709\u4efb\u4f55\u8853\u5f0f\uff0c\u4f46\u64c1\u6709\u8d85\u4eba\u7684\u8eab\u9ad4"
+    },
+    "heavenlyRestrictionFullDesc": {
+        "0": "The Heavenly Restriction is a Modifier that trades every cursed technique for a body far beyond human.\nAll of the holder's own ability buttons disappear - they cannot use any role skill.\nIn exchange, their movement speed is greatly increased.\nIf the holder is a killing role, their kill cooldown is also greatly reduced.",
+        "11": "\u5929\u4e0e\u546a\u7e1b\u306f\u3001\u3059\u3079\u3066\u306e\u8853\u5f0f\u3068\u5f15\u304d\u63db\u3048\u306b\u4eba\u9593\u96e2\u308c\u3057\u305f\u4f53\u3092\u5f97\u308b\u4fee\u98fe\u3067\u3059\u3002\n\u6240\u6301\u8005\u306e\u80fd\u529b\u30dc\u30bf\u30f3\u306f\u3059\u3079\u3066\u6d88\u3048\u3001\u5f79\u306e\u30b9\u30ad\u30eb\u3092\u4e00\u5207\u4f7f\u3048\u307e\u305b\u3093\u3002\n\u4ee3\u308f\u308a\u306b\u79fb\u52d5\u901f\u5ea6\u304c\u5927\u5e45\u306b\u4e0a\u304c\u308a\u307e\u3059\u3002\n\u30ad\u30eb\u5f79\u306a\u3089\u3001\u30ad\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3\u3082\u5927\u5e45\u306b\u77ed\u7e2e\u3055\u308c\u307e\u3059\u3002",
+        "13": "\u300c\u5929\u4e0e\u5492\u7f1a\u300d\u662f\u4e00\u79cd\u4fee\u9970\u7b26\uff1a\u62ff\u5168\u90e8\u672f\u5f0f\u6362\u53d6\u4e00\u5177\u8fdc\u8d85\u5e38\u4eba\u7684\u8eab\u4f53\u3002\n\u6301\u6709\u8005\u81ea\u8eab\u7684\u6280\u80fd\u6309\u94ae\u5168\u90e8\u6d88\u5931\uff0c\u65e0\u6cd5\u4f7f\u7528\u4efb\u4f55\u89d2\u8272\u6280\u80fd\u3002\n\u4f5c\u4e3a\u4ea4\u6362\uff0c\u79fb\u52a8\u901f\u5ea6\u5927\u5e45\u63d0\u5347\u3002\n\u82e5\u672c\u8eab\u662f\u5e26\u5200\u804c\u4e1a\uff0c\u51fb\u6740\u51b7\u5374\u4e5f\u4f1a\u5927\u5e45\u7f29\u77ed\u3002",
+        "14": "\u300c\u5929\u8207\u5492\u7e1b\u300d\u662f\u4e00\u7a2e\u4fee\u98fe\u7b26\uff1a\u62ff\u5168\u90e8\u8853\u5f0f\u63db\u53d6\u4e00\u5177\u9060\u8d85\u5e38\u4eba\u7684\u8eab\u9ad4\u3002\n\u6301\u6709\u8005\u81ea\u8eab\u7684\u6280\u80fd\u6309\u9215\u5168\u90e8\u6d88\u5931\uff0c\u7121\u6cd5\u4f7f\u7528\u4efb\u4f55\u89d2\u8272\u6280\u80fd\u3002\n\u4f5c\u70ba\u4ea4\u63db\uff0c\u79fb\u52d5\u901f\u5ea6\u5927\u5e45\u63d0\u5347\u3002\n\u82e5\u672c\u8eab\u662f\u5e36\u5200\u8077\u696d\uff0c\u64ca\u6bba\u51b7\u537b\u4e5f\u6703\u5927\u5e45\u7e2e\u77ed\u3002"
+    },
+    "heavenlyRestrictionBlurb": {
+        "0": "Gave up everything for a body. Worth it.",
+        "11": "\u3059\u3079\u3066\u3092\u6368\u3066\u3066\u4f53\u3092\u624b\u306b\u5165\u308c\u305f\u3002\u3084\u308a\u3059\u304e\u3060\u3002",
+        "13": "\u6362\u6389\u4e00\u5207\uff0c\u53ea\u5269\u4e0b\u8eab\u4f53\u3002\u8840\u8d5a\u3002",
+        "14": "\u63db\u6389\u4e00\u5207\uff0c\u53ea\u5269\u4e0b\u8eab\u9ad4\u3002\u8cea\u8cfa\u3002"
+    },
+    "heavenlyRestrictionSpeed": {
+        "0": "Speed Multiplier",
+        "11": "\u79fb\u52d5\u901f\u5ea6\u500d\u7387",
+        "13": "\u79fb\u52a8\u901f\u5ea6\u500d\u7387",
+        "14": "\u79fb\u52d5\u901f\u5ea6\u500d\u7387"
+    },
+    "heavenlyRestrictionKillCooldown": {
+        "0": "Kill Cooldown Multiplier",
+        "11": "\u30ad\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3\u500d\u7387",
+        "13": "\u51fb\u6740\u51b7\u5374\u500d\u7387",
+        "14": "\u64ca\u6bba\u51b7\u537b\u500d\u7387"
+    },
+    "yutaOkkotsu": {
+        "0": "Yuta Okkotsu",
+        "11": "\u4e59\u9aa8\u6182\u592a",
+        "13": "\u4e59\u9aa8\u5fe7\u592a",
+        "14": "\u4e59\u9aa8\u6182\u592a"
+    },
+    "yutaOkkotsuIntroDesc": {
+        "0": "Say the word, and the world has to listen. Your throat pays for it.",
+        "11": "\u8a00\u3063\u3066\u3057\u307e\u3048\u3070\u4e16\u754c\u306f\u5f93\u3046\u3002\u305f\u3060\u3057\u5589\u304c\u58ca\u308c\u308b\u3002",
+        "13": "\u5f00\u53e3\u5c31\u80fd\u4ee4\u4eba\u5c31\u8303\uff0c\u4ee3\u4ef7\u662f\u4f60\u7684\u55d3\u5b50\u3002",
+        "14": "\u958b\u53e3\u5c31\u80fd\u4ee4\u4eba\u5c31\u7bc4\uff0c\u4ee3\u50f9\u662f\u4f60\u7684\u55c3\u5b50\u3002"
+    },
+    "yutaOkkotsuShortDesc": {
+        "0": "Give cursed speech orders that freeze a player or mute their vote",
+        "11": "\u546a\u8a00\u3067\u547d\u4ee4\u3057\u3001\u76f8\u624b\u3092\u505c\u3081\u305f\u308a\u6295\u7968\u3092\u5c01\u3058\u308b",
+        "13": "\u7528\u5492\u8a00\u4e0b\u4ee4\uff0c\u5b9a\u4f4f\u5bf9\u65b9\u6216\u5c01\u6389\u4ed6\u7684\u6295\u7968\u6743",
+        "14": "\u7528\u5492\u8a00\u4e0b\u4ee4\uff0c\u5b9a\u4f4f\u5c0d\u65b9\u6216\u5c01\u6389\u4ed6\u7684\u6295\u7968\u6b0a"
+    },
+    "yutaOkkotsuFullDesc": {
+        "0": "<title>Team</title>Crewmate.\n<title>Cursed Speech</title>Order the target in your crosshair. Don't Move freezes them for <var>%STOP%</var> s; Shut Up blocks their vote in the next meeting.\n<title>Throat</title>Every order also freezes you for <var>%THROAT%</var> s.\n<title>Limits</title>Both orders share one cooldown of <var>%CD%</var> s.",
+        "11": "<title>\u9663\u55b6</title>\u30af\u30eb\u30fc\u3002\n<title>\u546a\u8a00</title>\u7167\u6e96\u3057\u305f\u76f8\u624b\u306b\u547d\u4ee4\u3059\u308b\u3002\u300c\u52d5\u304f\u306a\u300d\u3067 <var>%STOP%</var> \u79d2\u505c\u6b62\u3001\u300c\u9ed9\u308c\u300d\u3067\u6b21\u306e\u4f1a\u8b70\u306e\u6295\u7968\u3092\u5c01\u3058\u308b\u3002\n<title>\u5589</title>\u4f7f\u7528\u3059\u308b\u305f\u3073\u306b\u81ea\u5206\u3082 <var>%THROAT%</var> \u79d2\u505c\u6b62\u3059\u308b\u3002\n<title>\u5236\u9650</title>\u4e21\u65b9\u306e\u547d\u4ee4\u306f\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%CD%</var> \u79d2\u3092\u5171\u6709\u3059\u308b\u3002",
+        "13": "<title>\u9635\u8425</title>\u8239\u5458\u3002\n<title>\u5492\u8a00</title>\u5bf9\u51c6\u5fc3\u5185\u7684\u76ee\u6807\u4e0b\u4ee4\u3002\u300c\u522b\u52a8\u300d\u5c06\u5176\u5b9a\u8eab <var>%STOP%</var> \u79d2\uff1b\u300c\u95ed\u5634\u300d\u5c01\u6389\u5176\u5728\u4e0b\u4e00\u6b21\u4f1a\u8bae\u7684\u6295\u7968\u3002\n<title>\u4f24\u55d3\u5b50</title>\u6bcf\u6b21\u4f7f\u7528\u540e\u4f60\u81ea\u5df1\u4f1a\u5b9a\u8eab <var>%THROAT%</var> \u79d2\uff0c\u65e0\u6cd5\u79fb\u52a8\u3002\n<title>\u9650\u5236</title>\u4e24\u4e2a\u6307\u4ee4\u5171\u4eab\u51b7\u5374 <var>%CD%</var> \u79d2\u3002",
+        "14": "<title>\u9663\u71df</title>\u8239\u54e1\u3002\n<title>\u5492\u8a00</title>\u5c0d\u6e96\u5fc3\u5167\u7684\u76ee\u6a19\u4e0b\u4ee4\u3002\u300c\u5225\u52d5\u300d\u5c07\u5176\u5b9a\u8eab <var>%STOP%</var> \u79d2\uff1b\u300c\u9589\u5634\u300d\u5c01\u6389\u5176\u5728\u4e0b\u4e00\u6b21\u6703\u8b70\u7684\u6295\u7968\u3002\n<title>\u50b7\u55c3\u5b50</title>\u6bcf\u6b21\u4f7f\u7528\u5f8c\u4f60\u81ea\u5df1\u6703\u5b9a\u8eab <var>%THROAT%</var> \u79d2\uff0c\u7121\u6cd5\u79fb\u52d5\u3002\n<title>\u9650\u5236</title>\u5169\u500b\u6307\u4ee4\u5171\u4eab\u51b7\u537b <var>%CD%</var> \u79d2\u3002"
+    },
+    "yutaOkkotsuBlurb": {
+        "0": "Voice like a command, throat like a wreck.",
+        "11": "\u58f0\u306f\u547d\u4ee4\u3001\u5589\u306f\u6bba\u3055\u308c\u305f\u3002",
+        "13": "\u55d3\u5b50\u662f\u547d\u4ee4\uff0c\u4e5f\u662f\u4e00\u573a\u707e\u96be\u3002",
+        "14": "\u55c3\u5b50\u662f\u547d\u4ee4\uff0c\u4e5f\u662f\u4e00\u5834\u707d\u96e3\u3002"
+    },
+    "yutaStopText": {
+        "0": "Don't Move",
+        "11": "\u52d5\u304f\u306a",
+        "13": "\u522b\u52a8",
+        "14": "\u5225\u52d5"
+    },
+    "yutaSilenceText": {
+        "0": "Shut Up",
+        "11": "\u9ed9\u308c",
+        "13": "\u95ed\u5634",
+        "14": "\u9589\u5634"
+    },
+    "yutaCooldown": {
+        "0": "Cursed Speech Cooldown",
+        "11": "\u546a\u8a00\u306e\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u5492\u8a00\u51b7\u5374",
+        "14": "\u5492\u8a00\u51b7\u537b"
+    },
+    "yutaStopDuration": {
+        "0": "Don't Move Duration",
+        "11": "\u300c\u52d5\u304f\u306a\u300d\u6642\u9593",
+        "13": "\u300c\u522b\u52a8\u300d\u6301\u7eed\u65f6\u95f4",
+        "14": "\u300c\u5225\u52d5\u300d\u6301\u7e8c\u6642\u9593"
+    },
+    "yutaThroatDuration": {
+        "0": "Throat Damage Duration",
+        "11": "\u5589\u640d\u50b7\u6642\u9593",
+        "13": "\u4f24\u55d3\u5b50\u65f6\u957f",
+        "14": "\u50b7\u55c3\u5b50\u6642\u9577"
+    },
+    "yutaOkkotsucommon1AchievementTitle": {
+        "0": "Don't Move",
+        "11": "\u300c\u52d5\u304f\u306a\u300d",
+        "13": "\u300c\u522b\u52a8\u300d",
+        "14": "\u300c\u5225\u52d5\u300d"
+    },
+    "yutaOkkotsucommon1AchievementGoal": {
+        "0": "Freeze a player with cursed speech.",
+        "11": "\u546a\u8a00\u3067\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u4e00\u4eba\u505c\u3081\u308b\u3002",
+        "13": "\u7528\u5492\u8a00\u5b9a\u4f4f\u4e00\u540d\u73a9\u5bb6\u3002",
+        "14": "\u7528\u5492\u8a00\u5b9a\u4f4f\u4e00\u540d\u73a9\u5bb6\u3002"
+    },
+    "yutaOkkotsuanother1AchievementTitle": {
+        "0": "Shut Up",
+        "11": "\u300c\u9ed9\u308c\u300d",
+        "13": "\u300c\u95ed\u5634\u300d",
+        "14": "\u300c\u9589\u5634\u300d"
+    },
+    "yutaOkkotsuanother1AchievementGoal": {
+        "0": "Mute a player's vote with cursed speech.",
+        "11": "\u546a\u8a00\u3067\u30d7\u30ec\u30a4\u30e4\u30fc\u306e\u6295\u7968\u3092\u5c01\u3058\u308b\u3002",
+        "13": "\u7528\u5492\u8a00\u5c01\u6389\u4e00\u540d\u73a9\u5bb6\u7684\u6295\u7968\u3002",
+        "14": "\u7528\u5492\u8a00\u5c01\u6389\u4e00\u540d\u73a9\u5bb6\u7684\u6295\u7968\u3002"
+    },
+    "yutaOkkotsuchallengeAchievementTitle": {
+        "0": "Words Have Weight",
+        "11": "\u8a00\u8449\u306b\u306f\u91cd\u307f\u304c\u3042\u308b",
+        "13": "\u4e00\u8a00\u4e5d\u9f0e",
+        "14": "\u4e00\u8a00\u4e5d\u9f0e"
+    },
+    "yutaOkkotsuchallengeAchievementGoal": {
+        "0": "Mute a player and have them voted out in that same meeting.",
+        "11": "\u6295\u7968\u3092\u5c01\u3058\u305f\u76f8\u624b\u3092\u3001\u305d\u306e\u4f1a\u8b70\u3067\u8ffd\u653e\u3055\u305b\u308b\u3002",
+        "13": "\u88ab\u4f60\u5c01\u6389\u6295\u7968\u7684\u4eba\uff0c\u5728\u540c\u4e00\u6b21\u4f1a\u8bae\u4e0a\u88ab\u653e\u9010\u3002",
+        "14": "\u88ab\u4f60\u5c01\u6389\u6295\u7968\u7684\u4eba\uff0c\u5728\u540c\u4e00\u6b21\u6703\u8b70\u4e0a\u88ab\u653e\u9010\u3002"
+    },
+    "kashimoHajime": {
+        "0": "Hajime Kashimo",
+        "11": "\u9e7f\u7d2b\u96f2\u4e00",
+        "13": "\u9e7f\u7d2b\u4e91\u4e00",
+        "14": "\u9e7f\u7d2b\u96f2\u4e00"
+    },
+    "kashimoHajimeIntroDesc": {
+        "0": "Four hundred years, and you are still the only one worth fighting.",
+        "11": "\u56db\u767e\u5e74\u305f\u3063\u3066\u3082\u3001\u6226\u3046\u4fa1\u5024\u304c\u3042\u308b\u306e\u306f\u304a\u524d\u3060\u3051\u3060\u3002",
+        "13": "\u56db\u767e\u5e74\u8fc7\u53bb\uff0c\u503c\u5f97\u4e00\u6218\u7684\u4f9d\u7136\u53ea\u6709\u4f60\u3002",
+        "14": "\u56db\u767e\u5e74\u904e\u53bb\uff0c\u503c\u5f97\u4e00\u6230\u7684\u4f9d\u7136\u53ea\u6709\u4f60\u3002"
+    },
+    "kashimoHajimeShortDesc": {
+        "0": "Shock everyone around you, then burn your own body for one last rampage",
+        "11": "\u5468\u56f2\u3092\u611f\u96fb\u3055\u305b\u3001\u6700\u5f8c\u306f\u81ea\u3089\u306e\u4f53\u3092\u71c3\u3084\u3057\u3066\u66b4\u308c\u308b",
+        "13": "\u653e\u7535\u9ebb\u75f9\u5468\u56f4\u7684\u4eba\uff0c\u6700\u540e\u71c3\u5c3d\u81ea\u5df1\u7684\u8eab\u4f53\u6362\u4e00\u6b21\u66b4\u8d70",
+        "14": "\u653e\u96fb\u9ebb\u75f9\u5468\u570d\u7684\u4eba\uff0c\u6700\u5f8c\u71c3\u76e1\u81ea\u5df1\u7684\u8eab\u9ad4\u63db\u4e00\u6b21\u66b4\u8d70"
+    },
+    "kashimoHajimeFullDesc": {
+        "0": "<title>Team</title>Neutral. You win alone once every other threat is gone and your side is at least half of the survivors - the same condition as the Jackal.\n<title>Charge</title>For a few seconds everyone within <var>%RAD%</var> m is electrocuted and frozen for <var>%SHOCK%</var> s. Cooldown <var>%CD%</var> s.\n<title>Mythical Beast Amber</title>Once per game. For <var>%AMBER%</var> s your speed surges and your kill cooldown vanishes - but when it ends, your body breaks down and you die.\n<title>Notes</title>Your tasks do not count toward the crew's progress bar.",
+        "11": "<title>\u9663\u55b6</title>\u4e2d\u7acb\u3002\u4ed6\u306e\u5a01\u8105\u3092\u3059\u3079\u3066\u6392\u9664\u3057\u3001\u81ea\u5206\u5074\u304c\u5b58\u751f\u8005\u306e\u534a\u6570\u4ee5\u4e0a\u306b\u306a\u308c\u3070\u5358\u72ec\u52dd\u5229\uff08\u30b8\u30e3\u30c3\u30ab\u30eb\u3068\u540c\u3058\u6761\u4ef6\uff09\u3002\n<title>\u5e36\u96fb</title><var>%RAD%</var> m \u4ee5\u5185\u306e\u5168\u54e1\u304c\u611f\u96fb\u3057\u3001<var>%SHOCK%</var> \u79d2\u505c\u6b62\u3059\u308b\u3002\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%CD%</var> \u79d2\u3002\n<title>\u5e7b\u7363\u7425\u73c0</title>1 \u8a66\u5408\u306b 1 \u56de\u3002<var>%AMBER%</var> \u79d2\u9593\u306f\u901f\u5ea6\u304c\u6fc0\u5897\u3057\u30ad\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3\u304c\u6d88\u3048\u308b\u304c\u3001\u7d42\u4e86\u3068\u540c\u6642\u306b\u4f53\u304c\u5d29\u308c\u3066\u6b7b\u306c\u3002\n<title>\u88dc\u8db3</title>\u30bf\u30b9\u30af\u306f\u30af\u30eb\u30fc\u306e\u9032\u6357\u30b2\u30fc\u30b8\u306b\u52a0\u7b97\u3055\u308c\u306a\u3044\u3002",
+        "13": "<title>\u9635\u8425</title>\u4e2d\u7acb\u3002\u5176\u5b83\u5a01\u80c1\u5168\u90e8\u51fa\u5c40\u3001\u4e14\u4f60\u4e00\u65b9\u4eba\u6570\u4e0d\u5c11\u4e8e\u573a\u4e0a\u5269\u4f59\u65f6\u5355\u72ec\u83b7\u80dc\uff08\u548c\u8c7a\u72fc\u540c\u6b3e\u6761\u4ef6\uff09\u3002\n<title>\u5e26\u7535</title><var>%RAD%</var> \u7c73\u5185\u6240\u6709\u4eba\u88ab\u7535\u51fb\u5b9a\u8eab <var>%SHOCK%</var> \u79d2\u3002\u51b7\u5374 <var>%CD%</var> \u79d2\u3002\n<title>\u5e7b\u517d\u7425\u73c0</title>\u6bcf\u5c40\u4e00\u6b21\u3002<var>%AMBER%</var> \u79d2\u5185\u79fb\u901f\u66b4\u6da8\u3001\u51fb\u6740\u51b7\u5374\u5f52\u96f6\uff0c\u4f46\u7ed3\u675f\u65f6\u8eab\u4f53\u5d29\u574f\uff0c\u4f60\u4f1a\u6b7b\u3002\n<title>\u8865\u8db3</title>\u4f60\u7684\u4efb\u52a1\u4e0d\u8ba1\u5165\u8239\u5458\u8fdb\u5ea6\u6761\u3002",
+        "14": "<title>\u9663\u71df</title>\u4e2d\u7acb\u3002\u5176\u5b83\u5a01\u8105\u5168\u90e8\u51fa\u5c40\u3001\u4e14\u4f60\u4e00\u65b9\u4eba\u6578\u4e0d\u5c11\u65bc\u5834\u4e0a\u5269\u9918\u6642\u55ae\u7368\u7372\u52dd\uff08\u548c\u8c7a\u72fc\u540c\u6b3e\u689d\u4ef6\uff09\u3002\n<title>\u5e36\u96fb</title><var>%RAD%</var> \u7c73\u5167\u6240\u6709\u4eba\u88ab\u96fb\u64ca\u5b9a\u8eab <var>%SHOCK%</var> \u79d2\u3002\u51b7\u537b <var>%CD%</var> \u79d2\u3002\n<title>\u5e7b\u7378\u7425\u73c0</title>\u6bcf\u5c40\u4e00\u6b21\u3002<var>%AMBER%</var> \u79d2\u5167\u79fb\u901f\u66b4\u6f32\u3001\u64ca\u6bba\u51b7\u537b\u6b78\u96f6\uff0c\u4f46\u7d50\u675f\u6642\u8eab\u9ad4\u5d29\u58de\uff0c\u4f60\u6703\u6b7b\u3002\n<title>\u88dc\u8db3</title>\u4f60\u7684\u4efb\u52d9\u4e0d\u8a08\u5165\u8239\u54e1\u9032\u5ea6\u689d\u3002"
+    },
+    "kashimoHajimeBlurb": {
+        "0": "No regrets. Only one fight left.",
+        "11": "\u6094\u3044\u306f\u7121\u3044\u3002\u3042\u3068\u4e00\u6226\u3060\u3051\u3060\u3002",
+        "13": "\u6ca1\u6709\u9057\u61be\uff0c\u53ea\u5269\u6700\u540e\u4e00\u6218\u3002",
+        "14": "\u6c92\u6709\u907a\u61be\uff0c\u53ea\u5269\u6700\u5f8c\u4e00\u6230\u3002"
+    },
+    "kashimoChargeText": {
+        "0": "Charge",
+        "11": "\u5e36\u96fb",
+        "13": "\u5e26\u7535",
+        "14": "\u5e36\u96fb"
+    },
+    "kashimoAmberText": {
+        "0": "Mythical Beast Amber",
+        "11": "\u5e7b\u7363\u7425\u73c0",
+        "13": "\u5e7b\u517d\u7425\u73c0",
+        "14": "\u5e7b\u7378\u7425\u73c0"
+    },
+    "kashimoChargeCooldown": {
+        "0": "Charge Cooldown",
+        "11": "\u5e36\u96fb\u306e\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u5e26\u7535\u51b7\u5374",
+        "14": "\u5e36\u96fb\u51b7\u537b"
+    },
+    "kashimoChargeDuration": {
+        "0": "Charge Duration",
+        "11": "\u5e36\u96fb\u6642\u9593",
+        "13": "\u5e26\u7535\u6301\u7eed\u65f6\u95f4",
+        "14": "\u5e36\u96fb\u6301\u7e8c\u6642\u9593"
+    },
+    "kashimoChargeRadius": {
+        "0": "Charge Radius",
+        "11": "\u5e36\u96fb\u534a\u5f84",
+        "13": "\u5e26\u7535\u534a\u5f84",
+        "14": "\u5e36\u96fb\u534a\u5f91"
+    },
+    "kashimoShockDuration": {
+        "0": "Shock Duration",
+        "11": "\u611f\u96fb\u6642\u9593",
+        "13": "\u7535\u51fb\u5b9a\u8eab\u65f6\u957f",
+        "14": "\u96fb\u64ca\u5b9a\u8eab\u6642\u9577"
+    },
+    "kashimoAmberDuration": {
+        "0": "Amber Duration",
+        "11": "\u7425\u73c0\u6642\u9593",
+        "13": "\u7425\u73c0\u6301\u7eed\u65f6\u95f4",
+        "14": "\u7425\u73c0\u6301\u7e8c\u6642\u9593"
+    },
+    "kashimoAmberSpeed": {
+        "0": "Amber Speed Multiplier",
+        "11": "\u7425\u73c0\u4e2d\u306e\u901f\u5ea6\u500d\u7387",
+        "13": "\u7425\u73c0\u671f\u95f4\u79fb\u901f\u500d\u7387",
+        "14": "\u7425\u73c0\u671f\u9593\u79fb\u901f\u500d\u7387"
+    },
+    "kashimoWin": {
+        "0": "Kashimo Wins",
+        "11": "\u9e7f\u7d2b\u96f2\u4e00\u306e\u52dd\u5229",
+        "13": "\u9e7f\u7d2b\u4e91\u4e00\u83b7\u80dc",
+        "14": "\u9e7f\u7d2b\u96f2\u4e00\u7372\u52dd"
+    },
+    "kashimoWinCondHint": {
+        "0": "Outlive every other threat and stand alone.",
+        "11": "\u4ed6\u306e\u5a01\u8105\u3092\u3059\u3079\u3066\u6392\u9664\u3057\u3001\u6700\u5f8c\u306b\u751f\u304d\u6b8b\u308b\u3002",
+        "13": "\u5176\u5b83\u5a01\u80c1\u5168\u90e8\u51fa\u5c40\uff0c\u6700\u540e\u6d3b\u4e0b\u6765\u7684\u90a3\u4e2a\u4eba\u3002",
+        "14": "\u5176\u5b83\u5a01\u8105\u5168\u90e8\u51fa\u5c40\uff0c\u6700\u5f8c\u6d3b\u4e0b\u4f86\u7684\u90a3\u500b\u4eba\u3002"
+    },
+    "kashimoHajimecommon1AchievementTitle": {
+        "0": "Electrified",
+        "11": "\u611f\u96fb",
+        "13": "\u5e26\u7535\u4f53\u8d28",
+        "14": "\u5e36\u96fb\u9ad4\u8cea"
+    },
+    "kashimoHajimecommon1AchievementGoal": {
+        "0": "Shock a player with your charge.",
+        "11": "\u5e36\u96fb\u3067\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u611f\u96fb\u3055\u305b\u308b\u3002",
+        "13": "\u7528\u5e26\u7535\u7535\u5230\u4e00\u540d\u73a9\u5bb6\u3002",
+        "14": "\u7528\u5e36\u96fb\u96fb\u5230\u4e00\u540d\u73a9\u5bb6\u3002"
+    },
+    "kashimoHajimeanother1AchievementTitle": {
+        "0": "Mythical Beast Amber",
+        "11": "\u5e7b\u7363\u7425\u73c0",
+        "13": "\u5e7b\u517d\u7425\u73c0",
+        "14": "\u5e7b\u7378\u7425\u73c0"
+    },
+    "kashimoHajimeanother1AchievementGoal": {
+        "0": "Kill someone while Amber is active.",
+        "11": "\u7425\u73c0\u4e2d\u306b\u8ab0\u304b\u3092\u6bba\u3059\u3002",
+        "13": "\u5728\u7425\u73c0\u72b6\u6001\u4e0b\u51fb\u6740\u4e00\u540d\u73a9\u5bb6\u3002",
+        "14": "\u5728\u7425\u73c0\u72c0\u614b\u4e0b\u64ca\u6bba\u4e00\u540d\u73a9\u5bb6\u3002"
+    },
+    "kashimoHajimechallengeAchievementTitle": {
+        "0": "Before The Body Breaks",
+        "11": "\u4f53\u304c\u5d29\u308c\u308b\u524d\u306b",
+        "13": "\u8eab\u4f53\u5d29\u574f\u4e4b\u524d",
+        "14": "\u8eab\u9ad4\u5d29\u58de\u4e4b\u524d"
+    },
+    "kashimoHajimechallengeAchievementGoal": {
+        "0": "Kill 2 players in a single Amber.",
+        "11": "\u4e00\u5ea6\u306e\u7425\u73c0\u3067 2 \u4eba\u6bba\u3059\u3002",
+        "13": "\u5728\u4e00\u6b21\u7425\u73c0\u4e2d\u51fb\u6740 2 \u540d\u73a9\u5bb6\u3002",
+        "14": "\u5728\u4e00\u6b21\u7425\u73c0\u4e2d\u64ca\u6bba 2 \u540d\u73a9\u5bb6\u3002"
+    },
+    "ambusher": {
+        "0": "Ambusher",
+        "11": "\u6697\u7b97\u8005",
+        "13": "\u6697\u7b97\u8005",
+        "14": "\u6697\u7b97\u8005"
+    },
+    "ambusherIntroDesc": {
+        "0": "You do not hunt. You wait where they will stand.",
+        "11": "\u72e9\u308b\u306e\u3067\u306f\u306a\u3044\u3002\u5f7c\u3089\u304c\u7acb\u3064\u5834\u6240\u3067\u5f85\u3064\u306e\u3060\u3002",
+        "13": "\u4f60\u4e0d\u730e\u6740\uff0c\u4f60\u53ea\u5728\u4ed6\u4eec\u4f1a\u7ad9\u7684\u5730\u65b9\u7b49\u3002",
+        "14": "\u4f60\u4e0d\u7375\u6bba\uff0c\u4f60\u53ea\u5728\u4ed6\u5011\u6703\u7ad9\u7684\u5730\u65b9\u7b49\u3002"
+    },
+    "ambusherShortDesc": {
+        "0": "Bait an action - whoever does it next dies instantly",
+        "11": "\u884c\u52d5\u306b\u7f60\u3092\u5f35\u308b\u3002\u6b21\u306b\u305d\u308c\u3092\u3057\u305f\u8005\u306f\u5373\u6b7b\u3059\u308b",
+        "13": "\u7ed9\u67d0\u79cd\u884c\u4e3a\u4e0b\u5957\uff0c\u4e0b\u4e00\u4e2a\u505a\u8fd9\u4ef6\u4e8b\u7684\u4eba\u5f53\u573a\u6b7b\u4ea1",
+        "14": "\u7d66\u67d0\u7a2e\u884c\u70ba\u4e0b\u5957\uff0c\u4e0b\u4e00\u500b\u505a\u9019\u4ef6\u4e8b\u7684\u4eba\u7576\u5834\u6b7b\u4ea1"
+    },
+    "ambusherFullDesc": {
+        "0": "<title>Team</title>Impostor.\n<title>Ambush</title>Press <var>F</var> to open the trap menu and pick one kind of action to bait: task, vent, report, kill, ability or console. The next player to do it dies on the spot, and the trap is spent.\n<title>Limits</title>Only one trap at a time, cooldown <var>%CD%</var> s. A meeting clears any untriggered trap.\n<title>Fair Play</title>Repairing a sabotage and the consoles of a sabotaged system never trigger a trap. You never trigger your own trap.",
+        "11": "<title>\u9663\u55b6</title>\u30a4\u30f3\u30dd\u30b9\u30bf\u30fc\u3002\n<title>\u6697\u7b97</title><var>F</var> \u3067\u30e1\u30cb\u30e5\u30fc\u3092\u958b\u304d\u3001\u7f60\u3092\u5f35\u308b\u884c\u52d5\u3092\u4e00\u3064\u9078\u3076\uff1a\u30bf\u30b9\u30af\uff0f\u30d9\u30f3\u30c8\uff0f\u901a\u5831\uff0f\u30ad\u30eb\uff0f\u30b9\u30ad\u30eb\uff0f\u30b3\u30f3\u30bd\u30fc\u30eb\u3002\u6b21\u306b\u305d\u308c\u3092\u3057\u305f\u8005\u306f\u305d\u306e\u5834\u3067\u6b7b\u306c\u3002\n<title>\u5236\u9650</title>\u7f60\u306f\u540c\u6642\u306b\u4e00\u3064\u3060\u3051\u3001\u30af\u30fc\u30eb\u30c0\u30a6\u30f3 <var>%CD%</var> \u79d2\u3002\u4f1a\u8b70\u3067\u672a\u767a\u52d5\u306e\u7f60\u306f\u6d88\u3048\u308b\u3002\n<title>\u30d5\u30a7\u30a2\u30d7\u30ec\u30a4</title>\u30b5\u30dc\u306e\u4fee\u5fa9\u3068\u3001\u30b5\u30dc\u4e2d\u306e\u30b7\u30b9\u30c6\u30e0\u306e\u30b3\u30f3\u30bd\u30fc\u30eb\u306f\u7f60\u306b\u53cd\u5fdc\u3057\u306a\u3044\u3002\u81ea\u5206\u81ea\u8eab\u3082\u53cd\u5fdc\u3057\u306a\u3044\u3002",
+        "13": "<title>\u9635\u8425</title>\u5185\u9b3c\u3002\n<title>\u6697\u7b97</title>\u6309 <var>F</var> \u6253\u5f00\u83dc\u5355\uff0c\u9009\u4e00\u7c7b\u8981\u8bbe\u4f0f\u7684\u884c\u4e3a\uff1a\u4efb\u52a1\uff0f\u7ba1\u9053\uff0f\u62a5\u544a\uff0f\u51fb\u6740\uff0f\u6280\u80fd\uff0f\u63a7\u5236\u53f0\u3002\u4e0b\u4e00\u4e2a\u505a\u8fd9\u4ef6\u4e8b\u7684\u4eba\u5f53\u573a\u6b7b\u4ea1\uff0c\u9677\u9631\u968f\u5373\u5931\u6548\u3002\n<title>\u9650\u5236</title>\u540c\u4e00\u65f6\u95f4\u53ea\u80fd\u6302\u4e00\u4e2a\uff0c\u51b7\u5374 <var>%CD%</var> \u79d2\uff1b\u5f00\u4f1a\u4f1a\u6e05\u7a7a\u672a\u89e6\u53d1\u7684\u9677\u9631\u3002\n<title>\u4e0d\u6253\u65c1\u8fb9\u9f13</title>\u4fee\u590d\u7834\u574f\u7684\u884c\u4e3a\u3001\u4ee5\u53ca\u88ab\u7834\u574f\u7cfb\u7edf\u7684\u4ea4\u4e92\u70b9\u4e0d\u4f1a\u89e6\u53d1\u9677\u9631\uff1b\u4f60\u81ea\u5df1\u4e5f\u4e0d\u4f1a\u8e29\u4e2d\u81ea\u5df1\u7684\u9677\u9631\u3002",
+        "14": "<title>\u9663\u71df</title>\u5167\u9b3c\u3002\n<title>\u6697\u7b97</title>\u6309 <var>F</var> \u6253\u958b\u9078\u55ae\uff0c\u9078\u4e00\u985e\u8981\u8a2d\u4f0f\u7684\u884c\u70ba\uff1a\u4efb\u52d9\uff0f\u7ba1\u9053\uff0f\u5831\u544a\uff0f\u64ca\u6bba\uff0f\u6280\u80fd\uff0f\u63a7\u5236\u53f0\u3002\u4e0b\u4e00\u500b\u505a\u9019\u4ef6\u4e8b\u7684\u4eba\u7576\u5834\u6b7b\u4ea1\uff0c\u9677\u9631\u96a8\u5373\u5931\u6548\u3002\n<title>\u9650\u5236</title>\u540c\u4e00\u6642\u9593\u53ea\u80fd\u639b\u4e00\u500b\uff0c\u51b7\u537b <var>%CD%</var> \u79d2\uff1b\u958b\u6703\u6703\u6e05\u7a7a\u672a\u89f8\u767c\u7684\u9677\u9631\u3002\n<title>\u4e0d\u6253\u65c1\u908a\u9f13</title>\u4fee\u5fa9\u7834\u58de\u7684\u884c\u70ba\u3001\u4ee5\u53ca\u88ab\u7834\u58de\u7cfb\u7d71\u7684\u4ea4\u4e92\u9ede\u4e0d\u6703\u89f8\u767c\u9677\u9631\uff1b\u4f60\u81ea\u5df1\u4e5f\u4e0d\u6703\u8e29\u4e2d\u81ea\u5df1\u7684\u9677\u9631\u3002"
+    },
+    "ambusherBlurb": {
+        "0": "Patience is a weapon too.",
+        "11": "\u8010\u5fc3\u3082\u307e\u305f\u6b66\u5668\u3060\u3002",
+        "13": "\u8010\u5fc3\u4e5f\u662f\u4e00\u79cd\u6b66\u5668\u3002",
+        "14": "\u8010\u5fc3\u4e5f\u662f\u4e00\u7a2e\u6b66\u5668\u3002"
+    },
+    "ambusherTrapText": {
+        "0": "Ambush",
+        "11": "\u6697\u7b97",
+        "13": "\u6697\u7b97",
+        "14": "\u6697\u7b97"
+    },
+    "ambusherTrapTask": {
+        "0": "Task",
+        "11": "\u30bf\u30b9\u30af",
+        "13": "\u4efb\u52a1",
+        "14": "\u4efb\u52d9"
+    },
+    "ambusherTrapVent": {
+        "0": "Vent",
+        "11": "\u30d9\u30f3\u30c8",
+        "13": "\u7ba1\u9053",
+        "14": "\u7ba1\u9053"
+    },
+    "ambusherTrapReport": {
+        "0": "Report",
+        "11": "\u901a\u5831",
+        "13": "\u62a5\u544a",
+        "14": "\u5831\u544a"
+    },
+    "ambusherTrapKill": {
+        "0": "Kill",
+        "11": "\u30ad\u30eb",
+        "13": "\u51fb\u6740",
+        "14": "\u64ca\u6bba"
+    },
+    "ambusherTrapAbility": {
+        "0": "Ability",
+        "11": "\u30b9\u30ad\u30eb",
+        "13": "\u6280\u80fd",
+        "14": "\u6280\u80fd"
+    },
+    "ambusherTrapConsole": {
+        "0": "Console",
+        "11": "\u30b3\u30f3\u30bd\u30fc\u30eb",
+        "13": "\u63a7\u5236\u53f0",
+        "14": "\u63a7\u5236\u53f0"
+    },
+    "ambusherCooldown": {
+        "0": "Ambush Cooldown",
+        "11": "\u6697\u7b97\u306e\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u6697\u7b97\u51b7\u5374",
+        "14": "\u6697\u7b97\u51b7\u537b"
+    },
+    "ambushercommon1AchievementTitle": {
+        "0": "Spring The Trap",
+        "11": "\u7f60\u3092\u4f5c\u52d5",
+        "13": "\u6536\u7f51",
+        "14": "\u6536\u7db2"
+    },
+    "ambushercommon1AchievementGoal": {
+        "0": "Kill a player with an ambush trap.",
+        "11": "\u6697\u7b97\u306e\u7f60\u3067\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u6bba\u3059\u3002",
+        "13": "\u7528\u6697\u7b97\u9677\u9631\u6740\u6b7b\u4e00\u540d\u73a9\u5bb6\u3002",
+        "14": "\u7528\u6697\u7b97\u9677\u9631\u6bba\u6b7b\u4e00\u540d\u73a9\u5bb6\u3002"
+    },
+    "ambusheranother1AchievementTitle": {
+        "0": "Counter-Ambush",
+        "11": "\u9006\u8a2d\u4f0f",
+        "13": "\u53cd\u8bbe\u4f0f",
+        "14": "\u53cd\u8a2d\u4f0f"
+    },
+    "ambusheranother1AchievementGoal": {
+        "0": "Kill a player using the kill trap.",
+        "11": "\u30ad\u30eb\u306e\u7f60\u3067\u30d7\u30ec\u30a4\u30e4\u30fc\u3092\u6bba\u3059\u3002",
+        "13": "\u7528\u300c\u51fb\u6740\u300d\u9677\u9631\u6740\u6b7b\u4e00\u540d\u73a9\u5bb6\u3002",
+        "14": "\u7528\u300c\u64ca\u6bba\u300d\u9677\u9631\u6bba\u6b7b\u4e00\u540d\u73a9\u5bb6\u3002"
+    },
+    "ambusherchallengeAchievementTitle": {
+        "0": "Knife Eats Knife",
+        "11": "\u5203\u306f\u5203\u3092\u55b0\u3046",
+        "13": "\u5200\u5403\u5200",
+        "14": "\u5200\u5403\u5200"
+    },
+    "ambusherchallengeAchievementGoal": {
+        "0": "Kill another killer with the kill trap.",
+        "11": "\u30ad\u30eb\u306e\u7f60\u3067\u5225\u306e\u6bba\u3057\u5c4b\u3092\u6bba\u3059\u3002",
+        "13": "\u7528\u300c\u51fb\u6740\u300d\u9677\u9631\u53cd\u6740\u53e6\u4e00\u540d\u5e26\u5200\u7684\u4eba\u3002",
+        "14": "\u7528\u300c\u64ca\u6bba\u300d\u9677\u9631\u53cd\u6bba\u53e6\u4e00\u540d\u5e36\u5200\u7684\u4eba\u3002"
+    },
+    "musicVipRequired": {
+        "0": "(VIP only)",
+        "11": "\uff08VIP\u9650\u5b9a\uff09",
+        "13": "\uff08\u9700\u8981VIP\uff09",
+        "14": "\uff08\u9700\u8981VIP\uff09"
+    },
+    "ambusherTrapSet": {
+        "0": "Something has been rigged...",
+        "11": "\u4f55\u304b\u304c\u4ed5\u7d44\u307e\u308c\u305f\u2026\u2026",
+        "13": "\u6709\u4ec0\u4e48\u4e1c\u897f\u88ab\u4e0b\u4e86\u5957\u2026\u2026",
+        "14": "\u6709\u4ec0\u9ebc\u6771\u897f\u88ab\u4e0b\u4e86\u5957\u2026\u2026"
+    },
+    "kashimoKillCooldown": {
+        "0": "Kill Cooldown",
+        "11": "\u30ad\u30eb\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+        "13": "\u51fb\u6740\u51b7\u5374",
+        "14": "\u64ca\u6bba\u51b7\u537b"
     }
 }

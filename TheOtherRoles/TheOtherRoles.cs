@@ -31,11 +31,20 @@ namespace TheOtherRoles
             Auxiliary.clearAndReload();
             Gojo.clearAndReload();
             Sukuna.clearAndReload();
+            ZeninNaoya.clearAndReload();
+            YutaOkkotsu.clearAndReload();
+            KashimoHajime.clearAndReload();
+            Ambusher.clearAndReload();
+            HeavenlyRestriction.clearAndReload();
             Kira.clearAndReload();
             Zeus.clearAndReload();
             Painter.clearAndReload();
             Aoi.clearAndReload();
             Itadori.clearAndReload();
+            Justice.clearAndReload();
+            HiromiHiguruma.clearAndReload();
+            Sniper.clearAndReload();
+            Archwitch.clearAndReload();
             Lighter.clearAndReload();
             Godfather.clearAndReload();
             Mafioso.clearAndReload();
@@ -51,7 +60,6 @@ namespace TheOtherRoles
             Morphling.clearAndReload();
             Camouflager.clearAndReload();
             Hacker.clearAndReload();
-            Energyamplifier.clearAndReload();
             Energyamplifier.clearAndReload();
             Tracker.clearAndReload();
             Vampire.clearAndReload();
@@ -272,11 +280,19 @@ namespace TheOtherRoles
                 { RoleId.Auxiliary, typeof(RoleBase<Auxiliary>) },
                 { RoleId.Gojo, typeof(RoleBase<Gojo>) },
                 { RoleId.Sukuna, typeof(RoleBase<Sukuna>) },
+                { RoleId.ZeninNaoya, typeof(RoleBase<ZeninNaoya>) },
+                { RoleId.YutaOkkotsu, typeof(RoleBase<YutaOkkotsu>) },
+                { RoleId.KashimoHajime, typeof(RoleBase<KashimoHajime>) },
+                { RoleId.Ambusher, typeof(RoleBase<Ambusher>) },
                 { RoleId.Kira, typeof(RoleBase<Kira>) },
                 { RoleId.Zeus, typeof(RoleBase<Zeus>) },
                 { RoleId.Painter, typeof(RoleBase<Painter>) },
                 { RoleId.Aoi, typeof(RoleBase<Aoi>) },
-                { RoleId.Itadori, typeof(RoleBase<Itadori>) }
+                { RoleId.Itadori, typeof(RoleBase<Itadori>) },
+                { RoleId.Justice, typeof(RoleBase<Justice>) },
+                { RoleId.HiromiHiguruma, typeof(RoleBase<HiromiHiguruma>) },
+                { RoleId.Sniper, typeof(RoleBase<Sniper>) },
+                { RoleId.Archwitch, typeof(RoleBase<Archwitch>) }
             };
 
             public static IEnumerable<HelpSprite> GetHelp(RoleId roleId)
@@ -310,6 +326,8 @@ namespace TheOtherRoles
             }
 
             static public MetaContext.Image GetIllustration(RoleId roleId)  => GetImageInternal(roleId, "Illustration", "Assets/Sprites/Illustrations/", illustrationCache);
+
+            static public MetaContext.Image GetIllustration(RoleInfo info) => info == null ? null : (info.Illustration ?? GetIllustration(info.roleId));
 
             static public MetaContext.Image GetRoleIcon(RoleId roleId) => GetImageInternal(roleId, "RoleIcon", "Assets/Sprites/RoleIcons/", roleIconCache);
 

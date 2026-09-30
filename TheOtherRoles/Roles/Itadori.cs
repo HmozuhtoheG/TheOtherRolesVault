@@ -114,7 +114,7 @@ namespace TheOtherRoles.Roles
             fingers.Add(new Finger { Holder = holder, Position = new Vector2(message.x, message.y) });
         });
 
-        public static RemoteProcess<(byte index, byte eaterId)> EatFinger = new("ItadoriEatFinger", (message, _) =>
+        public static RemoteProcess<(byte index, byte eaterId)> EatFinger = new("ItadoriEatFinger", (message, __) =>
         {
             if (message.index >= fingers.Count) return;
 
@@ -129,16 +129,18 @@ namespace TheOtherRoles.Roles
             if (role == null || role.becameSukuna) return;
 
             role.fingersEaten++;
+            if (eater == PlayerControl.LocalPlayer) _ = new StaticAchievementToken("itadori.common1");
             if (role.fingersEaten >= fingerCount) BecomeSukuna.Invoke(eater.PlayerId);
         });
 
-        public static RemoteProcess<byte> BecomeSukuna = RemotePrimitiveProcess.OfByte("ItadoriBecomeSukuna", (message, _) =>
+        public static RemoteProcess<byte> BecomeSukuna = RemotePrimitiveProcess.OfByte("ItadoriBecomeSukuna", (message, __) =>
         {
             var player = Helpers.playerById(message);
             var role = getRole(player);
             if (role == null || role.becameSukuna) return;
 
             role.becameSukuna = true;
+            if (player == PlayerControl.LocalPlayer) _ = new StaticAchievementToken("itadori.challenge");
             playLaugh();
 
             eraseRole(player);
@@ -270,7 +272,11 @@ namespace TheOtherRoles.Roles
 
             usedOneTimeKill = true;
 
-            if (target.Data != null && target.Data.Role.IsImpostor) killedImpostor = true;
+            if (target.Data != null && target.Data.Role.IsImpostor)
+            {
+                killedImpostor = true;
+                _ = new StaticAchievementToken("itadori.another1");
+            }
             else killedCrewmate = true;
 
             Helpers.forceMurderPlayer(player, target, true);

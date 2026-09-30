@@ -14,6 +14,7 @@ namespace TheOtherRoles.Modules.Music
             public string Id;
             public string Name;
             public string Artist;
+            public bool RequiresVip;
 
             public string Display => Artist.Length > 0 ? Name + " - " + Artist : Name;
         }
@@ -104,6 +105,14 @@ namespace TheOtherRoles.Modules.Music
                 break;
             }
             song.Artist = string.Join(", ", artists);
+
+            if (item.TryGetProperty("fee", out var fee))
+            {
+                int feeValue = fee.ValueKind == JsonValueKind.Number
+                    ? fee.GetInt32()
+                    : (fee.ValueKind == JsonValueKind.String && int.TryParse(fee.GetString(), out var parsed) ? parsed : 0);
+                song.RequiresVip = feeValue == 1;
+            }
 
             return string.IsNullOrEmpty(song.Id) ? null : song;
         }

@@ -50,11 +50,8 @@ namespace TheOtherRoles.Roles
         private static float nextDomainShake;
         private static float lastWallLog;
         private static readonly Dictionary<byte, bool> hiddenByDomain = [];
-        private static GameObject domainRingObject;
-        private static SpriteRenderer domainRing;
-        private static GameObject domainMaskObject;
-        private static SpriteRenderer domainMask;
-        private static Sprite domainMaskSprite;
+        private static readonly Dictionary<byte, bool> domainSideLock = [];
+        private bool domainCleaned;
 
         private GameObject verseObject;
         private TMPro.TextMeshPro verseText;
@@ -104,32 +101,6 @@ namespace TheOtherRoles.Roles
             if (simpleDomainSprite) return simpleDomainSprite;
             simpleDomainSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.EnergyFieldButton.png", 115f);
             return simpleDomainSprite;
-        }
-
-        private static Sprite ringSprite;
-
-        public static Sprite GetRingSprite()
-        {
-            if (ringSprite) return ringSprite;
-
-            int size = 256;
-            var tex = new Texture2D(size, size, TextureFormat.ARGB32, false);
-            Color clear = new Color(0, 0, 0, 0);
-            Vector2 center = new Vector2(size / 2f, size / 2f);
-            float outerRadius = size / 2f - 2f;
-            float innerRadius = outerRadius - 6f;
-
-            for (int y = 0; y < size; y++)
-            {
-                for (int x = 0; x < size; x++)
-                {
-                    float dist = Vector2.Distance(new Vector2(x, y), center);
-                    tex.SetPixel(x, y, dist <= outerRadius && dist >= innerRadius ? Color.white : clear);
-                }
-            }
-            tex.Apply();
-            ringSprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
-            return ringSprite;
         }
 
         public static RemoteProcess<(byte sukunaId, float duration, bool facingLeft)> StartChant = new("SukunaStartChant", (message, _) =>
@@ -202,6 +173,7 @@ namespace TheOtherRoles.Roles
             sukuna.isDomainCasting = true;
             sukuna.domainCastTimer = message.castTime;
             playDomainSound(message.soundIndex);
+            SukunaDomain.BeginCast(message.sukunaId, message.castTime);
         });
 
         public static RemoteProcess<(byte sukunaId, Vector2 center)> StartDomain = new("SukunaStartDomain", (message, _) =>
@@ -213,10 +185,12 @@ namespace TheOtherRoles.Roles
             sukuna.domainCenter = message.center;
             sukuna.domainTimer = domainDuration;
             domainProtected.Clear();
+            domainSideLock.Clear();
             localSimpleClicks = 0;
             localSimpleTimer = 0f;
             nextDomainSlash = 0f;
 
+            SukunaDomain.Begin(message.center, domainRadius);
             playDomainMusic();
             if (PlayerControl.LocalPlayer == sukuna.player)
                 new CustomMessage(ModTranslation.getString("sukunaDomainStart"), 3f);
@@ -337,25 +311,37 @@ namespace TheOtherRoles.Roles
                 {
                     isDomainCasting = false;
                     domainCastTimer = 0f;
+                    if (player == PlayerControl.LocalPlayer) player.moveable = true;
                 }
                 else if (player == PlayerControl.LocalPlayer)
                 {
+                    player.moveable = false;
+                    if (player.MyPhysics != null && player.MyPhysics.body != null)
+                        player.MyPhysics.body.velocity = Vector2.zero;
+
                     domainCastTimer -= Time.fixedDeltaTime;
                     if (domainCastTimer <= 0f)
                     {
                         isDomainCasting = false;
                         domainCastTimer = 0f;
                         domainUses--;
-                        StartDomain.Invoke((player.PlayerId, player.GetTruePosition()));
+                        Vector2 center = player.GetTruePosition();
+                        player.moveable = true;
+                        StartDomain.Invoke((player.PlayerId, center));
                     }
                 }
             }
 
             if (!isDomainActive)
             {
-                cleanupDomain();
+                if (!domainCleaned)
+                {
+                    domainCleaned = true;
+                    cleanupDomain();
+                }
                 return;
             }
+            domainCleaned = false;
 
             if (player == PlayerControl.LocalPlayer)
             {
@@ -379,12 +365,12 @@ namespace TheOtherRoles.Roles
 
             if (Time.time >= nextDomainSlash)
             {
-                nextDomainSlash = Time.time + 0.12f;
+                nextDomainSlash = Time.time + 0.1f;
                 foreach (PlayerControl p in PlayerControl.AllPlayerControls)
                 {
                     if (p == null || p.Data == null || p.Data.IsDead || p == player) continue;
                     if (!isInsideDomain(p) || domainProtected.Contains(p.PlayerId)) continue;
-                    spawnDomainSlash(p);
+                    SukunaDomain.SpawnSlash(p);
                 }
             }
 
@@ -427,32 +413,6 @@ namespace TheOtherRoles.Roles
                     : ModTranslation.getString("simpleDomain");
         }
 
-        private void spawnDomainSlash(PlayerControl target)
-        {
-            var sprite = getSlashSprite();
-            float elementSize = getPlayerBodySize(target) * 0.6f;
-            float spriteSize = sprite.rect.width / sprite.pixelsPerUnit;
-            float scale = elementSize / Mathf.Max(0.01f, spriteSize);
-
-            for (int i = 0; i < 2; i++)
-            {
-                var slashObject = new GameObject("SukunaDomainSlash") { layer = 5 };
-                slashObject.transform.position = (Vector2)target.transform.position + UnityEngine.Random.insideUnitCircle * 0.45f;
-                slashObject.transform.rotation = Quaternion.Euler(0f, 0f, UnityEngine.Random.Range(0f, 180f));
-                slashObject.transform.localScale = Vector3.one * scale;
-
-                var renderer = slashObject.AddComponent<SpriteRenderer>();
-                renderer.sprite = sprite;
-                renderer.color = new Color(1f, 1f, 1f, 0.9f);
-
-                HudManager.Instance.StartCoroutine(Effects.Lerp(0.3f, new Action<float>((p) =>
-                {
-                    if (renderer != null) renderer.color = new Color(1f, 1f, 1f, 0.9f * (1f - p));
-                    if (p == 1f && slashObject != null) UnityEngine.Object.Destroy(slashObject);
-                })));
-            }
-        }
-
         private void updateDomainVision()
         {
             var local = PlayerControl.LocalPlayer;
@@ -461,8 +421,7 @@ namespace TheOtherRoles.Roles
             if (local.Data.IsDead)
             {
                 restoreDomainVisibility();
-                hideDomainMask();
-                showDomainRing(true);
+                SukunaDomain.SetInsideView(false);
                 return;
             }
 
@@ -474,16 +433,7 @@ namespace TheOtherRoles.Roles
                 setPlayerVisibleByDomain(p, isInsideDomain(p) == localInside);
             }
 
-            if (localInside)
-            {
-                showDomainRing(false);
-                showDomainMask(true);
-            }
-            else
-            {
-                showDomainRing(true);
-                hideDomainMask();
-            }
+            SukunaDomain.SetInsideView(localInside);
         }
 
         private static void setPlayerVisibleByDomain(PlayerControl target, bool visible)
@@ -512,89 +462,15 @@ namespace TheOtherRoles.Roles
             hiddenByDomain.Clear();
         }
 
-        private static Sprite getDomainMaskSprite()
-        {
-            if (domainMaskSprite) return domainMaskSprite;
-
-            int size = 256;
-            var tex = new Texture2D(size, size, TextureFormat.ARGB32, false);
-            Vector2 center = new Vector2(size / 2f, size / 2f);
-            float holeRadius = size / 8f;
-            Color black = new Color(0f, 0f, 0f, 0.99f);
-            Color clear = new Color(0f, 0f, 0f, 0f);
-
-            for (int y = 0; y < size; y++)
-            {
-                for (int x = 0; x < size; x++)
-                {
-                    tex.SetPixel(x, y, Vector2.Distance(new Vector2(x, y), center) <= holeRadius ? clear : black);
-                }
-            }
-            tex.Apply();
-            domainMaskSprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
-            return domainMaskSprite;
-        }
-
-        private void showDomainMask(bool show)
-        {
-            if (show)
-            {
-                if (domainMaskObject == null)
-                {
-                    domainMaskObject = new GameObject("SukunaDomainMask") { layer = 5 };
-                    domainMask = domainMaskObject.AddComponent<SpriteRenderer>();
-                    domainMask.sprite = getDomainMaskSprite();
-                    domainMask.color = Color.white;
-                }
-
-                float holeSize = (getDomainMaskSprite().rect.width / 8f) / getDomainMaskSprite().pixelsPerUnit;
-                domainMaskObject.transform.position = new Vector3(domainCenter.x, domainCenter.y, 0f);
-                domainMaskObject.transform.localScale = Vector3.one * (domainRadius / holeSize);
-                domainMaskObject.SetActive(true);
-            }
-            else
-            {
-                hideDomainMask();
-            }
-        }
-
-        private void hideDomainMask()
-        {
-            if (domainMaskObject != null) domainMaskObject.SetActive(false);
-        }
-
-        private void showDomainRing(bool show)
-        {
-            if (show)
-            {
-                if (domainRingObject == null)
-                {
-                    domainRingObject = new GameObject("SukunaDomainRing") { layer = 5 };
-                    domainRing = domainRingObject.AddComponent<SpriteRenderer>();
-                    domainRing.sprite = GetRingSprite();
-                    domainRing.color = new Color(color.r, color.g, color.b, 0.55f);
-                }
-
-                float ringSize = GetRingSprite().rect.width / GetRingSprite().pixelsPerUnit;
-                domainRingObject.transform.position = new Vector3(domainCenter.x, domainCenter.y, 0f);
-                domainRingObject.transform.localScale = Vector3.one * (domainRadius * 2f / ringSize);
-                domainRingObject.SetActive(true);
-            }
-            else
-            {
-                if (domainRingObject != null) domainRingObject.SetActive(false);
-            }
-        }
-
         private static void cleanupDomain()
         {
             stopDomainMusic();
             restoreDomainVisibility();
             domainProtected.Clear();
+            domainSideLock.Clear();
             localSimpleClicks = 0;
             localSimpleTimer = 0f;
-            if (domainRingObject != null) domainRingObject.SetActive(false);
-            if (domainMaskObject != null) domainMaskObject.SetActive(false);
+            SukunaDomain.Hide();
         }
 
         public static RemoteProcess<(byte sukunaId, Vector2 origin, Vector2 direction)> ReleaseSlash = new("SukunaReleaseSlash", (message, _) =>
@@ -719,6 +595,10 @@ namespace TheOtherRoles.Roles
                 victims.Add(target);
             }
 
+            _ = new StaticAchievementToken("sukuna.common1");
+            if (victims.Count >= 2) _ = new StaticAchievementToken("sukuna.another1");
+            if (victims.Count >= 3) _ = new StaticAchievementToken("sukuna.challenge");
+
             ReleaseSlash.Invoke((player.PlayerId, origin, direction));
 
             foreach (var victim in victims)
@@ -765,10 +645,21 @@ namespace TheOtherRoles.Roles
             }
         }
 
+        public override void OnKill(PlayerControl target)
+        {
+            if (player != PlayerControl.LocalPlayer) return;
+            if (target == null) return;
+            if (!target.isRole(RoleId.Gojo)) return;
+
+            _ = new StaticAchievementToken("sukuna.ancientStrongest");
+        }
+
         public override void OnMeetingStart()
         {
             isChanting = false;
             HideVerse();
+            isDomainCasting = false;
+            domainCastTimer = 0f;
             if (player == PlayerControl.LocalPlayer) player.moveable = true;
 
             if (isDomainActive)
@@ -793,6 +684,8 @@ namespace TheOtherRoles.Roles
         {
             isChanting = false;
             HideVerse();
+            isDomainCasting = false;
+            domainCastTimer = 0f;
             if (player == PlayerControl.LocalPlayer) player.moveable = true;
 
             if (isDomainActive)
@@ -840,7 +733,12 @@ namespace TheOtherRoles.Roles
             public static void Postfix(PlayerPhysics __instance)
             {
                 var target = __instance.myPlayer;
-                if (target == null || target.Data == null || target.Data.IsDead) return;
+                if (target == null || target.Data == null) return;
+                if (target.Data.IsDead)
+                {
+                    domainSideLock.Remove(target.PlayerId);
+                    return;
+                }
                 if (!__instance.AmOwner || !target.CanMove) return;
                 if (MeetingHud.Instance || ExileController.Instance || target.inVent) return;
 
@@ -854,9 +752,15 @@ namespace TheOtherRoles.Roles
                     float distance = delta.magnitude;
                     if (distance <= 0.001f) continue;
 
-                    float clamped = distance < domainRadius
-                        ? Mathf.Min(distance, domainRadius - 0.1f)
-                        : Mathf.Max(distance, domainRadius + 0.1f);
+                    if (!domainSideLock.TryGetValue(target.PlayerId, out bool lockedInside))
+                    {
+                        lockedInside = distance < domainRadius;
+                        domainSideLock[target.PlayerId] = lockedInside;
+                    }
+
+                    float clamped = lockedInside
+                        ? Mathf.Min(distance, domainRadius - 0.15f)
+                        : Mathf.Max(distance, domainRadius + 0.15f);
                     if (Mathf.Abs(clamped - distance) < 0.001f) continue;
 
                     Vector2 safePosition = sukuna.domainCenter + delta / distance * clamped;
@@ -867,7 +771,7 @@ namespace TheOtherRoles.Roles
                     if (Time.time - lastWallLog > 2f)
                     {
                         lastWallLog = Time.time;
-                        TheOtherRolesPlugin.Logger.LogMessage($"[DOMAIN] wall clamped player {target.PlayerId} dist {distance:0.##} -> {clamped:0.##} (radius {domainRadius:0.##})");
+                        TheOtherRolesPlugin.Logger.LogMessage($"[DOMAIN] wall clamped player {target.PlayerId} dist {distance:0.##} -> {clamped:0.##} inside={lockedInside} (radius {domainRadius:0.##})");
                     }
                 }
             }

@@ -18,6 +18,9 @@ namespace TheOtherRoles.Roles
         public static float cooldown = 30f;
         public static int maxUses = 3;
 
+        private static byte lastSwapTargetId = byte.MaxValue;
+        private static float lastSwapTime = -99f;
+
         public int usesLeft;
 
         public static CustomButton unjustGameButton;
@@ -67,7 +70,7 @@ namespace TheOtherRoles.Roles
             clapSource.PlayOneShot(clip, 0.8f);
         }
 
-        public static RemoteProcess<(byte actorId, byte targetId)> UnjustGame = new("AoiUnjustGame", (message, _) =>
+        public static RemoteProcess<(byte actorId, byte targetId)> UnjustGame = new("AoiUnjustGame", (message, __) =>
         {
             playClap();
 
@@ -80,7 +83,22 @@ namespace TheOtherRoles.Roles
 
             if (actor.AmOwner) actor.NetTransform.SnapTo(targetPosition);
             if (target.AmOwner) target.NetTransform.SnapTo(actorPosition);
+
+            if (actor == PlayerControl.LocalPlayer)
+            {
+                lastSwapTargetId = message.targetId;
+                lastSwapTime = Time.time;
+            }
         });
+
+        public override void OnKill(PlayerControl target)
+        {
+            if (player != PlayerControl.LocalPlayer || target == null) return;
+            if (Time.time - lastSwapTime > 5f) return;
+
+            _ = new StaticAchievementToken("aoi.challenge");
+            if (target.PlayerId == lastSwapTargetId) _ = new StaticAchievementToken("aoi.another1");
+        }
 
         private void use()
         {
@@ -91,6 +109,8 @@ namespace TheOtherRoles.Roles
 
             usesLeft--;
             UnjustGame.Invoke((player.PlayerId, target.PlayerId));
+
+            _ = new StaticAchievementToken("aoi.common1");
 
             if (unjustGameButton != null)
             {

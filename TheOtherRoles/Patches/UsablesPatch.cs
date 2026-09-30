@@ -196,6 +196,24 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(KillButton), nameof(KillButton.DoClick))]
     class KillButtonDoClickPatch {
         public static bool Prefix(KillButton __instance) {
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Sniper))
+            {
+                var sniper = Sniper.local;
+                if (sniper == null) return true;
+
+                if (sniper.hasRifle)
+                {
+                    if (!__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove)
+                    {
+                        sniper.TrySnipe();
+                        PlayerControl.LocalPlayer.SetKillTimer(Sniper.cooldown);
+                    }
+                    return false;
+                }
+
+                if (!Sniper.canNormalKill) return false;
+            }
+
             if (HideNSeek.isHideNSeekGM && HideNSeek.isHunter() && !__instance.currentTarget && __instance.isActiveAndEnabled
                 && !__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove) {
                 int bot = HideNSeekBots.FindInRange(PlayerControl.LocalPlayer);

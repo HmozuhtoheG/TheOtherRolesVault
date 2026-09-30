@@ -1,0 +1,27 @@
+{
+    "X" : 5,
+    "Y" : 4,
+    "DefaultHeight" : 0.9,
+    "Characters" : [
+        { "Character" : 領, "Index" : 0 },
+        { "Character" : 域, "Index" : 1 },
+        { "Character" : 展, "Index" : 2 },
+        { "Character" : 開, "Index" : 3 },
+        { "Character" : 誅, "Index" : 4 },
+        { "Character" : 伏, "Index" : 5 },
+        { "Character" : 賜, "Index" : 6 },
+        { "Character" : 死, "Index" : 7 },
+        { "Character" : 最, "Index" : 8 },
+        { "Character" : 終, "Index" : 9 },
+        { "Character" : 判, "Index" : 10 },
+        { "Character" : 決, "Index" : 11 },
+        { "Character" : は, "Index" : 12 },
+        { "Character" : 有, "Index" : 13 },
+        { "Character" : 罪, "Index" : 14 },
+        { "Character" : 、, "Index" : 15 },
+        { "Character" : 没, "Index" : 16 },
+        { "Character" : 収, "Index" : 17 },
+        { "Character" : 無, "Index" : 18 },
+        { "Character" : 刑, "Index" : 19 }
+    ]
+}

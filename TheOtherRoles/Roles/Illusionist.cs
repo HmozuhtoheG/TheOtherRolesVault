@@ -46,6 +46,7 @@ namespace TheOtherRoles.Roles
         }
 
         public static List<Illusion> active = [];
+        public static byte framedId = byte.MaxValue;
 
         public Illusionist()
         {
@@ -175,11 +176,24 @@ namespace TheOtherRoles.Roles
                 SoundEffectsManager.play(message.isDecoy ? "morphlingMorph" : "morphlingSample", 0.7f);
         });
 
-        public static RemoteProcess<(byte victimId, byte reporterId)> TriggerIllusion = new("IllusionistTrigger", (message, _) =>
+        public static RemoteProcess<(byte victimId, byte reporterId)> TriggerIllusion = new("IllusionistTrigger", (message, __) =>
         {
+            var illusion = active.FirstOrDefault(x => x != null && x.victimId == message.victimId);
+            bool wasDecoy = illusion != null && illusion.isDecoy;
+            byte ownerId = illusion != null ? illusion.ownerId : byte.MaxValue;
+            byte decoyId = illusion != null ? illusion.decoyId : byte.MaxValue;
+
             removeIllusion(message.victimId);
             RPCProcedure.uncheckedCmdReportDeadBody(message.reporterId, message.victimId);
             SoundEffectsManager.play("fail", 0.7f);
+
+            if (PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.PlayerId != ownerId) return;
+
+            if (wasDecoy)
+            {
+                _ = new StaticAchievementToken("illusionist.another1");
+                framedId = decoyId;
+            }
         });
 
         public static void update(PlayerControl local)
@@ -259,6 +273,8 @@ namespace TheOtherRoles.Roles
 
             PlaceIllusion.Invoke((player.PlayerId, body.ParentId, body.TruePosition.x, body.TruePosition.y, decoyId, decoyMode));
 
+            _ = new StaticAchievementToken("illusionist.common1");
+
             usesLeft--;
             illusionButton.Timer = illusionButton.MaxTimer;
         }
@@ -306,6 +322,15 @@ namespace TheOtherRoles.Roles
             highlighted = null;
         }
 
+        public override void OnMeetingEnd(PlayerControl exiled = null)
+        {
+            if (player == PlayerControl.LocalPlayer && exiled != null
+                && framedId != byte.MaxValue && exiled.PlayerId == framedId)
+                _ = new StaticAchievementToken("illusionist.challenge");
+
+            framedId = byte.MaxValue;
+        }
+
         public override void ResetRole(bool isShifted) => destroyUi();
 
         private static void destroyUi()
@@ -342,6 +367,7 @@ namespace TheOtherRoles.Roles
             destroyUi();
             hideSprite = null;
             decoySprite = null;
+            framedId = byte.MaxValue;
             players = [];
         }
     }

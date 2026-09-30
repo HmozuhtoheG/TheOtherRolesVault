@@ -23,6 +23,10 @@ namespace TheOtherRoles.Roles
         public bool isInfinityActive;
         public float cursedEnergy;
 
+        public bool votedSukuna;
+        public bool sukunaExiled;
+        public bool hasDied;
+
         public static Color sixEyesScreenColor = new Color(0f, 1f, 1f, 0.22f);
         private static Dictionary<byte, Arrow> sixEyesArrows = [];
         private static SpriteRenderer sixEyesScreen;
@@ -135,7 +139,7 @@ namespace TheOtherRoles.Roles
             return ringSprite;
         }
 
-        public static RemoteProcess<(byte playerId, bool active)> SetInfinity = new("GojoSetInfinity", (message, _) =>
+        public static RemoteProcess<(byte playerId, bool active)> SetInfinity = new("GojoSetInfinity", (message, __) =>
         {
             var role = getRole(Helpers.playerById(message.playerId));
             if (role == null || role.player == null) return;
@@ -143,6 +147,7 @@ namespace TheOtherRoles.Roles
             role.isInfinityActive = message.active;
             if (message.active)
             {
+                if (role.player == PlayerControl.LocalPlayer) _ = new StaticAchievementToken("gojo.common1");
                 role.ShowIndicator();
                 SoundEffectsManager.playAtPosition("medicShield", role.player.GetTruePosition(), 1f, 8f);
             }
@@ -217,6 +222,7 @@ namespace TheOtherRoles.Roles
                 {
                     cursedEnergy = 0f;
                     SetActiveInfinity(false);
+                    _ = new StaticAchievementToken("gojo.another1");
                     new CustomMessage(ModTranslation.getString("gojoEnergyDepleted"), 3f);
                 }
                 else if (!IsHolding())
@@ -264,6 +270,55 @@ namespace TheOtherRoles.Roles
             isInfinityActive = false;
             HideIndicator();
             ClearSixEyes();
+            hasDied = true;
+        }
+
+        public override void OnMeetingEnd(PlayerControl exiled = null)
+        {
+            if (player != PlayerControl.LocalPlayer) return;
+            if (!votedSukuna) return;
+            if (exiled == null || !exiled.isRole(RoleId.Sukuna)) return;
+            sukunaExiled = true;
+        }
+
+        [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.CastVote))]
+        public static class GojoChallengerVotePatch
+        {
+            public static void Postfix([HarmonyArgument(0)] InnerNet.PlayerId srcPlayerId, [HarmonyArgument(1)] InnerNet.PlayerId suspectPlayerId)
+            {
+                var gojo = local;
+                if (gojo == null || gojo.player != PlayerControl.LocalPlayer) return;
+                if ((byte)srcPlayerId != PlayerControl.LocalPlayer.PlayerId) return;
+
+                var suspect = Helpers.playerById((byte)suspectPlayerId);
+                if (suspect != null && suspect.isRole(RoleId.Sukuna)) gojo.votedSukuna = true;
+            }
+        }
+
+        [HarmonyPatch(typeof(EndGameManager), nameof(EndGameManager.SetEverythingUp))]
+        public static class GojoChallengerEndPatch
+        {
+            public static void Postfix()
+            {
+                var gojo = local;
+                if (gojo == null || !gojo.sukunaExiled || gojo.hasDied) return;
+                if (PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
+
+                bool won = false;
+                var winners = EndGameResult.CachedWinners;
+                if (winners != null)
+                {
+                    foreach (var winner in winners)
+                    {
+                        if (winner == null || !winner.IsYou) continue;
+                        won = true;
+                        break;
+                    }
+                }
+                if (!won) return;
+
+                _ = new StaticAchievementToken("gojo.challenger");
+            }
         }
 
         public static void onTaskComplete(PlayerControl pc)
@@ -325,6 +380,8 @@ namespace TheOtherRoles.Roles
                     Vector2 direction = distance > 0.001f ? delta / distance : Vector2.right;
 
                     __instance.body.velocity = Vector2.zero;
+
+                    if (gojo.player == PlayerControl.LocalPlayer) _ = new StaticAchievementToken("gojo.challenge");
 
                     if (!PhysicsHelpers.AnyNonTriggersBetween(gojoPos, direction, infinityRadius, Constants.ShipAndObjectsMask))
                     {

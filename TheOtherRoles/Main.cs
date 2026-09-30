@@ -112,6 +112,7 @@ namespace TheOtherRoles
             CustomOptionHolder.Load();
             CustomColors.Load();
             AssetLoader.LoadAssets();
+            JusticeAudio.Preload();
             TORAchievementManager.LoadAchievements();
             EventDetail.Load();
             TranslatableTag.Load();
