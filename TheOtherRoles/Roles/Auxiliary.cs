@@ -36,7 +36,7 @@ namespace TheOtherRoles.Roles
             promoted = false;
         }
 
-        public static RemoteProcess<(byte auxiliaryId, byte targetId)> Mark = new("AuxiliaryMark", (message, _) =>
+        public static RemoteProcess<(byte auxiliaryId, byte targetId)> Mark = new("AuxiliaryMark", (message, __) =>
         {
             var auxiliary = getRole(Helpers.playerById(message.auxiliaryId));
             var target = Helpers.playerById(message.targetId);
@@ -46,6 +46,8 @@ namespace TheOtherRoles.Roles
             auxiliary.remainingMarks--;
             auxiliary.markedPlayer = target;
 
+            if (auxiliary.player == PlayerControl.LocalPlayer) _ = new StaticAchievementToken("auxiliary.common1");
+
             if (PlayerControl.LocalPlayer == target)
             {
                 SoundEffectsManager.play("warlockCurse");
@@ -53,13 +55,15 @@ namespace TheOtherRoles.Roles
             }
         });
 
-        public static RemoteProcess<byte> PromoteToSheriff = RemotePrimitiveProcess.OfByte("AuxiliaryPromotes", (message, _) =>
+        public static RemoteProcess<byte> PromoteToSheriff = RemotePrimitiveProcess.OfByte("AuxiliaryPromotes", (message, __) =>
         {
             PlayerControl auxiliary = Helpers.playerById(message);
             if (auxiliary == null || getRole(auxiliary) == null) return;
 
             Sheriff.replaceCurrentSheriff(auxiliary);
             eraseRole(auxiliary);
+
+            if (auxiliary == PlayerControl.LocalPlayer) _ = new StaticAchievementToken("auxiliary.challenge");
         });
 
         public static Sprite getButtonSprite()

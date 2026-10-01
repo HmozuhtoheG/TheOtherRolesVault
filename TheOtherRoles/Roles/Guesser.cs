@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheOtherRoles.MetaContext;
 using TheOtherRoles.Modules;
 using UnityEngine;
 using static TheOtherRoles.TheOtherRoles;
@@ -55,6 +56,8 @@ namespace TheOtherRoles.Roles
         {
             RoleId = roleId = RoleId.EvilGuesser;
         }
+
+        public static MetaContext.Image Illustration = SpriteLoader.FromResource("TheOtherRoles.Resources.Characterillustration.EvilGuesser.png", 300f);
 
         public static int remainingShotsEvilGuesser = 2;
         public static int safeGuessesEvilGuesser = 0;

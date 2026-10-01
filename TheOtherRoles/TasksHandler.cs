@@ -60,7 +60,7 @@ namespace TheOtherRoles {
                         || playerInfo.Object.isRole(RoleId.Fox)
                         || playerInfo.Object.isRole(RoleId.PlayerRole)
                         || playerInfo.Object.isRole(RoleId.Workaholic)
-                        || Layabout.isLayabout(playerInfo.Object))
+                        || Layabout.isLayabout(playerInfo.Object) || KashimoHajime.isRole(playerInfo.Object))
                         )
                         continue;
                     var (playerCompleted, playerTotal) = taskInfo(playerInfo);

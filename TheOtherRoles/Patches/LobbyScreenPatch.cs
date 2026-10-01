@@ -29,6 +29,8 @@ namespace TheOtherRoles.Patches
         [HarmonyPostfix]
         public static void OnEnable(EnterCodeManager __instance)
         {
+            EnterCodeServerPicker.Show();
+
             if (LobbyText)
             {
                 LobbyText.SetActive(GameId != 0);
@@ -52,6 +54,8 @@ namespace TheOtherRoles.Patches
         [HarmonyPostfix]
         public static void OnDisable()
         {
+            EnterCodeServerPicker.Hide();
+
             if (LobbyText)
             {
                 LobbyText.SetActive(false);

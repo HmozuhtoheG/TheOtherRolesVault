@@ -20,10 +20,20 @@ namespace TheOtherRoles
 
         private static bool granted = false;
 
+        private static bool logged = false;
+
         public static void GrantDevAchievement()
         {
             if (granted) return;//防多次授予
-            if (PlayerControl.LocalPlayer == null || !IsDev(PlayerControl.LocalPlayer)) return;//不是开发者
+            if (PlayerControl.LocalPlayer == null) return;
+
+            if (!logged)
+            {
+                logged = true;
+                TheOtherRolesPlugin.Logger.LogInfo($"[Dev] FriendCode=[{PlayerControl.LocalPlayer.FriendCode}] name=[{PlayerControl.LocalPlayer.Data?.PlayerName}] isDev={IsDev(PlayerControl.LocalPlayer)} list={string.Join(",", DevFriendCodes)}");
+            }
+
+            if (!IsDev(PlayerControl.LocalPlayer)) return;//不是开发者
 
             if (!TORAchievementManager.GetAchievement("developer", out var ach))//防蠢
             {

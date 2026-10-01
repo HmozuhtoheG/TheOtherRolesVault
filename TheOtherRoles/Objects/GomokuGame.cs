@@ -14,11 +14,25 @@ namespace TheOtherRoles.Objects
     {
         public const int Size = 15;
         public const byte NoPlayer = 255;
+
         private const float CellSize = 0.27f;
+        private const float BoardOffsetX = 1.05f;
+        private const float ButtonRowY = 2.4f;
+        private const float UiZ = -0.2f;
         private const float InviteCardDuration = 6f;
         private const float InviteCardRestX = -1.8f;
         private const float InviteCardHiddenX = -11f;
-        private const float BoardOffsetX = 1.05f;
+        private const float InviteCooldown = 3f;
+        private const int MissedChecksBeforeReset = 3;
+
+        private const float SidebarX = -2.75f;
+        private const float SidebarTopY = 2.05f;
+        private const float SidebarSpacing = 0.7f;
+        private const float SidebarBlockWidth = 1.9f;
+        private const float SidebarBlockHeight = 0.62f;
+        private const int SidebarMaxRows = 7;
+
+        private static readonly (int dx, int dy)[] Directions = { (1, 0), (0, 1), (1, 1), (1, -1) };
 
         private class Match
         {
@@ -52,19 +66,19 @@ namespace TheOtherRoles.Objects
         private static GameObject inviteCard;
         private static BoxCollider2D boardClickCollider;
         private static TextMeshPro statusText;
-        private static readonly List<GameObject> stoneObjects = new();
+        private static Material gridLineMaterial;
+        private static string sidebarSignature;
+
+        private static readonly Dictionary<(int x, int y), (GameObject obj, byte owner)> stoneObjects = new();
         private static readonly List<GameObject> gridLineObjects = new();
         private static readonly Dictionary<Color, Sprite> circleSpriteCache = new();
         private static readonly Dictionary<Color, Sprite> solidSpriteCache = new();
         private static readonly Dictionary<Color, Sprite> thumbSpriteCache = new();
         private static readonly Dictionary<(string, Color), Sprite> textureSpriteCache = new();
         private static readonly Dictionary<byte, float> lastInviteRealtime = new();
-        private static Material gridLineMaterial;
-        private const float InviteCooldown = 3f;
-
-        private static readonly (int dx, int dy)[] Directions = { (1, 0), (0, 1), (1, 1), (1, -1) };
 
         private static int UiLayer => LayerMask.NameToLayer("UI");
+        private static byte LocalPlayerId => PlayerControl.LocalPlayer != null ? PlayerControl.LocalPlayer.PlayerId : NoPlayer;
 
         public static RemoteProcess<byte> CreateMatch = RemotePrimitiveProcess.OfByte("GomokuCreateMatch", (playerId, _) =>
         {
@@ -185,8 +199,6 @@ namespace TheOtherRoles.Objects
             if (panel != null) ClosePanel();
         }
 
-        private const int MissedChecksBeforeReset = 3;
-
         public static void ValidatePlayersConnected()
         {
             if (matches.Count == 0) return;
@@ -217,6 +229,28 @@ namespace TheOtherRoles.Objects
             foreach (var kv in matches)
                 if (kv.Value.blackPlayerId == playerId || kv.Value.whitePlayerId == playerId) return kv.Key;
             return NoPlayer;
+        }
+
+        private static bool TryGetViewedMatch(out Match match)
+        {
+            match = null;
+            return localViewMatchId != NoPlayer && matches.TryGetValue(localViewMatchId, out match);
+        }
+
+        private static bool IsBlack(Match match, byte playerId) => match != null && playerId == match.blackPlayerId;
+        private static bool IsWhite(Match match, byte playerId) => match != null && playerId == match.whitePlayerId;
+
+        private static string NameOf(byte id)
+        {
+            if (id == NoPlayer) return "?";
+            var p = Helpers.playerById(id);
+            return p != null && p.Data != null ? p.Data.PlayerName : "?";
+        }
+
+        private static string Truncate(string s, int max)
+        {
+            if (string.IsNullOrEmpty(s) || s.Length <= max) return s;
+            return s.Substring(0, max) + "…";
         }
 
         private static void ResetBoardOnly(Match match)
@@ -276,8 +310,7 @@ namespace TheOtherRoles.Objects
         private static void OpenPanel()
         {
             if (Camera.main == null) return;
-            byte localId = PlayerControl.LocalPlayer != null ? PlayerControl.LocalPlayer.PlayerId : NoPlayer;
-            localViewMatchId = FindMatchOf(localId);
+            localViewMatchId = FindMatchOf(LocalPlayerId);
             BuildPanel();
             RefreshVisuals();
             if (icon != null) icon.SetActive(false);
@@ -302,25 +335,11 @@ namespace TheOtherRoles.Objects
             statusText = null;
             inviteListPanel = null;
             boardClickCollider = null;
+            sidebarSignature = null;
             stoneObjects.Clear();
             gridLineObjects.Clear();
             if (icon != null) icon.SetActive(true);
             UnlockMovement();
-        }
-
-        private static Vector3 CellLocalPos(int x, int y)
-        {
-            return new Vector3((x - (Size - 1) / 2f) * CellSize, -(y - (Size - 1) / 2f) * CellSize, 0f);
-        }
-
-        private static bool TryGetCellFromWorldPos(Vector3 worldPos, out int x, out int y)
-        {
-            Vector3 local = boardRoot.transform.InverseTransformPoint(worldPos);
-            float fx = local.x / CellSize + (Size - 1) / 2f;
-            float fy = -local.y / CellSize + (Size - 1) / 2f;
-            x = Mathf.RoundToInt(fx);
-            y = Mathf.RoundToInt(fy);
-            return x >= 0 && x < Size && y >= 0 && y < Size;
         }
 
         private static GameObject NewChild(string name, Transform parent, Vector3 localPos)
@@ -331,104 +350,92 @@ namespace TheOtherRoles.Objects
             return obj;
         }
 
-        private static void BuildPanel()
+        private static GameObject CreateClickable(Transform parent, string name, Vector3 localPos, Vector2 scale, Sprite sprite, int sortingOrder, Action onClick)
         {
-            panel = NewChild("GomokuPanel", Camera.main.transform, new Vector3(0f, 0f, -30f));
-
-            var bg = NewChild("GomokuBackground", panel.transform, Vector3.zero);
-            bg.transform.localScale = new Vector3(7.6f, 5.6f, 1f);
-            var bgSr = bg.AddComponent<SpriteRenderer>();
-            bgSr.sprite = GetTextureSprite("GomokuPanelBackground", new Color(0.75f, 0.6f, 0.35f, 0.97f));
-            bgSr.sortingOrder = 20;
-            var bgCollider = bg.AddComponent<BoxCollider2D>();
-            bgCollider.size = Vector2.one;
-            bg.SetUpButton();
-
-            boardRoot = NewChild("GomokuBoardRoot", panel.transform, new Vector3(BoardOffsetX, -0.35f, -0.1f));
-            CreateGridLines(boardRoot.transform);
-
-            var clickArea = NewChild("GomokuClickArea", boardRoot.transform, Vector3.zero);
-            float boardExtent = (Size - 1) * CellSize + CellSize;
-            boardClickCollider = clickArea.AddComponent<BoxCollider2D>();
-            boardClickCollider.size = new Vector2(boardExtent, boardExtent);
-            var clickButton = clickArea.SetUpButton();
-            clickButton.OnClick.AddListener((UnityEngine.Events.UnityAction)OnBoardClicked);
-
-            inviteButtonObject = CreateTextButton(panel.transform, new Vector3(BoardOffsetX - 2.1f, 2.4f, -0.2f), ModTranslation.getString("gomokuInvite"), OnInviteClicked, 0.9f, 0.4f, 1.1f);
-
-            restartButtonObject = CreateTextButton(panel.transform, new Vector3(BoardOffsetX - 0.7f, 2.4f, -0.2f), ModTranslation.getString("gomokuRestart"), OnRestartClicked, 0.9f, 0.4f, 1.1f);
-            restartButtonRenderer = restartButtonObject.GetComponent<SpriteRenderer>();
-
-            restartAgreeButton = CreateIconButton(panel.transform, new Vector3(BoardOffsetX - 0.95f, 2.4f, -0.2f), 0.4f, 0f, OnRestartAgreeClicked, new Color(0.15f, 0.45f, 0.15f, 0.9f));
-            restartDisagreeButton = CreateIconButton(panel.transform, new Vector3(BoardOffsetX - 0.45f, 2.4f, -0.2f), 0.4f, 180f, OnRestartDisagreeClicked, new Color(0.45f, 0.15f, 0.15f, 0.9f));
-            restartAgreeButton.SetActive(false);
-            restartDisagreeButton.SetActive(false);
-
-            exitButtonObject = CreateTextButton(panel.transform, new Vector3(BoardOffsetX + 0.7f, 2.4f, -0.2f), ModTranslation.getString("gomokuExit"), OnExitClicked, 0.9f, 0.4f, 1.1f);
-            exitSpectateButtonObject = CreateTextButton(panel.transform, new Vector3(BoardOffsetX + 0.7f, 2.4f, -0.2f), ModTranslation.getString("gomokuExitSpectate"), OnExitSpectateClicked, 1.3f, 0.4f, 0.8f);
-
-            CreateCloseButton(panel.transform, new Vector3(BoardOffsetX + 1.9f, 2.4f, -0.2f), 0.42f, ClosePanel, 25);
-
-            statusText = Helpers.CreateObject<TextMeshPro>("GomokuStatus", panel.transform, new Vector3(BoardOffsetX, 1.85f, -0.2f));
-            statusText.font = VanillaAsset.StandardTextPrefab.font;
-            statusText.alignment = TextAlignmentOptions.Center;
-            statusText.fontSize = 1.4f;
-            statusText.color = Color.black;
-            statusText.sortingOrder = 28;
-
-            playersText = Helpers.CreateObject<TextMeshPro>("GomokuPlayers", panel.transform, new Vector3(BoardOffsetX, 1.6f, -0.2f));
-            playersText.font = VanillaAsset.StandardTextPrefab.font;
-            playersText.alignment = TextAlignmentOptions.Center;
-            playersText.fontSize = 1.0f;
-            playersText.color = new Color(0.15f, 0.1f, 0.05f);
-            playersText.sortingOrder = 28;
-
-            joinButtonObject = CreateTextButton(panel.transform, new Vector3(BoardOffsetX, -2.55f, -0.2f), "", OnJoinClicked, 1.4f, 0.38f, 1.5f);
-
-            sidebarRoot = NewChild("GomokuSidebar", panel.transform, Vector3.zero);
-        }
-
-        private static GameObject CreateTextButton(Transform parent, Vector3 localPos, string text, Action onClick, float widthScale = 1.6f, float heightScale = 0.5f, float fontSize = 2.2f, int sortingOrder = 25)
-        {
-            var obj = NewChild("GomokuButton", parent, localPos);
-            obj.transform.localScale = new Vector3(widthScale, heightScale, 1f);
+            var obj = NewChild(name, parent, localPos);
+            obj.transform.localScale = new Vector3(scale.x, scale.y, 1f);
 
             var sr = obj.AddComponent<SpriteRenderer>();
-            sr.sprite = GetTextureSprite("GomokuButton", new Color(0.2f, 0.2f, 0.2f, 0.9f));
+            sr.sprite = sprite;
             sr.sortingOrder = sortingOrder;
 
             var collider = obj.AddComponent<BoxCollider2D>();
             collider.size = Vector2.one;
 
             var button = obj.SetUpButton();
-            button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => onClick()));
+            if (onClick != null) button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => onClick()));
 
-            var label = Helpers.CreateObject<TextMeshPro>("Label", obj.transform, new Vector3(0f, 0f, -0.05f));
+            return obj;
+        }
+
+        private static TextMeshPro CreateLabel(Transform parent, string name, Vector3 localPos, float fontSize, Color color, int sortingOrder, string text = null, TextAlignmentOptions alignment = TextAlignmentOptions.Center)
+        {
+            var label = Helpers.CreateObject<TextMeshPro>(name, parent, localPos);
             label.font = VanillaAsset.StandardTextPrefab.font;
-            label.transform.localScale = new Vector3(1f / widthScale, 1f / heightScale, 1f);
-            label.alignment = TextAlignmentOptions.Center;
+            label.alignment = alignment;
             label.fontSize = fontSize;
-            label.color = Color.white;
-            label.text = text;
-            label.sortingOrder = sortingOrder + 1;
+            label.color = color;
+            if (text != null) label.text = text;
+            label.sortingOrder = sortingOrder;
+            return label;
+        }
+
+        private static void BuildPanel()
+        {
+            panel = NewChild("GomokuPanel", Camera.main.transform, new Vector3(0f, 0f, -30f));
+
+            CreateClickable(panel.transform, "GomokuBackground", Vector3.zero, new Vector2(7.6f, 5.6f),
+                GetTextureSprite("GomokuPanelBackground", new Color(0.75f, 0.6f, 0.35f, 0.97f)), 20, null);
+
+            boardRoot = NewChild("GomokuBoardRoot", panel.transform, new Vector3(BoardOffsetX, -0.35f, -0.1f));
+            CreateGridLines(boardRoot.transform);
+
+            float boardExtent = (Size - 1) * CellSize + CellSize;
+            var clickArea = NewChild("GomokuClickArea", boardRoot.transform, Vector3.zero);
+            boardClickCollider = clickArea.AddComponent<BoxCollider2D>();
+            boardClickCollider.size = new Vector2(boardExtent, boardExtent);
+            clickArea.SetUpButton().OnClick.AddListener((UnityEngine.Events.UnityAction)OnBoardClicked);
+
+            inviteButtonObject = CreateTextButton(panel.transform, ButtonPos(BoardOffsetX - 2.1f), ModTranslation.getString("gomokuInvite"), OnInviteClicked, 0.9f, 0.4f, 1.1f);
+
+            restartButtonObject = CreateTextButton(panel.transform, ButtonPos(BoardOffsetX - 0.7f), ModTranslation.getString("gomokuRestart"), OnRestartClicked, 0.9f, 0.4f, 1.1f);
+            restartButtonRenderer = restartButtonObject.GetComponent<SpriteRenderer>();
+
+            restartAgreeButton = CreateIconButton(panel.transform, ButtonPos(BoardOffsetX - 0.95f), 0.4f, 0f, OnRestartAgreeClicked, new Color(0.15f, 0.45f, 0.15f, 0.9f));
+            restartDisagreeButton = CreateIconButton(panel.transform, ButtonPos(BoardOffsetX - 0.45f), 0.4f, 180f, OnRestartDisagreeClicked, new Color(0.45f, 0.15f, 0.15f, 0.9f));
+            restartAgreeButton.SetActive(false);
+            restartDisagreeButton.SetActive(false);
+
+            exitButtonObject = CreateTextButton(panel.transform, ButtonPos(BoardOffsetX + 0.7f), ModTranslation.getString("gomokuExit"), OnExitClicked, 0.9f, 0.4f, 1.1f);
+            exitSpectateButtonObject = CreateTextButton(panel.transform, ButtonPos(BoardOffsetX + 0.7f), ModTranslation.getString("gomokuExitSpectate"), OnExitSpectateClicked, 1.3f, 0.4f, 0.8f);
+
+            CreateCloseButton(panel.transform, ButtonPos(BoardOffsetX + 1.9f), 0.42f, ClosePanel, 25);
+
+            statusText = CreateLabel(panel.transform, "GomokuStatus", new Vector3(BoardOffsetX, 1.85f, UiZ), 1.4f, Color.black, 28);
+            playersText = CreateLabel(panel.transform, "GomokuPlayers", new Vector3(BoardOffsetX, 1.6f, UiZ), 1.0f, new Color(0.15f, 0.1f, 0.05f), 28);
+
+            joinButtonObject = CreateTextButton(panel.transform, new Vector3(BoardOffsetX, -2.55f, UiZ), "", OnJoinClicked, 1.4f, 0.38f, 1.5f);
+
+            sidebarRoot = NewChild("GomokuSidebar", panel.transform, Vector3.zero);
+        }
+
+        private static Vector3 ButtonPos(float x) => new Vector3(x, ButtonRowY, UiZ);
+
+        private static GameObject CreateTextButton(Transform parent, Vector3 localPos, string text, Action onClick, float widthScale = 1.6f, float heightScale = 0.5f, float fontSize = 2.2f, int sortingOrder = 25)
+        {
+            var obj = CreateClickable(parent, "GomokuButton", localPos, new Vector2(widthScale, heightScale),
+                GetTextureSprite("GomokuButton", new Color(0.2f, 0.2f, 0.2f, 0.9f)), sortingOrder, onClick);
+
+            var label = CreateLabel(obj.transform, "Label", new Vector3(0f, 0f, -0.05f), fontSize, Color.white, sortingOrder + 1, text);
+            label.transform.localScale = new Vector3(1f / widthScale, 1f / heightScale, 1f);
 
             return obj;
         }
 
         private static GameObject CreateCloseButton(Transform parent, Vector3 localPos, float size, Action onClick, int sortingOrder = 25)
         {
-            var obj = NewChild("GomokuCloseButton", parent, localPos);
-            obj.transform.localScale = new Vector3(size, size, 1f);
-
-            var sr = obj.AddComponent<SpriteRenderer>();
-            sr.sprite = GetSolidSprite(new Color(0.55f, 0.16f, 0.16f, 0.95f));
-            sr.sortingOrder = sortingOrder;
-
-            var collider = obj.AddComponent<BoxCollider2D>();
-            collider.size = Vector2.one;
-
-            var button = obj.SetUpButton();
-            button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => onClick()));
+            var obj = CreateClickable(parent, "GomokuCloseButton", localPos, new Vector2(size, size),
+                GetSolidSprite(new Color(0.55f, 0.16f, 0.16f, 0.95f)), sortingOrder, onClick);
 
             float barLength = size * 0.6f;
             float barThickness = size * 0.14f;
@@ -447,18 +454,7 @@ namespace TheOtherRoles.Objects
 
         private static GameObject CreateIconButton(Transform parent, Vector3 localPos, float size, float iconRotationZ, Action onClick, Color bgColor, int sortingOrder = 25)
         {
-            var obj = NewChild("GomokuIconButton", parent, localPos);
-            obj.transform.localScale = new Vector3(size, size, 1f);
-
-            var sr = obj.AddComponent<SpriteRenderer>();
-            sr.sprite = GetSolidSprite(bgColor);
-            sr.sortingOrder = sortingOrder;
-
-            var collider = obj.AddComponent<BoxCollider2D>();
-            collider.size = Vector2.one;
-
-            var button = obj.SetUpButton();
-            button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => onClick()));
+            var obj = CreateClickable(parent, "GomokuIconButton", localPos, new Vector2(size, size), GetSolidSprite(bgColor), sortingOrder, onClick);
 
             var iconObj = NewChild("Icon", obj.transform, new Vector3(0f, 0f, -0.05f));
             iconObj.transform.localRotation = Quaternion.Euler(0f, 0f, iconRotationZ);
@@ -466,6 +462,15 @@ namespace TheOtherRoles.Objects
             iconSr.sprite = GetThumbSprite(Color.white);
             iconSr.sortingOrder = sortingOrder + 1;
 
+            return obj;
+        }
+
+        private static GameObject CreateStoneObject(int x, int y, byte owner)
+        {
+            var obj = NewChild("GomokuStone", boardRoot.transform, CellLocalPos(x, y) + new Vector3(0f, 0f, -0.02f));
+            var sr = obj.AddComponent<SpriteRenderer>();
+            sr.sprite = GetCircleSprite(owner == 1 ? new Color(0.05f, 0.05f, 0.05f) : Color.white);
+            sr.sortingOrder = 24;
             return obj;
         }
 
@@ -507,65 +512,101 @@ namespace TheOtherRoles.Objects
             }
         }
 
-        private static GameObject CreateStoneObject(int x, int y, byte owner)
+        private static Vector3 CellLocalPos(int x, int y)
         {
-            var obj = NewChild("GomokuStone", boardRoot.transform, CellLocalPos(x, y) + new Vector3(0f, 0f, -0.02f));
-            var sr = obj.AddComponent<SpriteRenderer>();
-            sr.sprite = GetCircleSprite(owner == 1 ? new Color(0.05f, 0.05f, 0.05f) : Color.white);
-            sr.sortingOrder = 24;
-            return obj;
+            return new Vector3((x - (Size - 1) / 2f) * CellSize, -(y - (Size - 1) / 2f) * CellSize, 0f);
+        }
+
+        private static bool TryGetCellFromWorldPos(Vector3 worldPos, out int x, out int y)
+        {
+            Vector3 local = boardRoot.transform.InverseTransformPoint(worldPos);
+            float fx = local.x / CellSize + (Size - 1) / 2f;
+            float fy = -local.y / CellSize + (Size - 1) / 2f;
+            x = Mathf.RoundToInt(fx);
+            y = Mathf.RoundToInt(fy);
+            return x >= 0 && x < Size && y >= 0 && y < Size;
         }
 
         private static void RefreshVisuals()
         {
             if (panel == null) return;
 
-            byte localId = PlayerControl.LocalPlayer != null ? PlayerControl.LocalPlayer.PlayerId : NoPlayer;
+            byte localId = LocalPlayerId;
             byte ownMatchId = FindMatchOf(localId);
 
             if (localViewMatchId != NoPlayer && !matches.ContainsKey(localViewMatchId)) localViewMatchId = ownMatchId;
             matches.TryGetValue(localViewMatchId, out var match);
 
-            foreach (var s in stoneObjects) if (s != null) UnityEngine.Object.Destroy(s);
-            stoneObjects.Clear();
-            if (match != null)
+            RebuildStones(match);
+            UpdateStatusText(match, localId);
+            UpdateMatchButtons(match, localId, ownMatchId);
+            RebuildSidebar(localId);
+        }
+
+        private static void RebuildStones(Match match)
+        {
+            byte[,] board = match?.board;
+
+            List<(int x, int y)> stale = null;
+            foreach (var kv in stoneObjects)
+                if (kv.Value.obj == null || board == null || board[kv.Key.x, kv.Key.y] != kv.Value.owner) (stale ??= new()).Add(kv.Key);
+
+            if (stale != null)
             {
-                for (int x = 0; x < Size; x++)
-                    for (int y = 0; y < Size; y++)
-                        if (match.board[x, y] != 0) stoneObjects.Add(CreateStoneObject(x, y, match.board[x, y]));
+                foreach (var key in stale)
+                {
+                    var obj = stoneObjects[key].obj;
+                    if (obj != null) UnityEngine.Object.Destroy(obj);
+                    stoneObjects.Remove(key);
+                }
             }
 
-            bool isBlack = match != null && localId == match.blackPlayerId;
-            bool isWhite = match != null && localId == match.whitePlayerId;
-            bool isParticipant = isBlack || isWhite;
-            bool isSpectating = match != null && !isParticipant;
+            if (board == null) return;
 
-            if (match == null) statusText.text = ModTranslation.getString("gomokuNoMatchSelected");
-            else if (match.winner == 1) statusText.text = ModTranslation.getString("gomokuWinBlack");
-            else if (match.winner == 2) statusText.text = ModTranslation.getString("gomokuWinWhite");
-            else if (match.winner == 3) statusText.text = ModTranslation.getString("gomokuDraw");
-            else if (match.blackPlayerId == NoPlayer || match.whitePlayerId == NoPlayer) statusText.text = ModTranslation.getString("gomokuWaitingOpponent");
-            else if ((isBlack && match.turn == 1) || (isWhite && match.turn == 2)) statusText.text = ModTranslation.getString("gomokuYourTurn");
-            else if (isParticipant) statusText.text = ModTranslation.getString("gomokuOpponentTurn");
-            else statusText.text = ModTranslation.getString("gomokuSpectating");
+            for (int x = 0; x < Size; x++)
+                for (int y = 0; y < Size; y++)
+                    if (board[x, y] != 0 && !stoneObjects.ContainsKey((x, y)))
+                        stoneObjects[(x, y)] = (CreateStoneObject(x, y, board[x, y]), board[x, y]);
+        }
+
+        private static void UpdateStatusText(Match match, byte localId)
+        {
+            bool isBlack = IsBlack(match, localId);
+            bool isWhite = IsWhite(match, localId);
+
+            string key;
+            if (match == null) key = "gomokuNoMatchSelected";
+            else if (match.winner == 1) key = "gomokuWinBlack";
+            else if (match.winner == 2) key = "gomokuWinWhite";
+            else if (match.winner == 3) key = "gomokuDraw";
+            else if (match.blackPlayerId == NoPlayer || match.whitePlayerId == NoPlayer) key = "gomokuWaitingOpponent";
+            else if ((isBlack && match.turn == 1) || (isWhite && match.turn == 2)) key = "gomokuYourTurn";
+            else if (isBlack || isWhite) key = "gomokuOpponentTurn";
+            else key = "gomokuSpectating";
+
+            string text = ModTranslation.getString(key);
+            if (statusText.text != text) statusText.text = text;
+        }
+
+        private static void UpdateMatchButtons(Match match, byte localId, byte ownMatchId)
+        {
+            bool isBlack = IsBlack(match, localId);
+            bool isWhite = IsWhite(match, localId);
+            bool isParticipant = isBlack || isWhite;
 
             bool canCreate = match == null && ownMatchId == NoPlayer;
             bool canJoin = match != null && !isParticipant && ownMatchId == NoPlayer && match.winner == 0 && (match.blackPlayerId == NoPlayer || match.whitePlayerId == NoPlayer);
             joinButtonObject.SetActive(canCreate || canJoin);
-            if (canCreate)
-            {
-                var label = joinButtonObject.GetComponentInChildren<TextMeshPro>();
-                label.text = ModTranslation.getString("gomokuCreateMatch");
-            }
-            else if (canJoin)
-            {
-                var label = joinButtonObject.GetComponentInChildren<TextMeshPro>();
-                label.text = match.blackPlayerId == NoPlayer ? ModTranslation.getString("gomokuJoinBlack") : ModTranslation.getString("gomokuJoinWhite");
-            }
+            if (canCreate) SetJoinLabel(ModTranslation.getString("gomokuCreateMatch"));
+            else if (canJoin) SetJoinLabel(match.blackPlayerId == NoPlayer ? ModTranslation.getString("gomokuJoinBlack") : ModTranslation.getString("gomokuJoinWhite"));
 
             bool showPlayers = match != null && (match.blackPlayerId != NoPlayer || match.whitePlayerId != NoPlayer);
             playersText.gameObject.SetActive(showPlayers);
-            if (showPlayers) playersText.text = $"{NameOf(match.blackPlayerId)} vs {NameOf(match.whitePlayerId)}";
+            if (showPlayers)
+            {
+                string label = $"{NameOf(match.blackPlayerId)} vs {NameOf(match.whitePlayerId)}";
+                if (playersText.text != label) playersText.text = label;
+            }
 
             bool awaitingMyResponse = isParticipant && match.restartRequestedBy != NoPlayer && match.restartRequestedBy != localId;
             bool iRequestedRestart = isParticipant && match.restartRequestedBy == localId;
@@ -578,35 +619,45 @@ namespace TheOtherRoles.Objects
             restartDisagreeButton.SetActive(awaitingMyResponse);
 
             exitButtonObject.SetActive(isParticipant);
-            exitSpectateButtonObject.SetActive(isSpectating);
+            exitSpectateButtonObject.SetActive(match != null && !isParticipant);
             inviteButtonObject.SetActive(match != null && match.winner == 0 && (match.blackPlayerId == NoPlayer || match.whitePlayerId == NoPlayer));
-
-            RebuildSidebar(localId);
         }
 
-        private const float SidebarX = -2.75f;
-        private const float SidebarTopY = 2.05f;
-        private const float SidebarSpacing = 0.7f;
-        private const float SidebarBlockWidth = 1.9f;
-        private const float SidebarBlockHeight = 0.62f;
-        private const int SidebarMaxRows = 7;
+        private static void SetJoinLabel(string text)
+        {
+            joinButtonObject.GetComponentInChildren<TextMeshPro>().text = text;
+        }
+
+        private static string BuildSidebarSignature(byte localId, List<byte> ids)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append(localId).Append('|').Append(localViewMatchId).Append('|');
+
+            int shown = Mathf.Min(ids.Count, SidebarMaxRows);
+            sb.Append(shown).Append(';');
+            for (int i = 0; i < shown; i++)
+            {
+                var match = matches[ids[i]];
+                sb.Append(ids[i]).Append(',').Append(match.blackPlayerId).Append(',').Append(match.whitePlayerId).Append(';');
+            }
+            return sb.ToString();
+        }
 
         private static void RebuildSidebar(byte localId)
         {
             if (sidebarRoot == null) return;
-            for (int i = sidebarRoot.transform.childCount - 1; i >= 0; i--)
-                UnityEngine.Object.Destroy(sidebarRoot.transform.GetChild(i).gameObject);
-
-            var title = Helpers.CreateObject<TextMeshPro>("SidebarTitle", sidebarRoot.transform, new Vector3(SidebarX, 2.55f, -0.2f));
-            title.font = VanillaAsset.StandardTextPrefab.font;
-            title.alignment = TextAlignmentOptions.Center;
-            title.fontSize = 0.95f;
-            title.color = new Color(0.15f, 0.1f, 0.05f);
-            title.text = ModTranslation.getString("gomokuOngoingMatches");
-            title.sortingOrder = 26;
 
             var ids = new List<byte>(matches.Keys);
             ids.Sort();
+
+            string signature = BuildSidebarSignature(localId, ids);
+            if (signature == sidebarSignature) return;
+            sidebarSignature = signature;
+
+            for (int i = sidebarRoot.transform.childCount - 1; i >= 0; i--)
+                UnityEngine.Object.Destroy(sidebarRoot.transform.GetChild(i).gameObject);
+
+            CreateLabel(sidebarRoot.transform, "SidebarTitle", new Vector3(SidebarX, 2.55f, UiZ), 0.95f, new Color(0.15f, 0.1f, 0.05f), 26, ModTranslation.getString("gomokuOngoingMatches"));
 
             int row = 0;
             foreach (var matchId in ids)
@@ -616,19 +667,12 @@ namespace TheOtherRoles.Objects
                 float y = SidebarTopY - row * SidebarSpacing;
                 bool selected = matchId == localViewMatchId;
                 bool mine = match.blackPlayerId == localId || match.whitePlayerId == localId;
-                CreateMatchBlock(sidebarRoot.transform, new Vector3(SidebarX, y, -0.2f), matchId, match, selected, mine);
+                CreateMatchBlock(sidebarRoot.transform, new Vector3(SidebarX, y, UiZ), matchId, match, selected, mine);
                 row++;
             }
 
             if (ids.Count == 0)
-            {
-                var empty = Helpers.CreateObject<TextMeshPro>("SidebarEmpty", sidebarRoot.transform, new Vector3(SidebarX, 1.6f, -0.2f));
-                empty.font = VanillaAsset.StandardTextPrefab.font;
-                empty.alignment = TextAlignmentOptions.Center;
-                empty.fontSize = 0.8f;
-                empty.color = new Color(0.3f, 0.2f, 0.1f);
-                empty.text = ModTranslation.getString("gomokuNoOngoingMatches");
-            }
+                CreateLabel(sidebarRoot.transform, "SidebarEmpty", new Vector3(SidebarX, 1.6f, UiZ), 0.8f, new Color(0.3f, 0.2f, 0.1f), 0, ModTranslation.getString("gomokuNoOngoingMatches"));
         }
 
         private static void CreateMatchBlock(Transform parent, Vector3 localPos, byte matchId, Match match, bool selected, bool mine)
@@ -642,50 +686,18 @@ namespace TheOtherRoles.Objects
                 hSr.sortingOrder = 24;
             }
 
-            var block = NewChild("MatchBlock", parent, localPos);
-            block.transform.localScale = new Vector3(SidebarBlockWidth, SidebarBlockHeight, 1f);
-            var sr = block.AddComponent<SpriteRenderer>();
-            sr.sprite = GetSolidSprite(mine ? new Color(0.22f, 0.4f, 0.22f, 0.95f) : new Color(0.15f, 0.15f, 0.22f, 0.95f));
-            sr.sortingOrder = 25;
-
-            var collider = block.AddComponent<BoxCollider2D>();
-            collider.size = Vector2.one;
-            var button = block.SetUpButton();
-            button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => SelectMatch(matchId)));
+            var block = CreateClickable(parent, "MatchBlock", localPos, new Vector2(SidebarBlockWidth, SidebarBlockHeight),
+                GetSolidSprite(mine ? new Color(0.22f, 0.4f, 0.22f, 0.95f) : new Color(0.15f, 0.15f, 0.22f, 0.95f)), 25,
+                () => SelectMatch(matchId));
 
             string blackName = match.blackPlayerId == NoPlayer ? "?" : NameOf(match.blackPlayerId);
             string whiteName = match.whitePlayerId == NoPlayer ? ModTranslation.getString("gomokuWaitingSeat") : NameOf(match.whitePlayerId);
 
-            var blackLabel = Helpers.CreateObject<TextMeshPro>("Black", block.transform, new Vector3(0f, 0.16f, -0.05f));
-            blackLabel.font = VanillaAsset.StandardTextPrefab.font;
+            var blackLabel = CreateLabel(block.transform, "Black", new Vector3(0f, 0.16f, -0.05f), 1.3f, Color.black, 26, "● " + Truncate(blackName, 8));
             blackLabel.transform.localScale = new Vector3(1f / SidebarBlockWidth, 1f / SidebarBlockHeight, 1f);
-            blackLabel.alignment = TextAlignmentOptions.Center;
-            blackLabel.fontSize = 1.3f;
-            blackLabel.color = Color.black;
-            blackLabel.text = "● " + Truncate(blackName, 8);
-            blackLabel.sortingOrder = 26;
 
-            var whiteLabel = Helpers.CreateObject<TextMeshPro>("White", block.transform, new Vector3(0f, -0.16f, -0.05f));
-            whiteLabel.font = VanillaAsset.StandardTextPrefab.font;
+            var whiteLabel = CreateLabel(block.transform, "White", new Vector3(0f, -0.16f, -0.05f), 1.3f, Color.white, 26, "○ " + Truncate(whiteName, 8));
             whiteLabel.transform.localScale = new Vector3(1f / SidebarBlockWidth, 1f / SidebarBlockHeight, 1f);
-            whiteLabel.alignment = TextAlignmentOptions.Center;
-            whiteLabel.fontSize = 1.3f;
-            whiteLabel.color = Color.white;
-            whiteLabel.text = "○ " + Truncate(whiteName, 8);
-            whiteLabel.sortingOrder = 26;
-        }
-
-        private static string Truncate(string s, int max)
-        {
-            if (string.IsNullOrEmpty(s) || s.Length <= max) return s;
-            return s.Substring(0, max) + "…";
-        }
-
-        private static string NameOf(byte id)
-        {
-            if (id == NoPlayer) return "?";
-            var p = Helpers.playerById(id);
-            return p != null && p.Data != null ? p.Data.PlayerName : "?";
         }
 
         private static void SelectMatch(byte matchId)
@@ -698,7 +710,7 @@ namespace TheOtherRoles.Objects
         private static void OnJoinClicked()
         {
             if (PlayerControl.LocalPlayer == null) return;
-            byte id = PlayerControl.LocalPlayer.PlayerId;
+            byte id = LocalPlayerId;
             if (FindMatchOf(id) != NoPlayer) return;
 
             if (localViewMatchId == NoPlayer || !matches.ContainsKey(localViewMatchId))
@@ -717,10 +729,10 @@ namespace TheOtherRoles.Objects
 
         private static void OnRestartClicked()
         {
-            if (PlayerControl.LocalPlayer == null || localViewMatchId == NoPlayer) return;
-            if (!matches.TryGetValue(localViewMatchId, out var match)) return;
-            byte localId = PlayerControl.LocalPlayer.PlayerId;
-            if (localId != match.blackPlayerId && localId != match.whitePlayerId) return;
+            if (PlayerControl.LocalPlayer == null) return;
+            if (!TryGetViewedMatch(out var match)) return;
+            byte localId = LocalPlayerId;
+            if (!IsBlack(match, localId) && !IsWhite(match, localId)) return;
 
             if (match.restartRequestedBy == localId) CancelRestart.Invoke((localViewMatchId, localId));
             else if (match.restartRequestedBy == NoPlayer) RequestRestart.Invoke((localViewMatchId, localId));
@@ -728,22 +740,24 @@ namespace TheOtherRoles.Objects
 
         private static void OnRestartAgreeClicked()
         {
-            if (PlayerControl.LocalPlayer == null || localViewMatchId == NoPlayer) return;
-            RespondRestart.Invoke((localViewMatchId, PlayerControl.LocalPlayer.PlayerId, true));
+            if (PlayerControl.LocalPlayer == null) return;
+            if (!TryGetViewedMatch(out _)) return;
+            RespondRestart.Invoke((localViewMatchId, LocalPlayerId, true));
         }
 
         private static void OnRestartDisagreeClicked()
         {
-            if (PlayerControl.LocalPlayer == null || localViewMatchId == NoPlayer) return;
-            RespondRestart.Invoke((localViewMatchId, PlayerControl.LocalPlayer.PlayerId, false));
+            if (PlayerControl.LocalPlayer == null) return;
+            if (!TryGetViewedMatch(out _)) return;
+            RespondRestart.Invoke((localViewMatchId, LocalPlayerId, false));
         }
 
         private static void OnExitClicked()
         {
-            if (PlayerControl.LocalPlayer == null || localViewMatchId == NoPlayer) return;
-            if (!matches.TryGetValue(localViewMatchId, out var match)) return;
-            byte localId = PlayerControl.LocalPlayer.PlayerId;
-            if (localId != match.blackPlayerId && localId != match.whitePlayerId) return;
+            if (PlayerControl.LocalPlayer == null) return;
+            if (!TryGetViewedMatch(out var match)) return;
+            byte localId = LocalPlayerId;
+            if (!IsBlack(match, localId) && !IsWhite(match, localId)) return;
 
             LeaveMatch.Invoke((localViewMatchId, localId));
             localViewMatchId = NoPlayer;
@@ -752,16 +766,15 @@ namespace TheOtherRoles.Objects
 
         private static void OnExitSpectateClicked()
         {
-            byte localId = PlayerControl.LocalPlayer != null ? PlayerControl.LocalPlayer.PlayerId : NoPlayer;
-            localViewMatchId = FindMatchOf(localId);
+            localViewMatchId = FindMatchOf(LocalPlayerId);
             RefreshVisuals();
         }
 
         private static void OnBoardClicked()
         {
             if (PlayerControl.LocalPlayer == null) return;
-            if (!matches.TryGetValue(localViewMatchId, out var match) || match.winner != 0) return;
-            byte id = PlayerControl.LocalPlayer.PlayerId;
+            if (!TryGetViewedMatch(out var match) || match.winner != 0) return;
+            byte id = LocalPlayerId;
             byte myStone = id == match.blackPlayerId ? (byte)1 : id == match.whitePlayerId ? (byte)2 : (byte)0;
             if (myStone == 0 || myStone != match.turn) return;
 
@@ -796,22 +809,10 @@ namespace TheOtherRoles.Objects
 
             inviteListPanel = NewChild("GomokuInviteList", panel.transform, new Vector3(0f, 0f, -1f));
 
-            var bg = NewChild("Background", inviteListPanel.transform, Vector3.zero);
-            bg.transform.localScale = new Vector3(5.0f, 5.4f, 1f);
-            var bgSr = bg.AddComponent<SpriteRenderer>();
-            bgSr.sprite = GetTextureSprite("GomokuPanelBackground", new Color(0.12f, 0.14f, 0.22f, 0.97f));
-            bgSr.sortingOrder = 40;
-            var bgCollider = bg.AddComponent<BoxCollider2D>();
-            bgCollider.size = Vector2.one;
-            bg.SetUpButton();
+            CreateClickable(inviteListPanel.transform, "Background", Vector3.zero, new Vector2(5.0f, 5.4f),
+                GetTextureSprite("GomokuPanelBackground", new Color(0.12f, 0.14f, 0.22f, 0.97f)), 40, null);
 
-            var title = Helpers.CreateObject<TextMeshPro>("Title", inviteListPanel.transform, new Vector3(-0.3f, 2.35f, -0.1f));
-            title.font = VanillaAsset.StandardTextPrefab.font;
-            title.alignment = TextAlignmentOptions.Center;
-            title.fontSize = 1.3f;
-            title.color = Color.white;
-            title.text = ModTranslation.getString("gomokuInviteListTitle");
-            title.sortingOrder = 42;
+            CreateLabel(inviteListPanel.transform, "Title", new Vector3(-0.3f, 2.35f, -0.1f), 1.3f, Color.white, 42, ModTranslation.getString("gomokuInviteListTitle"));
 
             CreateCloseButton(inviteListPanel.transform, new Vector3(2.05f, 2.35f, -0.2f), 0.4f, CloseInviteList, 42);
 
@@ -819,7 +820,7 @@ namespace TheOtherRoles.Objects
             const float startY = 1.85f;
             const int maxRows = 12;
             int row = 0;
-            byte localId = PlayerControl.LocalPlayer != null ? PlayerControl.LocalPlayer.PlayerId : NoPlayer;
+            byte localId = LocalPlayerId;
 
             foreach (var player in PlayerControl.AllPlayerControls)
             {
@@ -831,13 +832,7 @@ namespace TheOtherRoles.Objects
                 byte targetId = player.PlayerId;
                 string targetName = player.Data != null ? player.Data.PlayerName : "";
 
-                var nameText = Helpers.CreateObject<TextMeshPro>("Name" + row, inviteListPanel.transform, new Vector3(-2.3f, y, -0.1f));
-                nameText.font = VanillaAsset.StandardTextPrefab.font;
-                nameText.alignment = TextAlignmentOptions.Left;
-                nameText.fontSize = 1.2f;
-                nameText.color = Color.white;
-                nameText.text = targetName;
-                nameText.sortingOrder = 42;
+                CreateLabel(inviteListPanel.transform, "Name" + row, new Vector3(-2.3f, y, -0.1f), 1.2f, Color.white, 42, targetName, TextAlignmentOptions.Left);
 
                 CreateTextButton(inviteListPanel.transform, new Vector3(1.75f, y, -0.1f), ModTranslation.getString("gomokuInviteSend"), () => OnInviteSendClicked(inviteMatchId, targetId), 1.1f, 0.3f, 1.05f, 42);
 
@@ -845,15 +840,7 @@ namespace TheOtherRoles.Objects
             }
 
             if (row == 0)
-            {
-                var empty = Helpers.CreateObject<TextMeshPro>("Empty", inviteListPanel.transform, new Vector3(0f, 0.5f, -0.1f));
-                empty.font = VanillaAsset.StandardTextPrefab.font;
-                empty.alignment = TextAlignmentOptions.Center;
-                empty.fontSize = 1.4f;
-                empty.color = Color.white;
-                empty.text = ModTranslation.getString("gomokuInviteListEmpty");
-                empty.sortingOrder = 42;
-            }
+                CreateLabel(inviteListPanel.transform, "Empty", new Vector3(0f, 0.5f, -0.1f), 1.4f, Color.white, 42, ModTranslation.getString("gomokuInviteListEmpty"));
         }
 
         private static void OnInviteSendClicked(byte matchId, byte targetId)
@@ -863,7 +850,7 @@ namespace TheOtherRoles.Objects
             if (lastInviteRealtime.TryGetValue(targetId, out float last) && now - last < InviteCooldown) return;
             lastInviteRealtime[targetId] = now;
 
-            Invite.Invoke((matchId, PlayerControl.LocalPlayer.PlayerId, targetId));
+            Invite.Invoke((matchId, LocalPlayerId, targetId));
             CloseInviteList();
         }
 
@@ -877,15 +864,9 @@ namespace TheOtherRoles.Objects
 
             inviteCard = NewChild("GomokuInviteCard", Camera.main.transform, new Vector3(InviteCardHiddenX, 0.6f, -40f));
 
-            var bg = NewChild("Background", inviteCard.transform, Vector3.zero);
-            bg.transform.localScale = new Vector3(3.6f, 1.4f, 1f);
-            var bgSr = bg.AddComponent<SpriteRenderer>();
-            bgSr.sprite = GetTextureSprite("GomokuPanelBackground", new Color(0.1f, 0.12f, 0.2f, 0.95f));
-            bgSr.sortingOrder = 60;
-            var collider = bg.AddComponent<BoxCollider2D>();
-            collider.size = Vector2.one;
-            var button = bg.SetUpButton();
-            button.OnClick.AddListener((UnityEngine.Events.UnityAction)(() => OnInviteCardClicked(matchId, fromId)));
+            CreateClickable(inviteCard.transform, "Background", Vector3.zero, new Vector2(3.6f, 1.4f),
+                GetTextureSprite("GomokuPanelBackground", new Color(0.1f, 0.12f, 0.2f, 0.95f)), 60,
+                () => OnInviteCardClicked(matchId, fromId));
 
             var accent = NewChild("Accent", inviteCard.transform, new Vector3(-1.65f, 0f, -0.05f));
             accent.transform.localScale = new Vector3(0.1f, 1.4f, 1f);
@@ -893,29 +874,9 @@ namespace TheOtherRoles.Objects
             accentSr.sprite = GetSolidSprite(new Color(0.85f, 0.65f, 0.2f));
             accentSr.sortingOrder = 61;
 
-            var title = Helpers.CreateObject<TextMeshPro>("Title", inviteCard.transform, new Vector3(0.1f, 0.32f, -0.1f));
-            title.font = VanillaAsset.StandardTextPrefab.font;
-            title.alignment = TextAlignmentOptions.Center;
-            title.fontSize = 1.3f;
-            title.color = Color.white;
-            title.text = ModTranslation.getString("gomokuInviteTitle");
-            title.sortingOrder = 62;
-
-            var message = Helpers.CreateObject<TextMeshPro>("Message", inviteCard.transform, new Vector3(0.1f, -0.12f, -0.1f));
-            message.font = VanillaAsset.StandardTextPrefab.font;
-            message.alignment = TextAlignmentOptions.Center;
-            message.fontSize = 1.1f;
-            message.color = new Color(0.9f, 0.9f, 0.9f);
-            message.text = string.Format(ModTranslation.getString("gomokuInviteMessage"), senderName);
-            message.sortingOrder = 62;
-
-            var hint = Helpers.CreateObject<TextMeshPro>("Hint", inviteCard.transform, new Vector3(0.1f, -0.5f, -0.1f));
-            hint.font = VanillaAsset.StandardTextPrefab.font;
-            hint.alignment = TextAlignmentOptions.Center;
-            hint.fontSize = 0.85f;
-            hint.color = new Color(0.75f, 0.75f, 0.75f);
-            hint.text = ModTranslation.getString("gomokuInviteHint");
-            hint.sortingOrder = 62;
+            CreateLabel(inviteCard.transform, "Title", new Vector3(0.1f, 0.32f, -0.1f), 1.3f, Color.white, 62, ModTranslation.getString("gomokuInviteTitle"));
+            CreateLabel(inviteCard.transform, "Message", new Vector3(0.1f, -0.12f, -0.1f), 1.1f, new Color(0.9f, 0.9f, 0.9f), 62, string.Format(ModTranslation.getString("gomokuInviteMessage"), senderName));
+            CreateLabel(inviteCard.transform, "Hint", new Vector3(0.1f, -0.5f, -0.1f), 0.85f, new Color(0.75f, 0.75f, 0.75f), 62, ModTranslation.getString("gomokuInviteHint"));
 
             TORGUIManager.Instance.StartCoroutine(CoAnimateInviteCard(inviteCard).WrapToIl2Cpp());
         }
@@ -964,29 +925,14 @@ namespace TheOtherRoles.Objects
         {
             if (Camera.main == null) return null;
 
-            var obj = NewChild("GomokuIcon", Camera.main.transform, new Vector3(-4.2f, -2.55f, -30f));
-            obj.transform.localScale = new Vector3(0.9f, 0.9f, 1f);
+            const float iconScale = 0.9f;
+            var obj = CreateClickable(Camera.main.transform, "GomokuIcon", new Vector3(-4.2f, -2.55f, -30f), new Vector2(iconScale, iconScale),
+                GetTextureSprite("GomokuIcon", new Color(0.75f, 0.6f, 0.35f)), 10, TogglePanel);
 
-            var sr = obj.AddComponent<SpriteRenderer>();
-            sr.sprite = GetTextureSprite("GomokuIcon", new Color(0.75f, 0.6f, 0.35f));
-            sr.sortingOrder = 10;
-
-            var collider = obj.AddComponent<BoxCollider2D>();
-            collider.size = Vector2.one;
-
-            var button = obj.SetUpButton();
-            button.OnClick.AddListener((UnityEngine.Events.UnityAction)TogglePanel);
-
-            var label = Helpers.CreateObject<TextMeshPro>("Label", obj.transform, new Vector3(0f, 0.65f, -0.05f));
-            label.font = VanillaAsset.StandardTextPrefab.font;
-            label.transform.localScale = new Vector3(1f / 0.9f, 1f / 0.9f, 1f);
-            label.alignment = TextAlignmentOptions.Center;
-            label.fontSize = 1.3f;
-            label.color = Color.white;
+            var label = CreateLabel(obj.transform, "Label", new Vector3(0f, 0.65f, -0.05f), 1.3f, Color.white, 11, ModTranslation.getString("gomokuTitle"));
+            label.transform.localScale = new Vector3(1f / iconScale, 1f / iconScale, 1f);
             label.outlineColor = Color.black;
             label.outlineWidth = 0.15f;
-            label.text = ModTranslation.getString("gomokuTitle");
-            label.sortingOrder = 11;
 
             return obj;
         }

@@ -119,9 +119,11 @@ namespace TheOtherRoles.Patches {
         }
 
         static void setPetVisibility() {
+            if (PlayerControl.LocalPlayer == null || PlayerControl.LocalPlayer.Data == null) return;
             bool localalive = !PlayerControl.LocalPlayer.Data.IsDead;
             foreach (var player in PlayerControl.AllPlayerControls)
             {
+                if (player == null || player.Data == null || player.cosmetics == null) continue;
                 bool playeralive = !player.Data.IsDead;
                 player.cosmetics.SetPetVisible((localalive && playeralive) || !localalive);
             }
@@ -589,6 +591,21 @@ namespace TheOtherRoles.Patches {
 
         static void hunterUpdate() {
             if (!HideNSeek.isHideNSeekGM) return;
+
+            if (HideNSeek.isHunter()) HideNSeek.applyBlackScreen(HideNSeek.isFrozen());
+
+            HiderDisguise.Update();
+            HiderInvisibility.Update();
+
+            if (HideNSeek.isHunter() && !HideNSeek.isFrozen()) {
+                var kill = FastDestroyableSingleton<HudManager>.Instance != null ? FastDestroyableSingleton<HudManager>.Instance.KillButton : null;
+                var local = PlayerControl.LocalPlayer;
+                if (kill != null && kill.currentTarget == null && !kill.isCoolingDown && local != null && local.Data != null && !local.Data.IsDead
+                    && HideNSeekBots.FindInRange(local) >= 0) {
+                    kill.SetEnabled();
+                }
+            }
+
             int minutes = (int)HideNSeek.timer / 60;
             int seconds = (int)HideNSeek.timer % 60;
             string suffix = $" {minutes:00}:{seconds:00}";
@@ -602,7 +619,6 @@ namespace TheOtherRoles.Patches {
                     UnityEngine.Object.DestroyImmediate(gameObject.GetComponent<RoomTracker>());
                     HideNSeek.timerText = gameObject.GetComponent<TMPro.TMP_Text>();
 
-                    // Use local position to place it in the player's view instead of the world location
                     gameObject.transform.localPosition = new Vector3(0, -1.8f, gameObject.transform.localPosition.z);
                     if (AmongUs.Data.DataManager.Settings.Gameplay.StreamerMode) gameObject.transform.localPosition = new Vector3(0, 2f, gameObject.transform.localPosition.z);
                 }
@@ -613,38 +629,6 @@ namespace TheOtherRoles.Patches {
                 } else {
                     HideNSeek.timerText.text = "<color=#FF0000FF>" + suffix + "</color>";
                     HideNSeek.timerText.color = Color.red;
-                }
-            }
-            if (HideNSeek.isHunted() && !Hunted.taskPunish && !HideNSeek.isWaitingTimer) {
-                var (playerCompleted, playerTotal) = TasksHandler.taskInfo(PlayerControl.LocalPlayer.Data);
-                int numberOfTasks = playerTotal - playerCompleted;
-                if (numberOfTasks == 0) {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareTimer, Hazel.SendOption.Reliable, -1);
-                    writer.Write(HideNSeek.taskPunish);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.shareTimer(HideNSeek.taskPunish);
-
-                    Hunted.taskPunish = true;
-                }
-            }
-
-            if (!HideNSeek.isHunter()) return;
-
-            byte playerId = PlayerControl.LocalPlayer.PlayerId;
-            foreach (Arrow arrow in Hunter.localArrows) arrow.arrow.SetActive(false);
-            if (Hunter.arrowActive) {
-                int arrowIndex = 0;
-                foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
-                    if (!p.Data.IsDead && !p.Data.Role.IsImpostor) {
-                        if (arrowIndex >= Hunter.localArrows.Count) {
-                            Hunter.localArrows.Add(new Arrow(Color.blue));
-                        }
-                        if (arrowIndex < Hunter.localArrows.Count && Hunter.localArrows[arrowIndex] != null) {
-                            Hunter.localArrows[arrowIndex].arrow.SetActive(true);
-                            Hunter.localArrows[arrowIndex].Update(p.transform.position, Color.blue);
-                        }
-                        arrowIndex++;
-                    }
                 }
             }
         }
@@ -697,7 +681,7 @@ namespace TheOtherRoles.Patches {
                 // -- GAME MODE --
                 hunterUpdate();
 
-                Racer.update();
+                Racer.carUpdate();
             }
 
             foreach (var role in new List<Role>(Role.allRoles)) {
@@ -724,6 +708,7 @@ namespace TheOtherRoles.Patches {
     class PlayerControlReportDeadBodyPatch {
         public static bool Prefix(PlayerControl __instance) {
             if (HideNSeek.isHideNSeekGM) return false;
+            if (HotPotato.isHotPotatoGM) return false;
             Helpers.handleVampireBiteOnBodyReport();
             Helpers.HandleUndertakerDropOnBodyReport();
             Helpers.handleTrapperTrapOnBodyReport();
@@ -838,6 +823,8 @@ namespace TheOtherRoles.Patches {
             // Collect dead player info
             DeadPlayer deadPlayer = new(target, DateTime.UtcNow, DeadPlayer.CustomDeathReason.Kill, __instance);
             deadPlayers.Add(deadPlayer);
+
+            if (HideNSeek.isHideNSeekGM) HiderDisguise.Restore(target);
 
             // Reset killer to crewmate if resetToCrewmate
             if (resetToCrewmate) __instance.Data.Role.TeamType = RoleTeamTypes.Crewmate;

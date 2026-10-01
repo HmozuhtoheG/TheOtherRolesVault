@@ -180,8 +180,17 @@ namespace TheOtherRoles.Patches
                     if (forceTargetPlayerId != byte.MaxValue)
                         exiled = GameData.Instance.AllPlayers.ToArray().FirstOrDefault(v => v.PlayerId == forceTargetPlayerId && !v.IsDead);
 
+                    Justice.HandleTie(__instance, ref exiled, ref tie, potentialExiled, out var justiceExtra);
+
                     // RPCVotingComplete
                     __instance.RpcVotingComplete(array, exiled, tie, false, 0);
+
+                    if (justiceExtra != null && AmongUsClient.Instance != null && AmongUsClient.Instance.AmHost) {
+                        MessageWriter justiceWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.UncheckedExilePlayer, Hazel.SendOption.Reliable, -1);
+                        justiceWriter.Write(justiceExtra.PlayerId);
+                        AmongUsClient.Instance.FinishRpcImmediately(justiceWriter);
+                        RPCProcedure.uncheckedExilePlayer(justiceExtra.PlayerId);
+                    }
                 }
             }
 
@@ -297,6 +306,7 @@ namespace TheOtherRoles.Patches
                     Yasuna.specialVoteTargetPlayerId == Swapper.playerId2) && PlayerControl.LocalPlayer.isRole(RoleId.Swapper)) Swapper.charges++;
 
                 __instance.TitleText.text = FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.MeetingVotingResults, new Il2CppReferenceArray<Il2CppSystem.Object>(0));
+
                 int num = 0;
                 for (int i = 0; i < __instance.playerStates.Length; i++) {
                     PlayerVoteArea playerVoteArea = __instance.playerStates[i];
@@ -1174,6 +1184,15 @@ namespace TheOtherRoles.Patches
                 }
             }
 
+            // Add Kira Write Buttons
+            Kira.OnMeetingBegin();
+            Kira.CreateMeetingButtons(__instance, addButtonGuide);
+
+            Justice.ClearButtons();
+            Justice.CreateMeetingButtons(__instance);
+            HiromiHiguruma.ClearButtons();
+            HiromiHiguruma.CreateMeetingButtons(__instance);
+
             // Add Godfather Reckoning Buttons
             Gambler.OnMeetingBegin();
             Godfather.ClearButtons();
@@ -1353,7 +1372,11 @@ namespace TheOtherRoles.Patches
                     var button = player.PlayerButton.Cast<PassiveButton>();
                     var hover = button.gameObject.AddComponent<TouchHover>();
                     var playerControl = Helpers.playerById(player.PlayerId);
-                    button.SetOverlay(() => PlayerControl.LocalPlayer.Data.IsDead || CustomGameModes.FreePlayGM.isFreePlayGM ? Helpers.GetProgressContext(playerControl) : null);
+                    button.SetOverlay(() =>
+                    {
+                        if (Kira.IsLocalKira && playerControl != PlayerControl.LocalPlayer) return null;
+                        return PlayerControl.LocalPlayer.Data.IsDead || CustomGameModes.FreePlayGM.isFreePlayGM ? Helpers.GetProgressContext(playerControl) : null;
+                    });
                 }
                 __instance.StartCoroutine(Effects.Sequence(Effects.Wait(2f), Helpers.Action(() => SortVotingArea(__instance, p => p.IsDead || p.Disconnected ? 2 : 1)).WrapToIl2Cpp()));
 
@@ -1519,6 +1542,17 @@ namespace TheOtherRoles.Patches
                     Godfather.UpdateButtons(__instance);
                     Godfather.UpdateMeetingText();
                 }
+                if (PlayerControl.LocalPlayer.isRole(RoleId.Kira))
+                {
+                    Kira.UpdateButtons(__instance);
+                    Kira.MaskMeetingNames(__instance);
+                }
+                if (PlayerControl.LocalPlayer.isRole(RoleId.Justice))
+                {
+                    Justice.UpdateButtons(__instance);
+                }
+                Justice.UpdateTimer(__instance);
+                HiromiHiguruma.Update();
             }
         }
 

@@ -57,7 +57,7 @@ namespace TheOtherRoles.Roles
             return true;
         }
 
-        public static RemoteProcess<(byte targetId, byte commissionerId)> Recruit = new("PoliceCommissionerRecruit", (message, _) =>
+        public static RemoteProcess<(byte targetId, byte commissionerId)> Recruit = new("PoliceCommissionerRecruit", (message, __) =>
         {
             var target = Helpers.playerById(message.targetId);
             var commissioner = getRole(Helpers.playerById(message.commissionerId));
@@ -71,6 +71,12 @@ namespace TheOtherRoles.Roles
             string commissionerName = commissioner.player.Data.PlayerName;
 
             commissioner.usesLeft--;
+
+            if (commissioner.player == PlayerControl.LocalPlayer)
+            {
+                _ = new StaticAchievementToken("policeCommissioner.common1");
+                if (wasImpostor) _ = new StaticAchievementToken("policeCommissioner.another1");
+            }
 
             FastDestroyableSingleton<RoleManager>.Instance.SetRole(target, RoleTypes.Crewmate);
             RPCProcedure.erasePlayerRoles(targetId, true, true, true);
@@ -89,6 +95,9 @@ namespace TheOtherRoles.Roles
             if (!dies) return;
 
             if (AmongUsClient.Instance == null || !AmongUsClient.Instance.AmHost) return;
+
+            if (wasImpostor && commissioner.player == PlayerControl.LocalPlayer)
+                _ = new StaticAchievementToken("policeCommissioner.challenge");
 
             Helpers.MurderPlayer(target, commissioner.player, true);
         });

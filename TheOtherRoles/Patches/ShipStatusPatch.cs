@@ -86,6 +86,9 @@ namespace TheOtherRoles.Patches {
             if (Sunglasses.sunglasses.FindAll(x => x.PlayerId == player.PlayerId).Count > 0) // Sunglasses
                 __result *= 1f - Sunglasses.vision * 0.1f;
 
+            if (player.Object != null && Archwitch.isWitchedPlayer(player.Object))
+                __result *= Archwitch.visionMultiplier;
+
             return false;
         }
 

@@ -94,6 +94,11 @@ namespace TheOtherRoles.Patches
                 Props.placeProps();
             }
 
+            if (Itadori.exists && AmongUsClient.Instance.AmHost)
+            {
+                Itadori.SpawnFingers();
+            }
+
             TORGameManager.Instance?.GameStatistics.RecordEvent(new(GameStatistics.EventVariation.GameStart, null, 0) { RelatedTag = EventDetail.GameStart });
 
             if (CustomOptionHolder.randomGameStartPosition.getBool())
@@ -169,15 +174,22 @@ namespace TheOtherRoles.Patches
             EventUtility.gameStartsUpdate();
 
             if (HideNSeek.isHideNSeekGM) {
+                HideNSeek.isWaitingTimer = true;
+
+                if (AmongUsClient.Instance.AmHost) {
+                    HideNSeekBots.SpawnBots(HideNSeek.botCount);
+                }
+
+                if (HideNSeek.isHunter()) HideNSeek.applyBlackScreen(true);
+
                 foreach (PlayerControl player in HideNSeek.getHunters()) {
                     player.moveable = false;
                     player.NetTransform.Halt();
-                    HideNSeek.timer = HideNSeek.hunterWaitingTime;
                     FastDestroyableSingleton<HudManager>.Instance.StartCoroutine(Effects.Lerp(HideNSeek.hunterWaitingTime, new Action<float>((p) => {
                         if (p == 1f) {
-                            player.moveable = true;
-                            HideNSeek.timer = CustomOptionHolder.hideNSeekTimer.getFloat() * 60;
+                            if (player != null) player.moveable = true;
                             HideNSeek.isWaitingTimer = false;
+                            if (HideNSeek.isHunter()) HideNSeek.applyBlackScreen(false);
                         }
                     })));
                     player.MyPhysics.SetBodyType(PlayerBodyTypes.Seeker);
@@ -226,6 +238,10 @@ namespace TheOtherRoles.Patches
                         }
                     })));
                 }
+            }
+
+            if (HotPotato.isHotPotatoGM) {
+                HotPotato.startRound();
             }
         }
     }
