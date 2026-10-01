@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using BepInEx.Unity.IL2CPP.Utils.Collections;
 using TheOtherRoles.MetaContext;
 using static TheOtherRoles.TheOtherRoles;
@@ -27,6 +28,7 @@ namespace TheOtherRoles.Modules
         private const float BracketLength = 30f;
         private const int SortingOrder = 10400;
 
+        private static readonly RoleId[] ButtonIllustrationRoles = [RoleId.Agnosia, RoleId.Illusionist];
         private static readonly Vector2 CenterOffset = new(0f, -30f);
         private static readonly Color FrameIdle = new(0.06f, 0.07f, 0.10f, 0.9f);
         private static readonly Color RandomColor = new(0.30f, 0.85f, 0.35f, 1f);
@@ -183,9 +185,10 @@ namespace TheOtherRoles.Modules
                 slotFrames[i] = Helpers.CreateCenteredImage("Frame", slot, discSprite, new Vector2(IconSize + IconPad * 2f, IconSize + IconPad * 2f));
                 slotFrames[i].color = isRandom ? RandomColor : FrameIdle;
 
-                Sprite icon = isRandom ? null : RoleHelpers.GetRoleIcon(roleInfo.roleId)?.GetSprite();
+                Sprite icon = isRandom ? null : GetRoleArt(roleInfo);
                 slotIcons[i] = Helpers.CreateCenteredImage("Icon", slot, icon, new Vector2(IconSize, IconSize));
                 slotIcons[i].color = icon == null ? new Color(1f, 1f, 1f, 0f) : Color.white;
+                slotIcons[i].preserveAspect = true;
 
                 var glyphObj = new GameObject("Glyph");
                 glyphObj.transform.SetParent(slot, false);
@@ -219,6 +222,16 @@ namespace TheOtherRoles.Modules
             countdownLabel.color = new Color(1f, 1f, 1f, 0.85f);
             countdownLabel.raycastTarget = false;
             countdownLabel.text = "";
+        }
+
+        private static Sprite GetRoleArt(RoleInfo roleInfo)
+        {
+            var art = ButtonIllustrationRoles.Contains(roleInfo.roleId) ? null : RoleHelpers.GetIllustration(roleInfo)?.GetSprite();
+            if (art != null) return art;
+
+            if (roleInfo.isImpostor) return Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Imposter.png", 100f);
+            if (roleInfo.isNeutral) return Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Netural.png", 100f);
+            return Helpers.loadSpriteFromResources("TheOtherRoles.Resources.Crewmate.png", 100f);
         }
 
         private static void BuildViewfinder()
