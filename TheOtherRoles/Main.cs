@@ -36,7 +36,7 @@ namespace TheOtherRoles
     public class TheOtherRolesPlugin : BasePlugin
     {
         public const string Id = "me.eisbison.theotherroles";
-        public const string VersionString = "1.0.4";
+        public const string VersionString = "1.0.6";
         public const string SubVersionString = "official";
         public static uint betaDays = 0;  // amount of days for the build to be usable (0 for infinite!)
 
@@ -104,12 +104,15 @@ namespace TheOtherRoles
             ServerManager.DefaultRegions = defaultRegions;
             // UpdateRegions();
 
+            Modules.EmbeddedAssemblies.Register();
+
             Harmony.PatchAll();
             RemoteProcessBase.Load();
 
             CustomOptionHolder.Load();
             CustomColors.Load();
             AssetLoader.LoadAssets();
+            JusticeAudio.Preload();
             TORAchievementManager.LoadAchievements();
             EventDetail.Load();
             TranslatableTag.Load();
@@ -120,6 +123,8 @@ namespace TheOtherRoles
 #endif
 
             EventUtility.Load();
+            Modules.Emotes.EmoteCatalog.Load();
+            Modules.Music.NeteaseClient.SetApiBase(Modules.Music.MusicPreference.Saved);
             SubmergedCompatibility.Initialize();
             Modules.MainMenuPatch.addSceneChangeCallbacks();
             SceneManager.sceneLoaded += (UnityEngine.Events.UnityAction<Scene, LoadSceneMode>)((scene, loadMode) =>

@@ -196,6 +196,33 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(KillButton), nameof(KillButton.DoClick))]
     class KillButtonDoClickPatch {
         public static bool Prefix(KillButton __instance) {
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Sniper))
+            {
+                var sniper = Sniper.local;
+                if (sniper == null) return true;
+
+                if (sniper.hasRifle)
+                {
+                    if (!__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove)
+                    {
+                        sniper.TrySnipe();
+                        PlayerControl.LocalPlayer.SetKillTimer(Sniper.cooldown);
+                    }
+                    return false;
+                }
+
+                if (!Sniper.canNormalKill) return false;
+            }
+
+            if (HideNSeek.isHideNSeekGM && HideNSeek.isHunter() && !__instance.currentTarget && __instance.isActiveAndEnabled
+                && !__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead && PlayerControl.LocalPlayer.CanMove) {
+                int bot = HideNSeekBots.FindInRange(PlayerControl.LocalPlayer);
+                if (bot >= 0) {
+                    HideNSeekBots.Kill(bot, PlayerControl.LocalPlayer);
+                    return false;
+                }
+            }
+
             if (__instance.isActiveAndEnabled && __instance.currentTarget && !__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead
                 && (PlayerControl.LocalPlayer.CanMove || (PlayerControl.LocalPlayer.isRole(RoleId.Trickster) && Trickster.isInTricksterVent))) {
                 // Ninja doesn't get teleported to the body on stealth
@@ -280,6 +307,10 @@ namespace TheOtherRoles.Patches {
             if (Zombie.isZombieGM) {
                 roleCanCallEmergency = false;
                 statusText = ModTranslation.getString("zombieMeetingButton");
+            }
+            if (HotPotato.isHotPotatoGM) {
+                roleCanCallEmergency = false;
+                statusText = ModTranslation.getString("hotPotatoMeetingButton");
             }
             // Deactivate emergency button for Swapper
             if (PlayerControl.LocalPlayer.isRole(RoleId.Swapper) && !Swapper.canCallEmergency) {
@@ -1114,6 +1145,7 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(MapBehaviour), nameof(MapBehaviour.ShowSabotageMap))]
     class ShowSabotageMapPatch {
         static bool Prefix(MapBehaviour __instance) {
+            if (HotPotato.isHotPotatoGM) return false;
             if (HideNSeek.isHideNSeekGM)
                 return HideNSeek.canSabotage;
             return true;

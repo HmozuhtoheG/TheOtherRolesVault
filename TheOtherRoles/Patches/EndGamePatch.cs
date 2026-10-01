@@ -35,7 +35,11 @@ namespace TheOtherRoles.Patches {
         BlockmanWin = 26,
         WorkaholicWin = 27,
         PlayerRoleWin = 28,
-        InvalidGame = 29
+        InvalidGame = 29,
+        KiraWin = 30,
+        HotPotatoWin = 31,
+        ArchwitchWin = 32,
+        KashimoWin = 33
         //ProsecutorWin = 16
     }
 
@@ -67,7 +71,11 @@ namespace TheOtherRoles.Patches {
         WorkaholicWin,
         GremlinWin,
         PlayerRoleWin,
-        InvalidGame
+        InvalidGame,
+        KiraWin,
+        HotPotatoWin,
+        ArchwitchWin,
+        KashimoWin
 
         //ProsecutorWin
     }
@@ -181,6 +189,7 @@ namespace TheOtherRoles.Patches {
                 .. Pursuer.allPlayers,
                 .. Kataomoi.allPlayers,
                 .. JekyllAndHyde.allPlayers,
+                .. (Archwitch.anyWitched ? Archwitch.allPlayers : new System.Collections.Generic.List<PlayerControl>()),
                 .. Madmate.madmate,
                 .. SchrodingersCat.allPlayers,
                 .. CreatedMadmate.createdMadmate,
@@ -201,6 +210,13 @@ namespace TheOtherRoles.Patches {
                 .. PlayerRole.allPlayers
             ];
             if (Shifter.isNeutral) notWinners.AddRange(Shifter.allPlayers);
+
+            // Itadori only wins with the crew if he killed an impostor, and with the impostors once he became Sukuna
+            foreach (var itadori in Itadori.players)
+            {
+                if (itadori.player == null || itadori.becameSukuna || itadori.crewWinEarned) continue;
+                notWinners.Add(itadori.player);
+            }
 
             List<CachedPlayerData> winnersToRemove = [];
             foreach (CachedPlayerData winner in EndGameResult.CachedWinners.GetFastEnumerator()) {
@@ -231,18 +247,46 @@ namespace TheOtherRoles.Patches {
             bool yandereWin = Yandere.exists && gameOverReason == (GameOverReason)CustomGameOverReason.YandereWin;
             bool foxWin = Fox.exists && gameOverReason == (GameOverReason)CustomGameOverReason.FoxWin;
             bool jekyllAndHydeWin = JekyllAndHyde.exists && gameOverReason == (GameOverReason)CustomGameOverReason.JekyllAndHydeWin;
+            bool archwitchWin = Archwitch.anyWitched && gameOverReason == (GameOverReason)CustomGameOverReason.ArchwitchWin;
             bool everyoneDead = AdditionalTempData.playerRoles.All(x => !x.IsAlive);
             bool invalidGame = gameOverReason == (GameOverReason)CustomGameOverReason.InvalidGame;
+            bool kiraWin = Kira.exists && gameOverReason == (GameOverReason)CustomGameOverReason.KiraWin;
+            bool kashimoWin = KashimoHajime.exists && gameOverReason == (GameOverReason)CustomGameOverReason.KashimoWin;
             bool blockmanWin = Blockman.exists && gameOverReason == (GameOverReason)CustomGameOverReason.BlockmanWin;
             bool workaholicWin = Workaholic.exists && gameOverReason == (GameOverReason)CustomGameOverReason.WorkaholicWin;
             bool playerRoleWin = PlayerRole.exists && gameOverReason == (GameOverReason)CustomGameOverReason.PlayerRoleWin;
+            bool hotPotatoWin = gameOverReason == (GameOverReason)CustomGameOverReason.HotPotatoWin;
             //bool prosecutorWin = Lawyer.lawyer != null && gameOverReason == (GameOverReason)CustomGameOverReason.ProsecutorWin;
 
             // Here we changed this to: The Pursuer wins no matter who wins except for sabotage
             //bool isPursurerLose = jesterWin || arsonistWin || miniLose || vultureWin || teamJackalWin;
 
+            // Kira Win
+            if (kiraWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.KiraWin;
+                foreach (var kira in Kira.players)
+                {
+                    if (kira.player == null || kira.kills < Kira.killsToWin) continue;
+                    EndGameResult.CachedWinners.Add(new(kira.player.Data));
+                }
+            }
+
+            // Kashimo Win
+            else if (kashimoWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.KashimoWin;
+                foreach (var kashimo in KashimoHajime.players)
+                {
+                    if (kashimo.player == null || kashimo.player.Data == null || kashimo.player.Data.IsDead) continue;
+                    EndGameResult.CachedWinners.Add(new(kashimo.player.Data) { IsImpostor = false });
+                }
+            }
+
             // Invalid game
-            if (invalidGame)
+            else if (invalidGame)
             {
                 EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
                 AdditionalTempData.winCondition = WinCondition.InvalidGame;
@@ -406,6 +450,26 @@ namespace TheOtherRoles.Patches {
                 foreach (var playerRole in PlayerRole.livingPlayers)
                 {
                     EndGameResult.CachedWinners.Add(new CachedPlayerData(playerRole.Data));
+                }
+            }
+
+            else if (hotPotatoWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.HotPotatoWin;
+                var survivor = HotPotato.getSurvivor();
+                if (survivor != null && survivor.Data != null) EndGameResult.CachedWinners.Add(new CachedPlayerData(survivor.Data));
+            }
+
+            else if (archwitchWin)
+            {
+                EndGameResult.CachedWinners = new Il2CppSystem.Collections.Generic.List<CachedPlayerData>();
+                AdditionalTempData.winCondition = WinCondition.ArchwitchWin;
+
+                foreach (var archwitch in Archwitch.allPlayers)
+                {
+                    EndGameResult.CachedWinners.Add(new CachedPlayerData(archwitch.Data));
+                    if (PlayerControl.LocalPlayer == archwitch) _ = new StaticAchievementToken("archwitch.challenge");
                 }
             }
 
@@ -897,6 +961,12 @@ namespace TheOtherRoles.Patches {
                 textRenderer.color = Yandere.color;
                 __instance.BackgroundBar.material.SetColor("_Color", Yandere.color);
             }
+            else if (AdditionalTempData.winCondition == WinCondition.ArchwitchWin)
+            {
+                nonModTranslationText = "archwitchWin";
+                textRenderer.color = Archwitch.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Archwitch.color);
+            }
             else if (AdditionalTempData.winCondition == WinCondition.JekyllAndHydeWin)
             {
                 nonModTranslationText = "jekyllAndHydeWin";
@@ -933,6 +1003,18 @@ namespace TheOtherRoles.Patches {
                 textRenderer.color = Palette.DisabledGrey;
                 __instance.BackgroundBar.material.SetColor("_Color", Palette.DisabledGrey);
             }
+            else if (AdditionalTempData.winCondition == WinCondition.KiraWin)
+            {
+                textRenderer.text = ModTranslation.getString("kiraWin");
+                textRenderer.color = Kira.color;
+                __instance.BackgroundBar.material.SetColor("_Color", Kira.color);
+            }
+            else if (AdditionalTempData.winCondition == WinCondition.KashimoWin)
+            {
+                textRenderer.text = ModTranslation.getString("kashimoWin");
+                textRenderer.color = KashimoHajime.color;
+                __instance.BackgroundBar.material.SetColor("_Color", KashimoHajime.color);
+            }
             else if (AdditionalTempData.winCondition == WinCondition.MiniLose)
             {
                 nonModTranslationText = "miniDied";
@@ -968,6 +1050,12 @@ namespace TheOtherRoles.Patches {
                 nonModTranslationText = "playerRoleWin";
                 textRenderer.color = PlayerRole.color;
                 __instance.BackgroundBar.material.SetColor("_Color", PlayerRole.color);
+            }
+            else if (AdditionalTempData.winCondition == WinCondition.HotPotatoWin)
+            {
+                nonModTranslationText = "hotPotatoWin";
+                textRenderer.color = HotPotato.color;
+                __instance.BackgroundBar.material.SetColor("_Color", HotPotato.color);
             }
 
             if (!string.IsNullOrEmpty(nonModTranslationText)) textRenderer.text = ModTranslation.getString(nonModTranslationText);
@@ -1051,7 +1139,7 @@ namespace TheOtherRoles.Patches {
                 }
             }
 
-            if (ClientOption.GetValue(ClientOption.ClientOptionType.ShowRoleSummary) == 1 || HideNSeek.isHideNSeekGM || Zombie.isZombieGM) {
+            if (ClientOption.GetValue(ClientOption.ClientOptionType.ShowRoleSummary) == 1 || HideNSeek.isHideNSeekGM || Zombie.isZombieGM || HotPotato.isHotPotatoGM) {
                 var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
                 GameObject roleSummary = UnityEngine.Object.Instantiate(__instance.WinText.gameObject);
                 roleSummary.transform.position = new Vector3(__instance.Navigation.ExitButton.transform.position.x + 0.1f, position.y - 0.1f, -214f); 
@@ -1062,6 +1150,10 @@ namespace TheOtherRoles.Patches {
                     int minutes = (int)AdditionalTempData.timer / 60;
                     int seconds = (int)AdditionalTempData.timer % 60;
                     roleSummaryText.AppendLine($"<color=#FAD934FF>Time: {minutes:00}:{seconds:00}</color> \n");
+                }
+                if (HotPotato.isHotPotatoGM) {
+                    foreach (var rankLine in HotPotato.rankSummary()) roleSummaryText.AppendLine(rankLine);
+                    roleSummaryText.AppendLine();
                 }
                 roleSummaryText.AppendLine(ModTranslation.getString("roleSummaryText"));
                 bool plagueExists = AdditionalTempData.playerRoles.Any(x => x.Roles.Contains(RoleInfo.plagueDoctor));
@@ -1128,6 +1220,7 @@ namespace TheOtherRoles.Patches {
             if (DestroyableSingleton<TutorialManager>.InstanceExists) // InstanceExists | Don't check Custom Criteria when in Tutorial
                 return true;
             if (FreePlayGM.isFreePlayGM) return false;
+            if (HotPotato.isHotPotatoGM) return false;
             if (CustomOptionHolder.neverEndGame.getBool()) return false; // Testing mode: skip every win-condition check so the game never ends
             var statistics = new PlayerStatistics(__instance);
             if (CheckAndEndGameForBlockmanWin(__instance)) return false;
@@ -1151,6 +1244,8 @@ namespace TheOtherRoles.Patches {
             if (CheckAndEndGameForAkujoWin(__instance, statistics)) return false;
             if (CheckAndEndGameForPelicanWin(__instance, statistics)) return false;
             if (CheckAndEndGameForJackalWin(__instance, statistics)) return false;
+            if (CheckAndEndGameForKashimoWin(__instance, statistics)) return false;
+            if (CheckAndEndGameForArchwitchWin(__instance, statistics)) return false;
             if (CheckAndEndGameForImpostorWin(__instance, statistics)) return false;
             if (CheckAndEndGameForCrewmateWin(__instance, statistics)) return false;
             return false;
@@ -1255,7 +1350,7 @@ namespace TheOtherRoles.Patches {
             bool allOtherThreatsDead = statistics.TeamImpostorsAlive == 0
                 && statistics.TeamJackalAlive == 0
                 && statistics.TeamMoriartyAlive == 0
-                && statistics.TeamJekyllAndHydeAlive == 0
+                && statistics.TeamJekyllAndHydeAlive == 0 && statistics.TeamArchwitchAlive == 0
                 && statistics.TeamPelicanAlive == 0
                 && statistics.YandereAlive == 0
                 && statistics.TeamSheriffAlive == 0;
@@ -1286,6 +1381,21 @@ namespace TheOtherRoles.Patches {
             if (PlagueDoctor.triggerPlagueDoctorWin)
             {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.PlagueDoctorWin, false);
+                return true;
+            }
+            return false;
+        }
+
+        private static bool CheckAndEndGameForArchwitchWin(ShipStatus __instance, PlayerStatistics statistics)
+        {
+            if (!Archwitch.anyWitched) return false;
+
+            if (statistics.TeamArchwitchAlive >= statistics.TotalAlive - statistics.TeamArchwitchAlive &&
+                statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamPelicanAlive == 0 &&
+                statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 && statistics.YandereAlive == 0 &&
+                statistics.TeamSheriffAlive == 0)
+            {
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ArchwitchWin, false);
                 return true;
             }
             return false;
@@ -1359,7 +1469,7 @@ namespace TheOtherRoles.Patches {
         {
             if (statistics.TeamPelicanAlive >= statistics.TotalAlive - statistics.TeamPelicanAlive && statistics.YandereAlive == 0 &&
                 statistics.TeamImpostorsAlive == 0 && statistics.TeamSheriffAlive == 0 && statistics.TeamMoriartyAlive == 0
-                && statistics.TeamJekyllAndHydeAlive == 0 && statistics.TeamJackalAlive == 0)
+                && statistics.TeamJekyllAndHydeAlive == 0 && statistics.TeamArchwitchAlive == 0 && statistics.TeamJackalAlive == 0)
             {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.PelicanWin, false);
                 return true;
@@ -1388,7 +1498,8 @@ namespace TheOtherRoles.Patches {
 
         private static bool CheckAndEndGameForJackalWin(ShipStatus __instance, PlayerStatistics statistics) {
             if (statistics.TeamJackalAlive >= statistics.TotalAlive - statistics.TeamJackalAlive && statistics.TeamPelicanAlive == 0 && statistics.YandereAlive == 0
-                && statistics.TeamImpostorsAlive == 0 && statistics.TeamSheriffAlive == 0 && statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 &&
+                && statistics.TeamImpostorsAlive == 0 && statistics.TeamSheriffAlive == 0 && statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 && statistics.TeamArchwitchAlive == 0 &&
+                statistics.TeamKashimoAlive == 0 &&
                 (statistics.TeamJackalLovers == 0 || statistics.TeamJackalLovers >= statistics.CouplesAlive * 2)) {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.TeamJackalWin, false);
@@ -1397,10 +1508,25 @@ namespace TheOtherRoles.Patches {
             return false;
         }
 
+        private static bool CheckAndEndGameForKashimoWin(ShipStatus __instance, PlayerStatistics statistics) {
+            if (statistics.TeamKashimoAlive > 0
+                && statistics.TeamKashimoAlive >= statistics.TotalAlive - statistics.TeamKashimoAlive
+                && statistics.TeamPelicanAlive == 0 && statistics.YandereAlive == 0
+                && statistics.TeamImpostorsAlive == 0 && statistics.TeamSheriffAlive == 0
+                && statistics.TeamJackalAlive == 0 && statistics.TeamMoriartyAlive == 0
+                && statistics.TeamJekyllAndHydeAlive == 0 && statistics.TeamArchwitchAlive == 0
+                && (statistics.TeamKashimoLovers == 0 || statistics.TeamKashimoLovers >= statistics.CouplesAlive * 2)) {
+                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.KashimoWin, false);
+                return true;
+            }
+            return false;
+        }
+
         private static bool CheckAndEndGameForMoriartyWin(ShipStatus __instance, PlayerStatistics statistics)
         {
             if ((statistics.TeamMoriartyAlive >= statistics.TotalAlive - statistics.TeamMoriartyAlive && statistics.YandereAlive == 0
-                && statistics.TeamPelicanAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamSheriffAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 &&
+                && statistics.TeamPelicanAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamSheriffAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 && statistics.TeamArchwitchAlive == 0 &&
+                statistics.TeamKashimoAlive == 0 &&
                 (statistics.MoriartyLovers == 0 || statistics.MoriartyLovers >= statistics.CouplesAlive * 2)) || Moriarty.triggerMoriartyWin)
             {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.MoriartyWin, false);
@@ -1414,8 +1540,10 @@ namespace TheOtherRoles.Patches {
                 if ((0 != statistics.TotalAlive - statistics.TeamImpostorsAlive)) return false;
 
             if (statistics.TeamImpostorsAlive >= statistics.TotalAlive - statistics.TeamImpostorsAlive && statistics.TeamPelicanAlive == 0 && statistics.YandereAlive == 0
-                && statistics.TeamJackalAlive == 0 && statistics.TeamSheriffAlive == 0 && statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 &&
+                && statistics.TeamJackalAlive == 0 && statistics.TeamSheriffAlive == 0 && statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 && statistics.TeamArchwitchAlive == 0 &&
                 PlayerRole.livingPlayers.Count == 0 &&
+                Kira.livingPlayers.Count == 0 &&
+                KashimoHajime.livingPlayers.Count == 0 &&
                 (statistics.TeamImpostorLovers == 0 || statistics.TeamImpostorLovers >= statistics.CouplesAlive * 2)) {
                 //__instance.enabled = false;
                 GameOverReason endReason;
@@ -1447,8 +1575,8 @@ namespace TheOtherRoles.Patches {
                 return true;
             }
             if (statistics.TeamImpostorsAlive == 0 && statistics.TeamJackalAlive == 0 && statistics.TeamPelicanAlive == 0 &&
-                statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 && statistics.YandereAlive == 0
-                && PlayerRole.livingPlayers.Count == 0) {
+                statistics.TeamMoriartyAlive == 0 && statistics.TeamJekyllAndHydeAlive == 0 && statistics.TeamArchwitchAlive == 0 && statistics.YandereAlive == 0
+                && PlayerRole.livingPlayers.Count == 0 && Kira.livingPlayers.Count == 0 && KashimoHajime.livingPlayers.Count == 0) {
                 //__instance.enabled = false;
                 GameManager.Instance.RpcEndGame(GameOverReason.CrewmatesByVote, false);
                 return true;
@@ -1467,14 +1595,17 @@ namespace TheOtherRoles.Patches {
     internal class PlayerStatistics {
         public int TeamImpostorsAlive {get;set;}
         public int TeamJackalAlive {get;set;}
+        public int TeamKashimoAlive {get;set;}
         public int TeamSheriffAlive { get; set; }
         public int TeamMoriartyAlive { get; set; }
         public int TeamJekyllAndHydeAlive { get;set; }
+        public int TeamArchwitchAlive { get;set; }
         public int TeamPelicanAlive { get; set; }
         public int TotalAlive {get;set;}
         public int MoriartyLovers { get; set; }
         public int TeamImpostorLovers { get; set; }
         public int TeamJackalLovers { get; set; }
+        public int TeamKashimoLovers { get; set; }
         public int JekyllAndHydeLovers { get; set; }
         public int YandereAlive { get; set; }
         public int CouplesAlive { get; set; }
@@ -1493,6 +1624,7 @@ namespace TheOtherRoles.Patches {
 
         private void GetPlayerCounts() {
             int numJackalAlive = Jackal.livingPlayers.Count + Sidekick.livingPlayers.Count;
+            int numKashimoAlive = KashimoHajime.livingPlayers.Count;
             int numImpostorsAlive = 0;
             int numMoriartyAlive = Moriarty.livingPlayers.Count;
             int numJekyllAndHydeAlive = JekyllAndHyde.livingPlayers.Count;
@@ -1519,6 +1651,14 @@ namespace TheOtherRoles.Patches {
                         }
                     }
                 }
+            }
+
+            // Itadori who became Sukuna counts as an impostor for the win checks
+            foreach (var itadori in Itadori.players)
+            {
+                if (itadori.player == null || !itadori.becameSukuna) continue;
+                if (itadori.player.Data == null || itadori.player.Data.IsDead || itadori.player.Data.Disconnected) continue;
+                numImpostorsAlive++;
             }
 
             // Count the Mimic as one if enabled
@@ -1554,16 +1694,19 @@ namespace TheOtherRoles.Patches {
             }
 
             TeamJackalAlive = numJackalAlive;
+            TeamKashimoAlive = numKashimoAlive;
             TeamImpostorsAlive = numImpostorsAlive;
             TeamSheriffAlive = Sheriff.allPlayers.Where(x => !x.Data.IsDead && !Madmate.madmate.Any(y => y.PlayerId == x.PlayerId)).ToList().Count +
                 (Deputy.stopsGameEnd ? Deputy.livingPlayers.Count : 0);
             TeamMoriartyAlive = numMoriartyAlive;
             TeamJekyllAndHydeAlive = numJekyllAndHydeAlive;
+            TeamArchwitchAlive = Archwitch.witchedAliveCount;
             TeamPelicanAlive = numPelicanAlive;
             TotalAlive = numTotalAlive;
             TeamImpostorLovers = impLovers;
             TeamJackalLovers = Jackal.countLovers() + Sidekick.countLovers() + SchrodingersCat.countLovers(SchrodingersCat.Team.Jackal);
             CouplesAlive = numCouplesAlive;
+            TeamKashimoLovers = KashimoHajime.countLovers();
             MoriartyLovers = Moriarty.countLovers() + SchrodingersCat.countLovers(SchrodingersCat.Team.Moriarty);
             JekyllAndHydeLovers = JekyllAndHyde.countLovers() + SchrodingersCat.countLovers(SchrodingersCat.Team.JekyllAndHyde);
             YandereAlive = numYandereAlive;

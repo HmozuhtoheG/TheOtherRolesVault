@@ -128,6 +128,13 @@ namespace TheOtherRoles.Roles
                 role.level++;
                 gainedLevels++;
             }
+            if (role.player == PlayerControl.LocalPlayer)
+            {
+                _ = new StaticAchievementToken("playerRole.common1");
+                if (role.level >= 3) _ = new StaticAchievementToken("playerRole.another1");
+                if (role.level >= 7) _ = new StaticAchievementToken("playerRole.challenge");
+            }
+
             if (gainedLevels == 0) return;
             if (role.player != PlayerControl.LocalPlayer) return;
 

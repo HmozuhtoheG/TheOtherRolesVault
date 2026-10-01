@@ -124,6 +124,20 @@ namespace TheOtherRoles
         public static CustomButton gojoInfinityButton;
         public static TMPro.TMP_Text gojoInfinityEnergyText;
         public static CustomButton sukunaSlashButton;
+        public static CustomButton sukunaDomainButton;
+        public static TMPro.TMP_Text sukunaDomainUsesText;
+        public static CustomButton simpleDomainButton;
+        public static CustomButton higurumaSwordButton;
+        public static CustomButton sniperEquipButton;
+        public static CustomButton archwitchKillButton;
+        public static TMPro.TMP_Text simpleDomainClicksText;
+        public static CustomButton zeninDashButton;
+        public static CustomButton yutaStopButton;
+        public static CustomButton yutaSilenceButton;
+        public static CustomButton ambusherButton;
+        public static CustomButton kashimoKillButton;
+        public static CustomButton kashimoChargeButton;
+        public static CustomButton kashimoAmberButton;
         public static CustomButton archaeologistDetectButton;
         public static CustomButton archaeologistExcavateButton;
         public static CustomButton medicVitalsButton;
@@ -137,6 +151,8 @@ namespace TheOtherRoles
         public static CustomButton watcherKillButton;
         public static CustomButton freePlaySuicideButton;
         public static CustomButton freePlayReviveButton;
+        public static CustomButton hotPotatoPassButton;
+        public static CustomButton hotPotatoAdminButton;
         public static CustomButton eventKickButton;
         public static CustomButton blockmanPlaceButton;
         public static CustomButton blockmanDashButton;
@@ -155,10 +171,10 @@ namespace TheOtherRoles
         //public static CustomButton roleSummaryButton;
         public static CustomButton accelAttributeButton;
         public static CustomButton decelAttributeButton;
-        private static CustomButton hunterLighterButton;
-        private static CustomButton hunterAdminTableButton;
-        private static CustomButton hunterArrowButton;
-        private static CustomButton huntedShieldButton;
+        private static CustomButton hiderDisguiseButton;
+        private static CustomButton hiderInvisibilityButton;
+        private static TMPro.TMP_Text hiderInvisibilityCountText = null;
+        public static int hiderInvisibilityUses = 0;
 
         public static Dictionary<byte, List<CustomButton>> deputyHandcuffedButtons = null;
         public static PoolablePlayer targetDisplay;
@@ -198,7 +214,6 @@ namespace TheOtherRoles
         public static TMPro.TMP_Text portalmakerButtonText1;
         public static TMPro.TMP_Text portalmakerButtonText2;
         public static TMPro.TMP_Text portalmakerButtonNumText;
-        public static TMPro.TMP_Text huntedShieldCountText;
 
         public static Props.Proptip accelAttributePropTip;
         public static Props.Proptip decelAttributePropTip;
@@ -253,6 +268,18 @@ namespace TheOtherRoles
             energyAmplifierButton.EffectDuration = Energyamplifier.fieldDuration;
             gojoInfinityButton.MaxTimer = 0f;
             sukunaSlashButton.MaxTimer = Sukuna.cooldown;
+            sukunaDomainButton.MaxTimer = 0f;
+            simpleDomainButton.MaxTimer = 0f;
+            zeninDashButton.MaxTimer = ZeninNaoya.cooldown;
+            yutaStopButton.MaxTimer = YutaOkkotsu.cooldown;
+            yutaSilenceButton.MaxTimer = YutaOkkotsu.cooldown;
+            ambusherButton.MaxTimer = Ambusher.cooldown;
+            kashimoKillButton.MaxTimer = KashimoHajime.killCooldown;
+            kashimoChargeButton.MaxTimer = KashimoHajime.chargeCooldown;
+            kashimoAmberButton.MaxTimer = 0f;
+            higurumaSwordButton.MaxTimer = 0f;
+            sniperEquipButton.MaxTimer = 0f;
+            archwitchKillButton.MaxTimer = Archwitch.killCooldown;
             securityGuardButton.MaxTimer = SecurityGuard.cooldown;
             securityGuardCamButton.MaxTimer = SecurityGuard.cooldown;
             securityGuardFlushButton.MaxTimer = SecurityGuard.flushCooldown;
@@ -350,10 +377,6 @@ namespace TheOtherRoles
             freePlaySuicideButton.Timer = 0f;
             //trapperButton.MaxTimer = Trapper.cooldown;
             //bomberButton.MaxTimer = Bomber.bombCooldown;
-            hunterLighterButton.MaxTimer = Hunter.lightCooldown;
-            hunterAdminTableButton.MaxTimer = Hunter.AdminCooldown;
-            hunterArrowButton.MaxTimer = Hunter.ArrowCooldown;
-            huntedShieldButton.MaxTimer = Hunted.shieldCooldown;
             //defuseButton.MaxTimer = 0f;
             //defuseButton.Timer = 0f;
 
@@ -385,9 +408,6 @@ namespace TheOtherRoles
             foxStealthButton.EffectDuration = Fox.stealthDuration;
             detectiveButton.EffectDuration = Detective.inspectDuration;
             buskerButton.EffectDuration = Busker.duration;
-            hunterLighterButton.EffectDuration = Hunter.lightDuration;
-            hunterArrowButton.EffectDuration = Hunter.ArrowDuration;
-            huntedShieldButton.EffectDuration = Hunted.shieldDuration;
             //defuseButton.EffectDuration = Bomber.defuseDuration;
             //bomberButton.EffectDuration = Bomber.destructionTime + Bomber.bombActiveAfter;
             // Already set the timer to the max, as the button is enabled during the game and not available at the start
@@ -400,14 +420,6 @@ namespace TheOtherRoles
             timeMasterShieldButton.Timer = timeMasterShieldButton.MaxTimer;
             timeMasterShieldButton.isEffectActive = false;
             timeMasterShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-            SoundEffectsManager.stop("timemasterShield");
-        }
-
-        public static void resetHuntedRewindButton()
-        {
-            huntedShieldButton.Timer = huntedShieldButton.MaxTimer;
-            huntedShieldButton.isEffectActive = false;
-            huntedShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
             SoundEffectsManager.stop("timemasterShield");
         }
 
@@ -4750,18 +4762,7 @@ namespace TheOtherRoles
             );
 
             freePlayReviveButton = new CustomButton(
-                () =>
-                {
-                    PlayerControl.LocalPlayer.Revive();
-                    DeadBody[] array = UnityEngine.Object.FindObjectsOfType<DeadBody>();
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        if (GameData.Instance.GetPlayerById(array[i].ParentId).PlayerId == PlayerControl.LocalPlayer.PlayerId)
-                        {
-                            UnityEngine.Object.Destroy(array[i].gameObject);
-                        }
-                    }
-                },
+                () => { RPCProcedure.RpcRevive.Invoke(PlayerControl.LocalPlayer.PlayerId); },
                 () => { return FreePlayGM.isFreePlayGM && PlayerControl.LocalPlayer.Data.IsDead; },
                 () =>
                 {
@@ -4780,16 +4781,10 @@ namespace TheOtherRoles
             freePlaySuicideButton = new CustomButton(
                 () =>
                 {
-                    if (PlayerControl.LocalPlayer.AmOwner)
-                    {
-                        if (Constants.ShouldPlaySfx())
-                        {
-                            SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.KillSfx, false, 0.8f);
-                        }
-                        PlayerControl.LocalPlayer.cosmetics.SetNameMask(false);
-                        PlayerControl.LocalPlayer.RpcSetScanner(false);
-                    }
-                    PlayerControl.LocalPlayer.MyPhysics.StartCoroutine(PlayerControl.LocalPlayer.KillAnimations.First().CoPerformKill(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer));
+                    if (Constants.ShouldPlaySfx()) SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.KillSfx, false, 0.8f);
+                    PlayerControl.LocalPlayer.cosmetics.SetNameMask(false);
+                    PlayerControl.LocalPlayer.RpcSetScanner(false);
+                    Helpers.forceMurderPlayer(PlayerControl.LocalPlayer, PlayerControl.LocalPlayer, true);
                 },
                 () => { return FreePlayGM.isFreePlayGM && !PlayerControl.LocalPlayer.Data.IsDead; },
                 () =>
@@ -4805,6 +4800,44 @@ namespace TheOtherRoles
                 buttonText: ModTranslation.getString("FreePlaySuicideText"),
                 abilityTexture: CustomButton.ButtonLabelType.UseButton
             );
+
+            hotPotatoPassButton = new CustomButton(
+                () => { HotPotato.tryPass(PlayerControl.LocalPlayer); },
+                () =>
+                {
+                    var local = PlayerControl.LocalPlayer;
+                    if (!HotPotato.isHotPotatoGM || local == null || local.Data == null || local.Data.IsDead) return false;
+                    return HotPotato.holderId == local.PlayerId;
+                },
+                () => { return HotPotato.findPassTarget(PlayerControl.LocalPlayer) != null; },
+                () => { hotPotatoPassButton.Timer = hotPotatoPassButton.MaxTimer = 0f; },
+                HotPotato.getPotatoSprite(),
+                HotPotato.PassButtonOffset,
+                __instance,
+                KeyCode.F,
+                true,
+                buttonText: ModTranslation.getString("hotPotatoPassText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            )
+            {
+                Timer = 0f
+            };
+
+            hotPotatoAdminButton = new CustomButton(
+                () => { HotPotato.toggleAdminMap(); },
+                () => { return HotPotato.isHolder(PlayerControl.LocalPlayer); },
+                () => { return true; },
+                () => { hotPotatoAdminButton.Timer = hotPotatoAdminButton.MaxTimer = 0f; },
+                Hacker.getAdminSprite(),
+                CustomButton.ButtonPositions.lowerRowCenter,
+                __instance,
+                KeyCode.G,
+                buttonText: FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin),
+                abilityTexture: CustomButton.ButtonLabelType.AdminButton
+            )
+            {
+                Timer = 0f
+            };
 
             energyAmplifierButton = new CustomButton(
                 () =>
@@ -4896,7 +4929,8 @@ namespace TheOtherRoles
                 () =>
                 {
                     var role = Sukuna.local;
-                    return role != null && !role.isChanting && PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance;
+                    return role != null && !role.isChanting && role.burnout <= 0 && !role.isDomainActive
+                        && PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance;
                 },
                 () => { sukunaSlashButton.Timer = sukunaSlashButton.MaxTimer; },
                 Sukuna.getButtonSprite(),
@@ -4906,6 +4940,269 @@ namespace TheOtherRoles
                 buttonText: ModTranslation.getString("SukunaSlashText"),
                 abilityTexture: CustomButton.ButtonLabelType.KillButton
             );
+
+            // Sukuna Domain Expansion
+            sukunaDomainButton = new CustomButton(
+                () =>
+                {
+                    var role = Sukuna.local;
+                    if (role == null) return;
+
+                    if (role.isDomainActive) role.CloseDomain();
+                    else if (role.canUseDomain) role.TryStartDomain();
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Sukuna) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = Sukuna.local;
+                    return role != null && (role.canCloseDomain || (role.canUseDomain && PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance));
+                },
+                () => { sukunaDomainButton.Timer = 0f; },
+                Sukuna.getDomainButtonSprite(),
+                CustomButton.ButtonPositions.upperRowFarLeft,
+                __instance,
+                KeyCode.G,
+                buttonText: ModTranslation.getString("SukunaDomainText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            )
+            {
+                Timer = 0f
+            };
+            sukunaDomainUsesText = sukunaDomainButton.ShowUsesIcon(3);
+
+            // Simple Domain (everyone inside can mash this to survive)
+            simpleDomainButton = new CustomButton(
+                () => { Sukuna.registerLocalSimpleDomainClick(); },
+                () => { return Sukuna.localPlayerNeedsSimpleDomain(); },
+                () => { return PlayerControl.LocalPlayer.CanMove && HudManager.Instance != null; },
+                () => { },
+                Sukuna.getSimpleDomainButtonSprite(),
+                CustomButton.ButtonPositions.lowerRowLeft,
+                __instance,
+                null,
+                buttonText: ModTranslation.getString("simpleDomain"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            )
+            {
+                Timer = 0f
+            };
+            simpleDomainClicksText = simpleDomainButton.ShowUsesIcon(3);
+            simpleDomainButton.setActive(false);
+
+            zeninDashButton = new CustomButton(
+                () => { },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.ZeninNaoya) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = ZeninNaoya.local;
+                    return role != null && role.canUse;
+                },
+                () => { },
+                ZeninNaoya.getButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("zeninNaoyaDashText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            )
+            {
+                Timer = 0f
+            };
+            var zeninPassive = zeninDashButton.actionButton.GetComponent<PassiveButton>();
+            if (zeninPassive != null)
+            {
+                zeninPassive.OnMouseOver ??= new UnityEngine.Events.UnityEvent();
+                zeninPassive.OnMouseOut ??= new UnityEngine.Events.UnityEvent();
+                zeninPassive.OnMouseOver.AddListener((UnityEngine.Events.UnityAction)(() => ZeninNaoya.registerLocalAimButton(true)));
+                zeninPassive.OnMouseOut.AddListener((UnityEngine.Events.UnityAction)(() => ZeninNaoya.registerLocalAimButton(false)));
+            }
+
+            yutaStopButton = new CustomButton(
+                () =>
+                {
+                    var role = YutaOkkotsu.local;
+                    if (role == null) return;
+                    role.useStop();
+                    yutaStopButton.Timer = yutaStopButton.MaxTimer;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.YutaOkkotsu) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = YutaOkkotsu.local;
+                    return role != null && role.canCommand && PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance;
+                },
+                () => { yutaStopButton.Timer = yutaStopButton.MaxTimer; },
+                YutaOkkotsu.getStopButtonSprite(),
+                CustomButton.ButtonPositions.upperRowRight,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("yutaStopText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+
+            yutaSilenceButton = new CustomButton(
+                () =>
+                {
+                    var role = YutaOkkotsu.local;
+                    if (role == null) return;
+                    role.useSilence();
+                    yutaSilenceButton.Timer = yutaSilenceButton.MaxTimer;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.YutaOkkotsu) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = YutaOkkotsu.local;
+                    return role != null && role.canCommand && PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance;
+                },
+                () => { yutaSilenceButton.Timer = yutaSilenceButton.MaxTimer; },
+                YutaOkkotsu.getSilenceButtonSprite(),
+                CustomButton.ButtonPositions.upperRowCenter,
+                __instance,
+                KeyCode.G,
+                buttonText: ModTranslation.getString("yutaSilenceText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            );
+
+            kashimoChargeButton = new CustomButton(
+                () =>
+                {
+                    var role = KashimoHajime.local;
+                    if (role == null) return;
+                    role.useCharge();
+                    kashimoChargeButton.Timer = kashimoChargeButton.MaxTimer;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.KashimoHajime) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = KashimoHajime.local;
+                    return role != null && role.canCharge && PlayerControl.LocalPlayer.CanMove;
+                },
+                () => { kashimoChargeButton.Timer = kashimoChargeButton.MaxTimer; },
+                KashimoHajime.getChargeSprite(),
+                CustomButton.ButtonPositions.upperRowFarLeft,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("kashimoChargeText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            );
+
+            kashimoKillButton = new CustomButton(
+                () => { KashimoHajime.local?.kill(); },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.KashimoHajime) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = KashimoHajime.local;
+                    return role != null && role.canKill;
+                },
+                () => { kashimoKillButton.Timer = kashimoKillButton.MaxTimer; },
+                __instance.KillButton.graphic.sprite,
+                CustomButton.ButtonPositions.upperRowRight,
+                __instance,
+                KeyCode.Q
+            );
+
+            ambusherButton = new CustomButton(
+                () => { if (Ambusher.trapScreenOpen) Ambusher.CloseTrapScreen(); else Ambusher.OpenTrapScreen(); },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Ambusher) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    return !Ambusher.isArmed && PlayerControl.LocalPlayer.CanMove
+                        && !MeetingHud.Instance && !Minigame.Instance && !ExileController.Instance;
+                },
+                () => { ambusherButton.MaxTimer = Ambusher.cooldown; ambusherButton.Timer = ambusherButton.MaxTimer; },
+                Ambusher.getButtonSprite(),
+                CustomButton.ButtonPositions.upperRowFarLeft,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("ambusherTrapText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            );
+
+            kashimoAmberButton = new CustomButton(
+                () =>
+                {
+                    var role = KashimoHajime.local;
+                    if (role == null) return;
+                    role.useAmber();
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.KashimoHajime) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = KashimoHajime.local;
+                    return role != null && role.canAmber && PlayerControl.LocalPlayer.CanMove;
+                },
+                () => { },
+                KashimoHajime.getAmberSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.G,
+                buttonText: ModTranslation.getString("kashimoAmberText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            )
+            {
+                Timer = 0f
+            };
+
+            higurumaSwordButton = new CustomButton(
+                () => HiromiHigurumaPatches.ExecuteSword(),
+                () => HiromiHiguruma.hasExecutionerSword && PlayerControl.LocalPlayer.isRole(RoleId.HiromiHiguruma),
+                () => HiromiHigurumaPatches.SwordUsable(),
+                () => { higurumaSwordButton.Timer = 0f; },
+                HiromiHiguruma.getSwordSprite(),
+                CustomButton.ButtonPositions.upperRowFarLeft,
+                __instance,
+                null,
+                buttonText: ModTranslation.getString("hiromiSwordText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            )
+            {
+                Timer = 0f,
+                MaxTimer = 0f
+            };
+
+            sniperEquipButton = new CustomButton(
+                () => Sniper.local?.ToggleRifle(),
+                () => PlayerControl.LocalPlayer.isRole(RoleId.Sniper) && !PlayerControl.LocalPlayer.Data.IsDead,
+                () => Sniper.canEquip,
+                () => { sniperEquipButton.Timer = 0f; },
+                Sniper.getButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("sniperEquipText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            )
+            {
+                Timer = 0f,
+                MaxTimer = 0f
+            };
+
+            archwitchKillButton = new CustomButton(
+                () =>
+                {
+                    var witch = Archwitch.local;
+                    if (witch == null || witch.currentTarget == null) return;
+
+                    if (Helpers.checkMurderAttemptAndKill(PlayerControl.LocalPlayer, witch.currentTarget) == MurderAttemptResult.SuppressKill) return;
+
+                    archwitchKillButton.Timer = archwitchKillButton.MaxTimer;
+                    witch.currentTarget = null;
+                },
+                () => PlayerControl.LocalPlayer.isRole(RoleId.Archwitch) && Archwitch.local != null && Archwitch.local.isWitched && !PlayerControl.LocalPlayer.Data.IsDead,
+                () => Archwitch.local != null && Archwitch.local.currentTarget != null && PlayerControl.LocalPlayer.CanMove,
+                () => { archwitchKillButton.Timer = archwitchKillButton.MaxTimer; },
+                Archwitch.getKillButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.Q,
+                buttonText: ModTranslation.getString("archwitchKillText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            )
+            {
+                Timer = 0f,
+                MaxTimer = 0f
+            };
+
 
             thiefKillButton = new CustomButton(
                 () =>
@@ -4994,156 +5291,56 @@ namespace TheOtherRoles
             };
 
 
-            hunterLighterButton = new CustomButton(
-                () =>
-                {
-                    Hunter.lightActive.Add(PlayerControl.LocalPlayer.PlayerId);
-                    SoundEffectsManager.play("lighterLight");
-
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareTimer, Hazel.SendOption.Reliable, -1);
-                    writer.Write(Hunter.lightPunish);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.shareTimer(Hunter.lightPunish);
-                },
-                () => { return HideNSeek.isHunter() && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => { return true; },
-                () =>
-                {
-                    hunterLighterButton.Timer = 30f;
-                    hunterLighterButton.isEffectActive = false;
-                    hunterLighterButton.actionButton.graphic.color = Palette.EnabledColor;
-                },
-                Hunter.getLightSprite(),
-                CustomButton.ButtonPositions.upperRowFarLeft,
-                __instance,
-                KeyCode.F,
-                true,
-                Hunter.lightDuration,
-                () =>
-                {
-                    Hunter.lightActive.Remove(PlayerControl.LocalPlayer.PlayerId);
-                    hunterLighterButton.Timer = hunterLighterButton.MaxTimer;
-                    SoundEffectsManager.play("lighterLight");
-                },
-                buttonText: ModTranslation.getString("LighterText"),
-                abilityTexture: CustomButton.ButtonLabelType.UseButton
-            );
-
-            hunterAdminTableButton = new CustomButton(
-               () =>
-               {
-                   if (!MapBehaviour.Instance || !MapBehaviour.Instance.isActiveAndEnabled)
-                   {
-                       HudManager __instance = FastDestroyableSingleton<HudManager>.Instance;
-                       __instance.InitMap();
-                       MapBehaviour.Instance.ShowCountOverlay(allowedToMove: true, showLivePlayerPosition: true, includeDeadBodies: false);
-                   }
-
-                   PlayerControl.LocalPlayer.NetTransform.Halt(); // Stop current movement 
-
-                   MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareTimer, Hazel.SendOption.Reliable, -1);
-                   writer.Write(Hunter.AdminPunish);
-                   AmongUsClient.Instance.FinishRpcImmediately(writer);
-                   RPCProcedure.shareTimer(Hunter.AdminPunish);
-               },
-               () => { return HideNSeek.isHunter() && !PlayerControl.LocalPlayer.Data.IsDead; },
-               () => { return true; },
-               () =>
-               {
-                   hunterAdminTableButton.Timer = hunterAdminTableButton.MaxTimer;
-                   hunterAdminTableButton.isEffectActive = false;
-                   hunterAdminTableButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-               },
-               Hacker.getAdminSprite(),
-               CustomButton.ButtonPositions.lowerRowCenter,
-               __instance,
-               KeyCode.G,
-               true,
-               Hunter.AdminDuration,
-               () =>
-               {
-                   hunterAdminTableButton.Timer = hunterAdminTableButton.MaxTimer;
-                   if (MapBehaviour.Instance && MapBehaviour.Instance.isActiveAndEnabled) MapBehaviour.Instance.Close();
-               },
-               false,
-               FastDestroyableSingleton<TranslationController>.Instance.GetString(StringNames.Admin),
-               abilityTexture: CustomButton.ButtonLabelType.AdminButton
-            );
-
-            hunterArrowButton = new CustomButton(
-                () =>
-                {
-                    Hunter.arrowActive = true;
-                    SoundEffectsManager.play("trackerTrackPlayer");
-
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareTimer, Hazel.SendOption.Reliable, -1);
-                    writer.Write(Hunter.ArrowPunish);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.shareTimer(Hunter.ArrowPunish);
-                },
-                () => { return HideNSeek.isHunter() && !PlayerControl.LocalPlayer.Data.IsDead; },
-                () => { return true; },
-                () =>
-                {
-                    hunterArrowButton.Timer = 30f;
-                    hunterArrowButton.isEffectActive = false;
-                    hunterArrowButton.actionButton.graphic.color = Palette.EnabledColor;
-                },
-                Hunter.getArrowSprite(),
-                CustomButton.ButtonPositions.upperRowLeft,
-                __instance,
-                KeyCode.R,
-                true,
-                Hunter.ArrowDuration,
-                () =>
-                {
-                    Hunter.arrowActive = false;
-                    hunterArrowButton.Timer = hunterArrowButton.MaxTimer;
-                    SoundEffectsManager.play("trackerTrackPlayer");
-                },
-                buttonText: ModTranslation.getString("HunterArrowText"),
-                abilityTexture: CustomButton.ButtonLabelType.UseButton
-            );
-
-            huntedShieldButton = new CustomButton(
-                () =>
-                {
-                    MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.HuntedShield, Hazel.SendOption.Reliable, -1);
-                    writer.Write(PlayerControl.LocalPlayer.PlayerId);
-                    AmongUsClient.Instance.FinishRpcImmediately(writer);
-                    RPCProcedure.huntedShield(PlayerControl.LocalPlayer.PlayerId);
-                    SoundEffectsManager.play("timemasterShield");
-
-                    Hunted.shieldCount--;
-                },
+            hiderDisguiseButton = new CustomButton(
+                () => { HiderDisguise.TryDisguise(PlayerControl.LocalPlayer); },
                 () => { return HideNSeek.isHunted() && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () => { return PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance; },
                 () =>
                 {
-                    if (huntedShieldCountText != null) huntedShieldCountText.text = $"{Hunted.shieldCount}";
-                    return PlayerControl.LocalPlayer.CanMove && Hunted.shieldCount > 0;
+                    hiderDisguiseButton.MaxTimer = HideNSeek.disguiseCooldown;
+                    hiderDisguiseButton.Timer = hiderDisguiseButton.MaxTimer;
                 },
-                () =>
-                {
-                    huntedShieldButton.Timer = huntedShieldButton.MaxTimer;
-                    huntedShieldButton.isEffectActive = false;
-                    huntedShieldButton.actionButton.cooldownTimerText.color = Palette.EnabledColor;
-                },
-                TimeMaster.getButtonSprite(),
+                HiderDisguise.getDisguiseSprite(),
                 CustomButton.ButtonPositions.lowerRowRight,
                 __instance,
                 KeyCode.F,
-                true,
-                Hunted.shieldDuration,
+                buttonText: ModTranslation.getString("hiderDisguiseText"),
+                abilityTexture: CustomButton.ButtonLabelType.UseButton
+            )
+            {
+                MaxTimer = 1f,
+                Timer = 1f
+            };
+
+            hiderInvisibilityButton = new CustomButton(
                 () =>
                 {
-                    huntedShieldButton.Timer = huntedShieldButton.MaxTimer;
-                    SoundEffectsManager.stop("timemasterShield");
-
+                    HiderInvisibility.Activate(PlayerControl.LocalPlayer);
+                    hiderInvisibilityUses--;
                 },
-                buttonText: ModTranslation.getString("TimeShieldText"),
+                () => { return HideNSeek.isHunted() && !PlayerControl.LocalPlayer.Data.IsDead && hiderInvisibilityUses > 0; },
+                () =>
+                {
+                    if (hiderInvisibilityCountText != null) hiderInvisibilityCountText.text = $"{hiderInvisibilityUses}";
+                    return PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance;
+                },
+                () =>
+                {
+                    hiderInvisibilityButton.MaxTimer = HiderInvisibility.cooldown;
+                    hiderInvisibilityButton.Timer = hiderInvisibilityButton.MaxTimer;
+                },
+                HiderInvisibility.getButtonSprite(),
+                CustomButton.ButtonPositions.lowerRowCenter,
+                __instance,
+                KeyCode.G,
+                buttonText: ModTranslation.getString("hiderInvisibleText"),
                 abilityTexture: CustomButton.ButtonLabelType.UseButton
-            );
-            huntedShieldCountText = huntedShieldButton.ShowUsesIcon(3);
+            )
+            {
+                MaxTimer = 1f,
+                Timer = 1f
+            };
+            hiderInvisibilityCountText = hiderInvisibilityButton.ShowUsesIcon(3);
 
             emoteWheelButton = new CustomButton(
                 () =>

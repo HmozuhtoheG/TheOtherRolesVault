@@ -78,11 +78,8 @@ namespace TheOtherRoles.Patches {
 
             public static void Postfix(LobbyBehaviour __instance)
             {
-                if (ClientOption.AllOptions[ClientOption.ClientOptionType.PlayLobbyMusic].Value == 0)
-                {
-                    __instance.StopAllCoroutines();
-                    __instance.StartCoroutine(CoDelayPlayWithoutMusic(__instance).WrapToIl2Cpp());
-                }
+                __instance.StopAllCoroutines();
+                __instance.StartCoroutine(CoDelayPlayWithoutMusic(__instance).WrapToIl2Cpp());
             }
         }
 
@@ -204,8 +201,7 @@ namespace TheOtherRoles.Patches {
 
                 // Client update with handshake infos
                 else {
-                    if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) || TheOtherRolesPlugin.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0
-                        || TORMapOptions.gameMode == CustomGamemodes.FreePlay) {
+                    if (!playerVersions.ContainsKey(AmongUsClient.Instance.HostId) || TheOtherRolesPlugin.Version.CompareTo(playerVersions[AmongUsClient.Instance.HostId].version) != 0) {
                         kickingTimer += Time.deltaTime;
                         if (kickingTimer > 10) {
                             kickingTimer = 0;

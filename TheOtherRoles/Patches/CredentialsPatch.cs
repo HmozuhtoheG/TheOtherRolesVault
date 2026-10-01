@@ -36,6 +36,7 @@ namespace TheOtherRoles.Patches {
                     else if (HandleGuesser.isGuesserGm) gameModeText = ModTranslation.getString("gamemodeGuesser");
                     else if (FreePlayGM.isFreePlayGM) gameModeText = ModTranslation.getString("gamemodeFreePlay");
                     else if (Zombie.isZombieGM) gameModeText = ModTranslation.getString("gamemodeZombie");
+                    else if (HotPotato.isHotPotatoGM) gameModeText = ModTranslation.getString("gamemodeHotPotato");
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText) + "\n";
                     __instance.text.text = $"<size=130%><color=#33FFFF>TORV</color></size> <color=#FFFF00>v{TheOtherRolesPlugin.Version.ToString() + (TheOtherRolesPlugin.betaDays > 0 ? "-BETA" : "")}</color>\n{gameModeText}";
                     position.DistanceFromEdge = new Vector3(1.5f, 0.11f, 0);
@@ -45,6 +46,7 @@ namespace TheOtherRoles.Patches {
                     else if (TORMapOptions.gameMode == CustomGamemodes.Guesser) gameModeText = ModTranslation.getString("gamemodeGuesser");
                     else if (TORMapOptions.gameMode == CustomGamemodes.FreePlay) gameModeText = ModTranslation.getString("gamemodeFreePlay");
                     else if (TORMapOptions.gameMode == CustomGamemodes.Zombie) gameModeText = ModTranslation.getString("gamemodeZombie");
+                    else if (TORMapOptions.gameMode == CustomGamemodes.HotPotato) gameModeText = ModTranslation.getString("gamemodeHotPotato");
                     if (gameModeText != "") gameModeText = Helpers.cs(Color.yellow, gameModeText);
 
                     __instance.text.text = $"{ModTranslation.getString(fullCredentialsVersion)}\n{ModTranslation.getString(fullCredentials)}\n {__instance.text.text}";

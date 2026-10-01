@@ -13,12 +13,43 @@ using UnityEngine;
 
 namespace TheOtherRoles.CustomGameModes
 {
+    [TORRPCHolder]
     public static class FreePlayGM
     {
         public static bool isFreePlayGM = false;
         public static Sprite operateButtonSprite;
         public static Sprite reviveSprite;
         public static MetaScreen roleScreen;
+
+        public static RemoteProcess<byte> EraseRolesRPC = RemotePrimitiveProcess.OfByte("FreePlayEraseRoles", (message, _) =>
+        {
+            var player = Helpers.playerById(message);
+            if (player == null || player.Data == null) return;
+
+            if (player.isRole(RoleId.Jackal)) Jackal.eraseRole(player);
+            else if (player.isRole(RoleId.Sidekick)) Sidekick.eraseRole(player);
+
+            RPCProcedure.erasePlayerRoles(message, generateTasks: false);
+        });
+
+        public static RemoteProcess<(byte roleId, byte playerId, bool impostor)> SetRoleRPC = new("FreePlaySetRole", (message, _) =>
+        {
+            var player = Helpers.playerById(message.playerId);
+            if (player == null || player.Data == null) return;
+
+            if ((RoleId)message.roleId == RoleInfo.chainshifter.roleId) Shifter.isNeutral = true;
+            else if ((RoleId)message.roleId == RoleInfo.niceshifter.roleId) Shifter.isNeutral = false;
+
+            if (player.Data.Role.IsImpostor != message.impostor)
+                player.FastSetRole(message.impostor ? RoleTypes.Impostor : RoleTypes.Crewmate);
+
+            RPCProcedure.setRole(message.roleId, message.playerId);
+        });
+
+        public static RemoteProcess<(byte modifierId, byte playerId)> SetModifierRPC = new("FreePlaySetModifier", (message, _) =>
+        {
+            RPCProcedure.setModifier(message.modifierId, message.playerId, 0);
+        });
 
         public static Sprite getOperateButtonSprite()
         {
@@ -57,18 +88,10 @@ namespace TheOtherRoles.CustomGameModes
                 {
                     inner = gui.Arrange(GUIAlignment.Center, RoleInfo.allRoleInfos.Where(x => x != RoleInfo.bomberB && x != RoleInfo.bountyHunter && !x.isModifier).Select(r => gui.RawButton(GUIAlignment.Center, roleMaskedTittleAttr, Helpers.cs(r.orgColor, r.name), () =>
                     {
-                        bool isImpostorFormer = PlayerControl.LocalPlayer.Data.Role.IsImpostor;
                         var formerRole = RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer, false).FirstOrDefault();
                         if (formerRole == r) return; // Do nothing if the same role was given
-                        if (formerRole.roleId == RoleId.Jackal) Jackal.eraseRole(PlayerControl.LocalPlayer);
-                        else if (formerRole.roleId == RoleId.Sidekick) Sidekick.eraseRole(PlayerControl.LocalPlayer);
-                        RPCProcedure.erasePlayerRoles(PlayerControl.LocalPlayer.PlayerId, generateTasks: false);
-                        if (r.isImpostor && !isImpostorFormer) PlayerControl.LocalPlayer.FastSetRole(RoleTypes.Impostor);
-                        else if (!r.isImpostor && isImpostorFormer) PlayerControl.LocalPlayer.FastSetRole(RoleTypes.Crewmate);
-
-                        if (r == RoleInfo.chainshifter) Shifter.isNeutral = true;
-                        else if (r == RoleInfo.niceshifter) Shifter.isNeutral = false;
-                        RPCProcedure.setRole((byte)r.roleId, PlayerControl.LocalPlayer.PlayerId);
+                        EraseRolesRPC.Invoke(PlayerControl.LocalPlayer.PlayerId);
+                        SetRoleRPC.Invoke(((byte)r.roleId, PlayerControl.LocalPlayer.PlayerId, r.isImpostor));
 
                         if (r.roleId == RoleId.Fox) {
                             PlayerControl.LocalPlayer.clearAllTasks();
@@ -103,7 +126,7 @@ namespace TheOtherRoles.CustomGameModes
                         gui.LocalizedText(GUIAlignment.Center, roleMaskedTittleAttr, "freePlayModifiersUnequipped"),
                         gui.Arrange(GUIAlignment.Center, RoleInfo.allRoleInfos.Where(r => r.isModifier && r != RoleInfo.lover && r != RoleInfo.mini && !RoleInfo.getRoleInfoForPlayer(PlayerControl.LocalPlayer).Contains(r)).Select(r => gui.RawButton(GUIAlignment.Center, roleMaskedTittleAttr, Helpers.cs(r.color, r.name), () =>
                         {
-                            RPCProcedure.setModifier((byte)r.roleId, PlayerControl.LocalPlayer.PlayerId, 0);
+                            SetModifierRPC.Invoke(((byte)r.roleId, PlayerControl.LocalPlayer.PlayerId));
                             SetWidget(1);
                         })), 4)}
                         );

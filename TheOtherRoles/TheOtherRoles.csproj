@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Version>1.0.4</Version>
+        <Version>1.0.6</Version>
         <Description>TheOtherRolesVault</Description>
         <Authors>Keno</Authors>
 		<LangVersion>preview</LangVersion>
@@ -9,6 +9,7 @@
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <PlatformTarget>AnyCPU</PlatformTarget>
 		<Configurations>Windows;Android;</Configurations>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
       <LangVersion>preview</LangVersion>
@@ -22,6 +23,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<EmbeddedResource Include="$(PkgNLayer)\lib\netstandard1.3\NLayer.dll" LogicalName="TheOtherRoles.NLayer.dll" />
+
 		<EmbeddedResource Include="Resources\**" Exclude="Resources\AssetsBundle\assetsbundle-Android" Condition="'$(Configuration)' == 'Windows'" />
 
 		<EmbeddedResource Include="Resources\**" Exclude="Resources\AssetsBundle\assetsbundle-Windows" Condition="'$(Configuration)' == 'Android'" />
@@ -33,11 +36,12 @@
 
 	<ItemGroup>
 		<PackageReference Include="AmongUs.GameLibs.Android" Version="2026.3.17" Condition="'$(Configuration)' == 'Android'" />
-		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2026.8.18" Condition="'$(Configuration)' == 'Windows'" />
+		<PackageReference Include="AmongUs.GameLibs.Steam" Version="2026.9.29" Condition="'$(Configuration)' == 'Windows'" />
         <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.735" />
 		<PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="2.1.0-rc.1" />
         <PackageReference Include="Reactor" Version="2.5.1-ci.384" />
         <PackageReference Include="FilterAPI" Version="1.0.1" />
+        <PackageReference Include="NLayer" Version="1.14.0" GeneratePathProperty="true" />
     </ItemGroup>
    
     <Target Name="Date" BeforeTargets="BeforeBuild">  <!--Will make the compile time available s.t. we can let betas expire-->

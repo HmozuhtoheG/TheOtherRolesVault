@@ -233,7 +233,12 @@ namespace TheOtherRoles.Patches {
             Yasuna.specialVoteTargetPlayerId = byte.MaxValue;
 
             // Reset VoteEater settings.
+            if (exiled != null && VoteEater.eatenTargetPlayerIds.Contains(exiled.PlayerId)
+                && PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.isRole(RoleId.EvilVoteEater))
+                _ = new StaticAchievementToken("evilVoteEater.another1");
+
             VoteEater.eatenTargetPlayerIds.Clear();
+            VoteEater.eatenThisMeeting = 0;
 
             // Tracker reset deadBodyPositions
             Tracker.deadBodyPositions = [];

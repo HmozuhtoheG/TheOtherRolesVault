@@ -202,7 +202,7 @@ namespace TheOtherRoles.Roles
             return seekerSpawnAnim.length * 0.7f;
         }
 
-        public static RemoteProcess<(byte playerId, bool active)> SetAgnosia = new("AgnosiaSetState", (message, _) =>
+        public static RemoteProcess<(byte playerId, bool active)> SetAgnosia = new("AgnosiaSetState", (message, __) =>
         {
             var target = Helpers.playerById(message.playerId);
             var role = getRole(target);
@@ -214,6 +214,8 @@ namespace TheOtherRoles.Roles
 
             if (message.active)
             {
+                _ = new StaticAchievementToken("agnosia.common1");
+
                 applyLook();
                 role.lookRefresh = 1f;
                 target.SetKillTimerUnchecked(killCooldownActive, killCooldownActive);
@@ -314,6 +316,8 @@ namespace TheOtherRoles.Roles
             if (target == null || target == player) return;
 
             player.SetKillTimerUnchecked(mad || timer > 0f ? killCooldownActive : killCooldownIdle);
+
+            if (!mad && timer > 0f) _ = new StaticAchievementToken("agnosia.another1");
 
             if (mad) return;
 
@@ -469,6 +473,13 @@ namespace TheOtherRoles.Roles
             if (target.Data.Role == null || !target.Data.Role.IsImpostor) return true;
 
             Helpers.checkMurderAttemptAndKill(__instance, target);
+
+            if (__instance == PlayerControl.LocalPlayer)
+            {
+                var role = Agnosia.getRole(__instance);
+                if (role != null && role.mad) _ = new StaticAchievementToken("agnosia.challenge");
+            }
+
             return false;
         }
     }

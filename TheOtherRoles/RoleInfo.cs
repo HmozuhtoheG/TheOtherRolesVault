@@ -17,6 +17,7 @@ namespace TheOtherRoles
         public string fullDescription { get { return ModTranslation.getString(nameKey + "FullDesc"); } }
         public string blurb { get { return ModTranslation.getString(nameKey + "Blurb"); } }
         public RoleId roleId;
+        public MetaContext.Image Illustration;
         public bool isNeutral;
         public bool isOrgNeutral;
         public bool isModifier;
@@ -45,7 +46,20 @@ namespace TheOtherRoles
         public static RoleInfo deputy = new("deputy", Sheriff.color, RoleId.Deputy);
         public static RoleInfo auxiliary = new("auxiliary", Sheriff.color, RoleId.Auxiliary);
         public static RoleInfo gojo = new("gojo", Gojo.color, RoleId.Gojo);
+        public static RoleInfo yutaOkkotsu = new("yutaOkkotsu", YutaOkkotsu.color, RoleId.YutaOkkotsu);
+        public static RoleInfo kashimoHajime = new("kashimoHajime", KashimoHajime.color, RoleId.KashimoHajime, true);
+        public static RoleInfo ambusher = new("ambusher", Ambusher.color, RoleId.Ambusher);
         public static RoleInfo sukuna = new("sukuna", Palette.ImpostorRed, RoleId.Sukuna);
+        public static RoleInfo zeninNaoya = new("zeninNaoya", Palette.ImpostorRed, RoleId.ZeninNaoya);
+        public static RoleInfo kira = new("kira", Kira.color, RoleId.Kira, true);
+        public static RoleInfo zeus = new("zeus", Palette.ImpostorRed, RoleId.Zeus);
+        public static RoleInfo painter = new("painter", Palette.ImpostorRed, RoleId.Painter);
+        public static RoleInfo aoi = new("aoi", Palette.ImpostorRed, RoleId.Aoi);
+        public static RoleInfo itadori = new("itadori", Itadori.color, RoleId.Itadori, true);
+        public static RoleInfo justice = new("justice", Justice.color, RoleId.Justice);
+        public static RoleInfo hiromiHiguruma = new("hiromiHiguruma", HiromiHiguruma.color, RoleId.HiromiHiguruma);
+        public static RoleInfo sniper = new("sniper", Sniper.color, RoleId.Sniper);
+        public static RoleInfo archwitch = new("archwitch", Archwitch.color, RoleId.Archwitch, true);
         public static RoleInfo lighter = new("lighter", Lighter.color, RoleId.Lighter);
         public static RoleInfo godfather = new("godfather", Godfather.color, RoleId.Godfather);
         public static RoleInfo mafioso = new("mafioso", Mafioso.color, RoleId.Mafioso);
@@ -62,7 +76,7 @@ namespace TheOtherRoles
         public static RoleInfo bait = new("bait", Bait.color, RoleId.Bait);
         public static RoleInfo timeMaster = new("timeMaster", TimeMaster.color, RoleId.TimeMaster);
         public static RoleInfo medic = new("medic", Medic.color, RoleId.Medic);
-        public static RoleInfo niceSwapper = new("niceSwapper", Swapper.color, RoleId.Swapper);
+        public static RoleInfo niceSwapper = new("niceSwapper", Swapper.color, RoleId.Swapper) { Illustration = MetaContext.SpriteLoader.FromResource("TheOtherRoles.Resources.Characterillustration.NiceSwapper.png", 300f) };
         public static RoleInfo seer = new("seer", Seer.color, RoleId.Seer);
         public static RoleInfo hacker = new("hacker", Hacker.color, RoleId.Hacker);
         public static RoleInfo niceshifter = new("niceShifter", Shifter.color, RoleId.Shifter);
@@ -168,6 +182,7 @@ namespace TheOtherRoles
         public static RoleInfo diseased = new("diseased", Color.yellow, RoleId.Diseased, false, true);
         public static RoleInfo radar = new("radar", Color.yellow, RoleId.Radar, false, true);
         public static RoleInfo armored = new("armored", Color.yellow, RoleId.Armored, false, true);
+        public static RoleInfo heavenlyRestriction = new("heavenlyRestriction", HeavenlyRestriction.color, RoleId.HeavenlyRestriction, false, true);
         public static RoleInfo gravedigger = new("gravedigger", Color.yellow, RoleId.Gravedigger, false, true);
         public static RoleInfo gambler = new("gambler", Gambler.color, RoleId.Gambler, false, true);
         public static RoleInfo layabout = new("layabout", Color.yellow, RoleId.Layabout, false, true);
@@ -188,7 +203,18 @@ namespace TheOtherRoles
             serialKiller,
             pelican,
             playerRole,
-            sukuna
+            sukuna,
+            zeninNaoya,
+            ambusher,
+            kira,
+            zeus,
+            painter,
+            aoi,
+            itadori,
+            justice,
+            hiromiHiguruma,
+            sniper,
+            archwitch
         ];
 
         public static List<RoleInfo> Trick =
@@ -423,6 +449,7 @@ namespace TheOtherRoles
             diseased,
             radar,
             armored,
+            heavenlyRestriction,
             energyamplifier,
             illusionist,
             agnosia,
@@ -439,7 +466,20 @@ namespace TheOtherRoles
             policeCommissioner,
             auxiliary,
             gojo,
+            yutaOkkotsu,
+            kashimoHajime,
+            ambusher,
             sukuna,
+            zeninNaoya,
+            kira,
+            zeus,
+            painter,
+            aoi,
+            itadori,
+            justice,
+            hiromiHiguruma,
+            sniper,
+            archwitch,
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
@@ -462,6 +502,7 @@ namespace TheOtherRoles
                 if (Invert.invert.Any(x => x.PlayerId == p.PlayerId)) infos.Add(invert);
                 if (Chameleon.chameleon.Any(x => x.PlayerId == p.PlayerId)) infos.Add(chameleon);
                 if (p == Armored.armored) infos.Add(armored);
+                if (HeavenlyRestriction.isRestricted(p)) infos.Add(heavenlyRestriction);
                 if (Multitasker.multitasker.Any(x => x.PlayerId == p.PlayerId)) infos.Add(multitasker);
                 if (Diseased.diseased.Any(x => x.PlayerId == p.PlayerId)) infos.Add(diseased);
                 if (p == Radar.radar) infos.Add(radar);
@@ -488,8 +529,21 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.Deputy)) infos.Add(deputy);
             if (p.isRole(RoleId.Auxiliary)) infos.Add(auxiliary);
             if (p.isRole(RoleId.Gojo)) infos.Add(gojo);
+            if (p.isRole(RoleId.YutaOkkotsu)) infos.Add(yutaOkkotsu);
+            if (p.isRole(RoleId.KashimoHajime)) infos.Add(kashimoHajime);
+            if (p.isRole(RoleId.Ambusher)) infos.Add(ambusher);
             if (p.isRole(RoleId.Sukuna)) infos.Add(sukuna);
+            if (p.isRole(RoleId.ZeninNaoya)) infos.Add(zeninNaoya);
             if (p.isRole(RoleId.Martyr)) infos.Add(martyr);
+            if (p.isRole(RoleId.Kira)) infos.Add(kira);
+            if (p.isRole(RoleId.Zeus)) infos.Add(zeus);
+            if (p.isRole(RoleId.Painter)) infos.Add(painter);
+            if (p.isRole(RoleId.Aoi)) infos.Add(aoi);
+            if (p.isRole(RoleId.Itadori)) infos.Add(itadori);
+            if (p.isRole(RoleId.Justice)) infos.Add(justice);
+            if (p.isRole(RoleId.HiromiHiguruma)) infos.Add(hiromiHiguruma);
+            if (p.isRole(RoleId.Sniper)) infos.Add(sniper);
+            if (p.isRole(RoleId.Archwitch)) infos.Add(archwitch);
             if (p.isRole(RoleId.Lighter)) infos.Add(lighter);
             if (p.isRole(RoleId.Godfather)) infos.Add(godfather);
             if (p.isRole(RoleId.Mafioso)) infos.Add(mafioso);
@@ -774,7 +828,9 @@ namespace TheOtherRoles
                     //deathReasonString = $" - {Helpers.cs(Lawyer.color, "bad Lawyer")}";
                     //break;
                     case DeadPlayer.CustomDeathReason.Bomb:
-                        deathReasonString = string.Format(ModTranslation.getString("roleSummaryBombed"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName));
+                        deathReasonString = deadPlayer.killerIfExisting != null
+                            ? string.Format(ModTranslation.getString("roleSummaryBombed"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName))
+                            : ModTranslation.getString("roleSummarySuicide");
                         break;
                     case DeadPlayer.CustomDeathReason.Divined:
                         deathReasonString = string.Format(ModTranslation.getString("roleSummaryDivined"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName));
@@ -784,6 +840,9 @@ namespace TheOtherRoles
                         break;
                     case DeadPlayer.CustomDeathReason.Arson:
                         deathReasonString = string.Format(ModTranslation.getString("roleSummaryTorched"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName));
+                        break;
+                    case DeadPlayer.CustomDeathReason.ZeusStrike:
+                        deathReasonString = string.Format(ModTranslation.getString("roleSummaryZeusStruck"), Helpers.cs(killerColor, deadPlayer.killerIfExisting.Data.PlayerName));
                         break;
                 }
             }

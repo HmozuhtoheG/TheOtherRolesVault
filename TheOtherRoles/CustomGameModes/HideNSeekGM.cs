@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Hazel;
 using TheOtherRoles.Objects;
+using TheOtherRoles.Utilities;
 using UnityEngine;
 
 namespace TheOtherRoles.CustomGameModes {
@@ -20,6 +22,53 @@ namespace TheOtherRoles.CustomGameModes {
         public static bool canSabotage = false;
         public static float killCooldown = 10f;
         public static float hunterWaitingTime = 15f;
+
+        public static int botCount = 0;
+        public static float botPenalty = 15f;
+        public static float disguiseCooldown = 10f;
+
+        private static GameObject blackOverlay;
+
+        public static bool isFrozen() {
+            return isHideNSeekGM && isWaitingTimer;
+        }
+
+        public static List<PlayerControl> getHunted() {
+            List<PlayerControl> hunted = new(PlayerControl.AllPlayerControls.ToArray());
+            hunted.RemoveAll(x => x == null || x.Data == null || x.Data.Role.IsImpostor || x.isDummy);
+            return hunted;
+        }
+
+        public static void applyBlackScreen(bool on) {
+            var hud = FastDestroyableSingleton<HudManager>.Instance;
+            if (hud == null || hud.FullScreen == null) return;
+
+            if (!on) {
+                if (blackOverlay != null) {
+                    UnityEngine.Object.Destroy(blackOverlay);
+                    blackOverlay = null;
+                }
+                return;
+            }
+
+            if (blackOverlay != null) return;
+
+            var renderer = UnityEngine.Object.Instantiate(hud.FullScreen, hud.transform);
+            if (renderer == null) return;
+            blackOverlay = renderer.gameObject;
+            blackOverlay.SetActive(true);
+            blackOverlay.name = "HnSBlackScreen";
+            renderer.enabled = true;
+            renderer.color = new Color(0f, 0f, 0f, 1f);
+        }
+
+        public static void punishTimer(float amount) {
+            if (amount <= 0f) return;
+            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.ShareTimer, Hazel.SendOption.Reliable, -1);
+            writer.Write(amount);
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            RPCProcedure.shareTimer(amount);
+        }
         public static bool isHunter() {
             return isHideNSeekGM && PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.Data.Role.IsImpostor;
         }
@@ -52,6 +101,18 @@ namespace TheOtherRoles.CustomGameModes {
             canSabotage = CustomOptionHolder.hideNSeekCanSabotage.getBool();
             killCooldown = CustomOptionHolder.hideNSeekKillCooldown.getFloat();
             hunterWaitingTime = CustomOptionHolder.hideNSeekHunterWaiting.getFloat();
+
+            botCount = Mathf.RoundToInt(CustomOptionHolder.hideNSeekBotCount.getFloat());
+            botPenalty = CustomOptionHolder.hideNSeekBotPenalty.getFloat();
+            disguiseCooldown = CustomOptionHolder.hideNSeekDisguiseCooldown.getFloat();
+
+            applyBlackScreen(false);
+            HiderDisguise.Invalidate();
+            HiderDisguise.RestoreAll();
+            HiderInvisibility.clearAndReload();
+            HideNSeekBots.Clear();
+
+            HudManagerStartPatch.hiderInvisibilityUses = Mathf.RoundToInt(CustomOptionHolder.hideNSeekInvisCount.getFloat());
 
             Hunter.clearAndReload();
             Hunted.clearAndReload();

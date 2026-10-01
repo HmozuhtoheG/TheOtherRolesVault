@@ -41,6 +41,7 @@ public static class HelpMenu
         LastGameResult = 0x08,
         MyInfo = 0x10,
         Overview = 0x20,
+        Emotes = 0x40,
     }
 
     private static TextAttribute TabButtonAttr = new(TextAttribute.BoldAttr) { Size = new(1.15f, 0.26f) };
@@ -61,6 +62,7 @@ public static class HelpMenu
         new(HelpTab.Achievements, "helpAchievementsKey"),
         new(HelpTab.Overview, "helpOverviewKey"),
         new(HelpTab.Options, "helpOptionsKey"),
+        new(HelpTab.Emotes, "helpEmotesKey"),
         new(HelpTab.LastGameResult, "helpLastGameResultKey")
     ];
 
@@ -243,7 +245,7 @@ public static class HelpMenu
         inner = scrollView.Artifact;
         Reference<MetaContextOld.ScrollView.InnerScreen> innerRef = new();
 
-        screen.SetContext(scrollView, RoleHelpers.GetIllustration(roleInfo.roleId), out _);
+        screen.SetContext(scrollView, RoleHelpers.GetIllustration(roleInfo), out _);
         return screen;
     }
 
@@ -330,7 +332,7 @@ public static class HelpMenu
                 {
                     screen.SetContext(GetRoleContext(role), out _);
                     outsideScreen.ClearBackImage();
-                    outsideScreen.SetBackImage(RoleHelpers.GetIllustration(role.roleId), 0.2f);
+                    outsideScreen.SetBackImage(RoleHelpers.GetIllustration(role), 0.2f);
                 });
             }, RoleTitleAttrUnmasked)
             {
@@ -347,7 +349,7 @@ public static class HelpMenu
 
         widget.Append(new MetaContextOld.WrappedContext(scrollView));
 
-        backImage = RoleHelpers.GetIllustration(assignable.roleId);
+        backImage = RoleHelpers.GetIllustration(assignable);
 
         return widget;
     }
@@ -594,7 +596,7 @@ public static class HelpMenu
         context.Add(new TORGUIText(GUIAlignment.Left, gui.GetAttribute(AttributeAsset.OverlayTitle), new RawTextComponent(Helpers.cs(assignable.orgColor, assignable.name))));
         context.Add(new TORGUIText(GUIAlignment.Left, gui.GetAttribute(AttributeAsset.OverlayContent), new RawTextComponent(assignable.blurb)));
 
-        return new VerticalContextsHolder(GUIAlignment.Left, context) { BackImage = RoleHelpers.GetIllustration(assignable.roleId) };
+        return new VerticalContextsHolder(GUIAlignment.Left, context) { BackImage = RoleHelpers.GetIllustration(assignable) };
     }
 
     static public GUIContext GetAchievementContext(RoleInfo assignable)
@@ -639,7 +641,7 @@ public static class HelpMenu
     {
         var screen = MetaScreen.GenerateWindow(new(7.8f, HelpHeight + 0.6f), HudManager.Instance.transform, Vector3.zero, true, false, background: BackgroundSetting.Modern);
 
-        HelpTab validTabs = HelpTab.Achievements | HelpTab.Roles | HelpTab.Options | HelpTab.Overview;
+        HelpTab validTabs = HelpTab.Achievements | HelpTab.Roles | HelpTab.Options | HelpTab.Overview | HelpTab.Emotes;
         if (!(MapUtilities.CachedShipStatus == null || PlayerControl.LocalPlayer == null || HudManager.Instance == null || FastDestroyableSingleton<HudManager>.Instance.IsIntroDisplayed)) {
             validTabs |= HelpTab.MyInfo;
         }
@@ -740,9 +742,22 @@ public static class HelpMenu
                 { RoleId.EvilVoteEater, CustomOptionHolder.voteEaterSpawnRate },
                 { RoleId.PoliceCommissioner, CustomOptionHolder.policeCommissionerSpawnRate },
                 { RoleId.Gojo, CustomOptionHolder.gojoSpawnRate },
+                { RoleId.YutaOkkotsu, CustomOptionHolder.yutaSpawnRate },
+                { RoleId.KashimoHajime, CustomOptionHolder.kashimoSpawnRate },
+                { RoleId.Ambusher, CustomOptionHolder.ambusherSpawnRate },
                 { RoleId.Sukuna, CustomOptionHolder.sukunaSpawnRate },
+                { RoleId.ZeninNaoya, CustomOptionHolder.zeninNaoyaSpawnRate },
                 { RoleId.Martyr, CustomOptionHolder.martyrSpawnRate },
+                { RoleId.Kira, CustomOptionHolder.kiraSpawnRate },
                 { RoleId.Illusionist, CustomOptionHolder.illusionistSpawnRate },
+                { RoleId.Zeus, CustomOptionHolder.zeusSpawnRate },
+                { RoleId.Painter, CustomOptionHolder.painterSpawnRate },
+                { RoleId.Aoi, CustomOptionHolder.aoiSpawnRate },
+                { RoleId.Itadori, CustomOptionHolder.itadoriSpawnRate },
+                { RoleId.Justice, CustomOptionHolder.justiceSpawnRate },
+                { RoleId.HiromiHiguruma, CustomOptionHolder.hiromiSpawnRate },
+                { RoleId.Sniper, CustomOptionHolder.sniperSpawnRate },
+                { RoleId.Archwitch, CustomOptionHolder.archwitchSpawnRate },
                 { RoleId.Agnosia, CustomOptionHolder.agnosiaSpawnRate },
                 { RoleId.Veteran, CustomOptionHolder.veteranSpawnRate },
                 { RoleId.Sprinter, CustomOptionHolder.sprinterSpawnRate },
@@ -800,7 +815,9 @@ public static class HelpMenu
             ("akujoWin", Akujo.color, ["akujoWinCondHint"], CustomOptionHolder.akujoSpawnRate),
             ("foxWin", Fox.color, ["foxWinCondHint"], CustomOptionHolder.foxSpawnRate),
             ("gremlinWin", Gremlin.color, ["gremlinWinCondHint"], CustomOptionHolder.gremlinSpawnRate),
-            ("playerRoleWin", PlayerRole.color, ["playerRoleWinCondHint"], CustomOptionHolder.playerRoleSpawnRate)
+            ("playerRoleWin", PlayerRole.color, ["playerRoleWinCondHint"], CustomOptionHolder.playerRoleSpawnRate),
+            ("kiraWin", Kira.color, ["kiraWinCondHint"], CustomOptionHolder.kiraSpawnRate),
+            ("kashimoWin", KashimoHajime.color, ["kashimoWinCondHint"], CustomOptionHolder.kashimoSpawnRate)
         ];
     }
 
@@ -827,6 +844,9 @@ public static class HelpMenu
                 break;
             case HelpTab.Overview:
                 context.Append(ShowPreviewScreen());
+                break;
+            case HelpTab.Emotes:
+                context.Append(Emotes.EmoteHelpPage.Show());
                 break;
             case HelpTab.LastGameResult:
                 context.Append(GetLastGameContext());

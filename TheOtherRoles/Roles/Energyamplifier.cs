@@ -138,6 +138,8 @@ namespace TheOtherRoles.Roles
             if (currentEnergy < activationCost) return;
 
             currentEnergy -= activationCost;
+
+            _ = new StaticAchievementToken("energyAmplifier.common1");
             ActivateField.Invoke((player.PlayerId, fieldDuration));
         }
 

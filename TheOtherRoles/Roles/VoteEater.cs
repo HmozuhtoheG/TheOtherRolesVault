@@ -40,13 +40,14 @@ namespace TheOtherRoles.Roles
         public static List<byte> eatenTargetPlayerIds = [];
 
         private static int remainingUseCount = 2;
+        public static int eatenThisMeeting;
         public static int maxUses = 2;
         private static Sprite eatVoteSprite;
 
         private const float EatVoteSpritePixelsPerUnit = 258f;
         private const float EatVoteVisibleHeightRatio = 258f / 600f;
 
-        public static RemoteProcess<(byte voteEaterId, byte targetId)> EatVote = new("VoteEaterEatVote", (message, _) =>
+        public static RemoteProcess<(byte voteEaterId, byte targetId)> EatVote = new("VoteEaterEatVote", (message, __) =>
         {
             if (!MeetingHud.Instance) return;
             if (!isVoteEater(message.voteEaterId)) return;
@@ -57,6 +58,21 @@ namespace TheOtherRoles.Roles
 
             eatenTargetPlayerIds.Add(message.targetId);
             remainingUses(true);
+
+            if (message.voteEaterId != PlayerControl.LocalPlayer.PlayerId) return;
+
+            var local = PlayerControl.LocalPlayer;
+            if (local.isRole(RoleId.NiceVoteEater))
+            {
+                _ = new StaticAchievementToken("niceVoteEater.common1");
+                if (remainingUses() <= 0) _ = new StaticAchievementToken("niceVoteEater.challenge");
+            }
+            else if (local.isRole(RoleId.EvilVoteEater))
+            {
+                _ = new StaticAchievementToken("evilVoteEater.common1");
+                eatenThisMeeting++;
+                if (eatenThisMeeting >= 2) _ = new StaticAchievementToken("evilVoteEater.challenge");
+            }
         });
 
         public static Sprite getEatVoteSprite()
@@ -119,6 +135,7 @@ namespace TheOtherRoles.Roles
 
             remainingUseCount++;
             if (!isVoteEater(PlayerControl.LocalPlayer.PlayerId)) return;
+            if (PlayerControl.LocalPlayer.isRole(RoleId.NiceVoteEater)) _ = new StaticAchievementToken("niceVoteEater.another1");
 
             for (int i = 0; i < meetingHud.playerStates.Length; i++)
             {

@@ -14,7 +14,7 @@ namespace TheOtherRoles.Objects
         private static readonly Vector3 RightWheelOffset = new(0.69f, -0.22f, -0.01f);
         private static readonly Vector2 SeatOffset = new(0f, 0.08f);
         private const float FlipSpeed = 6f;
-        private const float MovementDeadzone = 0.0006f; // ignore jitter smaller than this so the car doesn't flip/spin while standing still
+        public const float MovementDeadzone = 0.0006f; // ignore jitter smaller than this so the car doesn't flip/spin while standing still
 
         private const int GearPipCount = 3;
         private const float GearPipSize = 0.09f;
@@ -28,7 +28,7 @@ namespace TheOtherRoles.Objects
             new(0.95f, 0.3f, 0.25f)
         };
 
-        private static Dictionary<Color, Sprite> gearPipSpriteCache = new();
+        private static Sprite gearPipSprite;
 
         // driver position only updates on FixedUpdate, so lerp toward it on every frame instead
         // of snapping - otherwise the car looks jerky above 50fps
@@ -71,12 +71,10 @@ namespace TheOtherRoles.Objects
             public PositionSmoother bodySmoother;
             public GameObject wheelLeft;
             public GameObject wheelRight;
-            public GameObject[] gearPips;
+            public SpriteRenderer[] gearPips;
             public int lastGear = -1;
-            public Vector3 lastPosition;
             public float targetScaleX = 1f;
             public float currentScaleX = 1f;
-            public bool hasLastPosition;
         }
 
         private static Dictionary<byte, CarVisual> cars = new();
@@ -97,40 +95,43 @@ namespace TheOtherRoles.Objects
             return wheelSprite;
         }
 
-        private static GameObject createWheel(Transform parent, Vector3 localOffset)
+        private static SpriteRenderer createChild(string name, Transform parent, Vector3 localOffset)
         {
-            var wheel = new GameObject("RacerCarWheel") { layer = 11 };
-            wheel.transform.SetParent(parent);
-            wheel.transform.localPosition = localOffset;
-            var wheelRenderer = wheel.AddComponent<SpriteRenderer>();
-            wheelRenderer.sprite = getCarWheelSprite();
-            return wheel;
+            var child = new GameObject(name) { layer = 11 };
+            child.transform.SetParent(parent);
+            child.transform.localPosition = localOffset;
+            return child.AddComponent<SpriteRenderer>();
         }
 
-        private static Sprite getGearPipSprite(Color color)
+        private static GameObject createWheel(Transform parent, Vector3 localOffset)
         {
-            if (gearPipSpriteCache.TryGetValue(color, out var cached) && cached != null) return cached;
+            var wheelRenderer = createChild("RacerCarWheel", parent, localOffset);
+            wheelRenderer.sprite = getCarWheelSprite();
+            return wheelRenderer.gameObject;
+        }
+
+        private static Sprite getGearPipSprite()
+        {
+            if (gearPipSprite) return gearPipSprite;
 
             var tex = new Texture2D(4, 4, TextureFormat.ARGB32, false);
             var pixels = new Color[16];
-            for (int i = 0; i < 16; i++) pixels[i] = color;
+            for (int i = 0; i < 16; i++) pixels[i] = Color.white;
             tex.SetPixels(pixels);
             tex.Apply();
 
-            var sprite = Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4f / GearPipSize);
-            return gearPipSpriteCache[color] = sprite;
+            gearPipSprite = Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4f / GearPipSize);
+            return gearPipSprite;
         }
 
-        private static GameObject createGearPip(Transform parent, int index)
+        private static SpriteRenderer createGearPip(Transform parent, int index)
         {
-            var pip = new GameObject("RacerCarGearPip") { layer = 11 };
-            pip.transform.SetParent(parent);
             float totalWidth = (GearPipCount - 1) * GearPipSpacing;
             float x = -totalWidth / 2f + index * GearPipSpacing;
-            pip.transform.localPosition = GearPipRowOffset + new Vector3(x, 0f, 0f);
-            var pipRenderer = pip.AddComponent<SpriteRenderer>();
-            pipRenderer.sprite = getGearPipSprite(GearPipOffColor);
-            return pip;
+            var pipRenderer = createChild("RacerCarGearPip", parent, GearPipRowOffset + new Vector3(x, 0f, 0f));
+            pipRenderer.sprite = getGearPipSprite();
+            pipRenderer.color = GearPipOffColor;
+            return pipRenderer;
         }
 
         private static Vector3 pivotPosition(Vector3 driverPosition, float scaleX)
@@ -152,7 +153,7 @@ namespace TheOtherRoles.Objects
 
             var bodySmoother = body.AddComponent<PositionSmoother>();
 
-            var gearPips = new GameObject[GearPipCount];
+            var gearPips = new SpriteRenderer[GearPipCount];
             for (int i = 0; i < GearPipCount; i++) gearPips[i] = createGearPip(body.transform, i);
 
             cars[ownerId] = new CarVisual
@@ -161,8 +162,7 @@ namespace TheOtherRoles.Objects
                 bodySmoother = bodySmoother,
                 wheelLeft = createWheel(body.transform, LeftWheelOffset),
                 wheelRight = createWheel(body.transform, RightWheelOffset),
-                gearPips = gearPips,
-                lastPosition = initialPosition
+                gearPips = gearPips
             };
         }
 
@@ -173,62 +173,62 @@ namespace TheOtherRoles.Objects
 
             for (int i = 0; i < car.gearPips.Length; i++)
             {
-                if (car.gearPips[i] == null) continue;
-                var pipRenderer = car.gearPips[i].GetComponent<SpriteRenderer>();
+                var pipRenderer = car.gearPips[i];
                 if (pipRenderer == null) continue;
-                pipRenderer.sprite = getGearPipSprite(i < gear ? GearPipOnColors[i] : GearPipOffColor);
+                pipRenderer.color = i < gear ? GearPipOnColors[i] : GearPipOffColor;
             }
         }
 
-        public static void UpdateVisual(byte ownerId, Vector3 driverPosition, int gear)
+        private static void updateWheels(CarVisual car, Vector3 delta)
+        {
+            if (delta.sqrMagnitude <= MovementDeadzone * MovementDeadzone) return;
+
+            float rotationDegrees;
+            if (Mathf.Abs(delta.x) >= Mathf.Abs(delta.y))
+            {
+                if (delta.x > 0f) car.targetScaleX = -1f;
+                else if (delta.x < 0f) car.targetScaleX = 1f;
+                rotationDegrees = -(Mathf.Abs(delta.x) / WheelCircumferenceUnits) * 360f;
+            }
+            else
+            {
+                rotationDegrees = (delta.magnitude / WheelCircumferenceUnits) * 360f;
+            }
+
+            if (car.wheelLeft != null) car.wheelLeft.transform.Rotate(0f, 0f, rotationDegrees);
+            if (car.wheelRight != null) car.wheelRight.transform.Rotate(0f, 0f, rotationDegrees);
+        }
+
+        private static void updateFlip(CarVisual car)
+        {
+            car.currentScaleX = Mathf.MoveTowards(car.currentScaleX, car.targetScaleX, FlipSpeed * Time.fixedDeltaTime);
+            car.body.transform.localScale = new Vector3(car.currentScaleX, 1f, 1f);
+        }
+
+        public static void UpdateVisual(byte ownerId, Vector3 driverPosition, Vector3 delta, int gear)
         {
             if (!cars.TryGetValue(ownerId, out var car) || car.body == null) return;
 
-            Vector3 delta = car.hasLastPosition ? driverPosition - car.lastPosition : Vector3.zero;
-            car.lastPosition = driverPosition;
-            car.hasLastPosition = true;
-
-            bool isMoving = delta.sqrMagnitude > MovementDeadzone * MovementDeadzone;
-            if (isMoving)
-            {
-                bool horizontalDominant = Mathf.Abs(delta.x) >= Mathf.Abs(delta.y);
-
-                float rotationDegrees;
-                if (horizontalDominant)
-                {
-                    if (delta.x > 0f) car.targetScaleX = -1f;
-                    else if (delta.x < 0f) car.targetScaleX = 1f;
-                    rotationDegrees = -(Mathf.Abs(delta.x) / WheelCircumferenceUnits) * 360f;
-                }
-                else
-                {
-                    rotationDegrees = (delta.magnitude / WheelCircumferenceUnits) * 360f;
-                }
-
-                if (car.wheelLeft != null) car.wheelLeft.transform.Rotate(0f, 0f, rotationDegrees);
-                if (car.wheelRight != null) car.wheelRight.transform.Rotate(0f, 0f, rotationDegrees);
-            }
-
-            car.currentScaleX = Mathf.MoveTowards(car.currentScaleX, car.targetScaleX, FlipSpeed * Time.fixedDeltaTime);
-            car.body.transform.localScale = new Vector3(car.currentScaleX, 1f, 1f);
-
-            Vector3 pivot = pivotPosition(driverPosition, car.currentScaleX);
-            car.bodySmoother.SetTarget(pivot);
-
+            updateWheels(car, delta);
+            updateFlip(car);
+            car.bodySmoother.SetTarget(pivotPosition(driverPosition, car.currentScaleX));
             updateGearPips(car, gear);
+        }
+
+        private static void destroyVisual(CarVisual car)
+        {
+            if (car != null && car.body != null) UnityEngine.Object.Destroy(car.body);
         }
 
         public static void DespawnVisual(byte ownerId)
         {
-            if (cars.TryGetValue(ownerId, out var car) && car.body != null)
-                UnityEngine.Object.Destroy(car.body);
+            if (cars.TryGetValue(ownerId, out var car)) destroyVisual(car);
             cars.Remove(ownerId);
         }
 
         public static void DespawnAll()
         {
-            foreach (var car in cars.Values)
-                if (car.body != null) UnityEngine.Object.Destroy(car.body);
+            foreach (var car in cars.Values) destroyVisual(car);
             cars.Clear();
         }
     }

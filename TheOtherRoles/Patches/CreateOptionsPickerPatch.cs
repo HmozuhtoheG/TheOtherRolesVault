@@ -42,6 +42,10 @@ namespace TheOtherRoles.Patches {
             {
                 __instance.GameModeText.text = ModTranslation.getString("torZombie");
             }
+            else if (TORMapOptions.gameMode == CustomGamemodes.HotPotato)
+            {
+                __instance.GameModeText.text = ModTranslation.getString("torHotPotato");
+            }
         }
     }
 

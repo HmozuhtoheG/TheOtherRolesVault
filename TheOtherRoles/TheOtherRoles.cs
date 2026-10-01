@@ -31,6 +31,20 @@ namespace TheOtherRoles
             Auxiliary.clearAndReload();
             Gojo.clearAndReload();
             Sukuna.clearAndReload();
+            ZeninNaoya.clearAndReload();
+            YutaOkkotsu.clearAndReload();
+            KashimoHajime.clearAndReload();
+            Ambusher.clearAndReload();
+            HeavenlyRestriction.clearAndReload();
+            Kira.clearAndReload();
+            Zeus.clearAndReload();
+            Painter.clearAndReload();
+            Aoi.clearAndReload();
+            Itadori.clearAndReload();
+            Justice.clearAndReload();
+            HiromiHiguruma.clearAndReload();
+            Sniper.clearAndReload();
+            Archwitch.clearAndReload();
             Lighter.clearAndReload();
             Godfather.clearAndReload();
             Mafioso.clearAndReload();
@@ -46,7 +60,6 @@ namespace TheOtherRoles
             Morphling.clearAndReload();
             Camouflager.clearAndReload();
             Hacker.clearAndReload();
-            Energyamplifier.clearAndReload();
             Energyamplifier.clearAndReload();
             Tracker.clearAndReload();
             Vampire.clearAndReload();
@@ -154,6 +167,7 @@ namespace TheOtherRoles
             HideNSeek.clearAndReload();
             FreePlayGM.clearAndReload();
             Zombie.clearAndReload();
+            HotPotato.clearAndReload();
         }
 
         public static class RoleData
@@ -265,7 +279,20 @@ namespace TheOtherRoles
                 { RoleId.PoliceCommissioner, typeof(RoleBase<PoliceCommissioner>) },
                 { RoleId.Auxiliary, typeof(RoleBase<Auxiliary>) },
                 { RoleId.Gojo, typeof(RoleBase<Gojo>) },
-                { RoleId.Sukuna, typeof(RoleBase<Sukuna>) }
+                { RoleId.Sukuna, typeof(RoleBase<Sukuna>) },
+                { RoleId.ZeninNaoya, typeof(RoleBase<ZeninNaoya>) },
+                { RoleId.YutaOkkotsu, typeof(RoleBase<YutaOkkotsu>) },
+                { RoleId.KashimoHajime, typeof(RoleBase<KashimoHajime>) },
+                { RoleId.Ambusher, typeof(RoleBase<Ambusher>) },
+                { RoleId.Kira, typeof(RoleBase<Kira>) },
+                { RoleId.Zeus, typeof(RoleBase<Zeus>) },
+                { RoleId.Painter, typeof(RoleBase<Painter>) },
+                { RoleId.Aoi, typeof(RoleBase<Aoi>) },
+                { RoleId.Itadori, typeof(RoleBase<Itadori>) },
+                { RoleId.Justice, typeof(RoleBase<Justice>) },
+                { RoleId.HiromiHiguruma, typeof(RoleBase<HiromiHiguruma>) },
+                { RoleId.Sniper, typeof(RoleBase<Sniper>) },
+                { RoleId.Archwitch, typeof(RoleBase<Archwitch>) }
             };
 
             public static IEnumerable<HelpSprite> GetHelp(RoleId roleId)
@@ -299,6 +326,8 @@ namespace TheOtherRoles
             }
 
             static public MetaContext.Image GetIllustration(RoleId roleId)  => GetImageInternal(roleId, "Illustration", "Assets/Sprites/Illustrations/", illustrationCache);
+
+            static public MetaContext.Image GetIllustration(RoleInfo info) => info == null ? null : (info.Illustration ?? GetIllustration(info.roleId));
 
             static public MetaContext.Image GetRoleIcon(RoleId roleId) => GetImageInternal(roleId, "RoleIcon", "Assets/Sprites/RoleIcons/", roleIconCache);
 
@@ -1140,10 +1169,24 @@ namespace TheOtherRoles
         }
     }
 
+    [TORRPCHolder]
     public static class Racer
     {
         public static List<PlayerControl> racer = [];
         public static Dictionary<byte, RacerCarData> cars = [];
+
+        public static RemoteProcess<(byte ownerId, byte driverId, byte passengerId)> SetOccupancyRPC = new("RacerSetOccupancy", (message, _) =>
+        {
+            if (!cars.TryGetValue(message.ownerId, out var car)) return;
+            car.driverId = message.driverId == byte.MaxValue ? null : message.driverId;
+            car.passengerId = message.passengerId == byte.MaxValue ? null : message.passengerId;
+        });
+
+        public static RemoteProcess<(byte ownerId, byte gear)> SetGearRPC = new("RacerSetGear", (message, _) =>
+        {
+            if (!cars.TryGetValue(message.ownerId, out var car)) return;
+            car.gear = message.gear;
+        });
 
         public static float speedBoost = 0.3f;
         public static int meetingsUntilDespawn = 3;
@@ -1163,10 +1206,23 @@ namespace TheOtherRoles
         public static float injurySlowFactor = 0.5f;
         public static float injuryDuration = 2f;
         private static Dictionary<byte, float> injuredUntil = new();
+        private static readonly List<byte> expiredInjuries = new();
 
         public static bool isInjured(PlayerControl player)
         {
             return player != null && injuredUntil.TryGetValue(player.PlayerId, out var until) && Time.time < until;
+        }
+
+        private static void purgeExpiredInjuries()
+        {
+            if (injuredUntil.Count == 0) return;
+
+            float now = Time.time;
+            expiredInjuries.Clear();
+            foreach (var injury in injuredUntil)
+                if (now >= injury.Value) expiredInjuries.Add(injury.Key);
+
+            foreach (byte id in expiredInjuries) injuredUntil.Remove(id);
         }
 
         public static Vector3 GetPassengerSeatPosition(RacerCarData car, PlayerControl driver)
@@ -1185,13 +1241,7 @@ namespace TheOtherRoles
 
         private static void setOccupancy(RacerCarData car, byte? driverId, byte? passengerId)
         {
-            car.driverId = driverId;
-            car.passengerId = passengerId;
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.RacerSetOccupancy, SendOption.Reliable, -1);
-            writer.Write(car.ownerId);
-            writer.Write(driverId ?? byte.MaxValue);
-            writer.Write(passengerId ?? byte.MaxValue);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            SetOccupancyRPC.Invoke((car.ownerId, driverId ?? byte.MaxValue, passengerId ?? byte.MaxValue));
         }
 
         public class RacerCarData
@@ -1315,12 +1365,8 @@ namespace TheOtherRoles
 
             if (newGear > car.gear)
                 car.currentSpeedFactor = Mathf.Min(GearCeilingFactor[newGear - 1], car.currentSpeedFactor + gearShiftKick);
-            car.gear = newGear;
 
-            MessageWriter writer = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte)CustomRPC.RacerSetGear, SendOption.Reliable, -1);
-            writer.Write(car.ownerId);
-            writer.Write((byte)newGear);
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
+            SetGearRPC.Invoke((car.ownerId, (byte)newGear));
         }
 
         public static void TransferDriver(PlayerControl currentDriver, PlayerControl target)
@@ -1363,8 +1409,10 @@ namespace TheOtherRoles
             }
         }
 
-        public static void update()
+        public static void carUpdate()
         {
+            purgeExpiredInjuries();
+
             foreach (var player in PlayerControl.AllPlayerControls)
             {
                 if (player == null || player.Data == null || player.Data.IsDead) continue;
@@ -1372,42 +1420,44 @@ namespace TheOtherRoles
                 var car = getCarByAnyOccupant(player);
                 if (car == null) continue;
 
-                if (car.passengerId == player.PlayerId)
-                {
-                    var driver = car.driverId != null ? Helpers.playerById(car.driverId.Value) : null;
-                    if (driver == null) continue;
-
-                    // Position is set from PlayerPhysicsFixedUpdate (Patches/PlayerControlPatch.cs),
-                    // not here, same as the driver's velocity boost below.
-                    fixOccupantPose(player, car.facingLeft);
-                }
-                else if (car.driverId == player.PlayerId)
-                {
-                    if (player == PlayerControl.LocalPlayer)
-                    {
-                        // Velocity multiplier itself is applied in PlayerPhysicsFixedUpdate
-                        // (Patches/PlayerControlPatch.cs), not here - PlayerPhysics.FixedUpdate
-                        // recomputes velocity after this runs, so it would get overwritten.
-                        float inputMagnitude = player.MyPhysics.body.velocity.magnitude;
-                        float gearCeiling = GearCeilingFactor[car.gear - 1];
-                        float target = inputMagnitude > 0.01f ? gearCeiling : 0f;
-                        car.currentSpeedFactor = Mathf.MoveTowards(car.currentSpeedFactor, target,
-                            (target > car.currentSpeedFactor ? accelerationRate : decelerationRate) * Time.fixedDeltaTime);
-                    }
-
-                    Vector3 pos = player.transform.position;
-                    if (car.hasLastPosition)
-                    {
-                        float deltaX = pos.x - car.lastPosition.x;
-                        if (Mathf.Abs(deltaX) > 0.0006f) car.facingLeft = deltaX < 0f;
-                    }
-                    car.lastPosition = pos;
-                    car.hasLastPosition = true;
-
-                    fixOccupantPose(player, car.facingLeft);
-                    RacerCar.UpdateVisual(car.ownerId, pos, car.gear);
-                }
+                if (car.passengerId == player.PlayerId) updatePassenger(player, car);
+                else if (car.driverId == player.PlayerId) updateDriver(player, car);
             }
+        }
+
+        private static void updatePassenger(PlayerControl player, RacerCarData car)
+        {
+            var driver = car.driverId != null ? Helpers.playerById(car.driverId.Value) : null;
+            if (driver == null) return;
+
+            // Position is set from PlayerPhysicsFixedUpdate (Patches/PlayerControlPatch.cs),
+            // not here, same as the driver's velocity boost below.
+            fixOccupantPose(player, car.facingLeft);
+        }
+
+        private static void updateDriver(PlayerControl player, RacerCarData car)
+        {
+            if (player == PlayerControl.LocalPlayer)
+            {
+                // Velocity multiplier itself is applied in PlayerPhysicsFixedUpdate
+                // (Patches/PlayerControlPatch.cs), not here - PlayerPhysics.FixedUpdate
+                // recomputes velocity after this runs, so it would get overwritten.
+                float velocityMagnitude = player.MyPhysics.body.velocity.magnitude;
+                float gearCeiling = GearCeilingFactor[car.gear - 1];
+                float target = velocityMagnitude > 0.01f ? gearCeiling : 0f;
+                car.currentSpeedFactor = Mathf.MoveTowards(car.currentSpeedFactor, target,
+                    (target > car.currentSpeedFactor ? accelerationRate : decelerationRate) * Time.fixedDeltaTime);
+            }
+
+            Vector3 pos = player.transform.position;
+            Vector3 delta = car.hasLastPosition ? pos - car.lastPosition : Vector3.zero;
+            if (car.hasLastPosition && Mathf.Abs(delta.x) > RacerCar.MovementDeadzone)
+                car.facingLeft = delta.x < 0f;
+            car.lastPosition = pos;
+            car.hasLastPosition = true;
+
+            fixOccupantPose(player, car.facingLeft);
+            RacerCar.UpdateVisual(car.ownerId, pos, delta, car.gear);
         }
 
         public static void clearAndReload()

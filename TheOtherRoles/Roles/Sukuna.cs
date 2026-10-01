@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using TheOtherRoles.MetaContext;
 using TheOtherRoles.Modules;
 using TheOtherRoles.Objects;
@@ -18,9 +19,39 @@ namespace TheOtherRoles.Roles
         public static float cooldown = 30f;
         public static float chantDuration = 8f;
 
+        public static bool hasDomain = true;
+        public static int domainMaxUses = 1;
+        public static float domainRadius = 5f;
+        public static float domainDuration = 20f;
+        public static int simpleDomainClicks = 5;
+        public static float simpleDomainTime = 6f;
+        public static int burnoutMeetings = 2;
+        public static float domainCastTime = 2f;
+
         public bool isChanting;
         public float chantTimer;
         public bool facingLeft;
+
+        public bool isDomainActive;
+        public bool isDomainCasting;
+        public float domainCastTimer;
+        public Vector2 domainCenter;
+        public float domainTimer;
+        public int domainUses;
+        public int burnout;
+
+        private static AudioSource domainMusicSource;
+        private static AudioClip[] domainSounds = new AudioClip[4];
+
+        public static readonly HashSet<byte> domainProtected = [];
+        public static int localSimpleClicks;
+        public static float localSimpleTimer;
+        private static float nextDomainSlash;
+        private static float nextDomainShake;
+        private static float lastWallLog;
+        private static readonly Dictionary<byte, bool> hiddenByDomain = [];
+        private static readonly Dictionary<byte, bool> domainSideLock = [];
+        private bool domainCleaned;
 
         private GameObject verseObject;
         private TMPro.TextMeshPro verseText;
@@ -29,6 +60,8 @@ namespace TheOtherRoles.Roles
 
         private static Sprite slashSprite;
         private static Sprite buttonSprite;
+        private static Sprite domainButtonSprite;
+        private static Sprite simpleDomainSprite;
 
         public Sukuna()
         {
@@ -36,6 +69,10 @@ namespace TheOtherRoles.Roles
             isChanting = false;
             chantTimer = 0f;
             facingLeft = false;
+            isDomainActive = false;
+            domainTimer = 0f;
+            domainUses = Mathf.RoundToInt(CustomOptionHolder.sukunaDomainUses.getFloat());
+            burnout = 0;
         }
 
         public static Sprite getButtonSprite()
@@ -52,6 +89,20 @@ namespace TheOtherRoles.Roles
             return slashSprite;
         }
 
+        public static Sprite getDomainButtonSprite()
+        {
+            if (domainButtonSprite) return domainButtonSprite;
+            domainButtonSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.BrainwashButton.png", 115f);
+            return domainButtonSprite;
+        }
+
+        public static Sprite getSimpleDomainButtonSprite()
+        {
+            if (simpleDomainSprite) return simpleDomainSprite;
+            simpleDomainSprite = Helpers.loadSpriteFromResources("TheOtherRoles.Resources.EnergyFieldButton.png", 115f);
+            return simpleDomainSprite;
+        }
+
         public static RemoteProcess<(byte sukunaId, float duration, bool facingLeft)> StartChant = new("SukunaStartChant", (message, _) =>
         {
             var sukuna = getRole(Helpers.playerById(message.sukunaId));
@@ -64,6 +115,363 @@ namespace TheOtherRoles.Roles
             sukuna.ShowVerse();
             SoundEffectsManager.playAtPosition("warlockCurse", sukuna.player.GetTruePosition(), 1f, 10f);
         });
+
+        private static AudioClip getDomainClip(int index)
+        {
+            if (index < 0 || index > 3) return null;
+            if (domainSounds[index] != null) return domainSounds[index];
+
+            string file = index == 0 ? "domain1" : index == 1 ? "domain2" : index == 2 ? "domainmusic" : "domainbroken";
+            domainSounds[index] = Helpers.loadWavFromResources($"TheOtherRoles.Resources.domain.{file}.wav", "TORV_Domain" + file);
+            return domainSounds[index];
+        }
+
+        public static void playDomainSound(int index)
+        {
+            if (ClientOption.GetValue(ClientOption.ClientOptionType.EnableSoundEffects) == 0) return;
+            if (!Constants.ShouldPlaySfx()) return;
+
+            var clip = getDomainClip(index);
+            if (clip != null) SoundManager.Instance.PlaySound(clip, false, 0.8f);
+        }
+
+        public static void playDomainMusic()
+        {
+            if (ClientOption.GetValue(ClientOption.ClientOptionType.EnableSoundEffects) == 0) return;
+            if (!Constants.ShouldPlaySfx()) return;
+
+            var clip = getDomainClip(2);
+            if (clip == null) return;
+
+            if (domainMusicSource == null)
+            {
+                var holder = new GameObject("SukunaDomainMusic");
+                UnityEngine.Object.DontDestroyOnLoad(holder);
+                domainMusicSource = holder.AddComponent<AudioSource>();
+                domainMusicSource.playOnAwake = false;
+                domainMusicSource.loop = true;
+                domainMusicSource.spatialBlend = 0f;
+                if (SoundManager.Instance != null && SoundManager.Instance.SfxChannel != null)
+                    domainMusicSource.outputAudioMixerGroup = SoundManager.Instance.SfxChannel;
+            }
+
+            domainMusicSource.Stop();
+            domainMusicSource.clip = clip;
+            domainMusicSource.Play();
+        }
+
+        public static void stopDomainMusic()
+        {
+            if (domainMusicSource != null && domainMusicSource.isPlaying) domainMusicSource.Stop();
+        }
+
+        public static RemoteProcess<(byte sukunaId, float castTime, byte soundIndex)> StartDomainCast = new("SukunaDomainCast", (message, _) =>
+        {
+            var sukuna = getRole(Helpers.playerById(message.sukunaId));
+            if (sukuna == null || sukuna.player == null) return;
+
+            sukuna.isDomainCasting = true;
+            sukuna.domainCastTimer = message.castTime;
+            playDomainSound(message.soundIndex);
+            SukunaDomain.BeginCast(message.sukunaId, message.castTime);
+        });
+
+        public static RemoteProcess<(byte sukunaId, Vector2 center)> StartDomain = new("SukunaStartDomain", (message, _) =>
+        {
+            var sukuna = getRole(Helpers.playerById(message.sukunaId));
+            if (sukuna == null || sukuna.player == null) return;
+
+            sukuna.isDomainActive = true;
+            sukuna.domainCenter = message.center;
+            sukuna.domainTimer = domainDuration;
+            domainProtected.Clear();
+            domainSideLock.Clear();
+            localSimpleClicks = 0;
+            localSimpleTimer = 0f;
+            nextDomainSlash = 0f;
+
+            SukunaDomain.Begin(message.center, domainRadius);
+            playDomainMusic();
+            if (PlayerControl.LocalPlayer == sukuna.player)
+                new CustomMessage(ModTranslation.getString("sukunaDomainStart"), 3f);
+        });
+
+        public static RemoteProcess<byte> EndDomain = RemotePrimitiveProcess.OfByte("SukunaEndDomain", (message, _) =>
+        {
+            var sukuna = getRole(Helpers.playerById(message));
+            if (sukuna == null || !sukuna.isDomainActive) return;
+
+            playDomainSound(3);
+            if (sukuna.player == PlayerControl.LocalPlayer) sukuna.startBurnout();
+            sukuna.isDomainActive = false;
+            sukuna.domainTimer = 0f;
+            cleanupDomain();
+        });
+
+        public static RemoteProcess<byte> SimpleDomainSuccess = RemotePrimitiveProcess.OfByte("SukunaSimpleDomain", (message, _) =>
+        {
+            domainProtected.Add(message);
+            if (PlayerControl.LocalPlayer != null && PlayerControl.LocalPlayer.PlayerId == message)
+            {
+                SoundEffectsManager.play("medicShield");
+                new CustomMessage(ModTranslation.getString("sukunaSimpleDomainOk"), 3f);
+            }
+        });
+
+        public static RemoteProcess<(byte sukunaId, byte playerId)> DomainExecute = new("SukunaDomainExecute", (message, _) =>
+        {
+            var sukuna = getRole(Helpers.playerById(message.sukunaId));
+            var victim = Helpers.playerById(message.playerId);
+            if (sukuna == null || sukuna.player == null || victim == null || victim.Data == null) return;
+            if (!sukuna.isDomainActive || domainProtected.Contains(victim.PlayerId)) return;
+
+            Helpers.forceMurderPlayer(sukuna.player, victim, false);
+        });
+
+        public bool canUseDomain => hasDomain && domainUses > 0 && !isDomainActive && !isDomainCasting
+            && player != null && player.Data != null && !player.Data.IsDead;
+
+        public bool canCloseDomain => isDomainActive && player == PlayerControl.LocalPlayer
+            && player.Data != null && !player.Data.IsDead;
+
+        public void CloseDomain()
+        {
+            if (!canCloseDomain) return;
+            EndDomain.Invoke(player.PlayerId);
+        }
+
+        public void TryStartDomain()
+        {
+            if (player != PlayerControl.LocalPlayer || !canUseDomain) return;
+            if (MeetingHud.Instance || ExileController.Instance) return;
+
+            byte soundIndex = (byte)UnityEngine.Random.Range(0, 2);
+            StartDomainCast.Invoke((player.PlayerId, domainCastTime, soundIndex));
+        }
+
+        public void startBurnout()
+        {
+            burnout = burnoutMeetings;
+            if (burnout > 0) new CustomMessage(string.Format(ModTranslation.getString("sukunaBurnout"), burnout), 4f);
+        }
+
+        public void registerSimpleDomainClick()
+        {
+            if (!isDomainActive) return;
+            var local = PlayerControl.LocalPlayer;
+            if (local == null || local == player || local.Data == null || local.Data.IsDead) return;
+            if (!isInsideDomain(local) || domainProtected.Contains(local.PlayerId)) return;
+
+            localSimpleClicks++;
+            if (localSimpleClicks < simpleDomainClicks) return;
+
+            SimpleDomainSuccess.Invoke(local.PlayerId);
+        }
+
+        public static void registerLocalSimpleDomainClick()
+        {
+            for (int i = 0; i < players.Count; i++)
+            {
+                var sukuna = players[i];
+                if (!sukuna.isDomainActive) continue;
+                if (sukuna.player == PlayerControl.LocalPlayer) continue;
+                sukuna.registerSimpleDomainClick();
+                return;
+            }
+        }
+
+        private bool isInsideDomain(PlayerControl target)
+        {
+            if (target == null || target.Data == null || target.Data.IsDead) return false;
+            return Vector2.Distance(target.transform.position, domainCenter) <= domainRadius;
+        }
+
+        public static bool localPlayerNeedsSimpleDomain()
+        {
+            var local = PlayerControl.LocalPlayer;
+            if (local == null || local.Data == null || local.Data.IsDead) return false;
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                var sukuna = players[i];
+                if (!sukuna.isDomainActive || sukuna.player == null || sukuna.player == local) continue;
+                if (sukuna.isInsideDomain(local) && !domainProtected.Contains(local.PlayerId)) return true;
+            }
+            return false;
+        }
+
+        private void updateDomain()
+        {
+            if (player == PlayerControl.LocalPlayer && HudManagerStartPatch.sukunaDomainUsesText != null)
+                HudManagerStartPatch.sukunaDomainUsesText.text = domainUses.ToString();
+
+            if (isDomainCasting)
+            {
+                if (player.Data.IsDead || MeetingHud.Instance || ExileController.Instance)
+                {
+                    isDomainCasting = false;
+                    domainCastTimer = 0f;
+                    if (player == PlayerControl.LocalPlayer) player.moveable = true;
+                }
+                else if (player == PlayerControl.LocalPlayer)
+                {
+                    player.moveable = false;
+                    if (player.MyPhysics != null && player.MyPhysics.body != null)
+                        player.MyPhysics.body.velocity = Vector2.zero;
+
+                    domainCastTimer -= Time.fixedDeltaTime;
+                    if (domainCastTimer <= 0f)
+                    {
+                        isDomainCasting = false;
+                        domainCastTimer = 0f;
+                        domainUses--;
+                        Vector2 center = player.GetTruePosition();
+                        player.moveable = true;
+                        StartDomain.Invoke((player.PlayerId, center));
+                    }
+                }
+            }
+
+            if (!isDomainActive)
+            {
+                if (!domainCleaned)
+                {
+                    domainCleaned = true;
+                    cleanupDomain();
+                }
+                return;
+            }
+            domainCleaned = false;
+
+            if (player == PlayerControl.LocalPlayer)
+            {
+                if (player.Data != null && !player.Data.IsDead
+                    && Vector2.Distance(player.transform.position, domainCenter) > domainRadius)
+                {
+                    EndDomain.Invoke(player.PlayerId);
+                    return;
+                }
+
+                domainTimer -= Time.fixedDeltaTime;
+                if (domainTimer <= 0f)
+                {
+                    EndDomain.Invoke(player.PlayerId);
+                    return;
+                }
+            }
+
+            var local = PlayerControl.LocalPlayer;
+            if (local == null || local.Data == null) return;
+
+            if (Time.time >= nextDomainSlash)
+            {
+                nextDomainSlash = Time.time + 0.1f;
+                foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+                {
+                    if (p == null || p.Data == null || p.Data.IsDead || p == player) continue;
+                    if (!isInsideDomain(p) || domainProtected.Contains(p.PlayerId)) continue;
+                    SukunaDomain.SpawnSlash(p);
+                }
+            }
+
+            updateDomainVision();
+
+            if (isInsideDomain(local) && Time.time >= nextDomainShake)
+            {
+                nextDomainShake = Time.time + 0.3f;
+                var follower = Camera.main != null ? Camera.main.GetComponent<FollowerCamera>() : null;
+                if (follower != null) follower.ShakeScreen(0.4f, 1.5f);
+            }
+
+            if (local != player && isInsideDomain(local))
+            {
+                if (domainProtected.Contains(local.PlayerId))
+                {
+                    localSimpleTimer = 0f;
+                }
+                else
+                {
+                    localSimpleTimer += Time.fixedDeltaTime;
+                    if (localSimpleTimer >= simpleDomainTime)
+                    {
+                        localSimpleTimer = 0f;
+                        DomainExecute.Invoke((player.PlayerId, local.PlayerId));
+                    }
+                }
+            }
+            else
+            {
+                localSimpleTimer = 0f;
+            }
+
+            if (HudManagerStartPatch.simpleDomainClicksText != null)
+                HudManagerStartPatch.simpleDomainClicksText.text = $"{localSimpleClicks}/{simpleDomainClicks}";
+
+            if (HudManagerStartPatch.simpleDomainButton != null)
+                HudManagerStartPatch.simpleDomainButton.buttonText = localSimpleTimer > 0f
+                    ? $"{ModTranslation.getString("simpleDomain")} {Mathf.Max(0f, simpleDomainTime - localSimpleTimer):F1}s"
+                    : ModTranslation.getString("simpleDomain");
+        }
+
+        private void updateDomainVision()
+        {
+            var local = PlayerControl.LocalPlayer;
+            if (local == null || local.Data == null) return;
+
+            if (local.Data.IsDead)
+            {
+                restoreDomainVisibility();
+                SukunaDomain.SetInsideView(false);
+                return;
+            }
+
+            bool localInside = isInsideDomain(local);
+
+            foreach (PlayerControl p in PlayerControl.AllPlayerControls)
+            {
+                if (p == null || p.Data == null || p == local) continue;
+                setPlayerVisibleByDomain(p, isInsideDomain(p) == localInside);
+            }
+
+            SukunaDomain.SetInsideView(localInside);
+        }
+
+        private static void setPlayerVisibleByDomain(PlayerControl target, bool visible)
+        {
+            if (hiddenByDomain.TryGetValue(target.PlayerId, out bool hidden) && hidden == !visible) return;
+            hiddenByDomain[target.PlayerId] = !visible;
+
+            if (visible && (Camouflager.camouflageTimer > 0f || Helpers.MushroomSabotageActive())) return;
+
+            target.cosmetics.SetBodyCosmeticsVisible(visible);
+            if (target.cosmetics.nameText != null) target.cosmetics.nameText.gameObject.SetActive(visible);
+        }
+
+        private static void restoreDomainVisibility()
+        {
+            foreach (var pair in hiddenByDomain.ToList())
+            {
+                if (!pair.Value) continue;
+                var target = Helpers.playerById(pair.Key);
+                if (target != null && target.cosmetics != null)
+                {
+                    target.cosmetics.SetBodyCosmeticsVisible(true);
+                    if (target.cosmetics.nameText != null) target.cosmetics.nameText.gameObject.SetActive(true);
+                }
+            }
+            hiddenByDomain.Clear();
+        }
+
+        private static void cleanupDomain()
+        {
+            stopDomainMusic();
+            restoreDomainVisibility();
+            domainProtected.Clear();
+            domainSideLock.Clear();
+            localSimpleClicks = 0;
+            localSimpleTimer = 0f;
+            SukunaDomain.Hide();
+        }
 
         public static RemoteProcess<(byte sukunaId, Vector2 origin, Vector2 direction)> ReleaseSlash = new("SukunaReleaseSlash", (message, _) =>
         {
@@ -156,6 +564,7 @@ namespace TheOtherRoles.Roles
         {
             if (player != PlayerControl.LocalPlayer || player.Data == null || player.Data.IsDead) return;
             if (isChanting || MeetingHud.Instance || ExileController.Instance) return;
+            if (burnout > 0 || isDomainActive) return;
 
             facingLeft = player.cosmetics != null && player.cosmetics.currentBodySprite != null && player.cosmetics.currentBodySprite.BodySprite != null
                 && player.cosmetics.currentBodySprite.BodySprite.flipX;
@@ -186,6 +595,10 @@ namespace TheOtherRoles.Roles
                 victims.Add(target);
             }
 
+            _ = new StaticAchievementToken("sukuna.common1");
+            if (victims.Count >= 2) _ = new StaticAchievementToken("sukuna.another1");
+            if (victims.Count >= 3) _ = new StaticAchievementToken("sukuna.challenge");
+
             ReleaseSlash.Invoke((player.PlayerId, origin, direction));
 
             foreach (var victim in victims)
@@ -195,6 +608,7 @@ namespace TheOtherRoles.Roles
         public override void FixedUpdate()
         {
             if (player == null || player.Data == null) return;
+            updateDomain();
             if (!isChanting) return;
 
             if (player.Data.IsDead || MeetingHud.Instance || ExileController.Instance)
@@ -231,31 +645,136 @@ namespace TheOtherRoles.Roles
             }
         }
 
+        public override void OnKill(PlayerControl target)
+        {
+            if (player != PlayerControl.LocalPlayer) return;
+            if (target == null) return;
+            if (!target.isRole(RoleId.Gojo)) return;
+
+            _ = new StaticAchievementToken("sukuna.ancientStrongest");
+        }
+
         public override void OnMeetingStart()
         {
             isChanting = false;
             HideVerse();
+            isDomainCasting = false;
+            domainCastTimer = 0f;
             if (player == PlayerControl.LocalPlayer) player.moveable = true;
+
+            if (isDomainActive)
+            {
+                playDomainSound(3);
+                isDomainActive = false;
+                domainTimer = 0f;
+                if (player == PlayerControl.LocalPlayer) startBurnout();
+                cleanupDomain();
+            }
+        }
+
+        public override void OnMeetingEnd(PlayerControl exiled = null)
+        {
+            if (player != PlayerControl.LocalPlayer || burnout <= 0) return;
+
+            burnout--;
+            if (burnout <= 0) new CustomMessage(ModTranslation.getString("sukunaBurnoutOver"), 4f);
         }
 
         public override void OnDeath(PlayerControl killer = null)
         {
             isChanting = false;
             HideVerse();
+            isDomainCasting = false;
+            domainCastTimer = 0f;
             if (player == PlayerControl.LocalPlayer) player.moveable = true;
+
+            if (isDomainActive)
+            {
+                playDomainSound(3);
+                isDomainActive = false;
+                domainTimer = 0f;
+                cleanupDomain();
+            }
         }
 
         static public IEnumerable<DocumentReplacement> GetReplacementPart()
         {
             yield return new("%CD%", Mathf.RoundToInt(cooldown).ToString());
             yield return new("%CHANT%", chantDuration.ToString("0.#"));
+            yield return new("%DUSES%", domainMaxUses.ToString());
+            yield return new("%DR%", domainRadius.ToString("0.##"));
+            yield return new("%DDUR%", domainDuration.ToString("0.#"));
+            yield return new("%SCLICKS%", simpleDomainClicks.ToString());
+            yield return new("%STIME%", simpleDomainTime.ToString("0.#"));
+            yield return new("%BURNOUT%", burnoutMeetings.ToString());
         }
 
         public static void clearAndReload()
         {
             cooldown = CustomOptionHolder.sukunaCooldown.getFloat();
             chantDuration = CustomOptionHolder.sukunaChantDuration.getFloat();
+            hasDomain = CustomOptionHolder.sukunaHasDomain.getBool();
+            domainMaxUses = Mathf.RoundToInt(CustomOptionHolder.sukunaDomainUses.getFloat());
+            domainRadius = CustomOptionHolder.sukunaDomainRadius.getFloat();
+            domainDuration = CustomOptionHolder.sukunaDomainDuration.getFloat();
+            simpleDomainClicks = Mathf.RoundToInt(CustomOptionHolder.sukunaDomainSimpleClicks.getFloat());
+            simpleDomainTime = CustomOptionHolder.sukunaDomainSimpleTime.getFloat();
+            burnoutMeetings = Mathf.RoundToInt(CustomOptionHolder.sukunaDomainBurnoutMeetings.getFloat());
+            domainCastTime = 2f;
+            TheOtherRolesPlugin.Logger.LogMessage($"[DOMAIN] options: has={hasDomain} uses={domainMaxUses} radius={domainRadius} duration={domainDuration} cast={domainCastTime} clicks={simpleDomainClicks} stime={simpleDomainTime} burnout={burnoutMeetings}");
+            stopDomainMusic();
+            cleanupDomain();
             players = [];
+        }
+
+        [HarmonyPatch(typeof(PlayerPhysics), nameof(PlayerPhysics.FixedUpdate))]
+        public static class SukunaDomainPhysicsPatch
+        {
+            public static void Postfix(PlayerPhysics __instance)
+            {
+                var target = __instance.myPlayer;
+                if (target == null || target.Data == null) return;
+                if (target.Data.IsDead)
+                {
+                    domainSideLock.Remove(target.PlayerId);
+                    return;
+                }
+                if (!__instance.AmOwner || !target.CanMove) return;
+                if (MeetingHud.Instance || ExileController.Instance || target.inVent) return;
+
+                for (int i = 0; i < players.Count; i++)
+                {
+                    var sukuna = players[i];
+                    if (!sukuna.isDomainActive || sukuna.player == null || sukuna.player == target) continue;
+
+                    Vector2 selfPos = __instance.body.position;
+                    Vector2 delta = selfPos - sukuna.domainCenter;
+                    float distance = delta.magnitude;
+                    if (distance <= 0.001f) continue;
+
+                    if (!domainSideLock.TryGetValue(target.PlayerId, out bool lockedInside))
+                    {
+                        lockedInside = distance < domainRadius;
+                        domainSideLock[target.PlayerId] = lockedInside;
+                    }
+
+                    float clamped = lockedInside
+                        ? Mathf.Min(distance, domainRadius - 0.15f)
+                        : Mathf.Max(distance, domainRadius + 0.15f);
+                    if (Mathf.Abs(clamped - distance) < 0.001f) continue;
+
+                    Vector2 safePosition = sukuna.domainCenter + delta / distance * clamped;
+                    __instance.body.velocity = Vector2.zero;
+                    __instance.body.position = safePosition;
+                    __instance.transform.position = safePosition;
+
+                    if (Time.time - lastWallLog > 2f)
+                    {
+                        lastWallLog = Time.time;
+                        TheOtherRolesPlugin.Logger.LogMessage($"[DOMAIN] wall clamped player {target.PlayerId} dist {distance:0.##} -> {clamped:0.##} inside={lockedInside} (radius {domainRadius:0.##})");
+                    }
+                }
+            }
         }
     }
 }

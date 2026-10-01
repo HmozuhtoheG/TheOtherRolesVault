@@ -22,7 +22,7 @@ namespace TheOtherRoles.Patches
         {
             SpoilerAfterDeath,
             ShowRoleSummary,
-            PlayLobbyMusic,
+            HostMusic,
             ShowLighterDarker,
             EnableSoundEffects,
             ShowChatNotification,
@@ -73,23 +73,7 @@ namespace TheOtherRoles.Patches
 #endif
             _ = new ClientOption(ClientOptionType.SpoilerAfterDeath, "spoilerAfterDeath", simpleSwitch, 1);
             _ = new ClientOption(ClientOptionType.ShowRoleSummary, "showRoleSummaryButton", simpleSwitch, 1);
-            _ = new ClientOption(ClientOptionType.PlayLobbyMusic, "playLobbyMusic", simpleSwitch, 1)
-            {
-                OnValueChanged = () =>
-                {
-                    if (!LobbyBehaviour.Instance) return;
-                    bool playMusic = AllOptions[ClientOptionType.PlayLobbyMusic].Value == 1;
-
-                    if (playMusic)
-                    {
-                        SoundManager.Instance.CrossFadeSound("MapTheme", LobbyBehaviour.Instance.MapTheme, 0.5f, 1.5f);
-                    }
-                    else
-                    {
-                        SoundManager.Instance.CrossFadeSound("MapTheme", null, 0.5f, 1.5f);
-                    }
-                }
-            };
+            _ = new ClientOption(ClientOptionType.HostMusic, "hostMusic", simpleSwitch, 1);
             _ = new ClientOption(ClientOptionType.ShowLighterDarker, "showLighterDarker", simpleSwitch, 0);
             _ = new ClientOption(ClientOptionType.EnableSoundEffects, "enableSoundEffects", simpleSwitch, 1);
             _ = new ClientOption(ClientOptionType.VeteranCounterSound, "veteranCounterSound", simpleSwitch, 1);
@@ -157,15 +141,20 @@ namespace TheOtherRoles.Patches
 
             SetTORContext();
 
+            TabGroup replacedTab = tabs[^1];
             tabs[^1] = Object.Instantiate(tabs[1], null);
             var torButton = tabs[^1];
             torButton.gameObject.name = "TORButton";
             torButton.transform.SetParent(tabs[0].transform.parent);
             torButton.transform.localScale = new Vector3(1f, 1f, 1f);
             torButton.Content = torTab;
-            var textObj = torButton.transform.FindChild("Text_TMP").gameObject;
-            textObj.GetComponent<TextTranslatorTMP>().enabled = false;
-            textObj.GetComponent<TMPro.TMP_Text>().text = "TORV";
+            if (replacedTab != null) replacedTab.gameObject.SetActive(false);
+            var textTransform = torButton.transform.FindChild("Text_TMP");
+            if (textTransform != null)
+            {
+                textTransform.GetComponent<TextTranslatorTMP>().enabled = false;
+                textTransform.GetComponent<TMPro.TMP_Text>().text = "TORV";
+            }
 
             passiveButton = torButton.gameObject.GetComponent<PassiveButton>();
             passiveButton.OnClick = new UnityEngine.UI.Button.ButtonClickedEvent();

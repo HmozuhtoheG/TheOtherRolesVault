@@ -44,7 +44,8 @@ namespace TheOtherRoles
         Guesser,
         HideNSeek,
         FreePlay,
-        Zombie
+        Zombie,
+        HotPotato
     }
 
     public static class Direction
@@ -654,6 +655,8 @@ namespace TheOtherRoles
             6, 6, 6, 6
             ];
 
+        public static readonly string[] OptionSchemaVersions = ["V07", "V08", "V09", "V10", "V11", "V12"];
+
         static public int[] Sequential(int length)
         {
             var array = new int[length];
@@ -732,6 +735,54 @@ namespace TheOtherRoles
             image.sprite = sprite;
             image.raycastTarget = false;
             return image;
+        }
+
+        public static Sprite ToSprite(Texture2D tex) => Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
+
+        public static Texture2D NewTexture(int size)
+        {
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+            tex.wrapMode = TextureWrapMode.Clamp;
+            tex.filterMode = FilterMode.Bilinear;
+            return tex;
+        }
+
+        public static Texture2D GenerateRadialTexture(int size, float innerRatio, float? sliceAngleDeg)
+        {
+            var tex = NewTexture(size);
+            float r = size / 2f;
+            float innerR = r * innerRatio;
+            float half = sliceAngleDeg.HasValue ? sliceAngleDeg.Value * 0.5f : 0f;
+            const float feather = 2.5f;
+            var pixels = new Color32[size * size];
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dx = x + 0.5f - r;
+                    float dy = y + 0.5f - r;
+                    float d = Mathf.Sqrt(dx * dx + dy * dy);
+
+                    bool inSlice = true;
+                    if (sliceAngleDeg.HasValue)
+                    {
+                        float angle = Mathf.Atan2(dx, dy) * Mathf.Rad2Deg;
+                        inSlice = Mathf.Abs(Mathf.DeltaAngle(0f, angle)) <= half;
+                    }
+
+                    float a = 0f;
+                    if (d <= r && inSlice)
+                    {
+                        a = 1f;
+                        if (d > r - feather) a *= Mathf.Clamp01((r - d) / feather);
+                        if (innerRatio > 0f && d < innerR + feather) a *= Mathf.Clamp01((d - innerR) / feather);
+                    }
+                    pixels[y * size + x] = new Color(1f, 1f, 1f, a);
+                }
+            }
+            tex.SetPixels32(pixels);
+            tex.Apply();
+            return tex;
         }
 
         public static Vector3 convertPos(int index, int arrangeType, (int x, int y)[] arrangement, Vector3 origin, Vector3[] originOffset, Vector3 contentsOffset, float[] scale, (float x, float y)[] contentAreaMultiplier)
@@ -1058,6 +1109,7 @@ namespace TheOtherRoles
             if (player.isRole(RoleId.SerialKiller)) return SerialKiller.killCooldown;
             if (player.isRole(RoleId.SchrodingersCat)) return SchrodingersCat.killCooldown;
             if (player.isRole(RoleId.PlayerRole)) return PlayerRole.getCooldownOf(player);
+            if (player.isRole(RoleId.Sniper)) return Sniper.cooldown;
             return GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
         }
 
@@ -2039,6 +2091,7 @@ namespace TheOtherRoles
         }
 
         public static bool roleCanUseSabotage(this PlayerControl player) {
+            if (HotPotato.isHotPotatoGM) return false;
             bool roleCouldUse = false;
             if (Madmate.madmate.Any(x => x.PlayerId == player?.PlayerId) && Madmate.canSabotage)
                 roleCouldUse = true;
@@ -2055,6 +2108,7 @@ namespace TheOtherRoles
 
         public static bool roleCanUseVents(this PlayerControl player) {
             if (Agnosia.madnessActive) return false;
+            if (HotPotato.isHotPotatoGM) return false;
             bool roleCouldUse = false;
             if (player.isRole(RoleId.Engineer))
                 roleCouldUse = true;
@@ -2154,6 +2208,14 @@ namespace TheOtherRoles
             if (Energyamplifier.HasTemporaryShield(target)) //&& Medic.IsShielded(target))
             {
                 SoundEffectsManager.play("fail");
+
+                var amplifier = Energyamplifier.local;
+                if (amplifier != null && target != PlayerControl.LocalPlayer && amplifier.isFieldActive)
+                {
+                    _ = new StaticAchievementToken("energyAmplifier.another1");
+                    _ = new StaticAchievementToken("energyAmplifier.challenge");
+                }
+
                 return MurderAttemptResult.SuppressKill;
             }
 
@@ -2338,6 +2400,7 @@ namespace TheOtherRoles
         public static bool checkSuspendAction(PlayerControl player, PlayerControl target)
         {
             if (player == null || target == null) return false;
+            if (player != target && Painter.isInIllusion(target)) return true;
             if (player != target && Gojo.isInfinityProtected(target)) return true;
             if (Veteran.players.Any(x => x.player == target && x.alertActive))
             {
