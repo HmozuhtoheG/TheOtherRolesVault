@@ -135,6 +135,7 @@ namespace TheOtherRoles
         public static CustomButton yutaStopButton;
         public static CustomButton yutaSilenceButton;
         public static CustomButton ambusherButton;
+        public static CustomButton strongmanGrabButton;
         public static CustomButton kashimoKillButton;
         public static CustomButton kashimoChargeButton;
         public static CustomButton kashimoAmberButton;
@@ -274,6 +275,7 @@ namespace TheOtherRoles
             yutaStopButton.MaxTimer = YutaOkkotsu.cooldown;
             yutaSilenceButton.MaxTimer = YutaOkkotsu.cooldown;
             ambusherButton.MaxTimer = Ambusher.cooldown;
+            strongmanGrabButton.MaxTimer = Strongman.cooldown;
             kashimoKillButton.MaxTimer = KashimoHajime.killCooldown;
             kashimoChargeButton.MaxTimer = KashimoHajime.chargeCooldown;
             kashimoAmberButton.MaxTimer = 0f;
@@ -5115,6 +5117,32 @@ namespace TheOtherRoles
                 __instance,
                 KeyCode.F,
                 buttonText: ModTranslation.getString("ambusherTrapText"),
+                abilityTexture: CustomButton.ButtonLabelType.KillButton
+            );
+
+            strongmanGrabButton = new CustomButton(
+                () =>
+                {
+                    var role = Strongman.local;
+                    var target = HudManager.Instance.KillButton.currentTarget;
+                    if (role == null || target == null) return;
+                    role.GrabTarget(target);
+                    strongmanGrabButton.Timer = strongmanGrabButton.MaxTimer;
+                },
+                () => { return PlayerControl.LocalPlayer.isRole(RoleId.Strongman) && !PlayerControl.LocalPlayer.Data.IsDead; },
+                () =>
+                {
+                    var role = Strongman.local;
+                    return role != null && role.heldId == byte.MaxValue
+                        && HudManager.Instance.KillButton.currentTarget != null
+                        && PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance && !ExileController.Instance;
+                },
+                () => { strongmanGrabButton.MaxTimer = Strongman.cooldown; strongmanGrabButton.Timer = strongmanGrabButton.MaxTimer; },
+                Strongman.getGrabButtonSprite(),
+                CustomButton.ButtonPositions.upperRowLeft,
+                __instance,
+                KeyCode.F,
+                buttonText: ModTranslation.getString("strongmanGrabText"),
                 abilityTexture: CustomButton.ButtonLabelType.KillButton
             );
 

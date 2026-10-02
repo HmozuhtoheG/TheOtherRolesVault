@@ -36,6 +36,7 @@ namespace TheOtherRoles
             KashimoHajime.clearAndReload();
             Ambusher.clearAndReload();
             HeavenlyRestriction.clearAndReload();
+            Strongman.clearAndReload();
             Kira.clearAndReload();
             Zeus.clearAndReload();
             Painter.clearAndReload();
@@ -284,6 +285,7 @@ namespace TheOtherRoles
                 { RoleId.YutaOkkotsu, typeof(RoleBase<YutaOkkotsu>) },
                 { RoleId.KashimoHajime, typeof(RoleBase<KashimoHajime>) },
                 { RoleId.Ambusher, typeof(RoleBase<Ambusher>) },
+                { RoleId.Strongman, typeof(RoleBase<Strongman>) },
                 { RoleId.Kira, typeof(RoleBase<Kira>) },
                 { RoleId.Zeus, typeof(RoleBase<Zeus>) },
                 { RoleId.Painter, typeof(RoleBase<Painter>) },

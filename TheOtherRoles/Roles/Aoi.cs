@@ -70,7 +70,7 @@ namespace TheOtherRoles.Roles
             clapSource.PlayOneShot(clip, 0.8f);
         }
 
-        public static RemoteProcess<(byte actorId, byte targetId)> UnjustGame = new("AoiUnjustGame", (message, __) =>
+        public static RemoteProcess<(byte actorId, byte targetId, float actorX, float actorY, float targetX, float targetY)> UnjustGame = new("AoiUnjustGame", (message, __) =>
         {
             playClap();
 
@@ -78,11 +78,11 @@ namespace TheOtherRoles.Roles
             var target = Helpers.playerById(message.targetId);
             if (actor == null || target == null || actor == target) return;
 
-            var actorPosition = actor.transform.position;
-            var targetPosition = target.transform.position;
+            actor.MyPhysics.ResetMoveState();
+            target.MyPhysics.ResetMoveState();
 
-            if (actor.AmOwner) actor.NetTransform.SnapTo(targetPosition);
-            if (target.AmOwner) target.NetTransform.SnapTo(actorPosition);
+            actor.NetTransform.SnapTo(new Vector2(message.targetX, message.targetY));
+            target.NetTransform.SnapTo(new Vector2(message.actorX, message.actorY));
 
             if (actor == PlayerControl.LocalPlayer)
             {
@@ -108,7 +108,9 @@ namespace TheOtherRoles.Roles
             if (target == null) return;
 
             usesLeft--;
-            UnjustGame.Invoke((player.PlayerId, target.PlayerId));
+            var actorPos = player.transform.position;
+            var targetPos = target.transform.position;
+            UnjustGame.Invoke((player.PlayerId, target.PlayerId, actorPos.x, actorPos.y, targetPos.x, targetPos.y));
 
             _ = new StaticAchievementToken("aoi.common1");
 

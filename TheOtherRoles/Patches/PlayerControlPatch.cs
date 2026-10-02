@@ -182,7 +182,8 @@ namespace TheOtherRoles.Patches {
 
         static void impostorSetTarget() {
             if (!PlayerControl.LocalPlayer.Data.Role.IsImpostor || (!PlayerControl.LocalPlayer.CanMove && !(PlayerControl.LocalPlayer.isRole(RoleId.Trickster) && Trickster.isInTricksterVent)) ||
-                PlayerControl.LocalPlayer.Data.IsDead || (PlayerControl.LocalPlayer.isRole(RoleId.Undertaker) && Undertaker.DraggedBody != null)) { // !isImpostor || !canMove || isDead
+                PlayerControl.LocalPlayer.Data.IsDead || (PlayerControl.LocalPlayer.isRole(RoleId.Undertaker) && Undertaker.DraggedBody != null) ||
+                (PlayerControl.LocalPlayer.isRole(RoleId.Strongman) && Strongman.local?.heldId != byte.MaxValue)) { // !isImpostor || !canMove || isDead
                 FastDestroyableSingleton<HudManager>.Instance.KillButton.SetTarget(null);
                 return;
             }

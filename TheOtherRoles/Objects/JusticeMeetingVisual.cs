@@ -220,7 +220,9 @@ namespace TheOtherRoles.Objects
             introRoot = null;
 
 
-            onStarted?.Invoke();
+            BuildBackground();
+            SpawnSide(meeting, a, new Vector3(-2f, 0f, 0f), "JusticeHolderLeft.png", 0, photoA);
+            SpawnSide(meeting, b, new Vector3(2f, 0f, 0f), "JusticeHolderRight.png", 1, photoB);
 
             if (meeting.TimerText != null) meeting.TimerText.gameObject.SetActive(true);
 
@@ -230,9 +232,7 @@ namespace TheOtherRoles.Objects
                 meeting.TitleText.text = ModTranslation.getString("justiceMeetingTitle");
             }
 
-            BuildBackground();
-            SpawnSide(meeting, a, new Vector3(-2f, 0f, 0f), "JusticeHolderLeft.png", 0, photoA);
-            SpawnSide(meeting, b, new Vector3(2f, 0f, 0f), "JusticeHolderRight.png", 1, photoB);
+            onStarted?.Invoke();
         }
 
         private static IEnumerator CoMeetingSound()

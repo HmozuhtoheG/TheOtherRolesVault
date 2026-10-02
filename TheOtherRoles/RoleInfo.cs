@@ -49,6 +49,7 @@ namespace TheOtherRoles
         public static RoleInfo yutaOkkotsu = new("yutaOkkotsu", YutaOkkotsu.color, RoleId.YutaOkkotsu);
         public static RoleInfo kashimoHajime = new("kashimoHajime", KashimoHajime.color, RoleId.KashimoHajime, true);
         public static RoleInfo ambusher = new("ambusher", Ambusher.color, RoleId.Ambusher);
+        public static RoleInfo strongman = new("strongman", Palette.ImpostorRed, RoleId.Strongman);
         public static RoleInfo sukuna = new("sukuna", Palette.ImpostorRed, RoleId.Sukuna);
         public static RoleInfo zeninNaoya = new("zeninNaoya", Palette.ImpostorRed, RoleId.ZeninNaoya);
         public static RoleInfo kira = new("kira", Kira.color, RoleId.Kira, true);
@@ -214,7 +215,8 @@ namespace TheOtherRoles
             justice,
             hiromiHiguruma,
             sniper,
-            archwitch
+            archwitch,
+            strongman
         ];
 
         public static List<RoleInfo> Trick =
@@ -480,11 +482,12 @@ namespace TheOtherRoles
             hiromiHiguruma,
             sniper,
             archwitch,
+            strongman,
         };
 
         public static List<RoleInfo> getRoleInfoForPlayer(PlayerControl p, bool showModifier = true, bool includeHidden = false, RoleId[] excludeRoles = null) {
             List<RoleInfo> infos = new();
-            if (p == null) return infos;
+            if (p == null || p.Data == null || p.Data.Role == null) return infos;
 
             // Modifier
             if (showModifier) {
@@ -544,6 +547,7 @@ namespace TheOtherRoles
             if (p.isRole(RoleId.HiromiHiguruma)) infos.Add(hiromiHiguruma);
             if (p.isRole(RoleId.Sniper)) infos.Add(sniper);
             if (p.isRole(RoleId.Archwitch)) infos.Add(archwitch);
+            if (p.isRole(RoleId.Strongman)) infos.Add(strongman);
             if (p.isRole(RoleId.Lighter)) infos.Add(lighter);
             if (p.isRole(RoleId.Godfather)) infos.Add(godfather);
             if (p.isRole(RoleId.Mafioso)) infos.Add(mafioso);

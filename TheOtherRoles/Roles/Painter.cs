@@ -237,10 +237,9 @@ namespace TheOtherRoles.Roles
 
         private static void SetVisible(PlayerControl target, bool visible)
         {
+            if (visible && (Camouflager.camouflageTimer > 0f || Helpers.MushroomSabotageActive())) return;
             if (hiddenByIllusion.TryGetValue(target.PlayerId, out bool hidden) && hidden == !visible) return;
             hiddenByIllusion[target.PlayerId] = !visible;
-
-            if (visible && (Camouflager.camouflageTimer > 0f || Helpers.MushroomSabotageActive())) return;
 
             try
             {
@@ -333,7 +332,7 @@ namespace TheOtherRoles.Roles
             illusion.Clear();
             painted.Clear();
             hiddenByIllusion.Clear();
-            illusionOverlay = null;
+            ApplyOverlay(false);
             CloseTaskScreen();
             destroyUi();
             players = [];

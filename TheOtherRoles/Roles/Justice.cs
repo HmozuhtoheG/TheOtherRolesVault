@@ -101,7 +101,6 @@ namespace TheOtherRoles.Roles
             if (meeting.SkipVoteButton != null)
             {
                 meeting.SkipVoteButton.ClearButtons();
-                meeting.SkipVoteButton.UnsetVote();
                 meeting.SkipVoteButton.VoteComplete = false;
             }
 

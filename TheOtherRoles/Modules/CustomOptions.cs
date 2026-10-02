@@ -637,7 +637,9 @@ namespace TheOtherRoles {
         public static void drawTab(LobbyViewSettingsPane __instance, CustomOptionType optionType)
         {
 
-            var relevantOptions = options.Where(x => x.type == optionType || x.type == CustomOption.CustomOptionType.Guesser && optionType == CustomOptionType.General).ToList();
+            var relevantOptions = options.Where(x => (x.type == optionType || x.type == CustomOption.CustomOptionType.Guesser && optionType == CustomOptionType.General)
+                && (x as CustomRoleOption)?.roleEnabled != false
+                && (x.parent as CustomRoleOption)?.roleEnabled != false).ToList();
 
             if ((int)optionType == 99)
             {
@@ -649,6 +651,7 @@ namespace TheOtherRoles {
                 relevantOptions.AddRange(options.Where(x => x.type == CustomOptionType.Modifier && x.isHeader));
                 foreach (var option in options)
                 {
+                    if (option.parent is CustomRoleOption parentRole && !parentRole.roleEnabled) continue;
                     if (option.parent != null && option.parent.getSelection() > 0)
                     {
                         if (option.id == 103) //Deputy
