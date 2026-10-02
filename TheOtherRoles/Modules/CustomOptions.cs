@@ -890,7 +890,6 @@ namespace TheOtherRoles {
             if (__instance.gameObject.name == "GAME SETTINGS TAB")
                 adaptTaskCount(__instance);
 
-            GameOptionsMenuStartPatch.InvalidateVisibleSignatures();
             GameOptionsMenuStartPatch.MarkAllTabsDirty();
         }
 
@@ -1308,9 +1307,6 @@ namespace TheOtherRoles {
             currentGOMs.Clear();
             currentTabTypes = new();
             currentTabsDirty = new();
-            lastVisibleSignatures.Clear();
-            spawnedHeaders.Clear();
-            spawnedRows.Clear();
             activeTabIndex = -1;
             headerTabButtons.ForEach(x => { if (x != null) x?.Destroy(); });
             headerTabButtons = new();
@@ -1396,58 +1392,6 @@ namespace TheOtherRoles {
             }));
         }
 
-        private static readonly Dictionary<CustomOption, CategoryHeaderMasked> spawnedHeaders = new();
-        private static readonly Dictionary<CustomOption, OptionBehaviour> spawnedRows = new();
-
-        private static CategoryHeaderMasked SpawnHeader(GameOptionsMenu menu, CustomOption option)
-        {
-            if (spawnedHeaders.TryGetValue(option, out var cached) && cached != null) return cached;
-
-            var header = UnityEngine.Object.Instantiate<CategoryHeaderMasked>(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
-            header.SetHeader(StringNames.ImpostorsCategory, 20);
-            header.Title.text = option.heading != "" ? option.getHeading() : option.getName();
-            header.transform.localScale = Vector3.one * 0.63f;
-            header.transform.GetChild(0).GetComponent<SpriteRenderer>().color = option.getColor();
-            header.transform.GetChild(1).GetComponent<SpriteRenderer>().color = option.getColor();
-            spawnedHeaders[option] = header;
-            return header;
-        }
-
-        private static OptionBehaviour SpawnRow(GameOptionsMenu menu, CustomOption option)
-        {
-            if (spawnedRows.TryGetValue(option, out var cached) && cached != null) return cached;
-
-            OptionBehaviour optionBehaviour = UnityEngine.Object.Instantiate<StringOption>(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
-            optionBehaviour.SetClickMask(menu.ButtonClickMask);
-
-            // "SetUpFromData"
-            SpriteRenderer[] componentsInChildren = optionBehaviour.GetComponentsInChildren<SpriteRenderer>(true);
-            for (int i = 0; i < componentsInChildren.Length; i++)
-            {
-                componentsInChildren[i].material.SetInt(PlayerMaterial.MaskLayer, 20);
-            }
-            foreach (TextMeshPro textMeshPro in optionBehaviour.GetComponentsInChildren<TextMeshPro>(true))
-            {
-                textMeshPro.fontMaterial.SetFloat("_StencilComp", 3f);
-                textMeshPro.fontMaterial.SetFloat("_Stencil", 20);
-            }
-
-            var stringOption = optionBehaviour as StringOption;
-            stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => { });
-            stringOption.TitleText.text = option.getName();
-            if (option.isHeader && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier))
-            {
-                stringOption.TitleText.text = ModTranslation.getString("optionSpawnChance");
-            }
-            if (stringOption.TitleText.text.Length > 25)
-                stringOption.TitleText.fontSize = 2.2f;
-            if (stringOption.TitleText.text.Length > 40)
-                stringOption.TitleText.fontSize = 2f;
-
-            spawnedRows[option] = optionBehaviour;
-            return optionBehaviour;
-        }
-
         private static void createSettings(GameOptionsMenu menu, List<CustomOption> options)
         {
             float num = 1.5f;
@@ -1455,37 +1399,48 @@ namespace TheOtherRoles {
             {
                 if (option.isHeader)
                 {
-                    SpawnHeader(menu, option).transform.localPosition = new Vector3(-0.903f, num, -2f);
+                    CategoryHeaderMasked categoryHeaderMasked = UnityEngine.Object.Instantiate<CategoryHeaderMasked>(menu.categoryHeaderOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
+                    categoryHeaderMasked.SetHeader(StringNames.ImpostorsCategory, 20);
+                    string titleText = option.heading != "" ? option.getHeading() : option.getName();
+                    categoryHeaderMasked.Title.text = titleText;
+                    categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
+                    categoryHeaderMasked.transform.localPosition = new Vector3(-0.903f, num, -2f);
+                    categoryHeaderMasked.transform.GetChild(0).GetComponent<SpriteRenderer>().color = option.getColor();
+                    categoryHeaderMasked.transform.GetChild(1).GetComponent<SpriteRenderer>().color = option.getColor();
                     num -= 0.63f;
                 }
-
-                bool visible = option.isHeader
-                    || (ShouldBeEnabled(option)  // Hides options, for which the parent is disabled!
-                        && !(option.parent != null && option.parent.selection != 0 && option.invertedParent));
-
-                OptionBehaviour optionBehaviour = SpawnRow(menu, option);
-                var stringOption = optionBehaviour as StringOption;
-                option.optionBehaviour = stringOption;
-
-                optionBehaviour.gameObject.SetActive(visible);
-                if (!visible) continue;
-
+                else if (!ShouldBeEnabled(option)) continue;  // Hides options, for which the parent is disabled!
+                else if (option.parent != null && option.parent.selection != 0 && option.invertedParent) continue;
+                OptionBehaviour optionBehaviour = UnityEngine.Object.Instantiate<StringOption>(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 optionBehaviour.transform.localPosition = new Vector3(0.952f, num, -2f);
+                optionBehaviour.SetClickMask(menu.ButtonClickMask);
 
-                string titleText = option.getName();
+                // "SetUpFromData"
+                SpriteRenderer[] componentsInChildren = optionBehaviour.GetComponentsInChildren<SpriteRenderer>(true);
+                for (int i = 0; i < componentsInChildren.Length; i++)
+                {
+                    componentsInChildren[i].material.SetInt(PlayerMaterial.MaskLayer, 20);
+                }
+                foreach (TextMeshPro textMeshPro in optionBehaviour.GetComponentsInChildren<TextMeshPro>(true))
+                {
+                    textMeshPro.fontMaterial.SetFloat("_StencilComp", 3f);
+                    textMeshPro.fontMaterial.SetFloat("_Stencil", 20);
+                }
+
+                var stringOption = optionBehaviour as StringOption;
+                stringOption.OnValueChanged = new Action<OptionBehaviour>((o) => { });
+                stringOption.TitleText.text = option.getName();
                 if (option.isHeader && option.heading == "" && (option.type == CustomOptionType.Neutral || option.type == CustomOptionType.Crewmate || option.type == CustomOptionType.Impostor || option.type == CustomOptionType.Modifier))
                 {
-                    titleText = ModTranslation.getString("optionSpawnChance");
+                    stringOption.TitleText.text = ModTranslation.getString("optionSpawnChance");
                 }
-                if (stringOption.TitleText.text != titleText)
-                {
-                    stringOption.TitleText.text = titleText;
-                    if (titleText.Length > 25) stringOption.TitleText.fontSize = 2.2f;
-                    if (titleText.Length > 40) stringOption.TitleText.fontSize = 2f;
-                }
-                string valueText = option.getString();
-                if (stringOption.ValueText.text != valueText) stringOption.ValueText.text = valueText;
+                if (stringOption.TitleText.text.Length > 25)
+                    stringOption.TitleText.fontSize = 2.2f;
+                if (stringOption.TitleText.text.Length > 40)
+                    stringOption.TitleText.fontSize = 2f;
                 stringOption.Value = stringOption.oldValue = option.selection;
+                stringOption.ValueText.text = option.getString();
+                option.optionBehaviour = stringOption;
 
                 menu.Children.Add(optionBehaviour);
                 num -= 0.45f;
@@ -1562,7 +1517,6 @@ namespace TheOtherRoles {
             currentTabsDirty.Add(true);
             torSettingsTab.SetActive(false);
             currentGOMs.Add((byte)optionType, torSettingsGOM);
-            lastVisibleSignatures.Remove(optionType);
         }
 
         public static void RebuildTabIfDirty(int index)
@@ -1608,36 +1562,25 @@ namespace TheOtherRoles {
             RebuildActiveTabIfDirty();
         }
 
-        public static void InvalidateVisibleSignatures()
-        {
-            lastVisibleSignatures.Clear();
-        }
-
         public static void MarkAllTabsDirty()
         {
             for (int i = 0; i < currentTabsDirty.Count; i++) currentTabsDirty[i] = true;
         }
-        private static readonly Dictionary<CustomOptionType, string> lastVisibleSignatures = new();
-
-        private static string BuildVisibleSignature(List<CustomOption> relevantOptions)
-        {
-            var sb = new StringBuilder();
-            foreach (var option in relevantOptions)
-            {
-                if (option.isHeader) sb.Append('h').Append(option.id).Append(',');
-
-                if (!option.isHeader)
-                {
-                    if (!ShouldBeEnabled(option)) continue;
-                    if (option.parent != null && option.parent.selection != 0 && option.invertedParent) continue;
-                }
-                sb.Append('o').Append(option.id).Append(',');
-            }
-            return sb.ToString();
-        }
 
         public static void updateGameOptionsMenu(CustomOptionType optionType, GameOptionsMenu torSettingsGOM)
         {
+            // Destroy every existing row first. The tab is cloned from the vanilla
+            // "GAME SETTINGS TAB", so its Children already contain the vanilla option
+            // behaviours (map / impostor count / tasks). If we only Clear() the list and keep
+            // reusing cached rows, those vanilla rows stay behind and, after toggling a role,
+            // the page ends up blank/covered. Rebuilding from scratch keeps the view clean.
+            foreach (var child in torSettingsGOM.Children)
+            {
+                child.Destroy();
+            }
+            torSettingsGOM.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
+            torSettingsGOM.Children.Clear();
+
             var relevantOptions = options.Where(x => x.type == optionType).ToList();
             if (TORMapOptions.gameMode == CustomGamemodes.Guesser) // Exclude guesser options in neutral mode
                 relevantOptions = relevantOptions.Where(x => !(new List<int> { 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 7006 }).Contains(x.id)).ToList();
@@ -1647,14 +1590,7 @@ namespace TheOtherRoles {
             if (TORMapOptions.gameMode != CustomGamemodes.FreePlay)
                 relevantOptions = relevantOptions.Where(x => x.id != 10429).ToList();
 
-            string signature = BuildVisibleSignature(relevantOptions);
-            if (lastVisibleSignatures.TryGetValue(optionType, out var previous) && previous == signature && torSettingsGOM.Children.Count > 0) return;
-            lastVisibleSignatures[optionType] = signature;
-
-            torSettingsGOM.scrollBar.transform.FindChild("SliderInner").DestroyChildren();
-            torSettingsGOM.Children.Clear();
             createSettings(torSettingsGOM, relevantOptions);
-
         }
 
         private static void createSettingTabs(GameSettingMenu __instance)

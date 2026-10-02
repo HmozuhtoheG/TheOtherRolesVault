@@ -260,6 +260,7 @@ public static class HelpMenu
     static private TextAttributes RoleBlurbAttribute = new(TORGUIContextEngine.API.GetAttribute(AttributeAsset.DocumentBold)) { FontSize = new(1.3f) };
     static private TextAttributes RoleNameAttribute = new(TORGUIContextEngine.API.GetAttribute(AttributeAsset.DocumentBold)) { FontSize = new(2.8f) };
     static private TextAttributes ChapterTitleAttribute = new(TORGUIContextEngine.API.GetAttribute(AttributeAsset.DocumentBold)) { FontSize = new(1.7f) };
+    static private TextAttributes PortedFromAttribute = new(TORGUIContextEngine.API.GetAttribute(AttributeAsset.DocumentStandard)) { FontSize = new(0.9f), Color = Color.gray };
 
     private static GUIContext GetRoleNameContext(RoleInfo roleInfo)
     {
@@ -271,7 +272,12 @@ public static class HelpMenu
         var rawText = roleInfo.fullDescription;
         foreach (var r in RoleData.GetReplacementPart(roleInfo.roleId)) rawText = rawText.Replace(r.Key, r.Replacement);
 
-        return gui.VerticalHolder(GUIAlignment.TopLeft, gui.HorizontalHolder(GUIAlignment.Left, gui.VerticalHolder(GUIAlignment.Left, blurb, gui.VerticalMargin(-0.06f), title, gui.VerticalMargin(-0.05f)), gui.HorizontalMargin(0.25f)), gui.VerticalMargin(0.15f),
+       
+        GUIContext portedFrom = roleInfo.roleId == RoleId.Justice || roleInfo.roleId == RoleId.Sniper
+            ? gui.Text(GUIAlignment.Left, PortedFromAttribute, gui.RawTextComponent("from Nebula On Ship"))
+            : null;
+
+        return gui.VerticalHolder(GUIAlignment.TopLeft, gui.HorizontalHolder(GUIAlignment.Left, gui.VerticalHolder(GUIAlignment.Left, blurb, gui.VerticalMargin(-0.06f), title, portedFrom, gui.VerticalMargin(-0.05f)), gui.HorizontalMargin(0.25f)), gui.VerticalMargin(0.15f),
             GetDocumentText(rawText), gui.VerticalMargin(0.15f));
     }
 

@@ -441,8 +441,8 @@ namespace TheOtherRoles.Objects
             float barThickness = size * 0.14f;
             foreach (float angle in new[] { 45f, -45f })
             {
-                var bar = NewChild("Bar", parent, localPos + new Vector3(0f, 0f, -0.05f));
-                bar.transform.localScale = new Vector3(barLength, barThickness, 1f);
+                var bar = NewChild("Bar", obj.transform, new Vector3(0f, 0f, -0.05f));
+                bar.transform.localScale = new Vector3(barLength / size, barThickness / size, 1f);
                 bar.transform.localRotation = Quaternion.Euler(0f, 0f, angle);
                 var barSr = bar.AddComponent<SpriteRenderer>();
                 barSr.sprite = GetSolidSprite(Color.white);
