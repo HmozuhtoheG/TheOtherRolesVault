@@ -516,6 +516,11 @@ namespace TheOtherRoles {
         public static CustomRoleOption ambusherSpawnRate;
         public static CustomOption ambusherCooldown;
 
+        public static CustomRoleOption strongmanSpawnRate;
+        public static CustomOption strongmanCooldown;
+        public static CustomOption strongmanCanNormalKill;
+        public static CustomOption strongmanHoldSpeed;
+
         public static CustomRoleOption kashimoSpawnRate;
         public static CustomOption kashimoChargeCooldown;
         public static CustomOption kashimoChargeDuration;
@@ -1304,8 +1309,13 @@ namespace TheOtherRoles {
             zeninNaoyaFreezeDuration = CustomOption.Create(12104, Types.Impostor, "zeninNaoyaFreezeDuration", 1.5f, 0.5f, 4f, 0.5f, zeninNaoyaSpawnRate, false, "unitSeconds");
             zeninNaoyaArrogance = CustomOption.Create(12105, Types.Impostor, "zeninNaoyaArrogance", true, zeninNaoyaSpawnRate);
 
-            ambusherSpawnRate = new CustomRoleOption(12140, Types.Impostor, "ambusher", Ambusher.color);
+            ambusherSpawnRate = new CustomRoleOption(12140, Types.Impostor, "ambusher", Ambusher.color, roleEnabled: false);
             ambusherCooldown = CustomOption.Create(12141, Types.Impostor, "ambusherCooldown", 30f, 10f, 60f, 5f, ambusherSpawnRate, false, "unitSeconds");
+
+            strongmanSpawnRate = new CustomRoleOption(12142, Types.Impostor, "strongman", Palette.ImpostorRed);
+            strongmanCooldown = CustomOption.Create(12143, Types.Impostor, "strongmanCooldown", 30f, 10f, 60f, 5f, strongmanSpawnRate, false, "unitSeconds");
+            strongmanCanNormalKill = CustomOption.Create(12144, Types.Impostor, "strongmanCanNormalKill", true, strongmanSpawnRate);
+            strongmanHoldSpeed = CustomOption.Create(12145, Types.Impostor, "strongmanHoldSpeed", 0.5f, 0.1f, 1f, 0.05f, strongmanSpawnRate);
 
             kashimoSpawnRate = new CustomRoleOption(12130, Types.Neutral, "kashimoHajime", KashimoHajime.color);
             kashimoChargeCooldown = CustomOption.Create(12132, Types.Neutral, "kashimoChargeCooldown", 25f, 10f, 60f, 5f, kashimoSpawnRate, false, "unitSeconds");
@@ -1662,7 +1672,7 @@ namespace TheOtherRoles {
             justiceSpawnRate = new CustomRoleOption(12050, Types.Crewmate, "justice", Justice.color);
             justicePutOnBalance = CustomOption.Create(12051, Types.Crewmate, "justicePutOnBalance", false, justiceSpawnRate);
             justiceMeetingTime = CustomOption.Create(12052, Types.Crewmate, "justiceMeetingTime", 60f, 30f, 300f, 15f, justiceSpawnRate, false, "unitSeconds");
-            archwitchSpawnRate = new CustomRoleOption(12090, Types.Crewmate, "archwitch", Archwitch.color);
+            archwitchSpawnRate = new CustomRoleOption(12090, Types.Neutral, "archwitch", Archwitch.color);
             archwitchKillCooldown = CustomOption.Create(12091, Types.Crewmate, "archwitchKillCooldown", 25f, 5f, 60f, 2.5f, archwitchSpawnRate, false, "unitSeconds");
             archwitchRequiredPoints = CustomOption.Create(12092, Types.Crewmate, "archwitchRequiredPoints", 30f, 5f, 100f, 5f, archwitchSpawnRate);
             archwitchWitnessPoints = CustomOption.Create(12093, Types.Crewmate, "archwitchWitnessPoints", 5f, 0f, 30f, 1f, archwitchSpawnRate);
@@ -1699,7 +1709,7 @@ namespace TheOtherRoles {
             aoiCooldown = CustomOption.Create(12031, Types.Impostor, "aoiCooldown", 30f, 5f, 120f, 5f, aoiSpawnRate, false, "unitSeconds");
             aoiUses = CustomOption.Create(12032, Types.Impostor, "aoiUses", 3f, 1f, 10f, 1f, aoiSpawnRate, false, "unitScrews");
 
-            painterSpawnRate = new CustomRoleOption(12020, Types.Impostor, "painter", Painter.color);
+            painterSpawnRate = new CustomRoleOption(12020, Types.Impostor, "painter", Painter.color, roleEnabled: false);
             painterCooldown = CustomOption.Create(12021, Types.Impostor, "painterCooldown", 30f, 5f, 120f, 5f, painterSpawnRate, false, "unitSeconds");
             painterUses = CustomOption.Create(12022, Types.Impostor, "painterUses", 2f, 1f, 10f, 1f, painterSpawnRate, false, "unitScrews");
             painterDuration = CustomOption.Create(12023, Types.Impostor, "painterDuration", 15f, 5f, 60f, 5f, painterSpawnRate, false, "unitSeconds");

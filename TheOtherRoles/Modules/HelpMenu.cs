@@ -751,6 +751,7 @@ public static class HelpMenu
                 { RoleId.YutaOkkotsu, CustomOptionHolder.yutaSpawnRate },
                 { RoleId.KashimoHajime, CustomOptionHolder.kashimoSpawnRate },
                 { RoleId.Ambusher, CustomOptionHolder.ambusherSpawnRate },
+                { RoleId.Strongman, CustomOptionHolder.strongmanSpawnRate },
                 { RoleId.Sukuna, CustomOptionHolder.sukunaSpawnRate },
                 { RoleId.ZeninNaoya, CustomOptionHolder.zeninNaoyaSpawnRate },
                 { RoleId.Martyr, CustomOptionHolder.martyrSpawnRate },

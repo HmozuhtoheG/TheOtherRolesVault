@@ -196,6 +196,22 @@ namespace TheOtherRoles.Patches {
     [HarmonyPatch(typeof(KillButton), nameof(KillButton.DoClick))]
     class KillButtonDoClickPatch {
         public static bool Prefix(KillButton __instance) {
+            if (PlayerControl.LocalPlayer.isRole(RoleId.Strongman))
+            {
+                var strongman = Strongman.local;
+                if (strongman == null) return true;
+
+                if (strongman.heldId != byte.MaxValue)
+                {
+                    if (!__instance.isCoolingDown && !PlayerControl.LocalPlayer.Data.IsDead
+                        && PlayerControl.LocalPlayer.CanMove && !MeetingHud.Instance && !ExileController.Instance)
+                        strongman.ThrowHeld();
+                    return false;
+                }
+
+                if (!Strongman.canNormalKill) return false;
+            }
+
             if (PlayerControl.LocalPlayer.isRole(RoleId.Sniper))
             {
                 var sniper = Sniper.local;

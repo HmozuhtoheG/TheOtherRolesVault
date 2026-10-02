@@ -172,6 +172,8 @@ namespace TheOtherRoles
         Ambusher,
 
         HeavenlyRestriction,
+
+        Strongman,
     }
 
     enum CustomRPC
