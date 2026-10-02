@@ -72,7 +72,11 @@ namespace TheOtherRoles.Modules
         internal static void Build(IReadOnlyList<RoleInfo> roles, IReadOnlyList<RoleInfo> randomPool, float timerLimit,
             Action<RoleInfo> onPick, Action onRandom)
         {
-            if (roles == null || roles.Count == 0) return;
+            if (roles == null || roles.Count == 0)
+            {
+                TheOtherRolesPlugin.Logger.LogWarning("[DraftWheel] build skipped, no roles");
+                return;
+            }
 
             EnsureAssets();
 
@@ -89,6 +93,8 @@ namespace TheOtherRoles.Modules
 
             bool withRandom = randomPool != null;
             slotCount = roles.Count + (withRandom ? 1 : 0);
+
+            TheOtherRolesPlugin.Logger.LogMessage($"[DraftWheel] build slots={slotCount} random={withRandom} scale={uiScale:0.00} screen={Screen.width}x{Screen.height}");
             sliceAngle = 360f / slotCount;
             slotRoles = new RoleInfo[slotCount];
             for (int i = 0; i < roles.Count; i++) slotRoles[i] = roles[i];
@@ -360,6 +366,8 @@ namespace TheOtherRoles.Modules
             }
 
             if (wheelRoot == null) return;
+
+            TheOtherRolesPlugin.Logger.LogMessage($"[DraftWheel] close animated={animated}");
 
             var root = wheelRoot;
             var group = canvasGroup;

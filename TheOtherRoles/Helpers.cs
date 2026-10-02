@@ -857,7 +857,9 @@ namespace TheOtherRoles
 
         public static bool MushroomSabotageActive()
         {
-            return PlayerControl.LocalPlayer.myTasks.ToArray().Any((x) => x.TaskType == TaskTypes.MushroomMixupSabotage);
+            var player = PlayerControl.LocalPlayer;
+            if (player == null || player.myTasks == null) return false;
+            return player.myTasks.ToArray().Any((x) => x != null && x.TaskType == TaskTypes.MushroomMixupSabotage);
         }
 
         public static bool ShowButtons
@@ -1110,6 +1112,7 @@ namespace TheOtherRoles
             if (player.isRole(RoleId.SchrodingersCat)) return SchrodingersCat.killCooldown;
             if (player.isRole(RoleId.PlayerRole)) return PlayerRole.getCooldownOf(player);
             if (player.isRole(RoleId.Sniper)) return Sniper.cooldown;
+            if (player.isRole(RoleId.Strongman)) return Strongman.cooldown;
             return GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown;
         }
 

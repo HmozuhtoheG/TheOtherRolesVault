@@ -76,6 +76,9 @@ namespace TheOtherRoles.Patches {
 
         private static void assignRoles() {
             var data = getRoleAssignmentData();
+            var allPlayers = PlayerControl.AllPlayerControls.ToArray();
+            int noRole = allPlayers.Count(x => x == null || x.Data == null || x.Data.Role == null);
+            TheOtherRolesPlugin.Logger.LogMessage($"[Assign] players={allPlayers.Length} noRoleData={noRole} crew={data.crewmates.Count} imp={data.impostors.Count} maxCrew={data.maxCrewmateRoles} maxNeut={data.maxNeutralRoles} maxImp={data.maxImpostorRoles} crewRoles={data.crewSettings.Count(x => x.Value.rate > 0)} neutRoles={data.neutralSettings.Count(x => x.Value.rate > 0)} impRoles={data.impSettings.Count(x => x.Value.rate > 0)}");
             applyPendingAssignments(data);
             assignSpecialRoles(data); // Assign special roles like mafia and lovers first as they assign a role to multiple players and the chances are independent of the ticket system
             selectFactionForFactionIndependentRoles(data);
@@ -142,9 +145,9 @@ namespace TheOtherRoles.Patches {
         public static RoleAssignmentData getRoleAssignmentData() {
             // Get the players that we want to assign the roles to. Crewmate and Neutral roles are assigned to natural crewmates. Impostor roles to impostors.
             List<PlayerControl> crewmates = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
-            crewmates.RemoveAll(x => x.Data.Role.IsImpostor);
+            crewmates.RemoveAll(x => x == null || x.Data == null || x.Data.Role == null || x.Data.Role.IsImpostor);
             List<PlayerControl> impostors = PlayerControl.AllPlayerControls.ToArray().ToList().OrderBy(x => Guid.NewGuid()).ToList();
-            impostors.RemoveAll(x => !x.Data.Role.IsImpostor);
+            impostors.RemoveAll(x => x == null || x.Data == null || x.Data.Role == null || !x.Data.Role.IsImpostor);
 
             var crewmateMin = CustomOptionHolder.crewmateRolesCountMin.getSelection();
             var crewmateMax = CustomOptionHolder.crewmateRolesCountMax.getSelection();
@@ -160,6 +163,9 @@ namespace TheOtherRoles.Patches {
 
             // Automatically force everyone to get a role by setting crew Min / Max according to Neutral Settings
             if (CustomOptionHolder.crewmateRolesFill.getBool()) {
+                neutralMin = Mathf.Clamp(neutralMin, 0, crewmates.Count);
+                neutralMax = Mathf.Clamp(neutralMax, 0, crewmates.Count);
+                if (neutralMin > neutralMax) neutralMin = neutralMax;
                 crewmateMax = crewmates.Count - neutralMin;
                 crewmateMin = crewmates.Count - neutralMax;
             }
@@ -214,6 +220,7 @@ namespace TheOtherRoles.Patches {
             impSettings.Add((byte)RoleId.ZeninNaoya, CustomOptionHolder.zeninNaoyaSpawnRate.data);
             impSettings.Add((byte)RoleId.Ambusher, CustomOptionHolder.ambusherSpawnRate.data);
             impSettings.Add((byte)RoleId.Sniper, CustomOptionHolder.sniperSpawnRate.data);
+            impSettings.Add((byte)RoleId.Strongman, CustomOptionHolder.strongmanSpawnRate.data);
 
             neutralSettings.Add((byte)RoleId.Kira, CustomOptionHolder.kiraSpawnRate.data);
             neutralSettings.Add((byte)RoleId.Itadori, CustomOptionHolder.itadoriSpawnRate.data);
@@ -243,7 +250,6 @@ namespace TheOtherRoles.Patches {
             crewSettings.Add((byte)RoleId.PoliceCommissioner, CustomOptionHolder.policeCommissionerSpawnRate.data);
             crewSettings.Add((byte)RoleId.Justice, CustomOptionHolder.justiceSpawnRate.data);
             crewSettings.Add((byte)RoleId.HiromiHiguruma, CustomOptionHolder.hiromiSpawnRate.data);
-            crewSettings.Add((byte)RoleId.Archwitch, CustomOptionHolder.archwitchSpawnRate.data);
             crewSettings.Add((byte)RoleId.Mayor, CustomOptionHolder.mayorSpawnRate.data);
             crewSettings.Add((byte)RoleId.Portalmaker, CustomOptionHolder.portalmakerSpawnRate.data);
             crewSettings.Add((byte)RoleId.Engineer, CustomOptionHolder.engineerSpawnRate.data);
@@ -277,7 +283,14 @@ namespace TheOtherRoles.Patches {
             crewSettings.Add((byte)RoleId.Gojo, CustomOptionHolder.gojoSpawnRate.data);
             crewSettings.Add((byte)RoleId.YutaOkkotsu, CustomOptionHolder.yutaSpawnRate.data);
             neutralSettings.Add((byte)RoleId.KashimoHajime, CustomOptionHolder.kashimoSpawnRate.data);
+            neutralSettings.Add((byte)RoleId.Archwitch, CustomOptionHolder.archwitchSpawnRate.data);
             crewSettings.Add((byte)RoleId.Martyr, CustomOptionHolder.martyrSpawnRate.data);
+
+            if (CustomOptionHolder.crewmateRolesFill.getBool() && !neutralSettings.Any(x => x.Value.rate > 0))
+            {
+                maxCrewmateRoles = Mathf.Clamp(maxCrewmateRoles + maxNeutralRoles, 0, crewmates.Count);
+                maxNeutralRoles = 0;
+            }
 
             return new RoleAssignmentData {
                 crewmates = crewmates,
